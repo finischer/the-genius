@@ -3,7 +3,7 @@ import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import Navbar from "~/components/Navbar/Navbar";
-import { LoginPage } from "./loginPage";
+import LoginPage from "./loginPage";
 
 
 const Home: NextPage = () => {

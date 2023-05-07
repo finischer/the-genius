@@ -36,6 +36,7 @@
     "@trpc/next": "^10.18.0",
     "@trpc/react-query": "^10.18.0",
     "@trpc/server": "^10.18.0",
+    "bcrypt": "^5.1.0",
     "bson": "^5.2.0",
     "dayjs": "^1.11.7",
     "embla-carousel-react": "^7.1.0",
@@ -45,10 +46,12 @@
     "nodemailer": "^6.9.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hot-toast": "^2.4.1",
     "superjson": "1.12.2",
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/eslint": "^8.21.3",
     "@types/node": "^18.15.5",
     "@types/nodemailer": "^6.4.7",

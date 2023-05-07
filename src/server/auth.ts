@@ -12,6 +12,7 @@ import { type UserRole } from "@prisma/client";
 import { prisma } from "~/server/db";
 import { sendVerificationRequest } from "./emailService";
 import { filterUserForClient } from "./helpers/filterForUserClient";
+import bcrypt from "bcrypt";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -46,15 +47,22 @@ export const authOptions: NextAuthOptions = {
       }
       return false;
     },
-    session: ({ session }) => ({
-      ...session,
-    }),
+    session: ({ session, token }) => {
+      if (token) {
+        session.user.name = token.name;
+        session.user.email = token.email;
+      }
+
+      return {
+        ...session,
+      };
+    },
 
     jwt({ token, trigger, session }) {
-      if (trigger === "update" && session?.name) {
+      if (trigger === "update" && session.user.name) {
         // Note, that `session` can be any arbitrary object, remember to validate it!
         token.id = session.id;
-        token.name = session.name;
+        token.name = session.user.name;
       }
       return token;
     },
@@ -64,10 +72,10 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "credentials",
       credentials: {
-        username: {
-          label: "Username",
-          type: "text",
-          placeholder: "Dein Username",
+        email: {
+          label: "E-Mail",
+          type: "email",
+          placeholder: "Deine E-Mail",
         },
         password: {
           label: "Passwort",
@@ -76,14 +84,28 @@ export const authOptions: NextAuthOptions = {
         },
       },
       async authorize(credentials) {
-        const user = await prisma.user.findUnique({
-          where: { name: credentials?.username },
-        });
-        if (user && user.password === credentials?.password) {
-          return filterUserForClient(user);
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("Invalid credentials");
         }
-        // Return null if user data could not be retrieved
-        return null;
+
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email },
+        });
+
+        if (!user || !user?.password) {
+          throw new Error("Invalid credentials");
+        }
+
+        const isCorrectPassword = await bcrypt.compare(
+          credentials.password,
+          user.password
+        );
+
+        if (!isCorrectPassword) {
+          throw new Error("Invalid credentials");
+        }
+
+        return filterUserForClient(user);
       },
     }),
     EmailProvider({
@@ -98,21 +120,11 @@ export const authOptions: NextAuthOptions = {
       from: process.env.EMAIL_FROM,
       sendVerificationRequest,
     }),
-    // DiscordProvider({
-    //   clientId: env.DISCORD_CLIENT_ID,
-    //   clientSecret: env.DISCORD_CLIENT_SECRET,
-    // }),
-    /**
-     * ...add more providers here.
-     *
-     * Most other providers require a bit more work than the Discord provider. For example, the
-     * GitHub provider requires you to add the `refresh_token_expires_in` field to the Account
-     * model. Refer to the NextAuth.js docs for the provider you want to use. Example:
-     *
-     * @see https://next-auth.js.org/providers/github
-     */
   ],
   secret: process.env.NEXTAUTH_SECRET,
+  pages: {
+    signIn: "/",
+  },
   session: {
     strategy: "jwt",
   },

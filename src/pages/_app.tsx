@@ -3,8 +3,9 @@ import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
 import "~/styles/globals.css";
-
+import { Toaster } from "react-hot-toast"
 import { api } from "~/utils/api";
+import { Notifications } from '@mantine/notifications';
 
 
 const MyApp: AppType<{ session: Session | null }> = ({
@@ -20,6 +21,8 @@ const MyApp: AppType<{ session: Session | null }> = ({
       withGlobalStyles
       withNormalizeCSS
     >
+      <Notifications position='top-center' />
+
       <SessionProvider session={session}>
         <Component {...pageProps} />
       </SessionProvider>

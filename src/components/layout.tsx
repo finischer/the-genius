@@ -2,6 +2,7 @@ import { AppShell, Burger, Button, Flex, Footer, Header, MediaQuery, Modal, Text
 import { signIn, useSession } from 'next-auth/react';
 import { PropsWithChildren, useState } from 'react';
 import Navbar from './Navbar';
+import AuthenticationModal from './modals/AuthenticationModal';
 
 const PageLayout = (props: PropsWithChildren) => {
     const { data: session, update: updateSession } = useSession();
@@ -15,7 +16,7 @@ const PageLayout = (props: PropsWithChildren) => {
             justify="center"
             align="center"
         >
-            <Button variant="outline" onClick={() => signIn()}>Login</Button>
+            <AuthenticationModal />
         </Flex>)
 
 

@@ -16,11 +16,11 @@ datasource db {
 
 model User {
   id            String       @id @default(auto()) @map("_id") @db.ObjectId
-  name          String?      @unique
+  username      String       @unique
   role          UserRole?    @default(USER)
-  email         String?      @unique
+  email         String       @unique
   emailVerified DateTime?
-  password      String?
+  password      String
   image         String?
   gameshows     Json[]
   friends       Friendship[] @relation(name: "users")

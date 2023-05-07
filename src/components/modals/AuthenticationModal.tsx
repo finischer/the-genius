@@ -10,7 +10,7 @@ import {
     TextInput,
     Title
 } from '@mantine/core';
-import { useForm } from '@mantine/form';
+import { isEmail, useForm } from '@mantine/form';
 import { useToggle } from '@mantine/hooks';
 import { signIn } from 'next-auth/react';
 import useNotification from '~/hooks/useNotification';
@@ -21,7 +21,13 @@ const AuthenticationModal = () => {
     const { showErrorNotification } = useNotification()
     const [type, toggle] = useToggle<"login" | "register">(['login', 'register']);
     const { mutate: register, isLoading: isRegistering } = api.users.create.useMutation({
-        onSuccess: () => form.reset(),
+        onSuccess: () => {
+            void signIn("credentials", {
+                ...form.values,
+                redirect: false
+            })
+
+        },
         onError: (e) => {
             const errorMessage = e.data?.zodError?.fieldErrors;
             const errorMessagesArray = errorMessage ? Object.values(errorMessage) : []
@@ -35,10 +41,11 @@ const AuthenticationModal = () => {
                         })
                     }
                 })
-            } else {
+            }
+            else {
                 showErrorNotification({
                     title: "Ein Fehler ist aufgetreten",
-                    message: "Probiere es später nochmal"
+                    message: e.message ?? "Probiere es später nochmal"
                 })
             }
         }
@@ -53,16 +60,23 @@ const AuthenticationModal = () => {
         },
 
         validate: {
-            email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+            email: isEmail("Ungültige E-Mail"),
         },
     })
 
-    const handleSubmit = form.onSubmit((formValues) => {
+    const handleSubmit = form.onSubmit(async (formValues) => {
         if (type === "login") {
-            void signIn("credentials", {
+            const res = await signIn("credentials", {
                 ...formValues,
                 redirect: false
             })
+
+            if (!res?.ok) {
+                showErrorNotification({
+                    title: "Falsche Zugangsdaten",
+                    message: res?.error ?? "Probiere es später nochmal"
+                })
+            }
         } else if (type === "register") {
             register(formValues)
         }
@@ -98,15 +112,14 @@ const AuthenticationModal = () => {
 
                     }
                     <TextInput
-                        label="Email"
-                        placeholder="you@mantine.dev"
+                        label="E-Mail"
+                        placeholder="you@mail.de"
                         required {...form.getInputProps("email")}
                         disabled={isRegistering}
-
                     />
                     <PasswordInput
-                        label="Password"
-                        placeholder="Your password"
+                        label="Passwort"
+                        placeholder="Dein starkes Passwort 👀"
                         required
                         mt="md"
                         disabled={isRegistering}

@@ -1,20 +1,68 @@
-import { Group, type MantineColor, Navbar as MantineNavbar, Text, ThemeIcon, UnstyledButton } from "@mantine/core";
-import { IconDoor } from '@tabler/icons-react';
-import Link from 'next/link';
-import React from 'react';
+import { Avatar, Box, Group, Navbar as MantineNavbar, NavLink, Text, UnstyledButton, rem, useMantineTheme } from "@mantine/core";
+import { IconChevronLeft, IconChevronRight, IconDoor, IconTools } from "@tabler/icons-react";
+import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
-interface INavbarLinkButton {
-    icon: JSX.Element
-    iconColor: MantineColor
-    href: string
-    children: React.ReactNode
-}
+// interface INavbarLinkButton {
+//     icon: JSX.Element
+//     iconColor: MantineColor
+//     href: string
+//     children: React.ReactNode
+// }
 
-const NavbarLinkButton: React.FC<INavbarLinkButton> = ({ icon, iconColor, href, children }) => {
+// const NavbarLinkButton: React.FC<INavbarLinkButton> = ({ icon, iconColor, href, children }) => {
+//     const router = useRouter()
+//     const isActive = router.pathname.startsWith(href)
+
+//     const handleLinkClick = () => {
+//         void router.push(href)
+//     }
+
+
+//     return (
+//         <UnstyledButton
+//             onClick={handleLinkClick}
+
+//             sx={(theme) => ({
+//                 display: 'block',
+//                 width: '100%',
+//                 padding: theme.spacing.xs,
+//                 borderRadius: theme.radius.sm,
+//                 color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
+//                 '&:hover': {
+//                     backgroundColor:
+//                         theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
+//                 },
+//             })}
+//         >
+
+//             <Group>
+
+//                 <ThemeIcon color={iconColor} variant="light">
+//                     {icon}
+//                 </ThemeIcon>
+
+//                 <Text size="sm">{children}</Text>
+//             </Group>
+//         </UnstyledButton>
+//     )
+// }
+
+const User = () => {
+    const { data: session } = useSession();
+    const theme = useMantineTheme();
+
     return (
-        <Link href={href} >
+        <Box
+            onClick={() => signOut({ callbackUrl: "/" })}
+            sx={{
+                paddingTop: theme.spacing.sm,
+                borderTop: `${rem(1)} solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[2]
+                    }`,
+            }}
+        >
             <UnstyledButton
-                sx={(theme) => ({
+                sx={{
                     display: 'block',
                     width: '100%',
                     padding: theme.spacing.xs,
@@ -25,33 +73,65 @@ const NavbarLinkButton: React.FC<INavbarLinkButton> = ({ icon, iconColor, href, 
                         backgroundColor:
                             theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
                     },
-                })}
+                }}
             >
-
                 <Group>
+                    <Avatar
+                        src={session?.user.image}
+                        radius="xl"
+                    />
+                    <Box sx={{ flex: 1 }}>
+                        <Text size="sm" weight={500}>
+                            {session?.user.name}
+                        </Text>
+                        <Text color="dimmed" size="xs">
+                            {session?.user.email}
+                        </Text>
+                    </Box>
 
-                    <ThemeIcon color={iconColor} variant="light">
-                        {icon}
-                    </ThemeIcon>
-
-                    <Text size="sm">{children}</Text>
+                    {theme.dir === 'ltr' ? (
+                        <IconChevronRight size={rem(18)} />
+                    ) : (
+                        <IconChevronLeft size={rem(18)} />
+                    )}
                 </Group>
             </UnstyledButton>
-        </Link>
-    )
+        </Box>)
 }
 
 const Navbar = ({ opened }: { opened: boolean }) => {
+    const router = useRouter()
+
+    const isActive = (href: string) => {
+        return router.pathname.startsWith(href)
+    }
+
     return (
         <MantineNavbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ sm: 200, lg: 300 }}>
+            <MantineNavbar.Section grow style={{ display: "flex", gap: "1rem", flexDirection: "column" }}>
+                <NavLink
+                    component="a"
+                    active={isActive("/rooms")}
+                    href="/rooms"
+                    label="Raum beitreten"
+                    description=""
+                    rightSection=""
+                    icon={<IconDoor size="1.3rem" />}
+
+                />
+                <NavLink
+                    component="a"
+                    active={isActive("/gameshows")}
+                    href="/gameshows/create"
+                    label="Spielshow erstellen"
+                    description="Erstelle deine eigene Spielshow"
+                    rightSection=""
+                    icon={<IconTools size="1.3rem" />}
+                />
+            </MantineNavbar.Section>
+
             <MantineNavbar.Section>
-                <NavbarLinkButton
-                    icon={<IconDoor size="1rem" />}
-                    iconColor='blue'
-                    href='/rooms'
-                >
-                    Raum beitreten
-                </NavbarLinkButton>
+                <User />
             </MantineNavbar.Section>
         </MantineNavbar>
     )

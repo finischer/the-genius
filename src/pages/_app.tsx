@@ -16,6 +16,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
     <MantineProvider
       theme={{
         colorScheme: "dark"
+
       }}
       withGlobalStyles
       withNormalizeCSS

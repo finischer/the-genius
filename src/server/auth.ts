@@ -85,7 +85,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          throw new Error("Invalid credentials");
+          throw new Error("Du hast keine Zugangsdaten eingegeben");
         }
 
         const user = await prisma.user.findUnique({
@@ -93,7 +93,7 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (!user || !user?.password) {
-          throw new Error("Invalid credentials");
+          throw new Error("Es existiert kein User mit dieser E-Mail 🙁");
         }
 
         const isCorrectPassword = await bcrypt.compare(
@@ -102,7 +102,9 @@ export const authOptions: NextAuthOptions = {
         );
 
         if (!isCorrectPassword) {
-          throw new Error("Invalid credentials");
+          throw new Error(
+            "Du musst dich beim Passwort vertippt haben. Probiere es nochmal. Ich schaue auch nicht hin 🫣"
+          );
         }
 
         return filterUserForClient(user);

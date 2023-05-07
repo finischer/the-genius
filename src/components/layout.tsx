@@ -7,7 +7,7 @@ import AuthenticationModal from './modals/AuthenticationModal';
 interface IPageLayout {
     showLoader?: boolean
     loadingMessage?: string
-    children: React.ReactNode
+    children?: React.ReactNode
 }
 
 const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage = "Lädt ...", children }) => {

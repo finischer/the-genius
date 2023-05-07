@@ -8,7 +8,7 @@ import {
 import CredentialsProvider from "next-auth/providers/credentials";
 import EmailProvider from "next-auth/providers/email";
 
-import { UserRole } from "@prisma/client";
+import { type UserRole } from "@prisma/client";
 import { prisma } from "~/server/db";
 import { sendVerificationRequest } from "./emailService";
 import { filterUserForClient } from "./helpers/filterForUserClient";
@@ -75,7 +75,7 @@ export const authOptions: NextAuthOptions = {
           placeholder: "Dein Passwort",
         },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         const user = await prisma.user.findUnique({
           where: { name: credentials?.username },
         });

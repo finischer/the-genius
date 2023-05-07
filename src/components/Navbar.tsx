@@ -1,9 +1,7 @@
-import React from 'react'
-import { AppShell, Aside, Burger, Footer, Group, Header, MediaQuery, Navbar as MantineNavbar, Text, ThemeIcon, UnstyledButton, useMantineTheme, ThemeIconProps, MantineColor } from "@mantine/core";
-import { useState } from "react";
-import { IconDashboard } from '@tabler/icons-react';
-import Link from 'next/link';
+import { Group, MantineColor, Navbar as MantineNavbar, Text, ThemeIcon, UnstyledButton } from "@mantine/core";
 import { IconDoor } from '@tabler/icons-react';
+import Link from 'next/link';
+import React from 'react';
 
 interface INavbarLinkButton {
     icon: JSX.Element

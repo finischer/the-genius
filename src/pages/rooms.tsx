@@ -1,7 +1,5 @@
 import { Table, Text, Title } from '@mantine/core'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React from 'react'
 import PageLayout from '~/components/layout'
 
 type Room = {

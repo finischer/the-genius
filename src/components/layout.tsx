@@ -1,6 +1,6 @@
-import { AppShell, Burger, Button, Flex, Footer, Header, MediaQuery, Modal, Text, TextInput, useMantineTheme } from '@mantine/core'
+import { AppShell, Burger, Button, Flex, Footer, Header, MediaQuery, Modal, Text, TextInput, useMantineTheme } from '@mantine/core';
 import { signIn, useSession } from 'next-auth/react';
-import React, { PropsWithChildren, useState } from 'react'
+import { PropsWithChildren, useState } from 'react';
 import Navbar from './Navbar';
 
 const PageLayout = (props: PropsWithChildren) => {

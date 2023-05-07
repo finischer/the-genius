@@ -7,7 +7,7 @@ const RoomsPage = () => {
     const router = useRouter();
     const { data: rooms, isLoading } = api.rooms.getAll.useQuery()
 
-    if (!rooms) return <div>404</div>
+    if (isLoading) return <PageLayout showLoader loadingMessage='Räume werden geladen ...' />
 
     const rows = rooms?.map(room => {
         return (
@@ -20,7 +20,7 @@ const RoomsPage = () => {
                 <td>{room.createdAt?.toLocaleString()} Uhr</td>
             </tr>
         )
-    })
+    }) ?? []
 
     const handleRoomClick = (roomId: string) => {
         void router.push(`/room/${roomId}`)

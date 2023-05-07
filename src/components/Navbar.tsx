@@ -2,59 +2,26 @@ import { Avatar, Box, Group, Navbar as MantineNavbar, NavLink, Text, UnstyledBut
 import { IconChevronLeft, IconChevronRight, IconDoor, IconTools } from "@tabler/icons-react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-
-// interface INavbarLinkButton {
-//     icon: JSX.Element
-//     iconColor: MantineColor
-//     href: string
-//     children: React.ReactNode
-// }
-
-// const NavbarLinkButton: React.FC<INavbarLinkButton> = ({ icon, iconColor, href, children }) => {
-//     const router = useRouter()
-//     const isActive = router.pathname.startsWith(href)
-
-//     const handleLinkClick = () => {
-//         void router.push(href)
-//     }
-
-
-//     return (
-//         <UnstyledButton
-//             onClick={handleLinkClick}
-
-//             sx={(theme) => ({
-//                 display: 'block',
-//                 width: '100%',
-//                 padding: theme.spacing.xs,
-//                 borderRadius: theme.radius.sm,
-//                 color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
-//                 '&:hover': {
-//                     backgroundColor:
-//                         theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-//                 },
-//             })}
-//         >
-
-//             <Group>
-
-//                 <ThemeIcon color={iconColor} variant="light">
-//                     {icon}
-//                 </ThemeIcon>
-
-//                 <Text size="sm">{children}</Text>
-//             </Group>
-//         </UnstyledButton>
-//     )
-// }
+import useNotification from "~/hooks/useNotification";
 
 const User = () => {
+    const { showSuccessNotification } = useNotification()
     const { data: session } = useSession();
     const theme = useMantineTheme();
+    const router = useRouter()
+
+    const handleLogout = async () => {
+        const data = await signOut({ redirect: false, callbackUrl: "/" })
+        void router.push(data.url)
+        showSuccessNotification({
+            title: "Logout erfgolreich",
+            message: "Ich hoffe, wir sehen uns bald wieder 👋"
+        })
+    }
 
     return (
         <Box
-            onClick={() => signOut({ callbackUrl: "/" })}
+            onClick={handleLogout}
             sx={{
                 paddingTop: theme.spacing.sm,
                 borderTop: `${rem(1)} solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[2]

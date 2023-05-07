@@ -9,9 +9,17 @@ const useNotification = () => {
         })
     }
 
+    const showSuccessNotification = (notification: NotificationProps) => {
+        notifications.show({
+            ...notification,
+            color: "green"
+        })
+    }
+
 
     return {
-        showErrorNotification
+        showErrorNotification,
+        showSuccessNotification
     }
 }
 

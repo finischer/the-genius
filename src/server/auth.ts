@@ -58,14 +58,14 @@ export const authOptions: NextAuthOptions = {
       };
     },
 
-    jwt({ token, trigger, session }) {
-      if (trigger === "update" && session.user.name) {
-        // Note, that `session` can be any arbitrary object, remember to validate it!
-        token.id = session.id;
-        token.name = session.user.name;
-      }
-      return token;
-    },
+    // jwt({ token, trigger, session }) {
+    //   if (trigger === "update" && session.user.name) {
+    //     // Note, that `session` can be any arbitrary object, remember to validate it!
+    //     token.id = session.id;
+    //     token.name = session.user.name;
+    //   }
+    //   return token;
+    // },
   },
   adapter: PrismaAdapter(prisma),
   providers: [

@@ -73,7 +73,7 @@ const AuthenticationModal = () => {
         <Container size={420} my={40}>
             <Title
                 align="center"
-                sx={(theme) => ({ fontFamily: `Greycliff CF, ${theme.fontFamily}`, fontWeight: 900 })}
+                sx={(theme) => ({ fontFamily: `${theme.fontFamily ?? "Greycliff CF"}`, fontWeight: 900 })}
             >
                 Willkommen zurück!
             </Title>

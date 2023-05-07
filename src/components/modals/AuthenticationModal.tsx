@@ -64,7 +64,7 @@ const AuthenticationModal = () => {
         },
     })
 
-    const handleSubmit = form.onSubmit(async (formValues) => {
+    const handleSubmit = void form.onSubmit(async (formValues) => {
         if (type === "login") {
             const res = await signIn("credentials", {
                 ...formValues,
@@ -101,7 +101,7 @@ const AuthenticationModal = () => {
 
 
             <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-                <form onSubmit={() => void handleSubmit()}>
+                <form onSubmit={handleSubmit}>
                     {type === "register" &&
                         <TextInput
                             label="Username"

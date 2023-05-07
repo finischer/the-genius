@@ -1,4 +1,4 @@
-import { NotificationProps, notifications } from '@mantine/notifications'
+import { type NotificationProps, notifications } from '@mantine/notifications'
 
 const useNotification = () => {
 

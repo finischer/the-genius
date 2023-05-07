@@ -63,7 +63,7 @@ export const userRouter = createTRPCRouter({
       return filterUserForClient(user);
     }),
 
-  getAll: protectedProcedure.query(({ ctx }) => {
+  getAll: protectedProcedure.query(() => {
     return "all users can see this message";
   }),
 

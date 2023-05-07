@@ -36,8 +36,8 @@ model User {
 
 model Friendship {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String   @unique @db.ObjectId
-  friendId  String   @unique @db.ObjectId
+  userId    String   @db.ObjectId
+  friendId  String   @db.ObjectId
   user      User     @relation("users", fields: [userId], references: [id])
   friend    User     @relation("friendUsers", fields: [friendId], references: [id])
   status    Boolean  @default(true)
@@ -48,16 +48,19 @@ model Friendship {
 }
 
 model Room {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  modus     String
-  password  String?
-  creator   User     @relation("roomCreator", fields: [creatorId], references: [id], onDelete: Cascade)
-  creatorId String   @unique @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  games     Json[]
-  teams     Json[]
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  modus       GameshowMode
+  roomSize    Int?         @default(12)
+  players     String[]
+  password    String?
+  currentGame String?
+  creator     User         @relation("roomCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId   String       @db.ObjectId
+  createdAt   DateTime?    @default(now())
+  updatedAt   DateTime?    @updatedAt
+  games       Json[]
+  teams       Json[]
 
   @@map("rooms")
 }
@@ -114,4 +117,9 @@ enum UserRole {
   USER
   ADMIN
   PREMIUM
+}
+
+enum GameshowMode {
+  DUELL
+  TEAM
 }

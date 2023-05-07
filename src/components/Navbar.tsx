@@ -1,5 +1,5 @@
 import { Avatar, Box, Group, Navbar as MantineNavbar, NavLink, Text, UnstyledButton, rem, useMantineTheme } from "@mantine/core";
-import { IconChevronLeft, IconChevronRight, IconDoor, IconTools } from "@tabler/icons-react";
+import { IconChevronLeft, IconChevronRight, IconDoor, IconHome, IconTools } from "@tabler/icons-react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import useNotification from "~/hooks/useNotification";
@@ -70,26 +70,37 @@ const Navbar = ({ opened }: { opened: boolean }) => {
     const router = useRouter()
 
     const isActive = (href: string) => {
+        if (href === "/") return router.pathname.length === 1
+
         return router.pathname.startsWith(href)
+    }
+
+    const goTo = (href: string) => {
+        router.push(href, undefined, { shallow: true })
     }
 
     return (
         <MantineNavbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ sm: 200, lg: 300 }}>
             <MantineNavbar.Section grow style={{ display: "flex", gap: "1rem", flexDirection: "column" }}>
                 <NavLink
-                    component="a"
+                    onClick={() => goTo("/")}
+                    active={isActive("/")}
+                    label="Home"
+                    description=""
+                    rightSection=""
+                    icon={<IconHome size="1.3rem" />}
+                />
+                <NavLink
+                    onClick={() => goTo("/rooms")}
                     active={isActive("/rooms")}
-                    href="/rooms"
                     label="Raum beitreten"
                     description=""
                     rightSection=""
                     icon={<IconDoor size="1.3rem" />}
-
                 />
                 <NavLink
-                    component="a"
+                    onClick={() => goTo("/gameshows/create")}
                     active={isActive("/gameshows")}
-                    href="/gameshows/create"
                     label="Spielshow erstellen"
                     description="Erstelle deine eigene Spielshow"
                     rightSection=""

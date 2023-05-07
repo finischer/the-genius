@@ -9,7 +9,7 @@ import {
 import bcrypt from "bcrypt";
 import { filterUserForClient } from "~/server/helpers/filterForUserClient";
 
-export const userRouter = createTRPCRouter({
+export const usersRouter = createTRPCRouter({
   create: publicProcedure
     .input(
       z.object({

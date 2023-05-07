@@ -10,6 +10,8 @@ const PageLayout = (props: PropsWithChildren) => {
     const [isNavbarOpened, setIsNavbarOpened] = useState(false)
     const [usernameInput, setUsernameInput] = useState("");
 
+    console.log("Session data: ", session)
+
     if (!session) return (
         <Flex
             h="100vh"

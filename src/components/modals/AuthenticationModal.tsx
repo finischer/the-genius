@@ -135,9 +135,9 @@ const AuthenticationModal = () => {
                     {type === "login" &&
                         <Group position="apart" mt="lg">
                             <Checkbox label="Remember me" disabled {...form.getInputProps("rememberMe", { type: "checkbox" })} />
-                            <Anchor component="button" size="sm">
-                                Forgot password?
-                            </Anchor>
+                            {/* <Anchor component="button" size="sm">
+                                Passwort vergessen?
+                            </Anchor> */}
                         </Group>
                     }
                     <Button fullWidth mt="xl" type='submit' disabled={isRegistering} loading={isLoggingIn || isRegistering}

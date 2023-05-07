@@ -17,7 +17,7 @@ datasource db {
 model User {
   id            String       @id @default(auto()) @map("_id") @db.ObjectId
   name          String?      @unique
-  role          Role?        @default(USER)
+  role          UserRole?    @default(USER)
   email         String?      @unique
   emailVerified DateTime?
   password      String?
@@ -87,7 +87,6 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
-
   @@map("accounts")
 }
 
@@ -108,11 +107,10 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
-
   @@map("verificationTokens")
 }
 
-enum Role {
+enum UserRole {
   USER
   ADMIN
   PREMIUM

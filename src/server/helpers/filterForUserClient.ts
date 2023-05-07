@@ -7,5 +7,6 @@ export const filterUserForClient = (user: User) => {
     image: user.image,
     gameshows: user.gameshows,
     email: user.email,
+    role: user.role,
   };
 };

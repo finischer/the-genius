@@ -5,9 +5,10 @@ import {
   type DefaultSession,
   type NextAuthOptions,
 } from "next-auth";
-import EmailProvider from "next-auth/providers/email";
 import CredentialsProvider from "next-auth/providers/credentials";
+import EmailProvider from "next-auth/providers/email";
 
+import { UserRole } from "@prisma/client";
 import { prisma } from "~/server/db";
 import { sendVerificationRequest } from "./emailService";
 import { filterUserForClient } from "./helpers/filterForUserClient";
@@ -22,8 +23,7 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
-      // ...other properties
-      // role: UserRole;
+      role: UserRole;
     } & DefaultSession["user"];
   }
 
@@ -40,8 +40,7 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
-      console.log("User: ", user);
+    signIn({ user }) {
       if (user) {
         return true;
       }
@@ -55,6 +54,7 @@ export const authOptions: NextAuthOptions = {
       if (trigger === "update" && session?.name) {
         // Note, that `session` can be any arbitrary object, remember to validate it!
         token.id = session.id;
+        token.name = session.name;
       }
       return token;
     },

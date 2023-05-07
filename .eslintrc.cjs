@@ -22,11 +22,9 @@ const config = {
   extends: ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
   rules: {
     "@typescript-eslint/no-misused-promises": [
-      2,
+      "error",
       {
-        checksVoidReturn: {
-          attributes: false,
-        },
+        checksVoidReturn: false,
       },
     ],
     "@typescript-eslint/consistent-type-imports": [

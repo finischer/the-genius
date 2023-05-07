@@ -76,7 +76,7 @@ const Navbar = ({ opened }: { opened: boolean }) => {
     }
 
     const goTo = (href: string) => {
-        router.push(href, undefined, { shallow: true })
+        void router.push(href, undefined, { shallow: true })
     }
 
     return (

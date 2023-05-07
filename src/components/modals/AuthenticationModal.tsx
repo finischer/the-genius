@@ -101,7 +101,7 @@ const AuthenticationModal = () => {
 
 
             <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-                <form onSubmit={void handleSubmit()}>
+                <form onSubmit={() => void handleSubmit()}>
                     {type === "register" &&
                         <TextInput
                             label="Username"

@@ -77,9 +77,9 @@ const AuthenticationModal = () => {
             >
                 Willkommen zurück!
             </Title>
-            <Text color="dimmed" size="sm" align="center" mt={5} onClick={() => toggle()}>
+            <Text color="dimmed" size="sm" align="center" mt={5}>
                 {type === "login" ? "Noch keinen Account? " : "Du hast bereits einen Account? "}
-                <Anchor size="sm" component="button">
+                <Anchor size="sm" component="button" onClick={() => toggle()}>
                     {type === "login" ? "Registriere dich hier" : "Log dich ein"}
                 </Anchor>
             </Text>

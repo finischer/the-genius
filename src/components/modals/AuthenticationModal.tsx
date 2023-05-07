@@ -4,18 +4,15 @@ import {
     Checkbox,
     Container,
     Group,
-    Notification,
     Paper,
     PasswordInput,
     Text,
     TextInput,
-    Title,
+    Title
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useToggle, upperFirst } from '@mantine/hooks';
-import { notifications } from '@mantine/notifications';
+import { useToggle } from '@mantine/hooks';
 import { signIn } from 'next-auth/react';
-import React from 'react';
 import useNotification from '~/hooks/useNotification';
 import { api } from '~/utils/api';
 

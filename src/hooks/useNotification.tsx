@@ -1,5 +1,4 @@
 import { NotificationProps, notifications } from '@mantine/notifications'
-import React from 'react'
 
 const useNotification = () => {
 

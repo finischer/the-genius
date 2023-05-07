@@ -6,7 +6,7 @@ function exclude<Room, Key extends keyof Room>(
   keys: Key[]
 ): Omit<Room[], Key> {
   const newRooms = rooms.map((room) => {
-    for (let key of keys) {
+    for (const key of keys) {
       delete room[key];
     }
 

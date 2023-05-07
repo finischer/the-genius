@@ -1,4 +1,4 @@
-import { Table, Title } from '@mantine/core'
+import { Table, Text, Title } from '@mantine/core'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
@@ -43,6 +43,7 @@ const RoomsPage = () => {
     return (
         <PageLayout>
             <Title order={2}>Tritt einem Raum bei</Title>
+            <Text c="dimmed">{rows.length} Räume sind verfügbar</Text>
             <Table verticalSpacing="md" striped highlightOnHover>
                 <thead>
                     <tr>

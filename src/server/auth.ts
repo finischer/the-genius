@@ -1,14 +1,16 @@
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { type GetServerSidePropsContext } from "next";
 import {
   getServerSession,
-  type NextAuthOptions,
   type DefaultSession,
+  type NextAuthOptions,
 } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { env } from "~/env.mjs";
+import CredentialsProvider from "next-auth/providers/credentials";
+
 import { prisma } from "~/server/db";
 import { sendVerificationRequest } from "./emailService";
+import { filterUserForClient } from "./helpers/filterForUserClient";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -38,20 +40,52 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
+    async signIn({ user, account, profile, email, credentials }) {
+      console.log("User: ", user);
+      if (user) {
+        return true;
+      }
+      return false;
+    },
     session: ({ session }) => ({
       ...session,
     }),
+
     jwt({ token, trigger, session }) {
-      console.log("Session: ", session);
       if (trigger === "update" && session?.name) {
         // Note, that `session` can be any arbitrary object, remember to validate it!
-        token.name = session.name;
+        token.id = session.id;
       }
       return token;
     },
   },
   adapter: PrismaAdapter(prisma),
   providers: [
+    CredentialsProvider({
+      name: "credentials",
+      credentials: {
+        username: {
+          label: "Username",
+          type: "text",
+          placeholder: "Dein Username",
+        },
+        password: {
+          label: "Passwort",
+          type: "password",
+          placeholder: "Dein Passwort",
+        },
+      },
+      async authorize(credentials, req) {
+        const user = await prisma.user.findUnique({
+          where: { name: credentials?.username },
+        });
+        if (user && user.password === credentials?.password) {
+          return filterUserForClient(user);
+        }
+        // Return null if user data could not be retrieved
+        return null;
+      },
+    }),
     EmailProvider({
       server: {
         host: process.env.EMAIL_SERVER_HOST,
@@ -82,6 +116,8 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
+  // Enable debug messages in the console if you are having problems
+  debug: process.env.NODE_ENV === "development",
 };
 
 /**

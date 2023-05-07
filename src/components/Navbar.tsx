@@ -1,4 +1,4 @@
-import { Group, MantineColor, Navbar as MantineNavbar, Text, ThemeIcon, UnstyledButton } from "@mantine/core";
+import { Group, type MantineColor, Navbar as MantineNavbar, Text, ThemeIcon, UnstyledButton } from "@mantine/core";
 import { IconDoor } from '@tabler/icons-react';
 import Link from 'next/link';
 import React from 'react';

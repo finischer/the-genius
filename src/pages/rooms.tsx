@@ -35,7 +35,7 @@ const RoomsPage = () => {
     ))
 
     const handleRoomClick = (room: Room) => {
-        router.push(`/room/${room.id}`)
+        void router.push(`/room/${room.id}`)
     }
 
     return (

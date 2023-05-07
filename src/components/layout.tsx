@@ -1,6 +1,6 @@
 import { AppShell, Burger, Button, Flex, Footer, Header, MediaQuery, Modal, Text, TextInput, useMantineTheme } from '@mantine/core';
 import { useSession } from 'next-auth/react';
-import { PropsWithChildren, useState } from 'react';
+import { type PropsWithChildren, useState } from 'react';
 import Navbar from './Navbar';
 import AuthenticationModal from './modals/AuthenticationModal';
 
@@ -42,7 +42,7 @@ const PageLayout = (props: PropsWithChildren) => {
                         onChange={(e) => setUsernameInput(e.target.value)}
                     />
 
-                    <Button variant="filled" onClick={() => updateSession({ name: usernameInput })} >
+                    <Button variant="filled" onClick={() => void updateSession({ name: usernameInput })} >
                         Namen speichern
                     </Button>
                 </Flex>

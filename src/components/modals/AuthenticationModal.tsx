@@ -23,11 +23,17 @@ const AuthenticationModal = () => {
     const { mutate: register, isLoading: isRegistering } = api.users.create.useMutation({
         onSuccess: () => form.reset(),
         onError: (e) => {
-            const errorMessage = JSON.parse(e.message);
-            if (errorMessage && errorMessage[0]) {
-                showErrorNotification({
-                    title: "Ein Fehler ist aufgetreten",
-                    message: errorMessage[0].message
+            const errorMessage = e.data?.zodError?.fieldErrors;
+            const errorMessagesArray = errorMessage ? Object.values(errorMessage) : []
+
+            if (errorMessagesArray.length > 0) {
+                errorMessagesArray.forEach(messages => {
+                    if (messages && messages[0]) {
+                        showErrorNotification({
+                            title: "Ein Fehler ist aufgetreten",
+                            message: messages[0]
+                        })
+                    }
                 })
             } else {
                 showErrorNotification({
@@ -53,7 +59,7 @@ const AuthenticationModal = () => {
 
     const handleSubmit = form.onSubmit((formValues) => {
         if (type === "login") {
-            signIn("credentials", {
+            void signIn("credentials", {
                 ...formValues,
                 redirect: false
             })

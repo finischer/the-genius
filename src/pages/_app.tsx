@@ -17,9 +17,10 @@ const MyApp: AppType<{ session: Session | null }> = ({
       theme={{
         colorScheme: "dark",
         colors: {
-          brand: ['#f0eaff', '#d1c1f4', '#b199e7', '#9171dc', '#7248d0', '#592fb7', '#45248f', '#311968', '#7248d0', '#0c031b'],
+          brand: ['#f0eaff', '#d1c1f4', '#b199e7', '#9171dc', '#7248d0', '#592fb7', '#45248f', '#311968', '#7248d0', '#592fb7'],
         },
-        primaryColor: "brand"
+        primaryColor: "brand",
+
       }}
       withGlobalStyles
       withNormalizeCSS
@@ -30,7 +31,6 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <Component {...pageProps} />
       </SessionProvider>
     </MantineProvider>
-
   );
 };
 

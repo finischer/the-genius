@@ -13,12 +13,14 @@ import {
 import { isEmail, useForm } from '@mantine/form';
 import { useToggle } from '@mantine/hooks';
 import { signIn } from 'next-auth/react';
+import { useState } from 'react';
 import useNotification from '~/hooks/useNotification';
 import { api } from '~/utils/api';
 
 
 const AuthenticationModal = () => {
     const { showErrorNotification } = useNotification()
+    const [isLoggingIn, setIsLoggingIn] = useState(false)
     const [type, toggle] = useToggle<"login" | "register">(['login', 'register']);
     const { mutate: register, isLoading: isRegistering } = api.users.create.useMutation({
         onSuccess: () => {
@@ -66,6 +68,7 @@ const AuthenticationModal = () => {
 
     const handleSubmit = form.onSubmit(async (formValues) => {
         if (type === "login") {
+            setIsLoggingIn(true)
             const res = await signIn("credentials", {
                 ...formValues,
                 redirect: false
@@ -77,9 +80,13 @@ const AuthenticationModal = () => {
                     message: res?.error ?? "Probiere es später nochmal"
                 })
             }
+
+            setIsLoggingIn(false)
+
         } else if (type === "register") {
             register(formValues)
         }
+
     })
 
 
@@ -133,7 +140,7 @@ const AuthenticationModal = () => {
                             </Anchor>
                         </Group>
                     }
-                    <Button fullWidth mt="xl" type='submit' disabled={isRegistering}
+                    <Button fullWidth mt="xl" type='submit' disabled={isRegistering} loading={isLoggingIn || isRegistering}
                     >
                         {type === "login" ? "Einloggen" : "Registrieren"}
                     </Button>

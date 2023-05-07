@@ -57,15 +57,6 @@ export const authOptions: NextAuthOptions = {
         ...session,
       };
     },
-
-    // jwt({ token, trigger, session }) {
-    //   if (trigger === "update" && session.user.name) {
-    //     // Note, that `session` can be any arbitrary object, remember to validate it!
-    //     token.id = session.id;
-    //     token.name = session.user.name;
-    //   }
-    //   return token;
-    // },
   },
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -84,13 +75,17 @@ export const authOptions: NextAuthOptions = {
         },
       },
       async authorize(credentials) {
+        console.log("Authorizing ...");
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Du hast keine Zugangsdaten eingegeben");
         }
 
+        console.log("Fetch user");
+
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
+        console.log("Result User: ", user);
 
         if (!user || !user?.password) {
           throw new Error("Es existiert kein User mit dieser E-Mail 🙁");
@@ -101,6 +96,7 @@ export const authOptions: NextAuthOptions = {
           user.password
         );
 
+        console.log("Is password correct? ", isCorrectPassword);
         if (!isCorrectPassword) {
           throw new Error(
             "Du musst dich beim Passwort vertippt haben. Probiere es nochmal. Ich schaue auch nicht hin 🫣"

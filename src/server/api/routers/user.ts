@@ -29,6 +29,7 @@ export const userRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      console.log("Creating User ...");
       const isEmailAlreadyRegisterd = await ctx.prisma.user.findUnique({
         where: {
           email: input.email,
@@ -59,6 +60,8 @@ export const userRouter = createTRPCRouter({
           password: await bcrypt.hash(input.password, 10),
         },
       });
+
+      console.log("User created: ", user);
 
       return filterUserForClient(user);
     }),

@@ -1,6 +1,6 @@
 import { AppShell, Burger, Button, Flex, Footer, Header, Loader, MediaQuery, Modal, Text, TextInput, useMantineTheme } from '@mantine/core';
 import { useSession } from 'next-auth/react';
-import { type PropsWithChildren, useState, useEffect } from 'react';
+import { useState } from 'react';
 import Navbar from './Navbar';
 import AuthenticationModal from './modals/AuthenticationModal';
 

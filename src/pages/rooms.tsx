@@ -1,26 +1,7 @@
-import { Loader, Table, Text, Title } from '@mantine/core'
+import { Table, Text, Title } from '@mantine/core'
 import { useRouter } from 'next/router'
 import PageLayout from '~/components/layout'
 import { api } from '~/utils/api'
-
-type Room = {
-    id: string,
-    name: string,
-    modus: "1vs1" | "2vs2"
-    players: number
-    currentGame: string
-    creator: string
-}
-
-// const rooms: Room[] = [
-//     { id: "1", name: "Mein Raum", modus: "1vs1", players: 3, currentGame: "Buchstabensalat", creator: "Niklas" },
-//     { id: "2", name: "Mein Raum", modus: "1vs1", players: 3, currentGame: "Buchstabensalat", creator: "Niklas" },
-//     { id: "3", name: "Mein Raum", modus: "1vs1", players: 3, currentGame: "Buchstabensalat", creator: "Niklas" },
-//     { id: "4", name: "Mein Raum", modus: "1vs1", players: 3, currentGame: "Buchstabensalat", creator: "Niklas" },
-
-// ];
-
-
 
 const RoomsPage = () => {
     const router = useRouter();

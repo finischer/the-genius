@@ -1,4 +1,3 @@
-import { Room } from "@prisma/client";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 // Exclude keys from user

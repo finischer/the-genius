@@ -64,22 +64,25 @@ const AuthenticationModal = () => {
         },
     })
 
-    const handleSubmit = void form.onSubmit(async (formValues) => {
-        if (type === "login") {
-            const res = await signIn("credentials", {
-                ...formValues,
-                redirect: false
-            })
-
-            if (!res?.ok) {
-                showErrorNotification({
-                    title: "Falsche Zugangsdaten",
-                    message: res?.error ?? "Probiere es später nochmal"
+    const handleSubmit = form.onSubmit((formValues) => {
+        (async () => {
+            if (type === "login") {
+                const res = await signIn("credentials", {
+                    ...formValues,
+                    redirect: false
                 })
+
+                if (!res?.ok) {
+                    showErrorNotification({
+                        title: "Falsche Zugangsdaten",
+                        message: res?.error ?? "Probiere es später nochmal"
+                    })
+                }
+            } else if (type === "register") {
+                register(formValues)
             }
-        } else if (type === "register") {
-            register(formValues)
         }
+        )()
     })
 
 

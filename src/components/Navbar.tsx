@@ -1,5 +1,5 @@
-import { Avatar, Box, Group, Navbar as MantineNavbar, NavLink, Text, UnstyledButton, rem, useMantineTheme } from "@mantine/core";
-import { IconChevronLeft, IconChevronRight, IconDoor, IconHome, IconTools } from "@tabler/icons-react";
+import { Avatar, Box, Group, Navbar as MantineNavbar, Menu, NavLink, Text, UnstyledButton, rem, useMantineTheme } from "@mantine/core";
+import { IconChevronLeft, IconChevronRight, IconDoor, IconHome, IconLogout, IconTools } from "@tabler/icons-react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import useNotification from "~/hooks/useNotification";
@@ -20,50 +20,60 @@ const User = () => {
     }
 
     return (
-        <Box
-            onClick={() => void handleLogout()}
-            sx={{
-                paddingTop: theme.spacing.sm,
-                borderTop: `${rem(1)} solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[2]
-                    }`,
-            }}
-        >
-            <UnstyledButton
-                sx={{
-                    display: 'block',
-                    width: '100%',
-                    padding: theme.spacing.xs,
-                    borderRadius: theme.radius.sm,
-                    color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
+        <Menu shadow="md" width={200}>
+            <Menu.Target>
+                <Box
+                    // onClick={() => void handleLogout()}
+                    sx={{
+                        paddingTop: theme.spacing.sm,
+                        borderTop: `${rem(1)} solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[2]
+                            }`,
+                    }}
+                >
+                    <UnstyledButton
+                        sx={{
+                            display: 'block',
+                            width: '100%',
+                            padding: theme.spacing.xs,
+                            borderRadius: theme.radius.sm,
+                            color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
 
-                    '&:hover': {
-                        backgroundColor:
-                            theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-                    },
-                }}
-            >
-                <Group>
-                    <Avatar
-                        src={session?.user.image}
-                        radius="xl"
-                    />
-                    <Box sx={{ flex: 1 }}>
-                        <Text size="sm" weight={500}>
-                            {session?.user.name}
-                        </Text>
-                        <Text color="dimmed" size="xs">
-                            {session?.user.email}
-                        </Text>
-                    </Box>
+                            '&:hover': {
+                                backgroundColor:
+                                    theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
+                            },
+                        }}
+                    >
+                        <Group>
+                            <Avatar
+                                src={session?.user.image}
+                                radius="xl"
+                            />
+                            <Box sx={{ flex: 1 }}>
+                                <Text size="sm" weight={500}>
+                                    {session?.user.name}
+                                </Text>
+                                <Text color="dimmed" size="xs">
+                                    {session?.user.email}
+                                </Text>
+                            </Box>
 
-                    {theme.dir === 'ltr' ? (
-                        <IconChevronRight size={rem(18)} />
-                    ) : (
-                        <IconChevronLeft size={rem(18)} />
-                    )}
-                </Group>
-            </UnstyledButton>
-        </Box>)
+                            {theme.dir === 'ltr' ? (
+                                <IconChevronRight size={rem(18)} />
+                            ) : (
+                                <IconChevronLeft size={rem(18)} />
+                            )}
+                        </Group>
+                    </UnstyledButton>
+                </Box>
+            </Menu.Target>
+
+            <Menu.Dropdown>
+                <Menu.Label>Account</Menu.Label>
+                <Menu.Item icon={<IconLogout size={14} />} onClick={() => void handleLogout()}>Ausloggen</Menu.Item>
+            </Menu.Dropdown>
+        </Menu>
+    )
 }
 
 const Navbar = ({ opened }: { opened: boolean }) => {

@@ -13,6 +13,10 @@ interface IPageLayout {
     children?: React.ReactNode
 }
 
+type TOnlinePlayersEvent = {
+    numOfOnlinePlayers: number
+}
+
 const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage = "Lädt ...", children }) => {
     const { data: session, update: updateSession, status } = useSession();
     const theme = useMantineTheme();
@@ -22,7 +26,7 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
     useEffect(() => {
 
         console.log("Socket connected!")
-        socket.emit("getOnlinePlayers", ({ numOfOnlinePlayers }) => {
+        socket.emit("getOnlinePlayers", ({ numOfOnlinePlayers }: TOnlinePlayersEvent) => {
             console.log("Online Players: ", numOfOnlinePlayers)
         })
     }, [])

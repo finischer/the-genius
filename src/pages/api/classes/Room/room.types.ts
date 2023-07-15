@@ -54,8 +54,8 @@ export interface IRoom {
   creator: User | null;
   numOfPlayers: number;
   gameshowMode: GameshowMode;
-  games: any[];
-  defaultGameStates: any[];
+  games: unknown[];
+  defaultGameStates: unknown[];
   teams: {
     teamOne: ITeam;
     teamTwo: ITeam;

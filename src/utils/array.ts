@@ -1,3 +1,3 @@
-export function copyNestedArray(array: any[]) {
+export function copyNestedArray(array: unknown[]) {
   return JSON.parse(JSON.stringify(array));
 }

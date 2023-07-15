@@ -1,17 +1,21 @@
 import { Server, type Socket } from "socket.io";
 import { roomHandler } from "./handlers/roomHandlers";
 import {
+  TNextApiResponse,
   type IClientToServerEvents,
   type IServerSocket,
 } from "~/types/socket.types";
 import { PrismaClient } from "@prisma/client";
 import { roomManager } from "./controllers/RoomManager";
 import Room from "./classes/Room/Room";
+import { NextApiRequest, NextApiResponse } from "next";
 
 const prisma = new PrismaClient();
 
-// @ts-expect-error sdf
-export default async function SocketHandler(req, res) {
+export default async function SocketHandler(
+  req: NextApiRequest,
+  res: TNextApiResponse
+) {
   // means that socket server was already initialised
   if (res.socket.server.io) {
     res.end();
@@ -19,7 +23,7 @@ export default async function SocketHandler(req, res) {
   }
 
   const io = new Server<IClientToServerEvents, IServerSocket>(
-    res.socket.server,
+    res.socket.server as any,
     {
       path: "/api/socket/",
       addTrailingSlash: false,

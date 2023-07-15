@@ -1,4 +1,4 @@
-import { IPlayer } from "../Player/player.types";
+import { type IPlayer } from "../Player/player.types";
 
 export type TBuzzer = {
   isPressed: boolean;

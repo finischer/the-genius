@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
-import { ITeam, TBuzzer } from "./team.types";
 import Player from "../Player/Player";
+import { type ITeam } from "./team.types";
 
 export default class Team implements ITeam {
   id: ITeam["id"];

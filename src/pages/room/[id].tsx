@@ -1,5 +1,5 @@
 import { ActionIcon, Button, Center, Container, CopyButton, Flex, Modal, Table } from '@mantine/core'
-import { Room } from '@prisma/client'
+import { useDisclosure } from '@mantine/hooks'
 import { IconCheck, IconCopy, IconInfoSmall } from '@tabler/icons-react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
@@ -7,8 +7,7 @@ import { useEffect, useState } from 'react'
 import Loader from '~/components/Loader/Loader'
 import { socket } from '~/hooks/useSocket'
 import { colors, sizes } from '~/styles/constants'
-import { IRoom } from '../api/classes/Room/room.types'
-import { useDisclosure } from '@mantine/hooks'
+import { type IRoom } from '../api/classes/Room/room.types'
 
 const RoomPage = () => {
     const router = useRouter()

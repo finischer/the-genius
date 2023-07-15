@@ -1,5 +1,5 @@
 import { type User } from "@prisma/client";
-import { NextApiResponse } from "next";
+import { type NextApiResponse } from "next";
 import { type Server, type Socket } from "socket.io";
 import type Room from "~/pages/api/classes/Room/Room";
 
@@ -23,6 +23,6 @@ export interface IClientToServerEvents {
   ) => void;
 }
 
-export interface TNextApiResponse<T = any> extends NextApiResponse<T> {
+export interface TNextApiResponse extends NextApiResponse {
   socket: NextApiResponse["socket"] & { server: { io?: Server } };
 }

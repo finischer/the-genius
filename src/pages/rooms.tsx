@@ -1,7 +1,6 @@
 import { Table, Text, Title } from '@mantine/core'
 import { useRouter } from 'next/router'
 import PageLayout from '~/components/layout'
-import { useSocket } from '~/hooks/useSocket'
 import { api } from '~/utils/api'
 
 const RoomsPage = () => {

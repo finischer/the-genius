@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { NextApiRequest } from "next";
+import { type NextApiRequest } from "next";
 import { Server, type Socket } from "socket.io";
 import {
   type TNextApiResponse,

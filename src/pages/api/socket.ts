@@ -1,6 +1,6 @@
 import { Server, type Socket } from "socket.io";
 import { roomHandler } from "./handlers/roomHandlers";
-import { IServerSocket } from "~/types/socket.types";
+import { type IServerSocket } from "~/types/socket.types";
 import { PrismaClient } from "@prisma/client";
 import { roomManager } from "./controllers/RoomManager";
 import Room from "./classes/Room/Room";

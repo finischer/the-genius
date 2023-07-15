@@ -1,7 +1,6 @@
-import { GameshowMode } from "@prisma/client";
 import { randomUUID } from "crypto";
 import { copyNestedArray } from "~/utils/array";
-import { IRoom, TRoomState } from "./room.types";
+import { type IRoom } from "./room.types";
 import Team from "../Team/Team";
 
 export default class Room implements IRoom {

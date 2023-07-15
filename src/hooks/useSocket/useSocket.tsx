@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 import { io } from "socket.io-client";
-import { IUseSocketContext, IUseSocketProvider } from "./useSocket.types";
+import { type IUseSocketContext, type IUseSocketProvider } from "./useSocket.types";
 
 const SocketContext = createContext<IUseSocketContext | undefined>(undefined);
 

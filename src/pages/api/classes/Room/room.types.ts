@@ -1,5 +1,5 @@
-import { GameshowMode, User } from "@prisma/client";
-import { ITeam } from "../Team/team.types";
+import { type GameshowMode, type User } from "@prisma/client";
+import { type ITeam } from "../Team/team.types";
 
 export type TRoomAnswerState = {
   showAnswer: boolean;

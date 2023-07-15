@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import { IPlayer } from "./player.types";
+import { type IPlayer } from "./player.types";
 
 export default class Player implements IPlayer {
   id: IPlayer["id"];

@@ -1,6 +1,6 @@
 import { Flex, Text, Loader as MantineLoader } from '@mantine/core'
 import React from 'react'
-import { ILoaderProps } from './loader.types'
+import { type ILoaderProps } from './loader.types'
 
 const Loader: React.FC<ILoaderProps> = ({ message = undefined }) => {
     return (

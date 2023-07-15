@@ -1,7 +1,15 @@
-import Room from "../classes/Room";
+import type Room from "../classes/Room";
 
-class RoomManager {
-  _rooms = new Map();
+interface IRoomManager {
+  addRoom: (room: Room) => void;
+  removeRoom: (roomId: string) => void;
+  getRoom: (roomId: string) => Room | undefined;
+  getRooms: () => Map<string, Room>;
+  getRoomsAsArray: () => [string, Room][];
+}
+
+class RoomManager implements IRoomManager {
+  _rooms = new Map<string, Room>();
 
   addRoom(room: Room) {
     this._rooms.set(room.id, room);

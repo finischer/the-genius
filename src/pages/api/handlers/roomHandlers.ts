@@ -16,7 +16,7 @@ export function roomHandler(io: Server, socket: IServerSocket) {
       name: user.username,
     };
     socket.roomId = roomId;
-    socket.join(roomId);
+    await socket.join(roomId);
 
     // const allSockets = await io.in(roomId).fetchSockets();
 

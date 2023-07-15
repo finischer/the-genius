@@ -1,6 +1,9 @@
 import { Server, type Socket } from "socket.io";
 import { roomHandler } from "./handlers/roomHandlers";
-import { type IServerSocket } from "~/types/socket.types";
+import {
+  type IClientToServerEvents,
+  type IServerSocket,
+} from "~/types/socket.types";
 import { PrismaClient } from "@prisma/client";
 import { roomManager } from "./controllers/RoomManager";
 import Room from "./classes/Room/Room";
@@ -15,7 +18,7 @@ export default async function SocketHandler(req, res) {
     return;
   }
 
-  const io: Server = new Server(res.socket.server, {
+  const io: Server = new Server<IClientToServerEvents>(res.socket.server, {
     path: "/api/socket/",
     addTrailingSlash: false,
   });

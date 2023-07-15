@@ -8,7 +8,7 @@ export default class Room implements IRoom {
   id: IRoom["id"];
   name: IRoom["name"];
   isPrivateRoom: IRoom["isPrivateRoom"];
-  createdById: IRoom["createdById"];
+  creator: IRoom["creator"];
   gameshowMode: IRoom["gameshowMode"];
   numOfPlayers: IRoom["numOfPlayers"];
   games: IRoom["games"];
@@ -20,7 +20,7 @@ export default class Room implements IRoom {
     id: IRoom["id"] | undefined = undefined,
     name: IRoom["name"],
     isPrivateRoom: IRoom["isPrivateRoom"],
-    createdById: IRoom["createdById"],
+    creator: IRoom["creator"],
     numOfPlayers: IRoom["numOfPlayers"],
     gameshowMode: IRoom["gameshowMode"],
     games: IRoom["games"]
@@ -28,7 +28,7 @@ export default class Room implements IRoom {
     this.id = id !== undefined ? id : randomUUID();
     this.name = name;
     this.isPrivateRoom = isPrivateRoom;
-    this.createdById = createdById;
+    this.creator = creator;
     this.numOfPlayers = numOfPlayers;
     this.gameshowMode = gameshowMode;
     this.games = games;

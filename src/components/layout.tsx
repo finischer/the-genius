@@ -1,10 +1,11 @@
-import { AppShell, Burger, Button, Flex, Footer, Header, Loader, MediaQuery, Modal, Text, TextInput, useMantineTheme } from '@mantine/core';
+import { AppShell, Burger, Button, Flex, Footer, Header, MediaQuery, Modal, Text, TextInput, useMantineTheme } from '@mantine/core';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import Navbar from './Navbar';
 import AuthenticationModal from './modals/AuthenticationModal';
 import { useSocket } from '~/hooks/useSocket';
 import { socket } from '~/hooks/useSocket/useSocket';
+import Loader from './Loader/Loader';
 
 interface IPageLayout {
     showLoader?: boolean
@@ -105,12 +106,7 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
                     }
                 >
                     {showLoader ?
-                        <Flex justify="center" align="center" h="100%">
-                            <Flex direction="column" gap="sm" align="center">
-                                <Loader />
-                                <Text>{loadingMessage}</Text>
-                            </Flex>
-                        </Flex>
+                        <Loader message={loadingMessage} />
                         :
                         <Text>{children}</Text>
                     }

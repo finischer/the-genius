@@ -24,15 +24,21 @@ export default async function SocketHandler(req, res) {
   // initialize saved rooms for e.g. after a server crash
   const rooms = await prisma.room.findMany();
 
-  rooms.forEach((room) => {
+  rooms.forEach(async (room) => {
     const { id, name, password, creatorId, modus, games } = room;
+    const user = await prisma.user.findUnique({
+      where: {
+        id: creatorId,
+      },
+    });
+
     const numOfPlayers = modus === "DUELL" ? 2 : 4;
 
     const tmpRoom = new Room(
       id,
       name,
       password !== null,
-      creatorId,
+      user,
       numOfPlayers,
       modus,
       games

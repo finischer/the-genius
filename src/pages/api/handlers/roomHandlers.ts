@@ -20,5 +20,7 @@ export function roomHandler(io: Server, socket: IServerSocket) {
     socket.join(roomId);
 
     const allSockets = await io.in(roomId).fetchSockets();
+
+    cb(room);
   });
 }

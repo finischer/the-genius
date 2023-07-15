@@ -1,4 +1,4 @@
-import { GameshowMode } from "@prisma/client";
+import { GameshowMode, User } from "@prisma/client";
 import { ITeam } from "../Team/team.types";
 
 export type TRoomAnswerState = {
@@ -51,7 +51,7 @@ export interface IRoom {
   id: string;
   name: string;
   isPrivateRoom: boolean;
-  createdById: string;
+  creator: User | null;
   numOfPlayers: number;
   gameshowMode: GameshowMode;
   games: any[];

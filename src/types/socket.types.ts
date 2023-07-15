@@ -8,7 +8,7 @@ type TSocketUser = {
   name: string;
 };
 
-export interface IServerSocket extends Socket {
+export interface IServerSocketData extends Socket {
   user?: TSocketUser;
   roomId?: string;
 }

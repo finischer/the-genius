@@ -2,9 +2,9 @@ import { PrismaClient } from "@prisma/client";
 import { NextApiRequest } from "next";
 import { Server, type Socket } from "socket.io";
 import {
-  TNextApiResponse,
+  type TNextApiResponse,
   type IClientToServerEvents,
-  type IServerSocket,
+  type IServerSocketData,
 } from "~/types/socket.types";
 import Room from "./classes/Room/Room";
 import { roomManager } from "./controllers/RoomManager";
@@ -22,7 +22,7 @@ export default async function SocketHandler(
     return;
   }
 
-  const io = new Server<IClientToServerEvents, IServerSocket>(
+  const io = new Server<IClientToServerEvents, IServerSocketData>(
     res.socket.server as any,
     {
       path: "/api/socket/",
@@ -57,7 +57,9 @@ export default async function SocketHandler(
     roomManager.addRoom(tmpRoom);
   });
 
-  const onConnection = (socket: Socket) => {
+  const onConnection = (
+    socket: Socket<IClientToServerEvents, IServerSocketData>
+  ) => {
     socket.on("getOnlinePlayers", async (cb) => {
       const sockets = await io.fetchSockets();
 
@@ -69,7 +71,7 @@ export default async function SocketHandler(
     });
 
     // initialize all handlers
-    roomHandler(io, socket as IServerSocket);
+    roomHandler(io, socket);
   };
 
   io.on("connection", onConnection);

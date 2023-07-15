@@ -1,14 +1,14 @@
+import { PrismaClient } from "@prisma/client";
+import { NextApiRequest } from "next";
 import { Server, type Socket } from "socket.io";
-import { roomHandler } from "./handlers/roomHandlers";
 import {
   TNextApiResponse,
   type IClientToServerEvents,
   type IServerSocket,
 } from "~/types/socket.types";
-import { PrismaClient } from "@prisma/client";
-import { roomManager } from "./controllers/RoomManager";
 import Room from "./classes/Room/Room";
-import { NextApiRequest, NextApiResponse } from "next";
+import { roomManager } from "./controllers/RoomManager";
+import { roomHandler } from "./handlers/roomHandlers";
 
 const prisma = new PrismaClient();
 

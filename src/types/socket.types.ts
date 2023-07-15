@@ -17,4 +17,7 @@ export interface IClientToServerEvents {
     { user, roomId }: { user: User; roomId: string },
     cb: (room: Room) => void
   ) => void;
+  getOnlinePlayers: (
+    cb: (response: { numOfOnlinePlayers: number }) => void
+  ) => void;
 }

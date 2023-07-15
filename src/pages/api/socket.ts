@@ -18,10 +18,13 @@ export default async function SocketHandler(req, res) {
     return;
   }
 
-  const io: Server = new Server<IClientToServerEvents>(res.socket.server, {
-    path: "/api/socket/",
-    addTrailingSlash: false,
-  });
+  const io = new Server<IClientToServerEvents, IServerSocket>(
+    res.socket.server,
+    {
+      path: "/api/socket/",
+      addTrailingSlash: false,
+    }
+  );
   res.socket.server.io = io;
 
   // initialize saved rooms for e.g. after a server crash

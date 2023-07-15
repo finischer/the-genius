@@ -23,7 +23,8 @@ export default async function SocketHandler(
   }
 
   const io = new Server<IClientToServerEvents, IServerSocketData>(
-    res.socket.server as any,
+    // @ts-ignore
+    res.socket.server,
     {
       path: "/api/socket/",
       addTrailingSlash: false,

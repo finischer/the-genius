@@ -1,8 +1,10 @@
 import { AppShell, Burger, Button, Flex, Footer, Header, Loader, MediaQuery, Modal, Text, TextInput, useMantineTheme } from '@mantine/core';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Navbar from './Navbar';
 import AuthenticationModal from './modals/AuthenticationModal';
+import { useSocket } from '~/hooks/useSocket';
+import { socket } from '~/hooks/useSocket/useSocket';
 
 interface IPageLayout {
     showLoader?: boolean
@@ -15,6 +17,14 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
     const theme = useMantineTheme();
     const [isNavbarOpened, setIsNavbarOpened] = useState(false)
     const [usernameInput, setUsernameInput] = useState("");
+
+    useEffect(() => {
+
+        console.log("Socket connected!")
+        socket.emit("getOnlinePlayers", ({ numOfOnlinePlayers }) => {
+            console.log("Online Players: ", numOfOnlinePlayers)
+        })
+    }, [])
 
     if (status === "unauthenticated") {
         return (

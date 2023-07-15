@@ -14,7 +14,7 @@ const User = () => {
         const data = await signOut({ redirect: false, callbackUrl: "/" })
         void router.push(data.url)
         showSuccessNotification({
-            title: "Logout erfgolreich",
+            title: "Logout erfolgreich",
             message: "Ich hoffe, wir sehen uns bald wieder 👋"
         })
     }

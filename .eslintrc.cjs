@@ -37,6 +37,7 @@ const config = {
     "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
     "@typescript-eslint/no-explicit-any": "warn",
     "@typescript-eslint/no-unsafe-member-access": "warn",
+    "@typescript-eslint/ban-ts-ignore": "off",
   },
 };
 

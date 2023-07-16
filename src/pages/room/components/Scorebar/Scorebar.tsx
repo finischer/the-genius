@@ -9,7 +9,7 @@ import { type IScoreCircleProps, type IScorebarProps } from './scorebar.types'
 
 const ScoreCircle: React.FC<IScoreCircleProps> = ({ filled }) => (
     <Box
-        sx={(theme) => ({
+        sx={() => ({
             height: "2rem",
             width: "2rem",
             background: filled ? colors.success : "transparent",
@@ -39,7 +39,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team }) => {
     return (
         <Flex direction="column" >
             <Flex gap="lg">
-                <Box sx={(theme) => ({
+                <Box sx={() => ({
                     minWidth: "20%",
                     maxWidth: "50%",
                     height: "100%",

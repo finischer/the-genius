@@ -1,4 +1,4 @@
-import { TUserReduced } from "~/types/socket.types";
+import { type TUserReduced } from "~/types/socket.types";
 import { type IPlayer } from "../Player/player.types";
 
 export type TBuzzer = {

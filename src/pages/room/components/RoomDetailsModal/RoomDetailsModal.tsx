@@ -3,7 +3,6 @@ import { IconCheck, IconCopy } from '@tabler/icons-react'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { socket } from '~/hooks/useSocket'
-import { useUser } from '~/hooks/useUser/useUser'
 import { type IRoomDetailsModalProps } from './roomDetailsModal.types'
 
 const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClose, room }) => {

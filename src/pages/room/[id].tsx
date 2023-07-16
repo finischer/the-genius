@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Center, Container, CopyButton, Flex, Modal, Table } from '@mantine/core'
+import { ActionIcon, Button, Center, Container, CopyButton, Flex, Modal, Table, Text } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { notifications } from '@mantine/notifications'
 import { IconCheck, IconCopy, IconInfoSmall } from '@tabler/icons-react'
@@ -13,12 +13,14 @@ import { TUserReduced } from '~/types/socket.types'
 import { type IRoom } from '../api/classes/Room/room.types'
 import Scorebar from './components/Scorebar/Scorebar'
 import RoomDetailsModal from './components/RoomDetailsModal/RoomDetailsModal'
+import { useUser } from '~/hooks/useUser/useUser'
 
 const RoomPage = () => {
     const router = useRouter()
     const { data: session } = useSession();
     const [openedRoomDetails, { open: openRoomDetails, close: closeRoomDetails }] = useDisclosure(false)
     const { room, setRoom } = useRoom()
+    const { isHost } = useUser()
 
     const roomId = router.query.id as string
 
@@ -57,14 +59,6 @@ const RoomPage = () => {
         }
     }, [session])
 
-    const leaveRoom = () => {
-        if (window.confirm("Möchtest du wirklich den Raum verlassen?")) {
-            socket.emit("leaveRoom", { roomId })
-            // initUser();
-            router.push("/rooms/")
-        }
-    }
-
     if (room === undefined) {
         return (
             <Center h="100vh" >
@@ -89,7 +83,7 @@ const RoomPage = () => {
 
                 {/* Main View */}
                 <Flex h="100%" align="center" justify="center" >
-
+                    <Text>Bist du der Host: {isHost.toString()} </Text>
                 </Flex>
 
                 {/* Footer View */}

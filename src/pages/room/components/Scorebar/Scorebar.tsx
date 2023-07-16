@@ -1,11 +1,10 @@
 import { Box, Button, Flex, Text } from '@mantine/core'
 import React from 'react'
+import { useRoom } from '~/hooks/useRoom/useRoom'
+import { socket } from '~/hooks/useSocket'
+import { useUser } from '~/hooks/useUser/useUser'
 import { colors } from '~/styles/constants'
 import { type IScoreCircleProps, type IScorebarProps } from './scorebar.types'
-import { useRoom } from '~/hooks/useRoom/useRoom'
-import { useUser } from '~/hooks/useUser/useUser'
-import { socket } from '~/hooks/useSocket'
-import Loader from '~/components/Loader/Loader'
 
 
 const ScoreCircle: React.FC<IScoreCircleProps> = ({ filled }) => (
@@ -29,6 +28,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team }) => {
     const { room } = useRoom()
     const { user, isPlayer, setUserAsPlayer } = useUser();
     const scoreCircles = Array(7).fill(null).map((_, index) => <ScoreCircle key={index} filled={team.gameScore > index} />)
+    // const isTeamFull = team.players.length >= room?.numOfPlayers
 
     const joinTeam = () => {
         socket.emit("joinTeam", ({ teamId: team.id, user }), () => {

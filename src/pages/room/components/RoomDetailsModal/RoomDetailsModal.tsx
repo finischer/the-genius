@@ -4,8 +4,10 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { socket } from '~/hooks/useSocket'
 import { type IRoomDetailsModalProps } from './roomDetailsModal.types'
+import { useUser } from '~/hooks/useUser/useUser'
 
 const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClose, room }) => {
+    const { user } = useUser()
     const router = useRouter()
     const roomId = router.query.id as string
 

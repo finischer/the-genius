@@ -7,8 +7,9 @@ export interface IUseUserProvider {
 }
 
 export interface IUseUserContext {
-  user: TUserReduced | undefined;
+  user: TUserReduced;
   setUser: Dispatch<TUserReduced>;
   setUserAsPlayer: (team: ITeam) => void;
   isPlayer: boolean;
+  isHost: boolean;
 }

@@ -5,7 +5,7 @@ import { IRoom } from "~/pages/api/classes/Room/room.types";
 const RoomContext = createContext<IUseRoomContext | undefined>(undefined);
 
 const RoomProvider: React.FC<IUseRoomProvider> = ({ children }) => {
-    const [room, setRoom] = useState<IRoom | undefined>(undefined)
+    const [room, setRoom] = useState<IRoom>()
 
     return (
         <RoomContext.Provider value={{ room, setRoom }}>

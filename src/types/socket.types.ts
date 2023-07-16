@@ -8,19 +8,29 @@ type TSocketUser = {
   name: string;
 };
 
+export type TUserReduced = Omit<
+  User,
+  "emailVerified" | "password" | "gameshows" | "createdAt" | "updatedAt"
+>;
+
 export interface IServerSocketData extends Socket {
   user?: TSocketUser;
-  roomId?: string;
+  roomId?: string | null;
 }
 
 export interface IClientToServerEvents {
   joinRoom: (
-    { user, roomId }: { user: User; roomId: string },
+    { user, roomId }: { user: TUserReduced; roomId: string },
     cb: (room: Room) => void
   ) => void;
+  leaveRoom: ({ roomId }: { roomId: string }) => void;
   getOnlinePlayers: (
     cb: (response: { numOfOnlinePlayers: number }) => void
   ) => void;
+}
+
+export interface IServerToClientEvents {
+  userLeftRoom: ({ user }: { user: TSocketUser | null }) => void;
 }
 
 export interface TNextApiResponse extends NextApiResponse {

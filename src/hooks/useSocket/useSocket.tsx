@@ -1,10 +1,11 @@
 import { createContext, useContext } from "react";
-import { io } from "socket.io-client";
+import { type Socket, io } from "socket.io-client";
 import { type IUseSocketContext, type IUseSocketProvider } from "./useSocket.types";
+import { IClientToServerEvents, IServerToClientEvents } from "~/types/socket.types";
 
 const SocketContext = createContext<IUseSocketContext | undefined>(undefined);
 
-const socket = io({
+const socket: Socket<IServerToClientEvents, IClientToServerEvents> = io({
   path: "/api/socket/",
   autoConnect: true,
   closeOnBeforeunload: false

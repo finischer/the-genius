@@ -5,6 +5,7 @@ import {
   type TNextApiResponse,
   type IClientToServerEvents,
   type IServerSocketData,
+  type IServerToClientEvents,
 } from "~/types/socket.types";
 import Room from "./classes/Room/Room";
 import { roomManager } from "./controllers/RoomManager";
@@ -22,7 +23,11 @@ export default async function SocketHandler(
     return;
   }
 
-  const io = new Server<IClientToServerEvents, IServerSocketData>(
+  const io = new Server<
+    IClientToServerEvents,
+    IServerToClientEvents,
+    IServerSocketData
+  >(
     // @ts-ignore
     res.socket.server,
     {

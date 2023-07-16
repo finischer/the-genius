@@ -1,5 +1,6 @@
 import { type Server, type Socket } from "socket.io";
 import {
+  type IServerToClientEvents,
   type IClientToServerEvents,
   type IServerSocketData,
 } from "~/types/socket.types";
@@ -10,7 +11,12 @@ import NoRoomException from "../exceptions/NoRoomException";
 
 export function roomHandler(
   io: Server,
-  socket: Socket<IClientToServerEvents, IServerSocketData> & IServerSocketData
+  socket: Socket<
+    IClientToServerEvents,
+    IServerToClientEvents,
+    IServerSocketData
+  > &
+    IServerSocketData
 ) {
   socket.on("joinRoom", async ({ user, roomId }, cb) => {
     const room = roomManager.getRoom(roomId);
@@ -27,5 +33,13 @@ export function roomHandler(
     // const allSockets = await io.in(roomId).fetchSockets();
 
     cb(room);
+  });
+
+  socket.on("leaveRoom", ({ roomId }) => {
+    if (socket.roomId === roomId) {
+      socket.to(roomId).emit("userLeftRoom", { user: socket.user || null });
+      socket.leave(roomId);
+      socket.roomId = null;
+    }
   });
 }

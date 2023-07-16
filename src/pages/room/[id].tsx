@@ -8,12 +8,17 @@ import Loader from '~/components/Loader/Loader'
 import { socket } from '~/hooks/useSocket'
 import { colors, sizes } from '~/styles/constants'
 import { type IRoom } from '../api/classes/Room/room.types'
+import { TUserReduced } from '~/types/socket.types'
+import useNotification from '~/hooks/useNotification'
+import { notifications } from '@mantine/notifications'
 
 const RoomPage = () => {
     const router = useRouter()
     const { data: session } = useSession();
     const [openedRoomDetails, { open: openRoomDetails, close: closeRoomDetails }] = useDisclosure(false)
     const [room, setRoom] = useState<IRoom | undefined>(undefined);
+    const { showSuccessNotification } = useNotification()
+
 
     const roomId = router.query.id as string
 
@@ -22,11 +27,38 @@ const RoomPage = () => {
         if (session?.user) {
             console.log("Session available")
             console.log("Socket: ", socket)
-            socket.emit("joinRoom", { user: session?.user, roomId }, (room: IRoom) => {
+
+            const user: TUserReduced = {
+                id: session.user.id,
+                username: session.user.name || "",
+                email: session.user.email || "",
+                image: session.user.image || null,
+                role: session.user.role
+            }
+
+            socket.emit("joinRoom", { user, roomId }, (room: IRoom) => {
                 setRoom(room)
             })
+
+            socket.on("userLeftRoom", ({ user }) => {
+                notifications.show({
+                    message: `${user?.name} hat den Raum verlassen`,
+                })
+            })
+        }
+
+        return () => {
+            socket.removeAllListeners("userLeftRoom")
         }
     }, [session])
+
+    const leaveRoom = () => {
+        if (window.confirm("Möchtest du wirklich den Raum verlassen?")) {
+            socket.emit("leaveRoom", { roomId })
+            // initUser();
+            router.push("/rooms/")
+        }
+    }
 
     if (room === undefined) {
         return (
@@ -84,7 +116,7 @@ const RoomPage = () => {
                         </tbody>
                     </Table>
 
-                    <Button variant='subtle' disabled>
+                    <Button variant='subtle' onClick={leaveRoom}>
                         Raum verlassen
                     </Button>
                 </Flex>

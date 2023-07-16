@@ -11,9 +11,9 @@ import { socket } from '~/hooks/useSocket'
 import { useUser } from '~/hooks/useUser/useUser'
 import { colors, sizes } from '~/styles/constants'
 import { type TUserReduced } from '~/types/socket.types'
+import RoomDetailsModal from '~/components/RoomDetailsModal'
 import { type IRoom } from '../api/classes/Room/room.types'
-import RoomDetailsModal from './components/RoomDetailsModal/RoomDetailsModal'
-import Scorebar from './components/Scorebar/Scorebar'
+import Scorebar from '~/components/Scorebar'
 
 const RoomPage = () => {
     const router = useRouter()

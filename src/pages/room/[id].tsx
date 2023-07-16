@@ -4,18 +4,21 @@ import { notifications } from '@mantine/notifications'
 import { IconCheck, IconCopy, IconInfoSmall } from '@tabler/icons-react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import Loader from '~/components/Loader/Loader'
+import { useRoom } from '~/hooks/useRoom/useRoom'
 import { socket } from '~/hooks/useSocket'
 import { colors, sizes } from '~/styles/constants'
 import { TUserReduced } from '~/types/socket.types'
 import { type IRoom } from '../api/classes/Room/room.types'
+import Scorebar from './components/Scorebar/Scorebar'
+import RoomDetailsModal from './components/RoomDetailsModal/RoomDetailsModal'
 
 const RoomPage = () => {
     const router = useRouter()
     const { data: session } = useSession();
     const [openedRoomDetails, { open: openRoomDetails, close: closeRoomDetails }] = useDisclosure(false)
-    const [room, setRoom] = useState<IRoom | undefined>(undefined);
+    const { room, setRoom } = useRoom()
 
     const roomId = router.query.id as string
 
@@ -41,6 +44,11 @@ const RoomPage = () => {
                 notifications.show({
                     message: `${user?.name} hat den Raum verlassen`,
                 })
+            })
+
+            socket.on("updateRoom", ({ newRoomState }) => {
+                console.log("Update Room!")
+                setRoom(newRoomState)
             })
         }
 
@@ -68,67 +76,29 @@ const RoomPage = () => {
     return (
         <>
             {/* Room Details */}
-            <Modal opened={openedRoomDetails} onClose={closeRoomDetails} title="Rauminformationen">
-                <Flex direction="column" gap="xl">
+            <RoomDetailsModal room={room} openedModal={openedRoomDetails} onClose={closeRoomDetails} />
 
-                    <Table>
-                        <tbody>
-                            <tr>
-                                <td>Raum-ID:</td>
-                                <td>{room.id}</td>
-                                <td style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                    <CopyButton timeout={2000} value={room.id}>
-                                        {({ copied, copy }) => (
-                                            copied ?
-                                                <IconCheck size="1.5rem" />
-                                                :
-                                                <ActionIcon size="1.5rem" onClick={copy}>
-                                                    <IconCopy />
-                                                </ActionIcon>
-
-                                        )}
-                                    </CopyButton>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Name:</td>
-                                <td>{room.name}</td>
-                            </tr>
-                            <tr>
-                                <td>Erstellt von:</td>
-                                <td>{room.creator?.username || "-"}</td>
-                            </tr>
-                            <tr>
-                                <td>Modus:</td>
-                                <td>{room.gameshowMode}</td>
-                            </tr>
-                            <tr>
-                                <td>Anzahl Spiele:</td>
-                                <td>{room.games.length}</td>
-                            </tr>
-                            <tr>
-                                <td>Sichtbarkeit:</td>
-                                <td>{room.isPrivateRoom ? "Private" : "Öffentlich"}</td>
-                            </tr>
-                        </tbody>
-                    </Table>
-
-                    <Button variant='subtle' onClick={leaveRoom}>
-                        Raum verlassen
-                    </Button>
-                </Flex>
-
-            </Modal>
-
-            <Container size="100%" h="100vh" p={sizes.padding}>
+            <Flex h="100vh" p={sizes.padding} pos="relative" direction="column">
                 {/* Header */}
-                <Container size="100%">
+                <Container size="100%" w="100%">
                     {/* Room Info Button */}
                     <ActionIcon color={colors.accent} size="xl" radius="xl" variant="filled" onClick={openRoomDetails}>
                         <IconInfoSmall size="3.25rem" />
                     </ActionIcon>
                 </Container>
-            </Container>
+
+                {/* Main View */}
+                <Flex h="100%" align="center" justify="center" >
+
+                </Flex>
+
+                {/* Footer View */}
+                <Flex justify="space-between" >
+                    <Scorebar team={room.teams.teamOne} />
+                    <Scorebar team={room.teams.teamTwo} />
+                </Flex>
+
+            </Flex >
         </>
     )
 }

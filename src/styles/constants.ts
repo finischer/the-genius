@@ -17,4 +17,5 @@ export const spacing = {
 
 export const colors = {
   accent: "#2F256F",
+  success: "#5AFF15",
 };

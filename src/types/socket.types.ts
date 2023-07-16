@@ -16,6 +16,7 @@ export type TUserReduced = Omit<
 export interface IServerSocketData extends Socket {
   user?: TSocketUser;
   roomId?: string | null;
+  teamId?: string | null;
 }
 
 export interface IClientToServerEvents {
@@ -27,10 +28,15 @@ export interface IClientToServerEvents {
   getOnlinePlayers: (
     cb: (response: { numOfOnlinePlayers: number }) => void
   ) => void;
+  joinTeam: (
+    { user, teamId }: { user: TUserReduced; teamId: string },
+    cb: () => void
+  ) => void;
 }
 
 export interface IServerToClientEvents {
   userLeftRoom: ({ user }: { user: TSocketUser | null }) => void;
+  updateRoom: ({ newRoomState }: { newRoomState: Room }) => void;
 }
 
 export interface TNextApiResponse extends NextApiResponse {

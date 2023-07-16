@@ -1,6 +1,13 @@
 import { randomUUID } from "crypto";
+import { type Server } from "socket.io";
+import {
+  type IClientToServerEvents,
+  type IServerSocketData,
+  type IServerToClientEvents,
+} from "~/types/socket.types";
 import { copyNestedArray } from "~/utils/array";
 import { type IRoom } from "./room.types";
+import { io } from "../../socket";
 import Team from "../Team/Team";
 
 export default class Room implements IRoom {
@@ -83,5 +90,15 @@ export default class Room implements IRoom {
     }
 
     return false;
+  }
+
+  getTeamById(teamId: string) {
+    console.log(Object.values(this.teams).find((t) => t.id === teamId));
+
+    return Object.values(this.teams).find((t) => t.id === teamId);
+  }
+
+  update() {
+    io.to(this.id).emit("updateRoom", { newRoomState: this });
   }
 }

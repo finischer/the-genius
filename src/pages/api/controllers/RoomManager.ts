@@ -1,4 +1,5 @@
 import type Room from "../classes/Room";
+import NoRoomException from "../exceptions/NoRoomException";
 
 interface IRoomManager {
   addRoom: (room: Room) => void;
@@ -19,7 +20,9 @@ class RoomManager implements IRoomManager {
     this._rooms.delete(roomId);
   }
 
-  getRoom(roomId: Room["id"]) {
+  getRoom(roomId: Room["id"] | undefined | null) {
+    if (!roomId) return undefined;
+
     return this._rooms.get(roomId);
   }
 

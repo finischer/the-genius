@@ -35,10 +35,10 @@ export function roomHandler(
     cb(room);
   });
 
-  socket.on("leaveRoom", ({ roomId }) => {
+  socket.on("leaveRoom", async ({ roomId }) => {
     if (socket.roomId === roomId) {
       socket.to(roomId).emit("userLeftRoom", { user: socket.user || null });
-      socket.leave(roomId);
+      await socket.leave(roomId);
       socket.roomId = null;
     }
   });

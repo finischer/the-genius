@@ -1,3 +1,4 @@
+import { TUserReduced } from "~/types/socket.types";
 import { type IPlayer } from "../Player/player.types";
 
 export type TBuzzer = {
@@ -17,12 +18,10 @@ export interface ITeam {
   totalScore: number;
   gameScore: number;
   avatarImage: string;
-  players: {
-    playerOne: IPlayer;
-    playerTwo: IPlayer;
-  };
+  players: IPlayer[];
   buzzer: TBuzzer;
   scorebarTimer: TScorebarTimer;
   isActiveTurn: boolean;
   getPlayer: (playerId: string) => IPlayer | null;
+  join: (user: TUserReduced) => void;
 }

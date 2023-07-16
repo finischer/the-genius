@@ -3,6 +3,8 @@ import { Notifications } from '@mantine/notifications';
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
+import { UserProvider } from '~/hooks/useUser/useUser';
+import { RoomProvider } from '~/hooks/useRoom/useRoom';
 import { SocketProvider } from '~/hooks/useSocket';
 import "~/styles/globals.css";
 import { api } from "~/utils/api";
@@ -30,7 +32,11 @@ const MyApp: AppType<{ session: Session | null }> = ({
 
       <SessionProvider session={session}>
         <SocketProvider>
-          <Component {...pageProps} />
+          <RoomProvider>
+            <UserProvider>
+              <Component {...pageProps} />
+            </UserProvider>
+          </RoomProvider>
         </SocketProvider>
       </SessionProvider>
     </MantineProvider>

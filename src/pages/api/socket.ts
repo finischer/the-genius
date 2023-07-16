@@ -10,8 +10,15 @@ import {
 import Room from "./classes/Room/Room";
 import { roomManager } from "./controllers/RoomManager";
 import { roomHandler } from "./handlers/roomHandlers";
+import { teamHandler } from "./handlers/teamHandlers";
 
 const prisma = new PrismaClient();
+
+export let io: Server<
+  IClientToServerEvents,
+  IServerToClientEvents,
+  IServerSocketData
+>;
 
 export default async function SocketHandler(
   req: NextApiRequest,
@@ -23,11 +30,7 @@ export default async function SocketHandler(
     return;
   }
 
-  const io = new Server<
-    IClientToServerEvents,
-    IServerToClientEvents,
-    IServerSocketData
-  >(
+  io = new Server(
     // @ts-ignore
     res.socket.server,
     {
@@ -78,6 +81,7 @@ export default async function SocketHandler(
 
     // initialize all handlers
     roomHandler(io, socket);
+    teamHandler(io, socket);
   };
 
   io.on("connection", onConnection);

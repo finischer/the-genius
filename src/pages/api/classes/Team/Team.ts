@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
 import Player from "../Player/Player";
 import { type ITeam } from "./team.types";
+import { TUserReduced } from "~/types/socket.types";
 
 export default class Team implements ITeam {
   id: ITeam["id"];
@@ -21,10 +22,7 @@ export default class Team implements ITeam {
     this.totalScore = 0;
     this.gameScore = 0;
     this.avatarImage = "";
-    this.players = {
-      playerOne: new Player(null, this.id, null),
-      playerTwo: new Player(null, this.id, null),
-    };
+    this.players = [];
     this.buzzer = {
       isPressed: false,
       playerBuzzered: "",
@@ -48,5 +46,10 @@ export default class Team implements ITeam {
     }
 
     return null;
+  }
+
+  join(user: TUserReduced) {
+    const newPlayer = new Player(user.id, this.id, user.username);
+    this.players.push(newPlayer);
   }
 }

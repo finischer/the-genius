@@ -1,11 +1,10 @@
-import { Room, type User } from "@prisma/client";
-import { createContext, useContext, useEffect, useState } from "react";
-import { IUseUserContext, IUseUserProvider } from "./useUser.types";
 import { useSession } from "next-auth/react";
-import { type TUserReduced } from "~/types/socket.types";
-import { ITeam } from "~/pages/api/classes/Team/team.types";
-import { useRoom } from "../useRoom/useRoom";
+import { createContext, useContext, useEffect, useState } from "react";
 import { type IRoom } from "~/pages/api/classes/Room/room.types";
+import { type ITeam } from "~/pages/api/classes/Team/team.types";
+import { type TUserReduced } from "~/types/socket.types";
+import { useRoom } from "../useRoom/useRoom";
+import { type IUseUserContext, type IUseUserProvider } from "./useUser.types";
 
 const UserContext = createContext<IUseUserContext | undefined>(undefined);
 

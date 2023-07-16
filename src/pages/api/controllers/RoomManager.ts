@@ -1,5 +1,4 @@
 import type Room from "../classes/Room";
-import NoRoomException from "../exceptions/NoRoomException";
 
 interface IRoomManager {
   addRoom: (room: Room) => void;

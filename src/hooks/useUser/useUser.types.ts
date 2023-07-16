@@ -1,5 +1,5 @@
 import { type Dispatch } from "react";
-import { ITeam } from "~/pages/api/classes/Team/team.types";
+import { type ITeam } from "~/pages/api/classes/Team/team.types";
 import { type TUserReduced } from "~/types/socket.types";
 
 export interface IUseUserProvider {

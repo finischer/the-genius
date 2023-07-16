@@ -67,10 +67,10 @@ const Scorebar: React.FC<IScorebarProps> = ({ team }) => {
                 }
             </Flex>
 
-            <Flex gap="1rem" bg={colors.accent} h="3rem" w="30rem" sx={(theme) => ({ borderRadius: "0.25rem", borderTopLeftRadius: 0 })} p="0.5rem 1rem" pos="relative">
+            <Flex gap="1rem" bg={colors.accent} h="3rem" w="30rem" sx={() => ({ borderRadius: "0.25rem", borderTopLeftRadius: 0 })} p="0.5rem 1rem" pos="relative">
                 {/* Player names */}
                 <Box
-                    sx={(theme) => ({
+                    sx={() => ({
                         width: "50%",
                         height: "100%",
                         display: "inline-block",
@@ -78,7 +78,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team }) => {
 
                     })}
                 >
-                    <Text sx={(theme) => ({
+                    <Text sx={() => ({
                         width: "100%",
                         overflow: "hidden",
                         whiteSpace: "nowrap",

@@ -1,14 +1,8 @@
 import { randomUUID } from "crypto";
-import { type Server } from "socket.io";
-import {
-  type IClientToServerEvents,
-  type IServerSocketData,
-  type IServerToClientEvents,
-} from "~/types/socket.types";
 import { copyNestedArray } from "~/utils/array";
-import { type IRoom } from "./room.types";
 import { io } from "../../socket";
 import Team from "../Team/Team";
+import { type IRoom } from "./room.types";
 
 export default class Room implements IRoom {
   id: IRoom["id"];

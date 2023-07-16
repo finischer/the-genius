@@ -1,19 +1,19 @@
-import { ActionIcon, Button, Center, Container, CopyButton, Flex, Modal, Table, Text } from '@mantine/core'
+import { ActionIcon, Center, Container, Flex, Text } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { notifications } from '@mantine/notifications'
-import { IconCheck, IconCopy, IconInfoSmall } from '@tabler/icons-react'
+import { IconInfoSmall } from '@tabler/icons-react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import Loader from '~/components/Loader/Loader'
 import { useRoom } from '~/hooks/useRoom/useRoom'
 import { socket } from '~/hooks/useSocket'
-import { colors, sizes } from '~/styles/constants'
-import { TUserReduced } from '~/types/socket.types'
-import { type IRoom } from '../api/classes/Room/room.types'
-import Scorebar from './components/Scorebar/Scorebar'
-import RoomDetailsModal from './components/RoomDetailsModal/RoomDetailsModal'
 import { useUser } from '~/hooks/useUser/useUser'
+import { colors, sizes } from '~/styles/constants'
+import { type TUserReduced } from '~/types/socket.types'
+import { type IRoom } from '../api/classes/Room/room.types'
+import RoomDetailsModal from './components/RoomDetailsModal/RoomDetailsModal'
+import Scorebar from './components/Scorebar/Scorebar'
 
 const RoomPage = () => {
     const router = useRouter()
@@ -44,7 +44,7 @@ const RoomPage = () => {
 
             socket.on("userLeftRoom", ({ user }) => {
                 notifications.show({
-                    message: `${user?.name} hat den Raum verlassen`,
+                    message: `${user?.name || ""} hat den Raum verlassen`,
                 })
             })
 

@@ -3,19 +3,18 @@ import { IconCheck, IconCopy } from '@tabler/icons-react'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { socket } from '~/hooks/useSocket'
-import { type IRoomDetailsModalProps } from './roomDetailsModal.types'
 import { useUser } from '~/hooks/useUser/useUser'
+import { type IRoomDetailsModalProps } from './roomDetailsModal.types'
 
 const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClose, room }) => {
-    const { user } = useUser()
     const router = useRouter()
     const roomId = router.query.id as string
 
-    const leaveRoom = () => {
+    const leaveRoom = async () => {
         if (window.confirm("Möchtest du wirklich den Raum verlassen?")) {
             socket.emit("leaveRoom", { roomId })
             // initUser();
-            router.push("/rooms/")
+            await router.push("/rooms/")
         }
     }
 

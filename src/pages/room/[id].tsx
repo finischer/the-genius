@@ -1,5 +1,6 @@
 import { ActionIcon, Button, Center, Container, CopyButton, Flex, Modal, Table } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
+import { notifications } from '@mantine/notifications'
 import { IconCheck, IconCopy, IconInfoSmall } from '@tabler/icons-react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
@@ -7,18 +8,14 @@ import { useEffect, useState } from 'react'
 import Loader from '~/components/Loader/Loader'
 import { socket } from '~/hooks/useSocket'
 import { colors, sizes } from '~/styles/constants'
-import { type IRoom } from '../api/classes/Room/room.types'
 import { TUserReduced } from '~/types/socket.types'
-import useNotification from '~/hooks/useNotification'
-import { notifications } from '@mantine/notifications'
+import { type IRoom } from '../api/classes/Room/room.types'
 
 const RoomPage = () => {
     const router = useRouter()
     const { data: session } = useSession();
     const [openedRoomDetails, { open: openRoomDetails, close: closeRoomDetails }] = useDisclosure(false)
     const [room, setRoom] = useState<IRoom | undefined>(undefined);
-    const { showSuccessNotification } = useNotification()
-
 
     const roomId = router.query.id as string
 

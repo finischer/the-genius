@@ -1,7 +1,7 @@
 import { type User } from "@prisma/client";
 import { type NextApiResponse } from "next";
 import { type Server, type Socket } from "socket.io";
-import { ICreateRoomConfig } from "~/components/CreateRoomModal/createRoomModal.types";
+import { type ICreateRoomConfig } from "~/components/CreateRoomModal/createRoomModal.types";
 import type Room from "~/pages/api/classes/Room/Room";
 
 type TSocketUser = {

@@ -1,7 +1,6 @@
-import { type GameshowMode, type User } from "@prisma/client";
+import { type GameshowMode } from "@prisma/client";
+import { type TUserReduced } from "~/types/socket.types";
 import { type ITeam } from "../Team/team.types";
-import { TUserReduced } from "~/types/socket.types";
-import { type JSONObject } from "superjson/dist/types";
 
 export type TRoomAnswerState = {
   showAnswer: boolean;

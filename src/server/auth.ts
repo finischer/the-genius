@@ -13,6 +13,7 @@ import { prisma } from "~/server/db";
 import { sendVerificationRequest } from "./emailService";
 import { filterUserForClient } from "./helpers/filterForUserClient";
 import bcrypt from "bcrypt";
+import { UserWithRelations } from "~/types/prisma.types";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -82,6 +83,9 @@ export const authOptions: NextAuthOptions = {
 
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
+          include: {
+            gameshows: true,
+          },
         });
 
         if (!user || !user?.password) {

@@ -1,6 +1,6 @@
-import { type User } from "@prisma/client";
+import { type UserWithRelations } from "~/types/prisma.types";
 
-export const filterUserForClient = (user: User) => {
+export const filterUserForClient = (user: UserWithRelations) => {
   return {
     id: user.id,
     name: user.username,

@@ -58,6 +58,9 @@ export const usersRouter = createTRPCRouter({
           ...input,
           password: await bcrypt.hash(input.password, 10),
         },
+        include: {
+          gameshows: true,
+        },
       });
 
       return filterUserForClient(user);

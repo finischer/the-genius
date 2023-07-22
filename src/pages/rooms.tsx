@@ -113,25 +113,27 @@ const RoomsPage = () => {
 
     return (
         <>
-            <Modal
-                onClose={closePasswordModal}
-                opened={openedPasswordModal}
-                title={`Gib das Passwort für ${activeRoom?.name} ein`}
-                centered
-            >
-                <LoadingOverlay visible={isLoadingValidatePassword} overlayBlur={2} />
-                <form onSubmit={handleJoinRoomWithPassword}>
-                    <Flex direction="column" gap="md">
-                        <PasswordInput
-                            label="Passwort"
-                            placeholder='Super secret passwort'
-                            required
-                            {...form.getInputProps("password")}
-                        />
-                        <Button type='submit'>Raum beitreten</Button>
-                    </Flex>
-                </form>
-            </Modal>
+            {activeRoom &&
+                <Modal
+                    onClose={closePasswordModal}
+                    opened={openedPasswordModal}
+                    title={`Gib das Passwort für ${activeRoom.name} ein`}
+                    centered
+                >
+                    <LoadingOverlay visible={isLoadingValidatePassword} overlayBlur={2} />
+                    <form onSubmit={handleJoinRoomWithPassword}>
+                        <Flex direction="column" gap="md">
+                            <PasswordInput
+                                label="Passwort"
+                                placeholder='Super secret passwort'
+                                required
+                                {...form.getInputProps("password")}
+                            />
+                            <Button type='submit'>Raum beitreten</Button>
+                        </Flex>
+                    </form>
+                </Modal>
+            }
             <PageLayout showLoader={isLoading} loadingMessage='Räume werden geladen ...'>
                 <Title order={2}>Tritt einem Raum bei</Title>
                 <Text c="dimmed">{rows.length} Räume sind verfügbar</Text>

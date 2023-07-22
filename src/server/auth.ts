@@ -9,11 +9,10 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import EmailProvider from "next-auth/providers/email";
 
 import { type UserRole } from "@prisma/client";
+import bcrypt from "bcrypt";
 import { prisma } from "~/server/db";
 import { sendVerificationRequest } from "./emailService";
 import { filterUserForClient } from "./helpers/filterForUserClient";
-import bcrypt from "bcrypt";
-import { UserWithRelations } from "~/types/prisma.types";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`

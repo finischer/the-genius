@@ -1,6 +1,6 @@
 import { Flex, Table, Text, Title } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
-import { Gameshow } from '@prisma/client'
+import { type Gameshow } from '@prisma/client'
 import { IconPlayerPlay, IconSettings, IconStar, IconStarFilled } from '@tabler/icons-react'
 import React, { useState } from 'react'
 import ActionIcon from '~/components/ActionIcon'

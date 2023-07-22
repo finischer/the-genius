@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import PageLayout from '~/components/layout'
 import { socket } from '~/hooks/useSocket'
 import { api } from '~/utils/api'
-import { IRoom } from './api/classes/Room/room.types'
+import { type IRoom } from './api/classes/Room/room.types'
 import { useDisclosure } from '@mantine/hooks'
 import { useForm } from '@mantine/form'
 import useNotification from '~/hooks/useNotification'
@@ -99,7 +99,7 @@ const RoomsPage = () => {
         void router.push(`/room/${activeRoom.id}`)
     }
 
-    const handleJoinRoomWithPassword = form.onSubmit(async values => {
+    const handleJoinRoomWithPassword = form.onSubmit(values => {
         if (!activeRoom) return
 
         // validate password on server side

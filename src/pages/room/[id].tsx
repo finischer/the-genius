@@ -25,11 +25,7 @@ const RoomPage = () => {
     const roomId = router.query.id as string
 
     useEffect(() => {
-        console.log("Use effect: ", session)
         if (session?.user) {
-            console.log("Session available")
-            console.log("Socket: ", socket)
-
             const user: TUserReduced = {
                 id: session.user.id,
                 username: session.user.name || "",

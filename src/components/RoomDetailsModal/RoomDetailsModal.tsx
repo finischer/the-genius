@@ -1,10 +1,9 @@
-import { ActionIcon, Button, CopyButton, Flex, Modal, Table, Tooltip } from '@mantine/core'
+import { ActionIcon, Button, CopyButton, Flex, Modal, Table } from '@mantine/core'
 import { IconCheck, IconCopy } from '@tabler/icons-react'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { socket } from '~/hooks/useSocket'
 import { type IRoomDetailsModalProps } from './roomDetailsModal.types'
-import { useUser } from '~/hooks/useUser/useUser'
 
 const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClose, room }) => {
     const router = useRouter()
@@ -21,7 +20,6 @@ const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClo
     return (
         <Modal opened={openedModal} onClose={onClose} title="Rauminformationen">
             <Flex direction="column" gap="xl">
-
                 <Table>
                     <tbody>
                         <tr>

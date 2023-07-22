@@ -1,13 +1,13 @@
-import { Modal, Select, type SelectItem, TextInput, Checkbox, Flex, Button, NumberInput, List } from '@mantine/core'
-import React, { useEffect, useState } from 'react'
-import { ICreateRoomConfig, ICreateRoomModalProps } from './createRoomModal.types'
-import { GAMESHOW_MODES } from '~/styles/constants'
-import { capitalize } from '~/utils/strings'
+import { Button, Checkbox, Flex, Modal, NumberInput, Select, TextInput, type SelectItem } from '@mantine/core'
 import { useForm } from '@mantine/form'
+import { type GameshowMode } from '@prisma/client'
+import { useRouter } from 'next/router'
+import React, { useEffect } from 'react'
 import { socket } from '~/hooks/useSocket'
 import { useUser } from '~/hooks/useUser/useUser'
-import { GameshowMode } from '@prisma/client'
-import { useRouter } from 'next/router'
+import { GAMESHOW_MODES } from '~/styles/constants'
+import { capitalize } from '~/utils/strings'
+import { type ICreateRoomModalProps } from './createRoomModal.types'
 
 const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose, gameshow }) => {
     const form = useForm({

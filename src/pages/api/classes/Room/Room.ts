@@ -107,7 +107,6 @@ export default class Room implements IRoom {
     io.to(this.id).emit("updateRoom", { newRoomState: this });
 
     const allRooms = roomManager.getRoomsAsArray();
-    console.log("All Rooms: ", allRooms);
     io.emit("updateAllRooms", { newRooms: allRooms });
   }
 }

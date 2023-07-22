@@ -20,6 +20,7 @@ export const spacing = {
 export const colors = {
   accent: "#2F256F",
   success: "#5AFF15",
+  lightText: "#C1C2C5",
 };
 
 export const GAMESHOW_MODES: GameshowMode[] = Object.values(

@@ -9,7 +9,6 @@ import { useUser } from '~/hooks/useUser/useUser'
 const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClose, room }) => {
     const router = useRouter()
     const roomId = router.query.id as string
-    const { isHost } = useUser()
 
     const leaveRoom = async () => {
         if (window.confirm("Möchtest du wirklich den Raum verlassen?")) {

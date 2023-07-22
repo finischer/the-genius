@@ -9,6 +9,7 @@ import NoRoomException from "../exceptions/NoRoomException";
 import Room from "../classes/Room/Room";
 import { prisma } from "~/server/db";
 import { ObjectId } from "mongodb";
+import bcrypt from "bcrypt";
 
 // const prisma = new PrismaClient();
 
@@ -34,7 +35,6 @@ export function roomHandler(
 
     // push room to room manager
     roomManager.addRoom(room);
-
     // push room to database
     const dbRoom = await prisma.room.create({
       data: {
@@ -43,7 +43,7 @@ export function roomHandler(
         modus: modus,
         creatorId: user.id,
         isPrivate: isPrivateRoom,
-        password,
+        password: await bcrypt.hash(password, 10),
         roomSize: room.roomSize,
         // @ts-ignore
         teams: room.teams,

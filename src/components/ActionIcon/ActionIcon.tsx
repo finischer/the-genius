@@ -1,6 +1,7 @@
 import React from 'react'
 import { ActionIcon as MantineActionIcon, Tooltip, useMantineTheme } from '@mantine/core'
 import { IActionIconProps } from './actionIcon.types'
+import { colors } from '~/styles/constants'
 
 const ActionIcon: React.FC<IActionIconProps> = ({ toolTip, children, ...props }) => {
     const theme = useMantineTheme()
@@ -11,7 +12,7 @@ const ActionIcon: React.FC<IActionIconProps> = ({ toolTip, children, ...props })
             label={toolTip}
             withArrow
             bg={theme.colors.dark[8]}
-            color='white'
+            color={colors.lightText}
         >
             <MantineActionIcon {...props}>
                 {children}

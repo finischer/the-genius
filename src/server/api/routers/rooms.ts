@@ -1,4 +1,7 @@
+import { GameshowMode } from "@prisma/client";
+import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { GAMESHOW_MODES } from "~/styles/constants";
 
 // Exclude keys from user
 function exclude<Room, Key extends keyof Room>(
@@ -27,6 +30,29 @@ export const roomsRouter = createTRPCRouter({
         },
       },
     });
+
+    create: protectedProcedure
+      .input(
+        z.object({
+          roomName: z.string().min(3).max(100),
+          modus: z.nativeEnum(GameshowMode),
+          isPrivateRoom: z.boolean().default(true),
+          password: z.string().min(3).max(20),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        const room = await ctx.prisma.room.create({
+          data: {
+            name: input.roomName,
+            modus: input.modus,
+            password: input.password,
+            isPrivate: input.isPrivateRoom,
+            creatorId: ctx.session.user.id,
+          },
+        });
+
+        return room;
+      });
 
     return exclude(rooms, ["password"]);
   }),

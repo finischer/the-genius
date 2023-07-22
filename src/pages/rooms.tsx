@@ -1,11 +1,30 @@
 import { Table, Text, Title } from '@mantine/core'
 import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 import PageLayout from '~/components/layout'
+import { socket } from '~/hooks/useSocket'
 import { api } from '~/utils/api'
+import { IRoom } from './api/classes/Room/room.types'
 
 const RoomsPage = () => {
     const router = useRouter();
-    const { data: rooms, isLoading } = api.rooms.getAll.useQuery()
+    const [rooms, setRooms] = useState<IRoom[]>([])
+    const { data, isLoading } = api.rooms.getAll.useQuery()
+
+
+    useEffect(() => {
+        socket.emit("listAllRooms", (rooms) => {
+            setRooms(rooms)
+        })
+
+        socket.on("updateAllRooms", ({ newRooms }) => {
+            setRooms(newRooms)
+        })
+
+        return () => {
+
+        }
+    }, [])
 
     if (isLoading) return <PageLayout showLoader loadingMessage='Räume werden geladen ...' />
 
@@ -14,9 +33,9 @@ const RoomsPage = () => {
             <tr key={room.id} style={{ cursor: "pointer" }} onClick={() => handleRoomClick(room.id)}>
                 <td>{room.name}</td>
                 <td>{room.modus}</td>
-                <td>{room.players.length} / {room.roomSize}</td>
+                <td>{room.participants.length} / {room.roomSize}</td>
                 <td>{room.currentGame ?? "-"}</td>
-                <td>{room.creator.username}</td>
+                <td>{room.creator?.username}</td>
                 <td>{room.createdAt?.toLocaleString()} Uhr</td>
             </tr>
         )

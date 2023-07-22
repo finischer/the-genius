@@ -44,24 +44,14 @@ export default async function SocketHandler(
   const rooms = await prisma.room.findMany();
 
   rooms.forEach(async (room) => {
-    const { id, name, password, creatorId, modus, games } = room;
+    const { id, name, creatorId, modus, games, isPrivate } = room;
     const user = await prisma.user.findUnique({
       where: {
         id: creatorId,
       },
     });
 
-    const numOfPlayers = modus === "DUELL" ? 2 : 4;
-
-    const tmpRoom = new Room(
-      id,
-      name,
-      password !== null,
-      user,
-      numOfPlayers,
-      modus,
-      games
-    );
+    const tmpRoom = new Room(id, name, isPrivate, user, modus, games);
 
     roomManager.addRoom(tmpRoom);
   });

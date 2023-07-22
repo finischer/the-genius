@@ -1,3 +1,5 @@
+import { GameshowMode } from "@prisma/client";
+
 export const sizes = {
   base: 25,
   padding: 25,
@@ -19,3 +21,7 @@ export const colors = {
   accent: "#2F256F",
   success: "#5AFF15",
 };
+
+export const GAMESHOW_MODES: GameshowMode[] = Object.values(
+  GameshowMode
+).filter((mode) => isNaN(Number(mode)));

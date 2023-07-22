@@ -22,7 +22,7 @@ model User {
   emailVerified DateTime?
   password      String
   image         String?
-  gameshows     Json[]
+  gameshows     Gameshow[]   @relation(name: "gameshowCreator")
   friends       Friendship[] @relation(name: "users")
   friendOf      Friendship[] @relation(name: "friendUsers")
   roomsOpen     Room[]       @relation(name: "roomCreator")
@@ -32,6 +32,19 @@ model User {
   updatedAt     DateTime     @updatedAt
 
   @@map("users")
+}
+
+model Gameshow {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  games      Json[]
+  creatorId  String   @db.ObjectId
+  user       User     @relation("gameshowCreator", fields: [creatorId], references: [id])
+  isFavorite Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("gameshows")
 }
 
 model Friendship {
@@ -48,20 +61,22 @@ model Friendship {
 }
 
 model Room {
-  id          String       @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  modus       GameshowMode
-  roomSize    Int?         @default(12)
-  players     String[]
-  password    String?
-  currentGame String?
-  creator     User         @relation("roomCreator", fields: [creatorId], references: [id], onDelete: Cascade)
-  creatorId   String       @db.ObjectId
-  createdAt   DateTime?    @default(now())
-  updatedAt   DateTime?    @updatedAt
-  games       Json[]
-  teams       Json[]
-
+  id           String       @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  modus        GameshowMode
+  roomSize     Int?         @default(12)
+  participants String[]     @default([])
+  password     String?    
+  isPrivate    Boolean      @default(true)
+  currentGame  String?
+  creator      User         @relation("roomCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId    String       @db.ObjectId
+  createdAt    DateTime?    @default(now())
+  updatedAt    DateTime?    @updatedAt
+  games        Json[]
+  defaultGameStates Json[]
+  teams        Json[]
+  
   @@map("rooms")
 }
 

@@ -5,17 +5,19 @@ interface IRoomManager {
   removeRoom: (roomId: string) => void;
   getRoom: (roomId: string) => Room | undefined;
   getRooms: () => Map<string, Room>;
-  getRoomsAsArray: () => [string, Room][];
+  getRoomsAsArray: () => Room[];
 }
 
 class RoomManager implements IRoomManager {
   _rooms = new Map<string, Room>();
 
   addRoom(room: Room) {
+    // TODO: create room in database
     this._rooms.set(room.id, room);
   }
 
   removeRoom(roomId: Room["id"]) {
+    // TODO: remove room in database
     this._rooms.delete(roomId);
   }
 
@@ -30,7 +32,7 @@ class RoomManager implements IRoomManager {
   }
 
   getRoomsAsArray() {
-    return Array.from(this._rooms);
+    return Array.from(this._rooms.values());
   }
 }
 

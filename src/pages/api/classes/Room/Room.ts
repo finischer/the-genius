@@ -3,34 +3,47 @@ import { copyNestedArray } from "~/utils/array";
 import { io } from "../../socket";
 import Team from "../Team/Team";
 import { type IRoom } from "./room.types";
+import { roomManager } from "../../controllers/RoomManager";
+
+const ROOM_DEFAULTS = {
+  roomSize: 12,
+  currentGame: "",
+};
 
 export default class Room implements IRoom {
   id: IRoom["id"];
   name: IRoom["name"];
   isPrivateRoom: IRoom["isPrivateRoom"];
   creator: IRoom["creator"];
-  gameshowMode: IRoom["gameshowMode"];
   numOfPlayers: IRoom["numOfPlayers"];
   games: IRoom["games"];
   defaultGameStates: IRoom["defaultGameStates"];
   teams: IRoom["teams"];
   state: IRoom["state"];
+  participants: IRoom["participants"];
+  modus: IRoom["modus"];
+  roomSize: IRoom["roomSize"];
+  createdAt: IRoom["createdAt"];
+  currentGame: IRoom["currentGame"];
 
   public constructor(
     id: IRoom["id"] | undefined = undefined,
     name: IRoom["name"],
     isPrivateRoom: IRoom["isPrivateRoom"],
     creator: IRoom["creator"],
-    numOfPlayers: IRoom["numOfPlayers"],
-    gameshowMode: IRoom["gameshowMode"],
+    modus: IRoom["modus"],
     games: IRoom["games"]
   ) {
     this.id = id !== undefined ? id : randomUUID();
     this.name = name;
+    this.modus = modus;
+    this.roomSize = ROOM_DEFAULTS.roomSize;
+    this.createdAt = new Date();
+    this.currentGame = ROOM_DEFAULTS.currentGame;
     this.isPrivateRoom = isPrivateRoom;
     this.creator = creator;
-    this.numOfPlayers = numOfPlayers;
-    this.gameshowMode = gameshowMode;
+    this.numOfPlayers = modus === "DUELL" ? 2 : 4;
+    this.participants = [];
     this.games = games;
     this.defaultGameStates = copyNestedArray(games);
     this.teams = {
@@ -87,12 +100,14 @@ export default class Room implements IRoom {
   }
 
   getTeamById(teamId: string) {
-    console.log(Object.values(this.teams).find((t) => t.id === teamId));
-
     return Object.values(this.teams).find((t) => t.id === teamId);
   }
 
   update() {
     io.to(this.id).emit("updateRoom", { newRoomState: this });
+
+    const allRooms = roomManager.getRoomsAsArray();
+    console.log("All Rooms: ", allRooms);
+    io.emit("updateAllRooms", { newRooms: allRooms });
   }
 }

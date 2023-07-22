@@ -1,13 +1,15 @@
-import { ActionIcon, Button, CopyButton, Flex, Modal, Table } from '@mantine/core'
+import { ActionIcon, Button, CopyButton, Flex, Modal, Table, Tooltip } from '@mantine/core'
 import { IconCheck, IconCopy } from '@tabler/icons-react'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { socket } from '~/hooks/useSocket'
 import { type IRoomDetailsModalProps } from './roomDetailsModal.types'
+import { useUser } from '~/hooks/useUser/useUser'
 
 const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClose, room }) => {
     const router = useRouter()
     const roomId = router.query.id as string
+    const { isHost } = useUser()
 
     const leaveRoom = async () => {
         if (window.confirm("Möchtest du wirklich den Raum verlassen?")) {
@@ -50,7 +52,7 @@ const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClo
                         </tr>
                         <tr>
                             <td>Modus:</td>
-                            <td>{room.gameshowMode}</td>
+                            <td>{room.modus}</td>
                         </tr>
                         <tr>
                             <td>Anzahl Spiele:</td>
@@ -58,7 +60,7 @@ const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClo
                         </tr>
                         <tr>
                             <td>Sichtbarkeit:</td>
-                            <td>{room.isPrivateRoom ? "Private" : "Öffentlich"}</td>
+                            <td>{room.isPrivateRoom ? "Privat" : "Öffentlich"}</td>
                         </tr>
                     </tbody>
                 </Table>

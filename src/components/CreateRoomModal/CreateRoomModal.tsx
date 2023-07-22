@@ -1,0 +1,89 @@
+import { Modal, Select, type SelectItem, TextInput, Checkbox, Flex, Button, NumberInput, List } from '@mantine/core'
+import React, { useEffect, useState } from 'react'
+import { ICreateRoomConfig, ICreateRoomModalProps } from './createRoomModal.types'
+import { GAMESHOW_MODES } from '~/styles/constants'
+import { capitalize } from '~/utils/strings'
+import { useForm } from '@mantine/form'
+import { socket } from '~/hooks/useSocket'
+import { useUser } from '~/hooks/useUser/useUser'
+import { GameshowMode } from '@prisma/client'
+import { useRouter } from 'next/router'
+
+const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose, gameshow }) => {
+    const form = useForm({
+        initialValues: {
+            name: "",
+            modus: "DUELL" as GameshowMode,
+            isPrivateRoom: true,
+            password: "",
+            games: []
+        }
+    })
+    const { user } = useUser()
+    const router = useRouter();
+
+    const selectData: (string | SelectItem)[] = GAMESHOW_MODES.map(m => ({
+        value: m,
+        label: capitalize(m)
+    }))
+
+    useEffect(() => {
+        // reset form when modal was opened
+        form.reset()
+    }, [openedModal])
+
+
+    const createRoom = form.onSubmit(values => {
+        // create room on server
+        socket.emit("createRoom", ({ user, roomConfig: values }), (room) => {
+            // connect to room
+            void router.push(`/room/${room.id}`)
+        })
+    })
+
+    return (
+        <Modal opened={openedModal} onClose={onClose} title={gameshow?.name}>
+            <form onSubmit={createRoom}>
+                <Flex gap="md" direction="column">
+                    <TextInput
+                        label="Raumname"
+                        placeholder='Maroom 5'
+                        required
+                        {...form.getInputProps("name")}
+                    />
+                    <Select
+                        required
+                        label="Spielmodus"
+                        placeholder='Wähle einen Modus'
+                        data={selectData}
+                        dropdownPosition='bottom'
+                        {...form.getInputProps("modus")}
+
+                    />
+                    <Checkbox
+                        label="Privater Raum"
+                        {...form.getInputProps("isPrivateRoom", { type: "checkbox" })}
+                    />
+                    {form.values.isPrivateRoom &&
+                        <TextInput
+                            label="Passwort"
+                            placeholder='mySecretRoomPassword'
+                            required
+                            {...form.getInputProps("password")}
+                        />
+                    }
+
+                    <NumberInput
+                        label="Anzahl Spiele"
+                        value={gameshow?.games.length}
+                        readOnly
+
+                    />
+                    <Button type="submit">Raum erstellen</Button>
+                </Flex>
+            </form>
+        </Modal>
+    )
+}
+
+export default CreateRoomModal

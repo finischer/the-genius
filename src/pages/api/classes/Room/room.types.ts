@@ -1,5 +1,7 @@
 import { type GameshowMode, type User } from "@prisma/client";
 import { type ITeam } from "../Team/team.types";
+import { TUserReduced } from "~/types/socket.types";
+import { type JSONObject } from "superjson/dist/types";
 
 export type TRoomAnswerState = {
   showAnswer: boolean;
@@ -50,10 +52,14 @@ export type TRoomState = {
 export interface IRoom {
   id: string;
   name: string;
+  modus: GameshowMode;
+  roomSize: number;
+  currentGame: string;
+  createdAt: Date;
   isPrivateRoom: boolean;
-  creator: User | null;
+  creator: TUserReduced | null;
   numOfPlayers: number;
-  gameshowMode: GameshowMode;
+  participants: string[];
   games: unknown[];
   defaultGameStates: unknown[];
   teams: {

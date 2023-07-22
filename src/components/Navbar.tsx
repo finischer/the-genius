@@ -109,10 +109,10 @@ const Navbar = ({ opened }: { opened: boolean }) => {
                     icon={<IconDoor size="1.3rem" />}
                 />
                 <NavLink
-                    onClick={() => goTo("/gameshows/create")}
+                    onClick={() => goTo("/gameshows")}
                     active={isActive("/gameshows")}
-                    label="Spielshow erstellen"
-                    description="Erstelle deine eigene Spielshow"
+                    label="Meine Spielshows"
+                    description="Starte oder erstelle deine eigene Spielshow"
                     rightSection=""
                     icon={<IconTools size="1.3rem" />}
                 />

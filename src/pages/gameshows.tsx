@@ -13,7 +13,7 @@ const GameshowsPage = () => {
     const [openedCreateRoomModal, { open: openCreateRoomModal, close: closeCreateRoomModal }] = useDisclosure(false)
     const [activeGameshow, setActiveGameshow] = useState<Gameshow | undefined>(undefined)
 
-    const subtitleText = gameshows?.length === 0 ? "Du hast bisher noch keine Spielshow erstellt" : `Du hast bereits ${gameshows?.length} Spielshows erstellt`
+    const subtitleText = gameshows?.length === 0 ? "Du hast bisher noch keine Spielshow erstellt" : `Du hast bereits ${gameshows?.length || "NOT_FOUND"} Spielshows erstellt`
 
     const createRoom = (gameshow: Gameshow) => {
         setActiveGameshow(gameshow)

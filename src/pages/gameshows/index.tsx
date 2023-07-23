@@ -1,14 +1,18 @@
 import { Flex, Table, Text, Title } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { type Gameshow } from '@prisma/client'
+import { IconPlus } from '@tabler/icons-react'
 import { IconPlayerPlay, IconSettings, IconStar, IconStarFilled } from '@tabler/icons-react'
+import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import ActionIcon from '~/components/ActionIcon'
 import CreateRoomModal from '~/components/CreateRoomModal/CreateRoomModal'
 import PageLayout from '~/components/layout'
+import { colors } from '~/styles/constants'
 import { api } from '~/utils/api'
 
 const GameshowsPage = () => {
+    const router = useRouter()
     const { data: gameshows, isLoading } = api.gameshows.getAllByCreatorId.useQuery()
     const [openedCreateRoomModal, { open: openCreateRoomModal, close: closeCreateRoomModal }] = useDisclosure(false)
     const [activeGameshow, setActiveGameshow] = useState<Gameshow | undefined>(undefined)
@@ -48,7 +52,14 @@ const GameshowsPage = () => {
     return (
         <PageLayout showLoader={isLoading} loadingMessage='Spielshows werden geladen ...'>
             <CreateRoomModal openedModal={openedCreateRoomModal} onClose={closeCreateRoomModal} gameshow={activeGameshow} />
-            <Title order={2}>Meine Spielshows</Title>
+            <Flex gap="md" align="center">
+                <Title order={2}>
+                    Meine Spielshows
+                </Title>
+                <ActionIcon toolTip='Spielshow erstellen' color={colors.accent} variant="filled">
+                    <IconPlus onClick={() => router.push("/gameshows/create")} />
+                </ActionIcon>
+            </Flex>
             <Text c="dimmed">{subtitleText}</Text>
             <Table verticalSpacing="md" striped>
                 <thead>

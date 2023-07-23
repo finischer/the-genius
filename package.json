@@ -2,13 +2,16 @@
   "name": "t3-test-app",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "19.7.0"
+  },
   "scripts": {
     "build": "next build",
     "dev": "next dev",
-    "postinstall": "prisma generate",
+    "postinstall": "tsc && prisma generate",
     "lint": "next lint",
     "start": "next start",
-    "heroku-postbuild": "npm install && npm install --save-dev typescript && npm run build"
+    "heroku-postbuild": "npm install && npm run build"
   },
   "dependencies": {
     "@emotion/react": "^11.10.8",

@@ -5,11 +5,12 @@ import { type ITransferListItem } from '~/components/GamesPicker/gamesPicker.typ
 import { GAME_CONFIGURATORS } from '~/components/configurators/_game_configurator_map'
 import PageLayout from '~/components/layout'
 import { TGameNames } from '~/games/game.types'
+import { ConfiguratorProvider } from '~/hooks/useConfigurator/useConfigurator'
 
 const NUM_OF_DEFAULT_STEPS = 2
 
 const CreateGameshowPage = () => {
-    const [activeStep, setActiveStep] = useState(1);
+    const [activeStep, setActiveStep] = useState(0);
     const [gameshow, setGameshow] = useState({
         name: "",
         games: []
@@ -24,31 +25,34 @@ const CreateGameshowPage = () => {
 
     return (
         <PageLayout>
-            <Flex gap="xl" direction="column">
+            <ConfiguratorProvider>
 
-                <Title>Erstelle deine Spielshow</Title>
-                <Stepper active={activeStep} onStepClick={setActiveStep} breakpoint="sm" size='sm' allowNextStepsSelect={false}>
-                    <Stepper.Step label="Spiele" description="Wähle deine Spiele aus" >
-                        <GamesPicker setSelectedGames={setSelectedGames} />
-                    </Stepper.Step>
-                    {selectedGames.map(g => (
-                        <Stepper.Step label={g.label}>
-                            {GAME_CONFIGURATORS[g.value as TGameNames]}
+                <Flex gap="xl" direction="column">
+
+                    <Title>Erstelle deine Spielshow</Title>
+                    <Stepper active={activeStep} onStepClick={setActiveStep} breakpoint="sm" size='sm' allowNextStepsSelect={false}>
+                        <Stepper.Step label="Spiele" description="Wähle deine Spiele aus" >
+                            <GamesPicker setSelectedGames={setSelectedGames} />
                         </Stepper.Step>
-                    ))}
-                    <Stepper.Step label="Details Spielshow" description="">
-                        Step 3 content: Get full access
-                    </Stepper.Step>
-                    <Stepper.Completed>
-                        Completed, click back button to get to previous step
-                    </Stepper.Completed>
-                </Stepper>
+                        {selectedGames.map(g => (
+                            <Stepper.Step label={g.label}>
+                                {GAME_CONFIGURATORS[g.value as TGameNames]}
+                            </Stepper.Step>
+                        ))}
+                        <Stepper.Step label="Details Spielshow" description="">
+                            Step 3 content: Get full access
+                        </Stepper.Step>
+                        <Stepper.Completed>
+                            Completed, click back button to get to previous step
+                        </Stepper.Completed>
+                    </Stepper>
 
-                <Group position="center" mt="xl">
-                    <Button variant="default" onClick={prevStep}>Zurück</Button>
-                    <Button onClick={nextStep}>Weiter</Button>
-                </Group>
-            </Flex>
+                    <Group position="center" mt="xl">
+                        <Button variant="default" onClick={prevStep}>Zurück</Button>
+                        <Button onClick={nextStep}>Weiter</Button>
+                    </Group>
+                </Flex>
+            </ConfiguratorProvider>
         </PageLayout>
     )
 }

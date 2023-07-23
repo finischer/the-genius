@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 import { type TDefaultFlaggenState } from "~/games/flaggen/config";
 import { type TGameNames } from "~/games/game.types";
 import { type TDefaultMemoryState } from "~/games/memory/config";
@@ -12,3 +13,12 @@ export type TGameSettingsMap = {
 export type TGameSettings<T extends TGameNames> = {
   state: TGameSettingsMap[T];
 };
+
+export interface IConfiguratorProvider {
+  children: React.ReactNode;
+}
+
+export type TConfiguratorContext = [
+  TGameSettingsMap,
+  Dispatch<SetStateAction<TGameSettingsMap>>
+];

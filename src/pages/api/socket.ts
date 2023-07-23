@@ -24,11 +24,15 @@ export default async function SocketHandler(
   req: NextApiRequest,
   res: TNextApiResponse
 ) {
-  // means that socket server was already initialised
+  console.log("Execute Socket handler");
+  // means that socket server was already initialized
   if (res.socket.server.io) {
+    console.log("Socket handler already initialized");
     res.end();
     return;
   }
+
+  console.log("New Socket handler will be initialized");
 
   io = new Server(
     // @ts-ignore
@@ -40,9 +44,11 @@ export default async function SocketHandler(
   );
   res.socket.server.io = io;
 
+  console.log("Initialize Server done. Now starting to fetch rooms from db");
   // initialize saved rooms for e.g. after a server crash
   const rooms = await prisma.room.findMany();
 
+  console.log("Rooms found: ", rooms.length);
   rooms.forEach(async (room) => {
     const { id, name, creatorId, modus, games, isPrivate } = room;
     const user = await prisma.user.findUnique({
@@ -59,6 +65,8 @@ export default async function SocketHandler(
   const onConnection = (
     socket: Socket<IClientToServerEvents, IServerSocketData>
   ) => {
+    console.log("Socket connected: ", socket.id);
+
     socket.on("getOnlinePlayers", async (cb) => {
       const sockets = await io.fetchSockets();
 

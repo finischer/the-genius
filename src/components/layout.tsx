@@ -12,22 +12,12 @@ interface IPageLayout {
     children?: React.ReactNode
 }
 
-type TOnlinePlayersEvent = {
-    numOfOnlinePlayers: number
-}
 
 const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage = "Lädt ...", children }) => {
     const { data: session, update: updateSession, status } = useSession();
     const theme = useMantineTheme();
     const [isNavbarOpened, setIsNavbarOpened] = useState(false)
     const [usernameInput, setUsernameInput] = useState("");
-
-    useEffect(() => {
-        console.log("is socket connected: ", socket.connected)
-        socket.emit("getOnlinePlayers", ({ numOfOnlinePlayers }: TOnlinePlayersEvent) => {
-            console.log("+++ getOnlinePlayers +++ : ", numOfOnlinePlayers)
-        })
-    }, [])
 
     if (status === "unauthenticated") {
         return (

@@ -1,13 +1,19 @@
 import { Button, Flex, LoadingOverlay, Modal, PasswordInput, Table, Text, Title } from '@mantine/core'
+import { useForm } from '@mantine/form'
+import { useDisclosure } from '@mantine/hooks'
+import { IconPoint } from '@tabler/icons-react'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import PageLayout from '~/components/layout'
+import useNotification from '~/hooks/useNotification'
 import { socket } from '~/hooks/useSocket'
+import { colors } from '~/styles/constants'
 import { api } from '~/utils/api'
 import { type IRoom } from './api/classes/Room/room.types'
-import { useDisclosure } from '@mantine/hooks'
-import { useForm } from '@mantine/form'
-import useNotification from '~/hooks/useNotification'
+
+type TOnlinePlayersEvent = {
+    numOfOnlinePlayers: number
+}
 
 const RoomsPage = () => {
     const router = useRouter();
@@ -54,6 +60,7 @@ const RoomsPage = () => {
     const [rooms, setRooms] = useState<IRoom[]>([])
     const [isLoading, setIsLoading] = useState(true);
     const [activeRoom, setActiveRoom] = useState<IRoom | undefined>(undefined)
+    const [playersOnline, setPlayersOnline] = useState<number | undefined>(undefined)
 
     useEffect(() => {
         socket.emit("listAllRooms", (rooms) => {
@@ -61,6 +68,11 @@ const RoomsPage = () => {
             setRooms(rooms)
             setIsLoading(false)
         })
+
+        // socket.on("getOnlinePlayers", ({ numOfOnlinePlayers }: TOnlinePlayersEvent) => {
+        //     console.log("+++ getOnlinePlayers +++ : ", numOfOnlinePlayers)
+        //     setPlayersOnline(numOfOnlinePlayers)
+        // })
 
         socket.on("updateAllRooms", ({ newRooms }) => {
             console.log("+++ updateAllRooms +++ : ", newRooms)
@@ -137,7 +149,13 @@ const RoomsPage = () => {
                 </Modal>
             }
             <PageLayout showLoader={isLoading} loadingMessage='Räume werden geladen ...'>
-                <Title order={2}>Tritt einem Raum bei</Title>
+                <Flex direction="row">
+                    <Title order={2} >Tritt einem Raum bei</Title>
+                    {/* <Flex align="center">
+                        <IconPoint size={24} color={colors.success} fill={colors.success} />
+                        <Text>{playersOnline} Spieler online</Text>
+                    </Flex> */}
+                </Flex>
                 <Text c="dimmed">{rows.length} Räume sind verfügbar</Text>
                 <Table verticalSpacing="md" striped highlightOnHover>
                     <thead>

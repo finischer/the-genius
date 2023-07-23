@@ -62,20 +62,21 @@ export default async function SocketHandler(
     roomManager.addRoom(tmpRoom);
   });
 
-  const onConnection = (
-    socket: Socket<IClientToServerEvents, IServerSocketData>
+  const onConnection = async (
+    socket: Socket<
+      IClientToServerEvents,
+      IServerToClientEvents,
+      IServerSocketData
+    >
   ) => {
     console.log("Socket connected: ", socket.id);
+    // const sockets = await io.fetchSockets();
+    // io.emit("getOnlinePlayers", { numOfOnlinePlayers: sockets.length });
 
-    socket.on("getOnlinePlayers", async (cb) => {
-      const sockets = await io.fetchSockets();
-
-      const response = {
-        numOfOnlinePlayers: sockets.length,
-      };
-
-      cb(response);
-    });
+    // socket.on("disconnecting", async () => {
+    //   const sockets = await io.fetchSockets();
+    //   io.emit("getOnlinePlayers", { numOfOnlinePlayers: sockets.length - 1 });
+    // });
 
     // initialize all handlers
     roomHandler(io, socket);

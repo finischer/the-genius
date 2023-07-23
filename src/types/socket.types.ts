@@ -30,9 +30,6 @@ export interface IClientToServerEvents {
     cb: (room: Room) => void
   ) => void;
   leaveRoom: ({ roomId }: { roomId: string }) => void;
-  getOnlinePlayers: (
-    cb: (response: { numOfOnlinePlayers: number }) => void
-  ) => void;
   joinTeam: (
     { user, teamId }: { user: TUserReduced; teamId: string },
     cb: () => void
@@ -44,6 +41,11 @@ export interface IServerToClientEvents {
   userLeftRoom: ({ user }: { user: TSocketUser | null }) => void;
   updateRoom: ({ newRoomState }: { newRoomState: Room }) => void;
   updateAllRooms: ({ newRooms }: { newRooms: Room[] }) => void;
+  getOnlinePlayers: ({
+    numOfOnlinePlayers,
+  }: {
+    numOfOnlinePlayers: number;
+  }) => void;
 }
 
 export interface TNextApiResponse extends NextApiResponse {

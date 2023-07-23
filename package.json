@@ -10,8 +10,7 @@
     "dev": "next dev",
     "postinstall": "tsc && prisma generate",
     "lint": "next lint",
-    "start": "next start",
-    "heroku-postbuild": "npm install && npm run build"
+    "start": "next start"
   },
   "dependencies": {
     "@emotion/react": "^11.10.8",

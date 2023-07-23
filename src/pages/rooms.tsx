@@ -57,11 +57,13 @@ const RoomsPage = () => {
 
     useEffect(() => {
         socket.emit("listAllRooms", (rooms) => {
+            console.log("+++ listAllRooms +++ : ", rooms)
             setRooms(rooms)
             setIsLoading(false)
         })
 
         socket.on("updateAllRooms", ({ newRooms }) => {
+            console.log("+++ updateAllRooms +++ : ", newRooms)
             setRooms(newRooms)
         })
 

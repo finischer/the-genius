@@ -23,10 +23,9 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
     const [usernameInput, setUsernameInput] = useState("");
 
     useEffect(() => {
-
-        console.log("Socket connected!")
+        console.log("is socket connected: ", socket.connected)
         socket.emit("getOnlinePlayers", ({ numOfOnlinePlayers }: TOnlinePlayersEvent) => {
-            console.log("Online Players: ", numOfOnlinePlayers)
+            console.log("+++ getOnlinePlayers +++ : ", numOfOnlinePlayers)
         })
     }, [])
 

@@ -5,9 +5,9 @@ import { TransferList, type TransferListData } from '@mantine/core'
 const availableGames: TransferListData = [
     [
         { value: 'flaggen', label: 'Flaggen' },
+        { value: 'merken', label: 'Merken' },
         // { value: 'zehnSetzen', label: 'Zehn setzen' },
         // { value: 'fragenhagel', label: 'Fragenhagel' },
-        // { value: 'merken', label: 'Merken' },
         // { value: 'duSagst', label: 'Du sagst ...' },
         // { value: 'buchstabensalat', label: 'Buchstabensalat' },
         // { value: 'referatBingo', label: 'Referat-Bingo' },

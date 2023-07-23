@@ -1,13 +1,15 @@
+import { TGameNames, type Games } from "~/games/game.types"
 import FlaggenConfigurator from "./FlaggenConfigurator"
+import MemoryConfigurator from "./MemoryConfigurator/MemoryConfigurator"
+import MerkenConfigurator from "./MerkenConfigurator/MerkenConfigurator"
 
-export enum Games {
-    FLAGGEN = "flaggen"
-}
 
 export type TGameConfigurators = {
-    [index in Games]: React.ReactNode
+    [index in TGameNames]: React.ReactNode
 }
 
 export const GAME_CONFIGURATORS: TGameConfigurators = {
-    "flaggen": <FlaggenConfigurator />
+    "flaggen": <FlaggenConfigurator />,
+    "memory": <MemoryConfigurator />,
+    "merken": <MerkenConfigurator />
 }

@@ -2,8 +2,9 @@ import { Button, Flex, Group, Stepper, Title } from '@mantine/core'
 import { useState } from 'react'
 import GamesPicker from '~/components/GamesPicker/GamesPicker'
 import { type ITransferListItem } from '~/components/GamesPicker/gamesPicker.types'
-import { type Games, GAME_CONFIGURATORS } from '~/components/configurators/_game_configurator_map'
+import { GAME_CONFIGURATORS } from '~/components/configurators/_game_configurator_map'
 import PageLayout from '~/components/layout'
+import { TGameNames } from '~/games/game.types'
 
 const NUM_OF_DEFAULT_STEPS = 2
 
@@ -32,7 +33,7 @@ const CreateGameshowPage = () => {
                     </Stepper.Step>
                     {selectedGames.map(g => (
                         <Stepper.Step label={g.label}>
-                            {GAME_CONFIGURATORS[g.value as Games]}
+                            {GAME_CONFIGURATORS[g.value as TGameNames]}
                         </Stepper.Step>
                     ))}
                     <Stepper.Step label="Details Spielshow" description="">

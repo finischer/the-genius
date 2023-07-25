@@ -1,5 +1,6 @@
 import { type Dispatch, type SetStateAction } from "react";
 import { type Updater } from "use-immer";
+import { z } from "zod";
 import { type TDefaultFlaggenState } from "~/games/flaggen/config";
 import { type TGameNames } from "~/games/game.types";
 import { type TDefaultMemoryState } from "~/games/memory/config";
@@ -18,7 +19,7 @@ export type TGameshowConfig = {
 
 export interface IConfiguratorProvider {
   gameshowConfig: TGameshowConfig;
-  updateGameshowConfig: Dispatch<SetStateAction<TGameshowConfig>>;
+  updateGameshowConfig: Updater<TGameshowConfig>;
   selectedGames: TGameNames[];
   children: React.ReactNode;
 }

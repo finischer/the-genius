@@ -26,10 +26,9 @@ const ConfiguratorProvider: React.FC<IConfiguratorProvider> = ({ gameshowConfig,
             newGameSettings.push(settings[gameName])
         })
 
-        updateGameshowConfig(oldConfig => ({
-            ...oldConfig,
-            games: newGameSettings
-        }))
+        updateGameshowConfig(draft => {
+            draft.games = newGameSettings
+        })
 
     }, [settings, selectedGames.length])
 

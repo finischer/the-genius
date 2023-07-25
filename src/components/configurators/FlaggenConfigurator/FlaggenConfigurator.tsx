@@ -4,7 +4,6 @@ import { COUNTRIES } from '~/games/flaggen/config';
 import { type TCountry } from '~/games/flaggen/flaggen.types';
 import { useConfigurator } from '~/hooks/useConfigurator/useConfigurator';
 
-
 const availableCountries = Object.keys(COUNTRIES).map(code => ({ key: code, value: code, label: COUNTRIES[code] as string }))
 
 const transferList: TransferListData = [
@@ -30,35 +29,21 @@ const FlaggenConfigurator = () => {
     const [flaggen, setFlaggen] = useConfigurator("flaggen")
     const [countries, setCountries] = useState(transferList)
 
+
     useEffect(() => {
-        // if (flaggen.countries.length > 0) {
-        //     setCountries(() => {
-        //         const aCountries = availableCountries.map(c => {
-        //             if (!flaggen.countries.map(c => c.shortCode).includes(c.value)) {
-        //                 return c
-        //             }
-        //         })
+        const selectedCountries = flaggen.countries.map(c => ({ key: c.shortCode, value: c.shortCode, label: c.country }))
+        const notSelectedCountries = availableCountries.filter(c => !selectedCountries.map(c => c.value).includes(c.value))
 
-        //         return [aCountries, flaggen.countries]
-        //     })
+        setCountries([notSelectedCountries, selectedCountries])
+    }, [])
 
-        //     return
-        // }
+    useEffect(() => {
+        const transformedCountries: TCountry[] = countries[1].map(c => ({ key: c.value, shortCode: c.value, country: c.label }))
 
-        const transformedCountries: TCountry[] = countries[1].map(c => ({ shortCode: c.value, country: c.label }))
-
-        setFlaggen(oldState => ({
-            ...oldState,
-            flaggen: {
-                ...oldState.flaggen,
-                countries: transformedCountries
-            }
-        }))
+        setFlaggen(draft => {
+            draft.flaggen.countries = transformedCountries
+        })
     }, [countries])
-
-    useEffect(() => {
-        console.log("Flaggen: ", flaggen)
-    }, [flaggen])
 
     return (
         <TransferList

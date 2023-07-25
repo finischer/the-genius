@@ -1,9 +1,10 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import { DEFAULT_FLAGGEN_STATE } from '~/games/flaggen/config'
 import { type TGameNames } from '~/games/game.types'
 import { DEFAULT_MEMORY_STATE } from '~/games/memory/config'
 import { DEFAULT_MERKEN_STATE } from '~/games/merken/config'
-import { IConfiguratorProvider, TConfiguratorContext, type TGameSettingsMap } from './useConfigurator.types'
+import { type IConfiguratorProvider, type TConfiguratorContext, type TGameSettingsMap } from './useConfigurator.types'
+import { useImmer } from "use-immer";
 
 const GAME_STATE_MAP: TGameSettingsMap = {
     flaggen: DEFAULT_FLAGGEN_STATE,
@@ -11,10 +12,27 @@ const GAME_STATE_MAP: TGameSettingsMap = {
     merken: DEFAULT_MERKEN_STATE
 }
 
+export type TSelectedGameSettingsArray = Array<TGameSettingsMap[TGameNames]>;
+
 const ConfiguratorContext = createContext<TConfiguratorContext | undefined>(undefined)
 
-const ConfiguratorProvider: React.FC<IConfiguratorProvider> = ({ children }) => {
-    const [settings, setSettings] = useState(GAME_STATE_MAP)
+const ConfiguratorProvider: React.FC<IConfiguratorProvider> = ({ gameshowConfig, updateGameshowConfig, selectedGames, children }) => {
+    const [settings, setSettings] = useImmer<TGameSettingsMap>(GAME_STATE_MAP)
+
+    useEffect(() => {
+        const newGameSettings: TSelectedGameSettingsArray = []
+
+        selectedGames.forEach(gameName => {
+            newGameSettings.push(settings[gameName])
+        })
+
+        updateGameshowConfig(oldConfig => ({
+            ...oldConfig,
+            games: newGameSettings
+        }))
+
+    }, [settings, selectedGames.length])
+
 
     return <ConfiguratorContext.Provider value={[settings, setSettings]}>
         {children}

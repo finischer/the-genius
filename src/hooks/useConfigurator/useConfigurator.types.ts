@@ -1,8 +1,9 @@
-import { Dispatch, SetStateAction } from "react";
+import { type Dispatch, type SetStateAction } from "react";
+import { type Updater } from "use-immer";
 import { type TDefaultFlaggenState } from "~/games/flaggen/config";
 import { type TGameNames } from "~/games/game.types";
 import { type TDefaultMemoryState } from "~/games/memory/config";
-import { TDefaultMerkenState } from "~/games/merken/config";
+import { type TDefaultMerkenState } from "~/games/merken/config";
 
 export type TGameSettingsMap = {
   flaggen: TDefaultFlaggenState;
@@ -10,15 +11,19 @@ export type TGameSettingsMap = {
   merken: TDefaultMerkenState;
 };
 
-export type TGameSettings<T extends TGameNames> = {
-  state: TGameSettingsMap[T];
+export type TGameshowConfig = {
+  name: string;
+  games: TGameSettingsMap[TGameNames][];
 };
 
 export interface IConfiguratorProvider {
+  gameshowConfig: TGameshowConfig;
+  updateGameshowConfig: Dispatch<SetStateAction<TGameshowConfig>>;
+  selectedGames: TGameNames[];
   children: React.ReactNode;
 }
 
 export type TConfiguratorContext = [
   TGameSettingsMap,
-  Dispatch<SetStateAction<TGameSettingsMap>>
+  Updater<TGameSettingsMap>
 ];

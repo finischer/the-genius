@@ -1,7 +1,7 @@
-import { ActionIcon, Box, Center, Container, Flex, Text } from '@mantine/core'
+import { Box, Button, Center, Container, Drawer, Flex, Text, Title } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { notifications } from '@mantine/notifications'
-import { IconInfoSmall } from '@tabler/icons-react'
+import { IconArrowRight, IconInfoSmall } from '@tabler/icons-react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
@@ -15,6 +15,8 @@ import { colors, sizes } from '~/styles/constants'
 import { type TUserReduced } from '~/types/socket.types'
 import { type IRoom } from '../api/classes/Room/room.types'
 import ContainerBox from '~/components/ContainerBox/ContainerBox'
+import { TGameNames } from '~/games/game.types'
+import ActionIcon from '~/components/ActionIcon/ActionIcon'
 
 
 const RoomPage = () => {
@@ -23,6 +25,7 @@ const RoomPage = () => {
     const [openedRoomDetails, { open: openRoomDetails, close: closeRoomDetails }] = useDisclosure(false)
     const { room, currentGame, setRoom } = useRoom()
     const { isHost } = useUser()
+    const [openedModSettings, { open: openModSettings, close: closeModSettings }] = useDisclosure(false);
 
     const roomId = router.query.id as string
 
@@ -56,6 +59,10 @@ const RoomPage = () => {
         }
     }, [session])
 
+    const startGame = (gameIdentifier: TGameNames) => {
+        console.log("+++ room - Start game +++ ", gameIdentifier)
+    }
+
     if (room === undefined) {
         return (
             <Center h="100vh" >
@@ -71,12 +78,34 @@ const RoomPage = () => {
             <Flex h="100vh" p={sizes.padding} pos="relative" direction="column">
                 {/* Moderation Buttons */}
                 {/* TODO */}
+                {isHost &&
+                    <>
+                        <Box pos="absolute" bottom="50%" >
+                            <ActionIcon variant='filled' toolTip='Spiele anzeigen'>
+                                <IconArrowRight onClick={openModSettings} />
+                            </ActionIcon>
+                        </Box>
+                        <Drawer opened={openedModSettings} onClose={closeModSettings} title={<Title order={2}>Spiel starten</Title>}>
+                            <Flex direction="column" gap="xl">
+                                {room.games.map(g => (
+                                    <Button
+                                        key={g.identifier}
+                                        disabled={g.identifier === currentGame?.identifier}
+                                        onClick={() => startGame(g.identifier)}
+                                    >
+                                        {g.name}
+                                    </Button>
+                                ))}
+                            </Flex>
+                        </Drawer>
+                    </>
+                }
 
                 {/* Header */}
                 <Container size="100%" w="100%" pos="relative">
                     {/* Room Info Button */}
-                    <ActionIcon color={colors.accent} size="xl" radius="xl" variant="filled" onClick={openRoomDetails}>
-                        <IconInfoSmall size="3.25rem" />
+                    <ActionIcon color={colors.accent} size="xl" radius="xl" variant="filled" >
+                        <IconInfoSmall size="3.25rem" onClick={openRoomDetails} />
                     </ActionIcon>
 
                     {/* Current Game */}

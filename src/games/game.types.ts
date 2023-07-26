@@ -9,7 +9,7 @@ export type TGameNames = "flaggen" | "memory" | "merken";
 
 export interface IGameGeneralState {
   name: string;
-  identifier: string;
+  identifier: TGameNames;
   maxPoints: number;
   scoreBarMode: TScoreBarMode;
 }

@@ -1,4 +1,4 @@
-import { Box, Button, Center, Container, Drawer, Flex, Text, Title } from '@mantine/core'
+import { Box, Button, Center, Container, Drawer, Flex, Text, Title, Tooltip } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { notifications } from '@mantine/notifications'
 import { IconArrowRight, IconInfoSmall } from '@tabler/icons-react'
@@ -28,6 +28,20 @@ const RoomPage = () => {
     const [openedModSettings, { open: openModSettings, close: closeModSettings }] = useDisclosure(false);
 
     const roomId = router.query.id as string
+
+    const gameBtns = room.games.map(g => {
+        const btnDisabled = g.identifier === currentGame?.identifier
+
+        return (
+            <Button
+                key={g.identifier}
+                disabled={btnDisabled}
+                onClick={() => startGame(g.identifier)}
+            >
+                {g.name} {btnDisabled && "(Läuft gerade)"}
+            </Button>
+        )
+    })
 
     useEffect(() => {
         if (session?.user) {
@@ -61,6 +75,7 @@ const RoomPage = () => {
 
     const startGame = (gameIdentifier: TGameNames) => {
         console.log("+++ room - Start game +++ ", gameIdentifier)
+        socket.emit("startGame", ({ gameIdentifier }))
     }
 
     if (room === undefined) {
@@ -85,17 +100,19 @@ const RoomPage = () => {
                                 <IconArrowRight onClick={openModSettings} />
                             </ActionIcon>
                         </Box>
-                        <Drawer opened={openedModSettings} onClose={closeModSettings} title={<Title order={2}>Spiel starten</Title>}>
-                            <Flex direction="column" gap="xl">
-                                {room.games.map(g => (
-                                    <Button
-                                        key={g.identifier}
-                                        disabled={g.identifier === currentGame?.identifier}
-                                        onClick={() => startGame(g.identifier)}
-                                    >
-                                        {g.name}
-                                    </Button>
-                                ))}
+                        <Drawer opened={openedModSettings} onClose={closeModSettings} title={<Title order={2}>Spiel starten</Title>} size="xs">
+                            <Flex h="100%" direction="column" gap="xl" justify="space-between">
+                                <Flex direction="column" gap="sm">
+
+                                    {gameBtns}
+                                </Flex>
+
+                                <Flex direction="column" gap="sm">
+                                    <Title order={2} >Allgemein</Title>
+                                    <Button.Group orientation='vertical'>
+                                        <Button color='red' disabled>Raum schließen</Button>
+                                    </Button.Group>
+                                </Flex>
                             </Flex>
                         </Drawer>
                     </>

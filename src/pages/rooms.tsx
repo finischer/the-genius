@@ -25,7 +25,6 @@ const RoomsPage = () => {
                 form.setFieldError("password", "Falsches Passwort")
             }
         },
-
         onError: (e) => {
             const errorMessage = e.data?.zodError?.fieldErrors;
             const errorMessagesArray = errorMessage ? Object.values(errorMessage) : []

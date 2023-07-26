@@ -4,6 +4,7 @@ import { io } from "../../socket";
 import Team from "../Team/Team";
 import { type IRoom } from "./room.types";
 import { roomManager } from "../../controllers/RoomManager";
+import { TGameNames } from "~/games/game.types";
 
 const ROOM_DEFAULTS = {
   roomSize: 12,
@@ -101,6 +102,10 @@ export default class Room implements IRoom {
 
   getTeamById(teamId: string) {
     return Object.values(this.teams).find((t) => t.id === teamId);
+  }
+
+  startGame(gameIdentifier: TGameNames) {
+    this.currentGame = gameIdentifier;
   }
 
   update() {

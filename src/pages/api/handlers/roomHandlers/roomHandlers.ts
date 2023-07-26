@@ -10,6 +10,8 @@ import {
 import Room from "../../classes/Room/Room";
 import { roomManager } from "../../controllers/RoomManager";
 import NoRoomException from "../../exceptions/NoRoomException";
+import { TGameSettingsMap } from "~/hooks/useConfigurator/useConfigurator.types";
+import { TGameNames } from "~/games/game.types";
 
 // const prisma = new PrismaClient();
 
@@ -37,7 +39,7 @@ export function roomHandler(
       isPrivateRoom,
       user,
       modus,
-      gameshow.games
+      gameshow.games as TGameSettingsMap[TGameNames][]
     );
 
     // push room to room manager
@@ -103,5 +105,14 @@ export function roomHandler(
       await socket.leave(roomId);
       socket.roomId = null;
     }
+  });
+
+  socket.on("startGame", ({ gameIdentifier }) => {
+    const room = roomManager.getRoom(socket.roomId);
+
+    if (!room) return new NoRoomException(socket);
+
+    room.startGame(gameIdentifier);
+    room.update();
   });
 }

@@ -1,15 +1,15 @@
-import { type Server, type Socket } from "socket.io";
+import bcrypt from "bcrypt";
+import { ObjectId } from "mongodb";
+import { type Socket, type Server } from "socket.io";
+import { prisma } from "~/server/db";
 import {
-  type IServerToClientEvents,
   type IClientToServerEvents,
+  type IServerToClientEvents,
   type IServerSocketData,
 } from "~/types/socket.types";
-import { roomManager } from "../controllers/RoomManager";
-import NoRoomException from "../exceptions/NoRoomException";
-import Room from "../classes/Room/Room";
-import { prisma } from "~/server/db";
-import { ObjectId } from "mongodb";
-import bcrypt from "bcrypt";
+import Room from "../../classes/Room/Room";
+import { roomManager } from "../../controllers/RoomManager";
+import NoRoomException from "../../exceptions/NoRoomException";
 
 // const prisma = new PrismaClient();
 
@@ -27,11 +27,18 @@ export function roomHandler(
     cb(rooms);
   });
 
-  socket.on("createRoom", async ({ user, roomConfig }, cb) => {
+  socket.on("createRoom", async ({ user, roomConfig, gameshow }, cb) => {
     const { name, modus, isPrivateRoom, password, games } = roomConfig;
 
     const roomId = new ObjectId().toString();
-    const room = new Room(roomId, name, isPrivateRoom, user, modus, games);
+    const room = new Room(
+      roomId,
+      name,
+      isPrivateRoom,
+      user,
+      modus,
+      gameshow.games
+    );
 
     // push room to room manager
     roomManager.addRoom(room);

@@ -24,4 +24,10 @@ export interface ITeam {
   isActiveTurn: boolean;
   getPlayer: (playerId: string) => IPlayer | null;
   join: (user: TUserReduced) => void;
+  increaseGameScore: (step: number) => void;
+  decreaseGameScore: (step: number) => void;
+  resetGameScore: () => void;
+  increaseTotalScore: (step: number) => void;
+  decreaseTotalScore: (step: number) => void;
+  resetTotalScore: () => void;
 }

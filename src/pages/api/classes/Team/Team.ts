@@ -52,4 +52,30 @@ export default class Team implements ITeam {
     const newPlayer = new Player(user.id, this.id, user.username);
     this.players.push(newPlayer);
   }
+
+  increaseGameScore(step = 1) {
+    this.gameScore += step;
+  }
+
+  decreaseGameScore(step = 1) {
+    if (this.gameScore === 0) return;
+    this.gameScore -= step;
+  }
+
+  resetGameScore() {
+    this.gameScore = 0;
+  }
+
+  increaseTotalScore(step = 1) {
+    this.totalScore += step;
+  }
+
+  decreaseTotalScore(step = 1) {
+    if (this.totalScore === 0) return;
+    this.totalScore -= step;
+  }
+
+  resetTotalScore() {
+    this.totalScore = 0;
+  }
 }

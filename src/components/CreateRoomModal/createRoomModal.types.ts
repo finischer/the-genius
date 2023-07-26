@@ -3,7 +3,7 @@ import { type GameshowMode, type Gameshow } from "@prisma/client";
 export interface ICreateRoomModalProps {
   openedModal: boolean;
   onClose: () => void;
-  gameshow: Gameshow | undefined;
+  gameshow: Gameshow;
 }
 
 export interface ICreateRoomConfig {

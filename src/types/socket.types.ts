@@ -1,7 +1,8 @@
-import { type User } from "@prisma/client";
+import { Gameshow, type User } from "@prisma/client";
 import { type NextApiResponse } from "next";
 import { type Server, type Socket } from "socket.io";
 import { type ICreateRoomConfig } from "~/components/CreateRoomModal/createRoomModal.types";
+import { TGameshowConfig } from "~/hooks/useConfigurator/useConfigurator.types";
 import type Room from "~/pages/api/classes/Room/Room";
 
 type TSocketUser = {
@@ -22,7 +23,15 @@ export interface IServerSocketData extends Socket {
 
 export interface IClientToServerEvents {
   createRoom: (
-    { user, roomConfig }: { user: TUserReduced; roomConfig: ICreateRoomConfig },
+    {
+      user,
+      roomConfig,
+      gameshow,
+    }: {
+      user: TUserReduced;
+      roomConfig: ICreateRoomConfig;
+      gameshow: Gameshow;
+    },
     cb: (room: Room) => void
   ) => void;
   joinRoom: (
@@ -35,6 +44,38 @@ export interface IClientToServerEvents {
     cb: () => void
   ) => void;
   listAllRooms: (cb: (rooms: Room[]) => void) => void;
+
+  // team events
+  increaseGameScore: ({
+    teamId,
+    step,
+  }: {
+    teamId: string;
+    step: number;
+  }) => void;
+  decreaseGameScore: ({
+    teamId,
+    step,
+  }: {
+    teamId: string;
+    step: number;
+  }) => void;
+  resetGameScore: ({ teamId }: { teamId: string }) => void;
+  increaseTotalScore: ({
+    teamId,
+    step,
+  }: {
+    teamId: string;
+    step: number;
+  }) => void;
+  decreaseTotalScore: ({
+    teamId,
+    step,
+  }: {
+    teamId: string;
+    step: number;
+  }) => void;
+  resetTotalScore: ({ teamId }: { teamId: string }) => void;
 }
 
 export interface IServerToClientEvents {

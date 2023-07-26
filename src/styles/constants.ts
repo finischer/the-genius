@@ -4,6 +4,11 @@ export const sizes = {
   base: 25,
   padding: 25,
   borderRadius: 5,
+  icon: {
+    s: 18,
+    m: 24,
+    xl: 30,
+  },
 };
 
 export const spacing = {

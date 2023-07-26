@@ -1,13 +1,11 @@
 import { Button, Flex, LoadingOverlay, Modal, PasswordInput, Table, Text, Title } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useDisclosure } from '@mantine/hooks'
-import { IconPoint } from '@tabler/icons-react'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import PageLayout from '~/components/layout'
 import useNotification from '~/hooks/useNotification'
 import { socket } from '~/hooks/useSocket'
-import { colors } from '~/styles/constants'
 import { api } from '~/utils/api'
 import { type IRoom } from './api/classes/Room/room.types'
 

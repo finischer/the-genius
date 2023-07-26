@@ -1,4 +1,4 @@
-import { ActionIcon, Center, Container, Flex, Text } from '@mantine/core'
+import { ActionIcon, Box, Center, Container, Flex, Text } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { notifications } from '@mantine/notifications'
 import { IconInfoSmall } from '@tabler/icons-react'
@@ -6,20 +6,22 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import Loader from '~/components/Loader/Loader'
+import RoomDetailsModal from '~/components/RoomDetailsModal'
+import Scorebar from '~/components/Scorebar'
 import { useRoom } from '~/hooks/useRoom/useRoom'
 import { socket } from '~/hooks/useSocket'
 import { useUser } from '~/hooks/useUser/useUser'
 import { colors, sizes } from '~/styles/constants'
 import { type TUserReduced } from '~/types/socket.types'
-import RoomDetailsModal from '~/components/RoomDetailsModal'
 import { type IRoom } from '../api/classes/Room/room.types'
-import Scorebar from '~/components/Scorebar'
+import ContainerBox from '~/components/ContainerBox/ContainerBox'
+
 
 const RoomPage = () => {
     const router = useRouter()
     const { data: session } = useSession();
     const [openedRoomDetails, { open: openRoomDetails, close: closeRoomDetails }] = useDisclosure(false)
-    const { room, setRoom } = useRoom()
+    const { room, currentGame, setRoom } = useRoom()
     const { isHost } = useUser()
 
     const roomId = router.query.id as string
@@ -45,7 +47,6 @@ const RoomPage = () => {
             })
 
             socket.on("updateRoom", ({ newRoomState }) => {
-                console.log("Update Room!")
                 setRoom(newRoomState)
             })
         }
@@ -67,14 +68,32 @@ const RoomPage = () => {
         <>
             {/* Room Details */}
             <RoomDetailsModal room={room} openedModal={openedRoomDetails} onClose={closeRoomDetails} />
-
             <Flex h="100vh" p={sizes.padding} pos="relative" direction="column">
+                {/* Moderation Buttons */}
+                {/* TODO */}
+
                 {/* Header */}
-                <Container size="100%" w="100%">
+                <Container size="100%" w="100%" pos="relative">
                     {/* Room Info Button */}
                     <ActionIcon color={colors.accent} size="xl" radius="xl" variant="filled" onClick={openRoomDetails}>
                         <IconInfoSmall size="3.25rem" />
                     </ActionIcon>
+
+                    {/* Current Game */}
+                    {currentGame &&
+                        <ContainerBox
+                            px="xl"
+                            bg={colors.accent}
+                            pos="absolute"
+                            h="100%"
+                            right={0}
+                            top={0}
+                            contentCentered
+                            withShadow
+                        >
+                            <Text>{currentGame?.name}</Text>
+                        </ContainerBox>
+                    }
                 </Container>
 
                 {/* Main View */}
@@ -87,7 +106,6 @@ const RoomPage = () => {
                     <Scorebar team={room.teams.teamOne} />
                     <Scorebar team={room.teams.teamTwo} />
                 </Flex>
-
             </Flex >
         </>
     )

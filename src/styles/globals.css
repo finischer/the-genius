@@ -1,1 +1,4 @@
-
+@font-face {
+  font-family: "Montserrat"; /*a name to be used later*/
+  src: url("../assets/fonts/montserrat/Montserrat-Regular.ttf"); /*URL to font*/
+}

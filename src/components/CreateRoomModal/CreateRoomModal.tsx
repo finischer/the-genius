@@ -35,14 +35,14 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
 
     const createRoom = form.onSubmit(values => {
         // create room on server
-        socket.emit("createRoom", ({ user, roomConfig: values }), (room) => {
+        socket.emit("createRoom", ({ user, roomConfig: values, gameshow }), (room) => {
             // connect to room
             void router.push(`/room/${room.id}`)
         })
     })
 
     return (
-        <Modal opened={openedModal} onClose={onClose} title={gameshow?.name}>
+        <Modal opened={openedModal} onClose={onClose} title={gameshow.name}>
             <form onSubmit={createRoom}>
                 <Flex gap="md" direction="column">
                     <TextInput
@@ -75,7 +75,7 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
 
                     <NumberInput
                         label="Anzahl Spiele"
-                        value={gameshow?.games.length}
+                        value={gameshow.games.length}
                         readOnly
 
                     />

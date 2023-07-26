@@ -1,10 +1,12 @@
-import { Box, Button, Flex, Text } from '@mantine/core'
+import { Box, Button, Flex, Group, Text } from '@mantine/core'
 import React from 'react'
 import { useRoom } from '~/hooks/useRoom/useRoom'
 import { socket } from '~/hooks/useSocket'
 import { useUser } from '~/hooks/useUser/useUser'
-import { colors } from '~/styles/constants'
+import { colors, sizes } from '~/styles/constants'
 import { type IScoreCircleProps, type IScorebarProps } from './scorebar.types'
+import ActionIcon from '../ActionIcon/ActionIcon'
+import { IconExposureMinus1, IconExposurePlus1, IconTargetArrow } from '@tabler/icons-react'
 
 
 const ScoreCircle: React.FC<IScoreCircleProps> = ({ filled }) => (
@@ -25,15 +27,26 @@ const ScoreCircle: React.FC<IScoreCircleProps> = ({ filled }) => (
 )
 
 const Scorebar: React.FC<IScorebarProps> = ({ team }) => {
-    const { room } = useRoom()
-    const { user, isPlayer, setUserAsPlayer } = useUser();
-    const scoreCircles = Array(7).fill(null).map((_, index) => <ScoreCircle key={index} filled={team.gameScore > index} />)
-    // const isTeamFull = team.players.length >= room?.numOfPlayers
+    const { room, currentGame } = useRoom()
+    const { user, isHost, isPlayer, setUserAsPlayer } = useUser();
+    const scoreCircles = currentGame ? Array(currentGame.maxPoints).fill(null).map((_, index) => <ScoreCircle key={index} filled={team.gameScore > index} />) : undefined
+    const isTeamFull = team.players.length >= room.numOfPlayers
 
     const joinTeam = () => {
+        if (isPlayer) return
         socket.emit("joinTeam", ({ teamId: team.id, user }), () => {
             setUserAsPlayer(team)
         })
+    }
+
+    const increaseGameScore = (step = 1) => {
+        if (!currentGame || team.gameScore >= currentGame?.maxPoints) return
+        socket.emit("increaseGameScore", ({ teamId: team.id, step }))
+    }
+
+    const decreaseGameScore = (step = 1) => {
+        if (team.gameScore <= 0) return
+        socket.emit("decreaseGameScore", ({ teamId: team.id, step }))
     }
 
     return (
@@ -62,12 +75,27 @@ const Scorebar: React.FC<IScorebarProps> = ({ team }) => {
                     </span>
 
                 </Box>
-                {!isPlayer &&
+                {!isPlayer && !isHost &&
                     <Button variant='subtle' mb="xs" onClick={joinTeam}>Beitreten</Button>
                 }
+
+                {isHost &&
+                    <Group mb="xs">
+                        <ActionIcon variant='outline' toolTip={`${team.name} an der Reihe sein lassen`}>
+                            <IconTargetArrow size={sizes.icon.s} />
+                        </ActionIcon>
+                        <ActionIcon variant='outline' toolTip="Score -1">
+                            <IconExposureMinus1 size={sizes.icon.s} onClick={() => decreaseGameScore()} />
+                        </ActionIcon>
+                        <ActionIcon variant='outline' toolTip="Score +1">
+                            <IconExposurePlus1 size={sizes.icon.s} onClick={() => increaseGameScore()} />
+                        </ActionIcon>
+                    </Group>
+                }
+
             </Flex>
 
-            <Flex gap="1rem" bg={colors.accent} h="3rem" w="30rem" sx={() => ({ borderRadius: "0.25rem", borderTopLeftRadius: 0 })} p="0.5rem 1rem" pos="relative">
+            <Flex gap="1rem" bg={colors.accent} h="3rem" w="30rem" sx={(theme) => ({ borderRadius: "0.25rem", borderTopLeftRadius: 0, boxShadow: theme.shadows.xl })} p="0.5rem 1rem" pos="relative">
                 {/* Player names */}
                 <Box
                     sx={() => ({

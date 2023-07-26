@@ -51,7 +51,7 @@ const GameshowsPage = () => {
 
     return (
         <PageLayout showLoader={isLoading} loadingMessage='Spielshows werden geladen ...'>
-            <CreateRoomModal openedModal={openedCreateRoomModal} onClose={closeCreateRoomModal} gameshow={activeGameshow} />
+            {activeGameshow && <CreateRoomModal openedModal={openedCreateRoomModal} onClose={closeCreateRoomModal} gameshow={activeGameshow} />}
             <Flex gap="md" align="center">
                 <Title order={2}>
                     Meine Spielshows

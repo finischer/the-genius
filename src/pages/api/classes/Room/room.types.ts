@@ -1,6 +1,8 @@
 import { type GameshowMode } from "@prisma/client";
 import { type TUserReduced } from "~/types/socket.types";
 import { type ITeam } from "../Team/team.types";
+import { IGameGeneralState, TGameNames } from "~/games/game.types";
+import { TGameSettingsMap } from "~/hooks/useConfigurator/useConfigurator.types";
 
 export type TRoomAnswerState = {
   showAnswer: boolean;
@@ -59,7 +61,7 @@ export interface IRoom {
   creator: TUserReduced | null;
   numOfPlayers: number;
   participants: string[];
-  games: unknown[];
+  games: TGameSettingsMap[TGameNames][];
   defaultGameStates: unknown[];
   teams: {
     teamOne: ITeam;

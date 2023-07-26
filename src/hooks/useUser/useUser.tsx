@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { type IRoom } from "~/pages/api/classes/Room/room.types";
 import { type ITeam } from "~/pages/api/classes/Team/team.types";
 import { type TUserReduced } from "~/types/socket.types";
-import { useRoom } from "../useRoom/useRoom";
+import { useRoom } from "../useRoom";
 import { type IUseUserContext, type IUseUserProvider } from "./useUser.types";
 
 const UserContext = createContext<IUseUserContext | undefined>(undefined);

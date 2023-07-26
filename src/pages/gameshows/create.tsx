@@ -8,9 +8,9 @@ import { type ITransferListItem } from '~/components/GamesPicker/gamesPicker.typ
 import Loader from '~/components/Loader/Loader'
 import { GAME_CONFIGURATORS } from '~/components/configurators/_game_configurator_map'
 import PageLayout from '~/components/layout'
-import { TGameNames } from '~/games/game.types'
-import { ConfiguratorProvider } from '~/hooks/useConfigurator/useConfigurator'
-import { TGameshowConfig } from '~/hooks/useConfigurator/useConfigurator.types'
+import { type TGameNames } from '~/games/game.types'
+import { ConfiguratorProvider } from '~/hooks/useConfigurator'
+import { type TGameshowConfig } from '~/hooks/useConfigurator/useConfigurator.types'
 import useNotification from '~/hooks/useNotification'
 import { api } from '~/utils/api'
 

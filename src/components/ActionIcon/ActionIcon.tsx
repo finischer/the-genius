@@ -1,7 +1,7 @@
-import React from 'react'
 import { ActionIcon as MantineActionIcon, Tooltip, useMantineTheme } from '@mantine/core'
-import { type IActionIconProps } from './actionIcon.types'
+import React from 'react'
 import { colors } from '~/styles/constants'
+import { type IActionIconProps } from './actionIcon.types'
 
 const ActionIcon: React.FC<IActionIconProps> = ({ toolTip, children, ...props }) => {
     const theme = useMantineTheme()

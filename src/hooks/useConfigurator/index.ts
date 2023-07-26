@@ -1,1 +1,1 @@
-export { default } from "./useConfigurator";
+export { ConfiguratorProvider, useConfigurator } from "./useConfigurator";

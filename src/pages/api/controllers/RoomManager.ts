@@ -1,8 +1,10 @@
 import type Room from "../classes/Room";
+import { prisma } from "~/server/db";
+import bcrypt from "bcrypt";
 
 interface IRoomManager {
   addRoom: (room: Room) => void;
-  removeRoom: (roomId: string) => void;
+  removeRoom: (roomId: string) => boolean;
   getRoom: (roomId: string) => Room | undefined;
   getRooms: () => Map<string, Room>;
   getRoomsAsArray: () => Room[];
@@ -12,13 +14,11 @@ class RoomManager implements IRoomManager {
   _rooms = new Map<string, Room>();
 
   addRoom(room: Room) {
-    // TODO: create room in database
     this._rooms.set(room.id, room);
   }
 
   removeRoom(roomId: Room["id"]) {
-    // TODO: remove room in database
-    this._rooms.delete(roomId);
+    return this._rooms.delete(roomId);
   }
 
   getRoom(roomId: Room["id"] | undefined | null) {

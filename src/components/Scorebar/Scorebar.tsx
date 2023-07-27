@@ -30,7 +30,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team }) => {
     const { room, currentGame } = useRoom()
     const { user, isHost, isPlayer, setUserAsPlayer } = useUser();
     const scoreCircles = currentGame ? Array(currentGame.maxPoints).fill(null).map((_, index) => <ScoreCircle key={index} filled={team.gameScore > index} />) : undefined
-    const isTeamFull = team.players.length >= room.numOfPlayers
+    const isTeamFull = team.players.length >= room.maxPlayersPerTeam
 
     const joinTeam = () => {
         if (isPlayer) return
@@ -59,7 +59,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team }) => {
                     background: colors.accent,
                     display: "flex",
                     alignItems: "center",
-                    padding: "0 1rem",
+                    padding: "0.25rem 1rem",
                     borderRadius: "0.25rem 0.2rem 0 0",
                     fontWeight: "bolder",
                     overflow: "hidden",
@@ -75,7 +75,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team }) => {
                     </span>
 
                 </Box>
-                {!isPlayer && !isHost &&
+                {!isPlayer && !isHost && !isTeamFull &&
                     <Button variant='subtle' mb="xs" onClick={joinTeam}>Beitreten</Button>
                 }
 

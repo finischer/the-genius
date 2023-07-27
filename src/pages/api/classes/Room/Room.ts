@@ -4,7 +4,7 @@ import { io } from "../../socket";
 import Team from "../Team/Team";
 import { type IRoom } from "./room.types";
 import { roomManager } from "../../controllers/RoomManager";
-import { TGameNames } from "~/games/game.types";
+import { type TGameNames } from "~/games/game.types";
 
 const ROOM_DEFAULTS = {
   roomSize: 12,
@@ -26,6 +26,7 @@ export default class Room implements IRoom {
   roomSize: IRoom["roomSize"];
   createdAt: IRoom["createdAt"];
   currentGame: IRoom["currentGame"];
+  maxPlayersPerTeam: IRoom["maxPlayersPerTeam"];
 
   public constructor(
     id: IRoom["id"] | undefined = undefined,
@@ -44,6 +45,7 @@ export default class Room implements IRoom {
     this.isPrivateRoom = isPrivateRoom;
     this.creator = creator;
     this.numOfPlayers = modus === "DUELL" ? 2 : 4;
+    this.maxPlayersPerTeam = this.numOfPlayers / 2;
     this.participants = [];
     this.games = games;
     this.defaultGameStates = copyNestedArray(games);

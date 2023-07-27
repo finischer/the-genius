@@ -26,7 +26,7 @@ const transferList: TransferListData = [
 // }
 
 const FlaggenConfigurator = () => {
-    const [flaggen, setFlaggen] = useConfigurator("flaggen")
+    const [flaggen, setFlaggen, { enableFurtherButton, disableFurtherButton }] = useConfigurator("flaggen")
     const [countries, setCountries] = useState(transferList)
 
 
@@ -43,6 +43,13 @@ const FlaggenConfigurator = () => {
         setFlaggen(draft => {
             draft.flaggen.countries = transformedCountries
         })
+
+        // check further button state
+        if (transformedCountries.length > 0) {
+            enableFurtherButton()
+        } else {
+            disableFurtherButton()
+        }
     }, [countries])
 
     return (

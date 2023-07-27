@@ -16,7 +16,7 @@ export type TSelectedGameSettingsArray = Array<TGameSettingsMap[TGameNames]>;
 
 const ConfiguratorContext = createContext<TConfiguratorContext | undefined>(undefined)
 
-const ConfiguratorProvider: React.FC<IConfiguratorProvider> = ({ gameshowConfig, updateGameshowConfig, selectedGames, children }) => {
+const ConfiguratorProvider: React.FC<IConfiguratorProvider> = ({ gameshowConfig, updateGameshowConfig, enableFurtherButton, disableFurtherButton, selectedGames, children }) => {
     const [settings, setSettings] = useImmer<TGameSettingsMap>(GAME_STATE_MAP)
 
     useEffect(() => {
@@ -33,7 +33,7 @@ const ConfiguratorProvider: React.FC<IConfiguratorProvider> = ({ gameshowConfig,
     }, [settings, selectedGames.length])
 
 
-    return <ConfiguratorContext.Provider value={[settings, setSettings]}>
+    return <ConfiguratorContext.Provider value={[settings, setSettings, { enableFurtherButton, disableFurtherButton }]}>
         {children}
     </ConfiguratorContext.Provider>
 
@@ -46,9 +46,9 @@ function useConfigurator<T extends TGameNames>(game: T) {
         throw Error("useConfigurator must be used within ConfiguratorProvider")
     }
 
-    const [settings, setSettings] = context
+    const [settings, setSettings, handleFurtherButton] = context
 
-    return [settings[game], setSettings] as const
+    return [settings[game], setSettings, handleFurtherButton] as const
 }
 
 export { ConfiguratorProvider, useConfigurator }

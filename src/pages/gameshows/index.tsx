@@ -40,8 +40,8 @@ const GameshowsPage = () => {
                                 <IconStarFilled /> : <IconStar />
                             }
                         </ActionIcon>
-                        <ActionIcon toolTip='Raum erstellen' color="green">
-                            <IconPlayerPlay onClick={() => createRoom(gameshow)} />
+                        <ActionIcon toolTip='Raum erstellen' color="green" onClick={() => createRoom(gameshow)}>
+                            <IconPlayerPlay />
                         </ActionIcon>
                     </Flex>
                 </td>
@@ -56,8 +56,8 @@ const GameshowsPage = () => {
                 <Title order={2}>
                     Meine Spielshows
                 </Title>
-                <ActionIcon toolTip='Spielshow erstellen' color={colors.accent} variant="filled">
-                    <IconPlus onClick={() => router.push("/gameshows/create")} />
+                <ActionIcon toolTip='Spielshow erstellen' color={colors.accent} variant="filled" onClick={() => router.push("/gameshows/create")} >
+                    <IconPlus />
                 </ActionIcon>
             </Flex>
             <Text c="dimmed">{subtitleText}</Text>

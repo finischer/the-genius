@@ -23,6 +23,7 @@ const MerkenConfigurator = () => {
                 defaultValue={merken.timerState.timeToThinkSeconds}
                 label="Nachdenkzeit"
                 description="in Sekunden"
+                min={1}
                 max={MAX_TIME_TO_THINK_SECONDS}
                 size='md'
                 onChange={updateTimeToThink}

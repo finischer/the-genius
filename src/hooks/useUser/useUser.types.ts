@@ -8,6 +8,7 @@ export interface IUseUserProvider {
 
 export interface IUseUserContext {
   user: TUserReduced;
+  team: ITeam | undefined;
   setUser: Dispatch<TUserReduced>;
   setUserAsPlayer: (team: ITeam) => void;
   isPlayer: boolean;

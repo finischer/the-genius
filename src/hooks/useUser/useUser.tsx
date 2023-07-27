@@ -60,7 +60,7 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
     }
 
     return (
-        <UserContext.Provider value={{ user, setUser, setUserAsPlayer, isPlayer, isHost }}>
+        <UserContext.Provider value={{ user, team, setUser, setUserAsPlayer, isPlayer, isHost }}>
             {children}
         </UserContext.Provider>
     );

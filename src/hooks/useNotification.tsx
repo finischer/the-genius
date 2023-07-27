@@ -1,4 +1,5 @@
 import { type NotificationProps, notifications } from '@mantine/notifications'
+import { IconInfoCircle } from '@tabler/icons-react'
 
 const useNotification = () => {
 
@@ -16,10 +17,18 @@ const useNotification = () => {
         })
     }
 
+    const showInfoNotification = (notification: NotificationProps) => {
+        notifications.show({
+            ...notification,
+            icon: <IconInfoCircle />,
+        })
+    }
+
 
     return {
         showErrorNotification,
-        showSuccessNotification
+        showSuccessNotification,
+        showInfoNotification
     }
 }
 

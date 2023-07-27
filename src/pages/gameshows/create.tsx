@@ -29,6 +29,7 @@ const CreateGameshowPage = () => {
     const [activeStep, setActiveStep] = useState(0);
     const [cachedGameshow, setCashedGameshow] = useLocalStorage<TGameshowConfig>({ key: 'cachedGameshow', defaultValue: DEFAULT_GAMESHOW_CONFIG });
     const [gameshow, setGameshow] = useImmer<TGameshowConfig>(cachedGameshow)
+    const [furtherButtonDisabled, setFurtherButtonDisabled] = useState(false);
 
     const [selectedGames, setSelectedGames] = useState<ITransferListItem[]>([])
     const { mutateAsync: createGameshow, isLoading, isSuccess } = api.gameshows.create.useMutation({
@@ -60,8 +61,21 @@ const CreateGameshowPage = () => {
     const isLastStep = activeStep === numOfSteps
     const allowSelectStepProps: StepProps = { allowStepClick: !isLoading, allowStepSelect: !isLoading }
 
+    const STEP_MAP = {
+        selectGames: 0,
+        detailsGameshow: numOfSteps - 1,
+        summary: numOfSteps
+    }
+
     const nextStep = () => setActiveStep((current) => (current < numOfSteps ? current + 1 : current));
-    const prevStep = () => setActiveStep((current) => (current > 0 ? current - 1 : current));
+    const prevStep = () => {
+        if (activeStep === 0) {
+            return router.push("/gameshows")
+        }
+
+        setActiveStep((current) => (current > 0 ? current - 1 : current))
+
+    };
     const saveGameshow = async () => {
         try {
             await createGameshow(gameshow)
@@ -74,9 +88,18 @@ const CreateGameshowPage = () => {
     const updateGameshowConfig = (e: React.ChangeEvent<HTMLInputElement>) => {
         const key: keyof TGameshowConfigKeys = e.target.id as keyof TGameshowConfigKeys;
 
+
         setGameshow(draft => {
             draft[key] = e.target.value
         })
+    }
+
+    const enableFurtherButton = () => {
+        setFurtherButtonDisabled(false)
+    }
+
+    const disableFurtherButton = () => {
+        setFurtherButtonDisabled(true)
     }
 
 
@@ -84,9 +107,37 @@ const CreateGameshowPage = () => {
         setCashedGameshow(gameshow) // save to localStorage
     }, [gameshow])
 
+    // Handle further button state for details gameshow step
+    useEffect(() => {
+        if (activeStep === STEP_MAP["detailsGameshow"]) {
+            if (gameshow.name === "") {
+                disableFurtherButton()
+            } else {
+                enableFurtherButton()
+            }
+        }
+    }, [activeStep, gameshow.name])
+
+
+    // Handle further button state for select games step
+    useEffect(() => {
+        if (activeStep === STEP_MAP["selectGames"]) {
+            if (selectedGames.length === 0) {
+                disableFurtherButton()
+            } else {
+                enableFurtherButton()
+            }
+        }
+    }, [activeStep, selectedGames.length])
+
     return (
         <PageLayout showLoader={isSuccess} loadingMessage='Spielshows werden geladen ...'>
-            <ConfiguratorProvider updateGameshowConfig={setGameshow} gameshowConfig={gameshow} selectedGames={selectedGamesReduced}>
+            <ConfiguratorProvider
+                enableFurtherButton={enableFurtherButton}
+                disableFurtherButton={disableFurtherButton}
+                updateGameshowConfig={setGameshow}
+                gameshowConfig={gameshow}
+                selectedGames={selectedGamesReduced}>
                 <Flex gap="xl" direction="column">
                     <Title>Erstelle deine Spielshow</Title>
                     <Stepper active={activeStep} onStepClick={setActiveStep} breakpoint="sm" size='sm' allowNextStepsSelect={false}>
@@ -124,7 +175,7 @@ const CreateGameshowPage = () => {
                             :
                             <>
                                 <Button variant="default" onClick={() => !isLoading && prevStep()}>Zurück</Button>
-                                <Button onClick={() => isLastStep && !isLoading ? saveGameshow() : nextStep()} loading={isLoading} >{isLastStep ? "Spielshow speichern" : "Weiter"}</Button>
+                                <Button onClick={() => isLastStep && !isLoading ? saveGameshow() : nextStep()} loading={isLoading} disabled={furtherButtonDisabled} >{isLastStep ? "Spielshow speichern" : "Weiter"}</Button>
                             </>
                         }
                     </Group>

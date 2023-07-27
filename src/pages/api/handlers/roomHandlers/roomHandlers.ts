@@ -72,6 +72,34 @@ export function roomHandler(
     io.emit("updateAllRooms", { newRooms: allRooms });
   });
 
+  socket.on("closeRoom", async ({ roomId }, cb) => {
+    const room = roomManager.getRoom(roomId);
+
+    if (!room) return new NoRoomException(socket);
+
+    let deleteSuccessful = roomManager.removeRoom(roomId);
+
+    if (deleteSuccessful) {
+      // Remove also in database
+      const dbRoom = await prisma.room.delete({
+        where: {
+          id: roomId,
+        },
+      });
+
+      if (!dbRoom) {
+        deleteSuccessful = false;
+      }
+    }
+    if (deleteSuccessful) {
+      socket.to(roomId).emit("roomWasClosed");
+      const allRooms = roomManager.getRoomsAsArray();
+      io.emit("updateAllRooms", { newRooms: allRooms });
+    }
+
+    if (cb) cb({ closeSuccessful: deleteSuccessful });
+  });
+
   socket.on("joinRoom", async ({ user, roomId }, cb) => {
     const room = roomManager.getRoom(roomId);
 

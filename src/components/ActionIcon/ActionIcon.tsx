@@ -3,7 +3,7 @@ import React from 'react'
 import { colors } from '~/styles/constants'
 import { type IActionIconProps } from './actionIcon.types'
 
-const ActionIcon: React.FC<IActionIconProps> = ({ toolTip, children, ...props }) => {
+const ActionIcon: React.FC<IActionIconProps> = ({ toolTip, children, onClick, ...props }) => {
     const theme = useMantineTheme()
 
     return (
@@ -14,7 +14,7 @@ const ActionIcon: React.FC<IActionIconProps> = ({ toolTip, children, ...props })
             bg={theme.colors.dark[8]}
             color={colors.lightText}
         >
-            <MantineActionIcon {...props}>
+            <MantineActionIcon onClick={onClick} {...props}>
                 {children}
             </MantineActionIcon>
         </Tooltip>

@@ -60,6 +60,7 @@ export interface IRoom {
   isPrivateRoom: boolean;
   creator: TUserReduced | null;
   numOfPlayers: number;
+  maxPlayersPerTeam: number;
   participants: string[];
   games: TGameSettingsMap[TGameNames][];
   defaultGameStates: unknown[];

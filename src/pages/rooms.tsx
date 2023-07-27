@@ -15,7 +15,7 @@ type TOnlinePlayersEvent = {
 
 const RoomsPage = () => {
     const router = useRouter();
-    const { showErrorNotification } = useNotification()
+    const { showErrorNotification, showInfoNotification } = useNotification()
 
     const { mutate: validatePassword, isLoading: isLoadingValidatePassword } = api.rooms.validatePassword.useMutation({
         onSuccess: (isPasswordValid) => {

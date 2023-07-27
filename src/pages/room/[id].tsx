@@ -17,31 +17,20 @@ import { useUser } from '~/hooks/useUser'
 import { colors, sizes } from '~/styles/constants'
 import { type TUserReduced } from '~/types/socket.types'
 import { type IRoom } from '../api/classes/Room/room.types'
+import ModPanel from './(components)/ModPanel/ModPanel'
+import useNotification from '~/hooks/useNotification'
 
 
 const RoomPage = () => {
+    const { showInfoNotification } = useNotification()
     const router = useRouter()
     const { data: session } = useSession();
     const [openedRoomDetails, { open: openRoomDetails, close: closeRoomDetails }] = useDisclosure(false)
     const { room, currentGame, setRoom } = useRoom()
-    const { isHost } = useUser()
-    const [openedModSettings, { open: openModSettings, close: closeModSettings }] = useDisclosure(false);
+    const { isHost, team } = useUser()
+    const modPanelDisclosure = useDisclosure(false);
 
     const roomId = router.query.id as string
-
-    const gameBtns = room.games.map(g => {
-        const btnDisabled = g.identifier === currentGame?.identifier
-
-        return (
-            <Button
-                key={g.identifier}
-                disabled={btnDisabled}
-                onClick={() => startGame(g.identifier)}
-            >
-                {g.name} {btnDisabled && "(Läuft gerade)"}
-            </Button>
-        )
-    })
 
     useEffect(() => {
         if (session?.user) {
@@ -66,6 +55,14 @@ const RoomPage = () => {
             socket.on("updateRoom", ({ newRoomState }) => {
                 setRoom(newRoomState)
             })
+
+            socket.on("roomWasClosed", () => {
+                showInfoNotification({
+                    message: "Raum wurde geschlossen"
+                })
+                router.push("/rooms")
+            })
+
         }
 
         return () => {
@@ -73,10 +70,7 @@ const RoomPage = () => {
         }
     }, [session])
 
-    const startGame = (gameIdentifier: TGameNames) => {
-        console.log("+++ room - Start game +++ ", gameIdentifier)
-        socket.emit("startGame", ({ gameIdentifier }))
-    }
+
 
     if (room === undefined) {
         return (
@@ -92,37 +86,22 @@ const RoomPage = () => {
             <RoomDetailsModal room={room} openedModal={openedRoomDetails} onClose={closeRoomDetails} />
             <Flex h="100vh" p={sizes.padding} pos="relative" direction="column">
                 {/* Moderation Buttons */}
-                {/* TODO */}
                 {isHost &&
                     <>
                         <Box pos="absolute" bottom="50%" >
                             <ActionIcon variant='filled' toolTip='Spiele anzeigen'>
-                                <IconArrowRight onClick={openModSettings} />
+                                <IconArrowRight onClick={modPanelDisclosure[1].open} />
                             </ActionIcon>
                         </Box>
-                        <Drawer opened={openedModSettings} onClose={closeModSettings} title={<Title order={2}>Spiel starten</Title>} size="xs">
-                            <Flex h="100%" direction="column" gap="xl" justify="space-between">
-                                <Flex direction="column" gap="sm">
-
-                                    {gameBtns}
-                                </Flex>
-
-                                <Flex direction="column" gap="sm">
-                                    <Title order={2} >Allgemein</Title>
-                                    <Button.Group orientation='vertical'>
-                                        <Button color='red' disabled>Raum schließen</Button>
-                                    </Button.Group>
-                                </Flex>
-                            </Flex>
-                        </Drawer>
+                        <ModPanel disclosure={modPanelDisclosure} />
                     </>
                 }
 
                 {/* Header */}
                 <Container size="100%" w="100%" pos="relative">
                     {/* Room Info Button */}
-                    <ActionIcon color={colors.accent} size="xl" radius="xl" variant="filled" >
-                        <IconInfoSmall size="3.25rem" onClick={openRoomDetails} />
+                    <ActionIcon color={colors.accent} size="xl" radius="xl" variant="filled" onClick={openRoomDetails} >
+                        <IconInfoSmall size="3.25rem" />
                     </ActionIcon>
 
                     {/* Current Game */}
@@ -143,8 +122,9 @@ const RoomPage = () => {
                 </Container>
 
                 {/* Main View */}
-                <Flex h="100%" align="center" justify="center" >
+                <Flex h="100%" align="center" justify="center" direction="column" >
                     <Text>Bist du der Host: {isHost.toString()} </Text>
+                    {team && <Text>Dein Team: {team.name}</Text>}
                 </Flex>
 
                 {/* Footer View */}

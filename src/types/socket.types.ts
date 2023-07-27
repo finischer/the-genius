@@ -35,6 +35,10 @@ export interface IClientToServerEvents {
     },
     cb: (room: Room) => void
   ) => void;
+  closeRoom: (
+    { roomId }: { roomId: string },
+    cb?: ({ closeSuccessful }: { closeSuccessful: boolean }) => void
+  ) => void;
   joinRoom: (
     { user, roomId }: { user: TUserReduced; roomId: string },
     cb: (room: Room) => void
@@ -81,14 +85,18 @@ export interface IClientToServerEvents {
 }
 
 export interface IServerToClientEvents {
-  userLeftRoom: ({ user }: { user: TSocketUser | null }) => void;
-  updateRoom: ({ newRoomState }: { newRoomState: Room }) => void;
-  updateAllRooms: ({ newRooms }: { newRooms: Room[] }) => void;
+  // +++ GENERAL EVENTS +++
   getOnlinePlayers: ({
     numOfOnlinePlayers,
   }: {
     numOfOnlinePlayers: number;
   }) => void;
+
+  // +++ ROOM EVENTS +++
+  userLeftRoom: ({ user }: { user: TSocketUser | null }) => void;
+  updateRoom: ({ newRoomState }: { newRoomState: Room }) => void;
+  updateAllRooms: ({ newRooms }: { newRooms: Room[] }) => void;
+  roomWasClosed: () => void;
 }
 
 export interface TNextApiResponse extends NextApiResponse {

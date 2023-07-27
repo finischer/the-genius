@@ -1,6 +1,4 @@
-import { type Dispatch, type SetStateAction } from "react";
 import { type Updater } from "use-immer";
-import { z } from "zod";
 import { type TDefaultFlaggenState } from "~/games/flaggen/config";
 import { type TGameNames } from "~/games/game.types";
 import { type TDefaultMemoryState } from "~/games/memory/config";
@@ -21,10 +19,16 @@ export interface IConfiguratorProvider {
   gameshowConfig: TGameshowConfig;
   updateGameshowConfig: Updater<TGameshowConfig>;
   selectedGames: TGameNames[];
+  enableFurtherButton: () => void;
+  disableFurtherButton: () => void;
   children: React.ReactNode;
 }
 
 export type TConfiguratorContext = [
   TGameSettingsMap,
-  Updater<TGameSettingsMap>
+  Updater<TGameSettingsMap>,
+  {
+    enableFurtherButton: () => void;
+    disableFurtherButton: () => void;
+  }
 ];

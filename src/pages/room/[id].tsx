@@ -18,8 +18,7 @@ import { useUser } from '~/hooks/useUser'
 import { colors, sizes } from '~/styles/constants'
 import { type TUserReduced } from '~/types/socket.types'
 import { type IRoom } from '../api/classes/Room/room.types'
-import ModPanel from './(components)/ModPanel/ModPanel'
-
+import ModPanel from '../../components/ModPanel'
 
 type TNetworkStatusEffectiveType = 'slow-2g' | '2g' | '3g' | '4g'
 

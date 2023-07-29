@@ -16,7 +16,7 @@ export type TSelectedGameSettingsArray = TGame[];
 
 const ConfiguratorContext = createContext<TConfiguratorContext | undefined>(undefined)
 
-const ConfiguratorProvider: React.FC<IConfiguratorProvider> = ({ gameshowConfig, updateGameshowConfig, enableFurtherButton, disableFurtherButton, selectedGames, children }) => {
+const ConfiguratorProvider: React.FC<IConfiguratorProvider> = ({ updateGameshowConfig, enableFurtherButton, disableFurtherButton, selectedGames, children }) => {
     const [settings, setSettings] = useImmer<TGameSettingsMap>(GAME_STATE_MAP)
 
     useEffect(() => {

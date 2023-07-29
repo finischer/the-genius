@@ -6,7 +6,7 @@ import { DEFAULT_MERKEN_STATE } from '~/games/merken/config'
 import { type IConfiguratorProvider, type TConfiguratorContext, type TGameSettingsMap } from './useConfigurator.types'
 import { useImmer } from "use-immer";
 
-const GAME_STATE_MAP: TGameSettingsMap = {
+export const GAME_STATE_MAP: TGameSettingsMap = {
     flaggen: DEFAULT_FLAGGEN_STATE,
     memory: DEFAULT_MEMORY_STATE,
     merken: DEFAULT_MERKEN_STATE

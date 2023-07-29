@@ -6,6 +6,6 @@ export interface IGamesPickerProps {
 }
 
 export interface ITransferListItem {
-  value: string;
+  value: TGameNames;
   label: string;
 }

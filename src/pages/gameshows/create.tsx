@@ -1,8 +1,11 @@
 import { Box, Button, Flex, Group, StepProps, Stepper, TextInput, Title } from '@mantine/core'
-import { useLocalStorage } from '@mantine/hooks'
+import { useDisclosure, useLocalStorage } from '@mantine/hooks'
+import { IconQuestionMark } from '@tabler/icons-react'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useImmer } from 'use-immer'
+import ActionIcon from '~/components/ActionIcon/ActionIcon'
+import GameRulesModal from '~/components/GameRulesModal/GameRulesModal'
 import GamesPicker from '~/components/GamesPicker/GamesPicker'
 import { type ITransferListItem } from '~/components/GamesPicker/gamesPicker.types'
 import Loader from '~/components/Loader/Loader'
@@ -10,6 +13,7 @@ import { GAME_CONFIGURATORS } from '~/components/configurators/_game_configurato
 import PageLayout from '~/components/layout'
 import { type TGameNames } from '~/games/game.types'
 import { ConfiguratorProvider } from '~/hooks/useConfigurator'
+import { GAME_STATE_MAP, useConfigurator } from '~/hooks/useConfigurator/useConfigurator'
 import { type TGameshowConfig } from '~/hooks/useConfigurator/useConfigurator.types'
 import useNotification from '~/hooks/useNotification'
 import { api } from '~/utils/api'
@@ -30,8 +34,13 @@ const CreateGameshowPage = () => {
     const [cachedGameshow, setCashedGameshow] = useLocalStorage<TGameshowConfig>({ key: 'cachedGameshow', defaultValue: DEFAULT_GAMESHOW_CONFIG });
     const [gameshow, setGameshow] = useImmer<TGameshowConfig>(cachedGameshow)
     const [furtherButtonDisabled, setFurtherButtonDisabled] = useState(false);
+    const [openedGameRules, { open: openGameRules, close: closeGameRules }] = useDisclosure();
 
     const [selectedGames, setSelectedGames] = useState<ITransferListItem[]>([])
+
+    const _tmpSelectedGame = selectedGames[activeStep - 1] // -1 because Game configurators starts at step 1 and not 0
+    const activeGame = gameshow.games[activeStep - 1]
+
     const { mutateAsync: createGameshow, isLoading, isSuccess } = api.gameshows.create.useMutation({
         onError: (e) => {
             const errorMessage = e.data?.zodError?.fieldErrors;
@@ -132,6 +141,7 @@ const CreateGameshowPage = () => {
 
     return (
         <PageLayout showLoader={isSuccess} loadingMessage='Spielshows werden geladen ...'>
+            {activeGame && <GameRulesModal centered rules={activeGame.getRules()} gameName={activeGame.name} onClose={closeGameRules} opened={openedGameRules} />}
             <ConfiguratorProvider
                 enableFurtherButton={enableFurtherButton}
                 disableFurtherButton={disableFurtherButton}
@@ -144,14 +154,25 @@ const CreateGameshowPage = () => {
                         <Stepper.Step label="Spiele" description="Wähle deine Spiele aus" {...allowSelectStepProps}>
                             <GamesPicker setSelectedGames={setSelectedGames} />
                         </Stepper.Step>
-                        {selectedGames.map(g => (
-                            <Stepper.Step key={g.value} label={g.label} {...allowSelectStepProps}>
-                                <Title order={2}>Einstellungen - {g.label} {/* TODO: add "show rules" button */} </Title>
-                                <Box mt="xl">
-                                    {GAME_CONFIGURATORS[g.value as TGameNames]}
-                                </Box>
-                            </Stepper.Step>
-                        ))}
+                        {selectedGames.map(g => {
+                            const game = GAME_STATE_MAP[g.value]
+                            const gameRules = game.getRules()
+                            return (
+
+                                <Stepper.Step key={g.value} label={g.label} {...allowSelectStepProps}>
+                                    <Flex align="center" gap="xs">
+                                        <Title order={2}>Einstellungen - {g.label}</Title>
+                                        {gameRules &&
+                                            <ActionIcon color='dimmed' toolTip='Regeln anzeigen' onClick={openGameRules}><IconQuestionMark /></ActionIcon>
+                                        }
+                                    </Flex>
+                                    <Box mt="xl">
+                                        {GAME_CONFIGURATORS[g.value as TGameNames]}
+                                    </Box>
+                                </Stepper.Step>
+                            )
+                        })
+                        }
                         <Stepper.Step label="Details Spielshow" description="" {...allowSelectStepProps}>
                             <Title order={2}>Details Spielshow</Title>
                             <Box mt="xl">

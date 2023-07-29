@@ -7,12 +7,30 @@ export const DEFAULT_MERKEN_STATE: TDefaultMerkenState = {
   identifier: "merken",
   name: "Merken",
   maxPoints: 7,
-  scoreBarMode: "circle",
+  scorebarMode: "circle",
   allCardsFlipped: false,
   cards: [],
   openCards: [],
   timerState: {
     isActive: false,
     timeToThinkSeconds: 60,
+  },
+  getRules() {
+    return `
+        Vor euch seht ihr ein Feld mit verdeckten Feldern. Hinter diesen Feldern verbirgt sich eine Abbildung. 
+        Ihr habt gleich ${this.timerState.timeToThinkSeconds} ${
+      Math.abs(this.timerState.timeToThinkSeconds) === 1
+        ? "Sekunde"
+        : "Sekunden"
+    } Zeit, um euch die Abbildung und die dazugehörige Nummer einzuprägen. Nach ${
+      Math.abs(this.timerState.timeToThinkSeconds) === 1
+        ? "der einen Sekunde"
+        : `${this.timerState.timeToThinkSeconds} Sekunden`
+    } werden alle Felder wieder verdeckt. 
+        Danach fragt ihr abwechselnd euren Gegner, welche Abbildung sich hinter einem Feld eurer Wahl verbirgt. 
+        Gebt ihr eine richtige Antwort, bekommt ihr einen Punkt und das Feld bleibt offen.
+        Gebt ihr eine falsche Antwort, wird das Feld wieder verdeckt und keiner bekommt einen Punkt.
+        Wer zuerst ${this.maxPoints} Punkte hat, der gewinnt das Spiel.
+    `;
   },
 };

@@ -7,12 +7,19 @@ export const DEFAULT_FLAGGEN_STATE: TDefaultFlaggenState = {
   identifier: "flaggen",
   maxPoints: 7,
   name: "Flaggen",
-  scoreBarMode: "circle",
+  scorebarMode: "circle",
   countries: [],
   qIndex: 0,
   display: {
     answer: false,
     country: false,
+  },
+  getRules() {
+    return `
+      Ihr bekommt eine Flagge gezeigt. Meint ihr das Land dieser Flagge zu kennen, buzzert ihr und gebt innerhalb von 5 Sekunden eine Antwort. 
+      Ist die Antwort korrekt, bekommt ihr einen Punkt. Ist die Antwort falsch, bekommt der Gegner einen Punkt. 
+      Wer zuerst ${this.maxPoints} Punkte hat, hat das Spiel für sich gewonnen.
+    `;
   },
 };
 

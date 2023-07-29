@@ -1,9 +1,9 @@
 import { IGameGeneralState } from "../game.types";
 import { IFlaggenState } from "./flaggen.types";
 
-export type TDefaultFlaggenState = IFlaggenState & IGameGeneralState;
+export type TFlaggenGameState = IFlaggenState & IGameGeneralState;
 
-export const DEFAULT_FLAGGEN_STATE: TDefaultFlaggenState = {
+export const DEFAULT_FLAGGEN_STATE: TFlaggenGameState = {
   identifier: "flaggen",
   maxPoints: 7,
   name: "Flaggen",

@@ -11,6 +11,10 @@ import Room from "./classes/Room/Room";
 import { roomManager } from "./controllers/RoomManager";
 import { roomHandler } from "./handlers/roomHandlers";
 import { teamHandler } from "./handlers/teamHandlers";
+import { type TGameSettingsMap } from "~/hooks/useConfigurator/useConfigurator.types";
+import { type TGame, type TGameNames } from "~/games/game.types";
+import { instrument } from "@socket.io/admin-ui";
+import { env } from "~/env.mjs";
 
 const prisma = new PrismaClient();
 
@@ -40,8 +44,22 @@ export default async function SocketHandler(
     {
       path: "/api/socket/",
       addTrailingSlash: false,
+      cors: {
+        origin: ["https://admin.socket.io"],
+        credentials: true,
+      },
     }
   );
+
+  instrument(io, {
+    auth: {
+      type: "basic",
+      username: env.SOCKET_IO_ADMIN_USERNAME,
+      password: env.SOCKET_IO_ADMIN_PASSWORD,
+    },
+    mode: "production",
+  });
+
   res.socket.server.io = io;
 
   console.log("Initialize Server done. Now starting to fetch rooms from db");
@@ -57,7 +75,14 @@ export default async function SocketHandler(
       },
     });
 
-    const tmpRoom = new Room(id, name, isPrivate, user, modus, games);
+    const tmpRoom = new Room(
+      id,
+      name,
+      isPrivate,
+      user,
+      modus,
+      games as TGame[]
+    );
 
     roomManager.addRoom(tmpRoom);
   });

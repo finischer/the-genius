@@ -1,17 +1,16 @@
 import bcrypt from "bcrypt";
 import { ObjectId } from "mongodb";
-import { type Socket, type Server } from "socket.io";
+import { type Server, type Socket } from "socket.io";
+import { type TGame } from "~/games/game.types";
 import { prisma } from "~/server/db";
 import {
   type IClientToServerEvents,
-  type IServerToClientEvents,
   type IServerSocketData,
+  type IServerToClientEvents,
 } from "~/types/socket.types";
 import Room from "../../classes/Room/Room";
 import { roomManager } from "../../controllers/RoomManager";
 import NoRoomException from "../../exceptions/NoRoomException";
-import { TGameSettingsMap } from "~/hooks/useConfigurator/useConfigurator.types";
-import { TGameNames } from "~/games/game.types";
 
 // const prisma = new PrismaClient();
 
@@ -39,7 +38,7 @@ export function roomHandler(
       isPrivateRoom,
       user,
       modus,
-      gameshow.games as TGameSettingsMap[TGameNames][]
+      gameshow.games as TGame[]
     );
 
     // push room to room manager

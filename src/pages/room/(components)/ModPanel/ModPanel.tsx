@@ -3,14 +3,13 @@ import { useDisclosure, useLocalStorage } from '@mantine/hooks';
 import { IconQuestionMark } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { type TGameNames } from '~/games/game.types';
+import { type TGame, type TGameNames } from '~/games/game.types';
 import useNotification from '~/hooks/useNotification';
 import { useRoom } from '~/hooks/useRoom';
 import { socket } from '~/hooks/useSocket';
 import { type IModPanelProps } from './modPanel.types';
 import Tooltip from '~/components/Tooltip/Tooltip';
 import GameRulesModal from '~/components/GameRulesModal/GameRulesModal';
-import { TGameSettingsMap } from '~/hooks/useConfigurator/useConfigurator.types';
 
 const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
     const { showErrorNotification, showSuccessNotification } = useNotification()
@@ -19,14 +18,14 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
 
     // for game rules
     const [openedGameRules, { open: openGameRules, close: closeGameRules }] = useDisclosure()
-    const [clickedGame, setClickedGame] = useState<TGameSettingsMap[TGameNames]>()
+    const [clickedGame, setClickedGame] = useState<TGame>()
 
     const { room, currentGame } = useRoom()
     const [isOpen, { close: closeModPanel }] = disclosure;
     const btnVariantDefault: ButtonProps = { variant: "default" }
     const titleOrder = 3
 
-    const handleOpenGameRules = (game: TGameSettingsMap[TGameNames]) => {
+    const handleOpenGameRules = (game: TGame) => {
         setClickedGame(game)
         openGameRules()
     }
@@ -61,6 +60,8 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
     }
 
     const closeRoom = () => {
+        if (!window.confirm("Möchtest du wirklich den Raum schließen? Der Spielfortschritt geht verloren")) return
+
         socket.emit("closeRoom", ({ roomId: room.id }), ({ closeSuccessful }) => {
             if (closeSuccessful) {
                 showSuccessNotification({
@@ -76,12 +77,12 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
     }
 
     return (<>
-        {clickedGame && <GameRulesModal opened={openedGameRules} onClose={closeGameRules} gameName={clickedGame.name} rules={clickedGame.rules} />}
+        {clickedGame && <GameRulesModal zIndex={999} opened={openedGameRules} onClose={closeGameRules} gameName={clickedGame.name} rules={clickedGame.rules} />}
         <Drawer
             opened={isOpen}
             onClose={closeModPanel}
             title={<Title order={2}>Mod-Panel</Title>}
-            size="xs"
+            size="sm"
             overlayProps={{
                 opacity: 0.15,
             }}

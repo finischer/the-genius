@@ -13,6 +13,8 @@ export const env = createEnv({
       process.env.NODE_ENV === "production"
         ? z.string().min(1)
         : z.string().min(1).optional(),
+    SOCKET_IO_ADMIN_USERNAME: z.string().min(1),
+    SOCKET_IO_ADMIN_PASSWORD: z.string().min(1),
   },
 
   /**
@@ -32,5 +34,7 @@ export const env = createEnv({
     MONGODB_URI: process.env.MONGODB_URI,
     NODE_ENV: process.env.NODE_ENV,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+    SOCKET_IO_ADMIN_PASSWORD: process.env.SOCKET_IO_ADMIN_PASSWORD,
+    SOCKET_IO_ADMIN_USERNAME: process.env.SOCKET_IO_ADMIN_USERNAME,
   },
 });

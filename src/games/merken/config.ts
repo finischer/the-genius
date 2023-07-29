@@ -1,9 +1,9 @@
 import { IGameGeneralState } from "../game.types";
 import { IMerkenState } from "./merken.types";
 
-export type TDefaultMerkenState = IMerkenState & IGameGeneralState;
+export type TMerkenGameState = IMerkenState & IGameGeneralState;
 
-export const DEFAULT_MERKEN_STATE: TDefaultMerkenState = {
+export const DEFAULT_MERKEN_STATE: TMerkenGameState = {
   identifier: "merken",
   name: "Merken",
   maxPoints: 7,

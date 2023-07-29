@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { DEFAULT_FLAGGEN_STATE } from '~/games/flaggen/config'
-import { type TGameNames } from '~/games/game.types'
+import { TGame, type TGameNames } from '~/games/game.types'
 import { DEFAULT_MEMORY_STATE } from '~/games/memory/config'
 import { DEFAULT_MERKEN_STATE } from '~/games/merken/config'
 import { type IConfiguratorProvider, type TConfiguratorContext, type TGameSettingsMap } from './useConfigurator.types'
@@ -12,7 +12,7 @@ export const GAME_STATE_MAP: TGameSettingsMap = {
     merken: DEFAULT_MERKEN_STATE
 }
 
-export type TSelectedGameSettingsArray = Array<TGameSettingsMap[TGameNames]>;
+export type TSelectedGameSettingsArray = TGame[];
 
 const ConfiguratorContext = createContext<TConfiguratorContext | undefined>(undefined)
 

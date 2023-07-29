@@ -1,18 +1,18 @@
 import { type Updater } from "use-immer";
-import { type TDefaultFlaggenState } from "~/games/flaggen/config";
-import { type TGameNames } from "~/games/game.types";
-import { type TDefaultMemoryState } from "~/games/memory/config";
-import { type TDefaultMerkenState } from "~/games/merken/config";
+import { type TFlaggenGameState } from "~/games/flaggen/config";
+import { type TGame, type TGameNames } from "~/games/game.types";
+import { type TMemoryGameState } from "~/games/memory/config";
+import { type TMerkenGameState } from "~/games/merken/config";
 
 export type TGameSettingsMap = {
-  flaggen: TDefaultFlaggenState;
-  memory: TDefaultMemoryState;
-  merken: TDefaultMerkenState;
+  flaggen: TFlaggenGameState;
+  memory: TMemoryGameState;
+  merken: TMerkenGameState;
 };
 
 export type TGameshowConfig = {
   name: string;
-  games: TGameSettingsMap[TGameNames][];
+  games: TGame[];
 };
 
 export interface IConfiguratorProvider {

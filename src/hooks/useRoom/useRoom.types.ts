@@ -1,5 +1,5 @@
 import { type Dispatch } from "react";
-import { TGameNames } from "~/games/game.types";
+import { TGame, TGameNames } from "~/games/game.types";
 import { type IRoom } from "~/pages/api/classes/Room/room.types";
 import { TGameSettingsMap } from "../useConfigurator/useConfigurator.types";
 
@@ -9,7 +9,7 @@ export interface IUseRoomProvider {
 
 export interface IUseRoomContext {
   room: IRoom | undefined;
-  currentGame: TGameSettingsMap[TGameNames] | undefined;
+  currentGame: TGame | undefined;
   setRoom: Dispatch<IRoom>;
 }
 

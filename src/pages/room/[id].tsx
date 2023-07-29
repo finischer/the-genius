@@ -1,4 +1,4 @@
-import { Box, Button, Center, Container, Drawer, Flex, Text, Title, Tooltip } from '@mantine/core'
+import { Box, Center, Container, Flex, Text } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { notifications } from '@mantine/notifications'
 import { IconArrowRight, IconInfoSmall } from '@tabler/icons-react'
@@ -10,7 +10,7 @@ import ContainerBox from '~/components/ContainerBox/ContainerBox'
 import Loader from '~/components/Loader/Loader'
 import RoomDetailsModal from '~/components/RoomDetailsModal'
 import Scorebar from '~/components/Scorebar'
-import { type TGameNames } from '~/games/game.types'
+import useNotification from '~/hooks/useNotification'
 import { useRoom } from '~/hooks/useRoom'
 import { socket } from '~/hooks/useSocket'
 import { useUser } from '~/hooks/useUser'
@@ -18,8 +18,7 @@ import { colors, sizes } from '~/styles/constants'
 import { type TUserReduced } from '~/types/socket.types'
 import { type IRoom } from '../api/classes/Room/room.types'
 import ModPanel from './(components)/ModPanel/ModPanel'
-import useNotification from '~/hooks/useNotification'
-
+import Game from '~/games'
 
 const RoomPage = () => {
     const { showInfoNotification } = useNotification()
@@ -69,8 +68,6 @@ const RoomPage = () => {
             socket.removeAllListeners("userLeftRoom")
         }
     }, [session])
-
-
 
     if (room === undefined) {
         return (
@@ -125,6 +122,7 @@ const RoomPage = () => {
                 <Flex h="100%" align="center" justify="center" direction="column" bg="green" >
                     {/* <Text>Bist du der Host: {isHost.toString()} </Text>
                     {team && <Text>Dein Team: {team.name}</Text>} */}
+                    {currentGame && <Game game={currentGame} />}
                 </Flex>
 
                 {/* Footer View */}

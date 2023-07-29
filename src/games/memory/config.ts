@@ -1,9 +1,9 @@
 import { IGameGeneralState } from "../game.types";
 import { IMemoryState } from "./memory.types";
 
-export type TDefaultMemoryState = IMemoryState & IGameGeneralState;
+export type TMemoryGameState = IMemoryState & IGameGeneralState;
 
-export const DEFAULT_MEMORY_STATE: TDefaultMemoryState = {
+export const DEFAULT_MEMORY_STATE: TMemoryGameState = {
   identifier: "memory",
   name: "Memory",
   maxPoints: 999,

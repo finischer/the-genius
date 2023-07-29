@@ -1,7 +1,7 @@
 import { Box, Center, Container, Flex, Text } from '@mantine/core'
-import { useDisclosure } from '@mantine/hooks'
+import { useDisclosure, useNetwork } from '@mantine/hooks'
 import { notifications } from '@mantine/notifications'
-import { IconArrowRight, IconInfoSmall } from '@tabler/icons-react'
+import { IconArrowRight, IconInfoSmall, IconWifi, IconWifi0, IconWifi1, IconWifi2, IconWifiOff } from '@tabler/icons-react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
@@ -20,6 +20,18 @@ import { type IRoom } from '../api/classes/Room/room.types'
 import ModPanel from './(components)/ModPanel/ModPanel'
 import Game from '~/games'
 
+
+type TNetworkStatusEffectiveType = 'slow-2g' | '2g' | '3g' | '4g'
+
+
+const NETWORK_STATUS_ICON_MAP: { [key in TNetworkStatusEffectiveType]: React.ReactNode } = {
+    "slow-2g": <IconWifi0 color="red" />,
+    "2g": <IconWifi1 color='orange' />,
+    "3g": <IconWifi2 color='yellow' />,
+    "4g": <IconWifi color='green' />
+}
+
+
 const RoomPage = () => {
     const { showInfoNotification } = useNotification()
     const router = useRouter()
@@ -28,8 +40,12 @@ const RoomPage = () => {
     const { room, currentGame, setRoom } = useRoom()
     const { isHost, team } = useUser()
     const modPanelDisclosure = useDisclosure(false);
+    const networkStatus = useNetwork();
+
+
 
     const roomId = router.query.id as string
+
 
     useEffect(() => {
         if (session?.user) {
@@ -96,10 +112,17 @@ const RoomPage = () => {
 
                 {/* Header */}
                 <Container size="100%" w="100%" pos="relative">
-                    {/* Room Info Button */}
-                    <ActionIcon color={colors.accent} size="xl" radius="xl" variant="filled" onClick={openRoomDetails} >
-                        <IconInfoSmall size="3.25rem" />
-                    </ActionIcon>
+                    <Flex align="center" gap="sm">
+
+                        {/* Room Info Button */}
+                        <ActionIcon color={colors.accent} size="xl" radius="xl" variant="filled" onClick={openRoomDetails} >
+                            <IconInfoSmall size="3.25rem" />
+                        </ActionIcon>
+                        {/* Connection status */}
+                        {!networkStatus.online && <IconWifiOff />}
+                        {networkStatus.online && networkStatus.effectiveType && NETWORK_STATUS_ICON_MAP[networkStatus.effectiveType]}
+                        {networkStatus.rtt}
+                    </Flex>
 
                     {/* Current Game */}
                     {currentGame &&

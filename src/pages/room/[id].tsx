@@ -119,7 +119,7 @@ const RoomPage = () => {
                 </Container>
 
                 {/* Main View */}
-                <Flex h="100%" align="center" justify="center" direction="column" bg="green" >
+                <Flex h="100%" align="center" justify="center" direction="column" >
                     {/* <Text>Bist du der Host: {isHost.toString()} </Text>
                     {team && <Text>Dein Team: {team.name}</Text>} */}
                     {currentGame && <Game game={currentGame} />}

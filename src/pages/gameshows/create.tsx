@@ -7,7 +7,7 @@ import { useImmer } from 'use-immer'
 import ActionIcon from '~/components/ActionIcon/ActionIcon'
 import GameRulesModal from '~/components/GameRulesModal/GameRulesModal'
 import GamesPicker from '~/components/GamesPicker/GamesPicker'
-import { type ITransferListItem } from '~/components/GamesPicker/gamesPicker.types'
+import { type TTransferListItem } from '~/components/GamesPicker/gamesPicker.types'
 import Loader from '~/components/Loader/Loader'
 import { GAME_CONFIGURATORS } from '~/components/configurators/_game_configurator_map'
 import PageLayout from '~/components/layout'
@@ -36,7 +36,7 @@ const CreateGameshowPage = () => {
     const [furtherButtonDisabled, setFurtherButtonDisabled] = useState(false);
     const [openedGameRules, { open: openGameRules, close: closeGameRules }] = useDisclosure();
 
-    const [selectedGames, setSelectedGames] = useState<ITransferListItem[]>([])
+    const [selectedGames, setSelectedGames] = useState<TTransferListItem[]>([])
 
     const activeGame = gameshow.games[activeStep - 1] // -1 because Game configurators starts at step 1 and not 0
 

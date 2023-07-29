@@ -1,4 +1,4 @@
-import { Accordion, Button, ButtonProps, Drawer, Flex, ScrollArea, Title } from '@mantine/core';
+import { Accordion, Button, ButtonProps, Drawer, Flex, ScrollArea, Text, Title } from '@mantine/core';
 import { useDisclosure, useLocalStorage } from '@mantine/hooks';
 import { IconQuestionMark } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
@@ -28,6 +28,10 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
     const handleOpenGameRules = (game: TGame) => {
         setClickedGame(game)
         openGameRules()
+    }
+
+    const releaseBuzzer = () => {
+        socket.emit("releaseBuzzer")
     }
 
     const gameBtns = room.games.map(g => {
@@ -81,7 +85,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
         <Drawer
             opened={isOpen}
             onClose={closeModPanel}
-            title={<Title order={2}>Mod-Panel</Title>}
+            title={<Text size={28} weight="bold">Mod-Panel</Text>}
             size="sm"
             overlayProps={{
                 opacity: 0.15,
@@ -108,8 +112,8 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                             </Accordion.Control>
                             <Accordion.Panel>
                                 <Button.Group orientation='vertical' >
-                                    <Button {...btnVariantDefault}>Leer</Button>
-                                    <Button {...btnVariantDefault}>Scoreboard</Button>
+                                    <Button {...btnVariantDefault} disabled>Leer</Button>
+                                    <Button {...btnVariantDefault} disabled>Scoreboard</Button>
                                 </Button.Group>
                             </Accordion.Panel>
                         </Accordion.Item>
@@ -120,9 +124,9 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                             </Accordion.Control>
                             <Accordion.Panel>
                                 <Button.Group orientation='vertical' >
-                                    <Button {...btnVariantDefault}>10s Timer starten</Button>
-                                    <Button {...btnVariantDefault}>Buzzer freigeben</Button>
-                                    <Button {...btnVariantDefault}>Konfetti regnen lassen</Button>
+                                    <Button {...btnVariantDefault} disabled>10s Timer starten</Button>
+                                    <Button {...btnVariantDefault} onClick={releaseBuzzer}>Buzzer freigeben</Button>
+                                    <Button {...btnVariantDefault} disabled>Konfetti regnen lassen</Button>
                                     <Button {...btnVariantDefault} disabled>Musik starten</Button>
                                 </Button.Group>
                             </Accordion.Panel>

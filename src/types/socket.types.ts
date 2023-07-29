@@ -82,6 +82,8 @@ export interface IClientToServerEvents {
     step: number;
   }) => void;
   resetTotalScore: ({ teamId }: { teamId: string }) => void;
+  toggleTeamActive: ({ teamId }: { teamId: string }) => void;
+  releaseBuzzer: () => void;
 }
 
 export interface IServerToClientEvents {

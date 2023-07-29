@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Group, Text } from '@mantine/core'
+import { Box, Button, Flex, Group, Text, Transition, keyframes } from '@mantine/core'
 import React from 'react'
 import { useRoom } from '~/hooks/useRoom'
 import { socket } from '~/hooks/useSocket'
@@ -7,6 +7,14 @@ import { colors, sizes } from '~/styles/constants'
 import { type IScoreCircleProps, type IScorebarProps } from './scorebar.types'
 import ActionIcon from '../ActionIcon/ActionIcon'
 import { IconExposureMinus1, IconExposurePlus1, IconTargetArrow } from '@tabler/icons-react'
+
+
+const stretchAnimation = keyframes({
+    "0%": { transform: "scale(0.75)" },
+    "100%": { transform: "scale(1.25)" }
+})
+
+const HIGHLIGHT_CONTAINER_COLOR = "#c6011f"
 
 
 const ScoreCircle: React.FC<IScoreCircleProps> = ({ filled }) => (
@@ -19,7 +27,7 @@ const ScoreCircle: React.FC<IScoreCircleProps> = ({ filled }) => (
             border: "1px solid white",
             marginLeft: "0.8rem",
             transition: "background 500ms",
-            "&:nth-child(1)": {
+            "&:nth-of-type(1)": {
                 marginLeft: 0
             }
         })}
@@ -31,6 +39,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team }) => {
     const { user, isHost, isPlayer, setUserAsPlayer } = useUser();
     const scoreCircles = currentGame ? Array(currentGame.maxPoints).fill(null).map((_, index) => <ScoreCircle key={index} filled={team.gameScore > index} />) : undefined
     const isTeamFull = team.players.length >= room.maxPlayersPerTeam
+    const highlightBoxShadow = team.isActiveTurn ? `0px 0px 50px 50px ${HIGHLIGHT_CONTAINER_COLOR}` : ""
 
     const joinTeam = () => {
         if (isPlayer) return
@@ -49,8 +58,30 @@ const Scorebar: React.FC<IScorebarProps> = ({ team }) => {
         socket.emit("decreaseGameScore", ({ teamId: team.id, step }))
     }
 
+    const toggleTeamActiveState = () => {
+        socket.emit("toggleTeamActive", { teamId: team.id })
+    }
+
     return (
-        <Flex direction="column" >
+        <Flex direction="column" pos="relative" >
+            {/* Highlight container to represent that it is the turn of this team  */}
+            <Box
+                pos="absolute"
+                left="50%"
+                bottom="50%"
+                opacity={0.9}
+                sx={{
+                    boxShadow: highlightBoxShadow,
+                    WebkitBoxShadow: highlightBoxShadow,
+                    animationName: stretchAnimation,
+                    animationDuration: "2s",
+                    animationTimingFunction: "ease-out",
+                    animationIterationCount: "infinite",
+                    animationDirection: "alternate",
+                    animationPlayState: "running",
+                }}
+            />
+
             <Flex gap="lg">
                 <Box sx={() => ({
                     minWidth: "20%",
@@ -81,14 +112,26 @@ const Scorebar: React.FC<IScorebarProps> = ({ team }) => {
 
                 {isHost &&
                     <Group mb="xs">
-                        <ActionIcon variant='outline' toolTip={`${team.name} an der Reihe sein lassen`}>
+                        <ActionIcon
+                            variant='outline'
+                            toolTip={`${team.name} an der Reihe sein lassen`}
+                            onClick={toggleTeamActiveState}
+                        >
                             <IconTargetArrow size={sizes.icon.s} />
                         </ActionIcon>
-                        <ActionIcon variant='outline' toolTip="Score -1">
-                            <IconExposureMinus1 size={sizes.icon.s} onClick={() => decreaseGameScore()} />
+                        <ActionIcon
+                            variant='outline'
+                            toolTip="Score -1"
+                            onClick={() => decreaseGameScore()}
+                        >
+                            <IconExposureMinus1 size={sizes.icon.s} />
                         </ActionIcon>
-                        <ActionIcon variant='outline' toolTip="Score +1">
-                            <IconExposurePlus1 size={sizes.icon.s} onClick={() => increaseGameScore()} />
+                        <ActionIcon
+                            variant='outline'
+                            toolTip="Score +1"
+                            onClick={() => increaseGameScore()}
+                        >
+                            <IconExposurePlus1 size={sizes.icon.s} />
                         </ActionIcon>
                     </Group>
                 }

@@ -73,7 +73,6 @@ export function roomHandler(
 
   socket.on("closeRoom", async ({ roomId }, cb) => {
     const room = roomManager.getRoom(roomId);
-
     if (!room) return new NoRoomException(socket);
 
     let deleteSuccessful = roomManager.removeRoom(roomId);
@@ -101,7 +100,6 @@ export function roomHandler(
 
   socket.on("joinRoom", async ({ user, roomId }, cb) => {
     const room = roomManager.getRoom(roomId);
-
     if (!room) return new NoRoomException(socket);
 
     socket.user = {
@@ -120,7 +118,6 @@ export function roomHandler(
   socket.on("leaveRoom", async ({ roomId }) => {
     if (socket.roomId === roomId) {
       const room = roomManager.getRoom(roomId);
-
       if (!room) return new NoRoomException(socket);
 
       room.participants = room.participants.filter(
@@ -140,6 +137,17 @@ export function roomHandler(
     if (!room) return new NoRoomException(socket);
 
     room.startGame(gameIdentifier);
+    room.update();
+  });
+
+  socket.on("releaseBuzzer", () => {
+    const room = roomManager.getRoom(socket.roomId);
+    if (!room) return new NoRoomException(socket);
+
+    Object.values(room.teams).forEach((t) => {
+      t.isActiveTurn = false;
+    });
+
     room.update();
   });
 }

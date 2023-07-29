@@ -7,6 +7,7 @@ import {
 import { roomManager } from "../../controllers/RoomManager";
 import NoRoomException from "../../exceptions/NoRoomException";
 import NoTeamException from "../../exceptions/NoTeamException";
+import { getRoomAndTeam } from "../helpers";
 
 export function teamHandler(
   io: Server,
@@ -18,13 +19,10 @@ export function teamHandler(
     IServerSocketData
 ) {
   socket.on("joinTeam", ({ user, teamId }, cb) => {
-    const room = roomManager.getRoom(socket.roomId);
+    const res = getRoomAndTeam(socket, socket.roomId, teamId);
+    if (!res) return;
 
-    if (!room) return new NoRoomException(socket);
-
-    const team = room.getTeamById(teamId);
-
-    if (!team) return new NoTeamException(socket);
+    const { room, team } = res;
 
     team.join(user);
     socket.teamId = teamId;
@@ -33,28 +31,39 @@ export function teamHandler(
   });
 
   socket.on("increaseGameScore", ({ teamId, step }) => {
-    const room = roomManager.getRoom(socket.roomId);
+    const res = getRoomAndTeam(socket, socket.roomId, teamId);
+    if (!res) return;
 
-    if (!room) return new NoRoomException(socket);
-
-    const team = room.getTeamById(teamId);
-
-    if (!team) return new NoTeamException(socket);
+    const { room, team } = res;
 
     team.increaseGameScore(step);
     room.update();
   });
 
   socket.on("decreaseGameScore", ({ teamId, step }) => {
-    const room = roomManager.getRoom(socket.roomId);
+    const res = getRoomAndTeam(socket, socket.roomId, teamId);
+    if (!res) return;
 
-    if (!room) return new NoRoomException(socket);
-
-    const team = room.getTeamById(teamId);
-
-    if (!team) return new NoTeamException(socket);
+    const { room, team } = res;
 
     team.decreaseGameScore(step);
+    room.update();
+  });
+
+  socket.on("toggleTeamActive", ({ teamId }) => {
+    const res = getRoomAndTeam(socket, socket.roomId, teamId);
+    if (!res) return;
+
+    const { room, team } = res;
+
+    team.isActiveTurn = !team.isActiveTurn;
+
+    // set other teams active state to false
+    const otherTeams = Object.values(room.teams).filter((t) => t.id !== teamId);
+    otherTeams.forEach((t) => {
+      t.isActiveTurn = false;
+    });
+
     room.update();
   });
 }

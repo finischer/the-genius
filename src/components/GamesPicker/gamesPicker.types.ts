@@ -1,11 +1,13 @@
 import { type Dispatch } from "react";
-import { TGameNames } from "~/games/game.types";
+import { type TGameNames } from "~/games/game.types";
 
 export interface IGamesPickerProps {
-  setSelectedGames: Dispatch<ITransferListItem[]>;
+  setSelectedGames: Dispatch<TTransferListItem[]>;
 }
 
-export interface ITransferListItem {
+export type TTransferListItem = {
   value: TGameNames;
   label: string;
-}
+};
+
+export type TTransferListData = [TTransferListItem[], TTransferListItem[]];

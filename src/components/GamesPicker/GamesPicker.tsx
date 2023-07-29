@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { type IGamesPickerProps } from './gamesPicker.types'
-import { TransferList, type TransferListData } from '@mantine/core'
+import { TransferList, type TransferListData } from '@mantine/core';
+import React, { type Dispatch, type SetStateAction, useEffect, useState } from 'react';
+import { type TTransferListData, type IGamesPickerProps } from './gamesPicker.types';
 
-const availableGames: TransferListData = [
+const availableGames: TTransferListData = [
     [
         { value: 'flaggen', label: 'Flaggen' },
         { value: 'merken', label: 'Merken' },
@@ -16,7 +16,7 @@ const availableGames: TransferListData = [
 ];
 
 const GamesPicker: React.FC<IGamesPickerProps> = ({ setSelectedGames }) => {
-    const [games, setGames] = useState<TransferListData>(availableGames)
+    const [games, setGames] = useState<TTransferListData>(availableGames)
 
     useEffect(() => {
         setSelectedGames(games[1])
@@ -25,7 +25,7 @@ const GamesPicker: React.FC<IGamesPickerProps> = ({ setSelectedGames }) => {
     return (
         <TransferList
             value={games}
-            onChange={setGames}
+            onChange={setGames as Dispatch<SetStateAction<TransferListData>>}
             searchPlaceholder="Suchen ..."
             nothingFound="Kein Spiel gefunden"
             titles={[`Verfügbare Spiele (${games[0].length})`, `Ausgewählte Spiele (${games[1].length})`]}

@@ -1,4 +1,4 @@
-import { TGameNames, type Games } from "~/games/game.types"
+import { type TGameNames } from "~/games/game.types"
 import FlaggenConfigurator from "./FlaggenConfigurator"
 import MemoryConfigurator from "./MemoryConfigurator/MemoryConfigurator"
 import MerkenConfigurator from "./MerkenConfigurator/MerkenConfigurator"

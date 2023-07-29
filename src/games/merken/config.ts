@@ -1,5 +1,5 @@
-import { IGameGeneralState } from "../game.types";
-import { IMerkenState } from "./merken.types";
+import { type IGameGeneralState } from "../game.types";
+import { type IMerkenState } from "./merken.types";
 
 export type TMerkenGameState = IMerkenState & IGameGeneralState;
 

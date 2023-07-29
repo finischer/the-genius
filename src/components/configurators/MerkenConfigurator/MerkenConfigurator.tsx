@@ -1,5 +1,4 @@
 import { Container, NumberInput } from '@mantine/core'
-import React, { SyntheticEvent, useEffect } from 'react'
 import { useConfigurator } from '~/hooks/useConfigurator'
 
 const MAX_TIME_TO_THINK_SECONDS = 180 // 3 minutes

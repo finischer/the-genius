@@ -1,7 +1,7 @@
 import React from 'react'
-import { IFlipCardProps } from './flipcard.types'
+import { type IFlipCardProps } from './flipcard.types'
 
-const FlipCard: React.FC<IFlipCardProps> = ({ front, back, onClick, clickable = true }) => {
+const FlipCard: React.FC<IFlipCardProps> = ({ }) => {
     return (
         <div>FlipCard</div>
     )

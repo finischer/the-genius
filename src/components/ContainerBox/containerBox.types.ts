@@ -1,4 +1,4 @@
-import { BoxProps } from "@mantine/core";
+import { type BoxProps } from "@mantine/core";
 
 export interface IContainerBoxProps extends BoxProps {
   children: React.ReactNode;

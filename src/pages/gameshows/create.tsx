@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Group, StepProps, Stepper, TextInput, Title } from '@mantine/core'
+import { Box, Button, Flex, Group, type StepProps, Stepper, TextInput, Title } from '@mantine/core'
 import { useDisclosure, useLocalStorage } from '@mantine/hooks'
 import { IconQuestionMark } from '@tabler/icons-react'
 import { useRouter } from 'next/router'
@@ -64,7 +64,7 @@ const CreateGameshowPage = () => {
         }
     })
 
-    const selectedGamesReduced: TGameNames[] = selectedGames.map(g => g.value as TGameNames);
+    const selectedGamesReduced: TGameNames[] = selectedGames.map(g => g.value);
     const numOfSteps = NUM_OF_DEFAULT_STEPS + selectedGames.length
     const isLastStep = activeStep === numOfSteps
     const allowSelectStepProps: StepProps = { allowStepClick: !isLoading, allowStepSelect: !isLoading }
@@ -99,7 +99,7 @@ const CreateGameshowPage = () => {
         try {
             await createGameshow(gameshowWithGameRules)
             // navigate back to gameshows
-            router.push("/gameshows")
+            void router.push("/gameshows")
         } catch (err) { }
     }
 
@@ -176,7 +176,7 @@ const CreateGameshowPage = () => {
                                         }
                                     </Flex>
                                     <Box mt="xl">
-                                        {GAME_CONFIGURATORS[g.value as TGameNames]}
+                                        {GAME_CONFIGURATORS[g.value]}
                                     </Box>
                                 </Stepper.Step>
                             )

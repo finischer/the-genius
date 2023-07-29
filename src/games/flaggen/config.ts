@@ -1,5 +1,5 @@
-import { IGameGeneralState } from "../game.types";
-import { IFlaggenState } from "./flaggen.types";
+import { type IGameGeneralState } from "../game.types";
+import { type IFlaggenState } from "./flaggen.types";
 
 export type TFlaggenGameState = IFlaggenState & IGameGeneralState;
 

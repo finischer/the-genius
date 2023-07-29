@@ -38,7 +38,7 @@ export function roomHandler(
       isPrivateRoom,
       user,
       modus,
-      gameshow.games as TGame[]
+      gameshow.games as unknown as TGame[]
     );
 
     // push room to room manager

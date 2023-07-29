@@ -1,20 +1,19 @@
 import { PrismaClient } from "@prisma/client";
+import { instrument } from "@socket.io/admin-ui";
 import { type NextApiRequest } from "next";
 import { Server, type Socket } from "socket.io";
+import { env } from "~/env.mjs";
+import { type TGame } from "~/games/game.types";
 import {
-  type TNextApiResponse,
   type IClientToServerEvents,
   type IServerSocketData,
   type IServerToClientEvents,
+  type TNextApiResponse,
 } from "~/types/socket.types";
 import Room from "./classes/Room/Room";
 import { roomManager } from "./controllers/RoomManager";
 import { roomHandler } from "./handlers/roomHandlers";
 import { teamHandler } from "./handlers/teamHandlers";
-import { type TGameSettingsMap } from "~/hooks/useConfigurator/useConfigurator.types";
-import { type TGame, type TGameNames } from "~/games/game.types";
-import { instrument } from "@socket.io/admin-ui";
-import { env } from "~/env.mjs";
 
 const prisma = new PrismaClient();
 
@@ -81,13 +80,13 @@ export default async function SocketHandler(
       isPrivate,
       user,
       modus,
-      games as TGame[]
+      games as unknown as TGame[]
     );
 
     roomManager.addRoom(tmpRoom);
   });
 
-  const onConnection = async (
+  const onConnection = (
     socket: Socket<
       IClientToServerEvents,
       IServerToClientEvents,

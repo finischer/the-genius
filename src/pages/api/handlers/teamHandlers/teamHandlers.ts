@@ -1,12 +1,9 @@
 import { type Server, type Socket } from "socket.io";
 import {
-  type IServerSocketData,
   type IClientToServerEvents,
+  type IServerSocketData,
   type IServerToClientEvents,
 } from "~/types/socket.types";
-import { roomManager } from "../../controllers/RoomManager";
-import NoRoomException from "../../exceptions/NoRoomException";
-import NoTeamException from "../../exceptions/NoTeamException";
 import { getRoomAndTeam } from "../helpers";
 
 export function teamHandler(

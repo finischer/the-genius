@@ -1,12 +1,12 @@
-import { Box, Button, Flex, Group, Text, Transition, keyframes } from '@mantine/core'
+import { Box, Button, Flex, Group, Text, keyframes } from '@mantine/core'
+import { IconExposureMinus1, IconExposurePlus1, IconTargetArrow } from '@tabler/icons-react'
 import React from 'react'
 import { useRoom } from '~/hooks/useRoom'
 import { socket } from '~/hooks/useSocket'
 import { useUser } from '~/hooks/useUser'
 import { colors, sizes } from '~/styles/constants'
-import { type IScoreCircleProps, type IScorebarProps } from './scorebar.types'
 import ActionIcon from '../ActionIcon/ActionIcon'
-import { IconExposureMinus1, IconExposurePlus1, IconTargetArrow } from '@tabler/icons-react'
+import { type IScoreCircleProps, type IScorebarProps } from './scorebar.types'
 
 
 const stretchAnimation = keyframes({

@@ -1,5 +1,5 @@
-import { IGameGeneralState } from "../game.types";
-import { IMemoryState } from "./memory.types";
+import { type IGameGeneralState } from "../game.types";
+import { type IMemoryState } from "./memory.types";
 
 export type TMemoryGameState = IMemoryState & IGameGeneralState;
 
@@ -9,6 +9,7 @@ export const DEFAULT_MEMORY_STATE: TMemoryGameState = {
   maxPoints: 999,
   scorebarMode: "number",
   rules: "",
+  cards: [],
   getRules() {
     return `
         Vor euch seht ihr 42 umgedrehte Karten. Auf jeder dieser Karten befindet sich ein Bild, dabei befindet sich ein Bild immer jeweils auf zwei Karten. 

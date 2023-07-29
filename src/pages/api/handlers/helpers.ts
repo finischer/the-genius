@@ -1,8 +1,8 @@
 import { Socket } from "socket.io";
 import {
-  IClientToServerEvents,
-  IServerSocketData,
-  IServerToClientEvents,
+  type IClientToServerEvents,
+  type IServerSocketData,
+  type IServerToClientEvents,
 } from "~/types/socket.types";
 import { roomManager } from "../controllers/RoomManager";
 import NoRoomException from "../exceptions/NoRoomException";
@@ -27,7 +27,7 @@ export function getRoomAndTeam(
   roomId: string | null | undefined,
   teamId: string
 ): GetRoomAndTeamReturnType {
-  const room = roomManager.getRoom(socket.roomId);
+  const room = roomManager.getRoom(roomId);
   if (!room) {
     new NoRoomException(socket);
     return;

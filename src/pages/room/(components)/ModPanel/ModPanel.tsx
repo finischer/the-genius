@@ -1,15 +1,15 @@
-import { Accordion, Button, ButtonProps, Drawer, Flex, ScrollArea, Text, Title } from '@mantine/core';
+import { Accordion, Button, type ButtonProps, Drawer, Flex, ScrollArea, Text, Title } from '@mantine/core';
 import { useDisclosure, useLocalStorage } from '@mantine/hooks';
 import { IconQuestionMark } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
+import GameRulesModal from '~/components/GameRulesModal/GameRulesModal';
+import Tooltip from '~/components/Tooltip/Tooltip';
 import { type TGame, type TGameNames } from '~/games/game.types';
 import useNotification from '~/hooks/useNotification';
 import { useRoom } from '~/hooks/useRoom';
 import { socket } from '~/hooks/useSocket';
 import { type IModPanelProps } from './modPanel.types';
-import Tooltip from '~/components/Tooltip/Tooltip';
-import GameRulesModal from '~/components/GameRulesModal/GameRulesModal';
 
 const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
     const { showErrorNotification, showSuccessNotification } = useNotification()
@@ -71,7 +71,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                 showSuccessNotification({
                     message: "Raum wurde geschlossen"
                 })
-                router.push("/rooms")
+                void router.push("/rooms")
             } else {
                 showErrorNotification({
                     message: "Raum konnte nicht geschlossen werden"

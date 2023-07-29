@@ -1,7 +1,6 @@
 import { type Dispatch } from "react";
-import { TGame, TGameNames } from "~/games/game.types";
+import { type TGame } from "~/games/game.types";
 import { type IRoom } from "~/pages/api/classes/Room/room.types";
-import { TGameSettingsMap } from "../useConfigurator/useConfigurator.types";
 
 export interface IUseRoomProvider {
   children: React.ReactNode;

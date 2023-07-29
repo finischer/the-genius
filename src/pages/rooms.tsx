@@ -9,13 +9,13 @@ import { socket } from '~/hooks/useSocket'
 import { api } from '~/utils/api'
 import { type IRoom } from './api/classes/Room/room.types'
 
-type TOnlinePlayersEvent = {
-    numOfOnlinePlayers: number
-}
+// type TOnlinePlayersEvent = {
+//     numOfOnlinePlayers: number
+// }
 
 const RoomsPage = () => {
     const router = useRouter();
-    const { showErrorNotification, showInfoNotification } = useNotification()
+    const { showErrorNotification } = useNotification()
 
     const { mutate: validatePassword, isLoading: isLoadingValidatePassword } = api.rooms.validatePassword.useMutation({
         onSuccess: (isPasswordValid) => {
@@ -57,7 +57,7 @@ const RoomsPage = () => {
     const [rooms, setRooms] = useState<IRoom[]>([])
     const [isLoading, setIsLoading] = useState(true);
     const [activeRoom, setActiveRoom] = useState<IRoom | undefined>(undefined)
-    const [playersOnline, setPlayersOnline] = useState<number | undefined>(undefined)
+    // const [playersOnline, setPlayersOnline] = useState<number | undefined>(undefined)
 
     useEffect(() => {
         socket.emit("listAllRooms", (rooms) => {

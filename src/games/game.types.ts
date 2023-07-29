@@ -1,4 +1,4 @@
-import { TGameSettingsMap } from "~/hooks/useConfigurator/useConfigurator.types";
+import { type TGameSettingsMap } from "~/hooks/useConfigurator/useConfigurator.types";
 
 export type TScorebarMode = "number" | "circle";
 

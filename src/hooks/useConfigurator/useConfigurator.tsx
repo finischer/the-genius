@@ -1,10 +1,10 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect } from 'react'
+import { useImmer } from "use-immer"
 import { DEFAULT_FLAGGEN_STATE } from '~/games/flaggen/config'
-import { TGame, type TGameNames } from '~/games/game.types'
+import { type TGame, type TGameNames } from '~/games/game.types'
 import { DEFAULT_MEMORY_STATE } from '~/games/memory/config'
 import { DEFAULT_MERKEN_STATE } from '~/games/merken/config'
 import { type IConfiguratorProvider, type TConfiguratorContext, type TGameSettingsMap } from './useConfigurator.types'
-import { useImmer } from "use-immer";
 
 export const GAME_STATE_MAP: TGameSettingsMap = {
     flaggen: DEFAULT_FLAGGEN_STATE,
@@ -52,3 +52,4 @@ function useConfigurator<T extends TGameNames>(game: T) {
 }
 
 export { ConfiguratorProvider, useConfigurator }
+

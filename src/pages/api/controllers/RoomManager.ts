@@ -1,6 +1,4 @@
 import type Room from "../classes/Room";
-import { prisma } from "~/server/db";
-import bcrypt from "bcrypt";
 
 interface IRoomManager {
   addRoom: (room: Room) => void;

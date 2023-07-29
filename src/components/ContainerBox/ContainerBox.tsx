@@ -1,5 +1,5 @@
 import React from 'react'
-import { IContainerBoxProps } from './containerBox.types'
+import { type IContainerBoxProps } from './containerBox.types'
 import { Box } from '@mantine/core'
 import { sizes } from '~/styles/constants'
 

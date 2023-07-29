@@ -10,6 +10,7 @@ import ContainerBox from '~/components/ContainerBox/ContainerBox'
 import Loader from '~/components/Loader/Loader'
 import RoomDetailsModal from '~/components/RoomDetailsModal'
 import Scorebar from '~/components/Scorebar'
+import Game from '~/games'
 import useNotification from '~/hooks/useNotification'
 import { useRoom } from '~/hooks/useRoom'
 import { socket } from '~/hooks/useSocket'
@@ -18,7 +19,6 @@ import { colors, sizes } from '~/styles/constants'
 import { type TUserReduced } from '~/types/socket.types'
 import { type IRoom } from '../api/classes/Room/room.types'
 import ModPanel from './(components)/ModPanel/ModPanel'
-import Game from '~/games'
 
 
 type TNetworkStatusEffectiveType = 'slow-2g' | '2g' | '3g' | '4g'
@@ -38,7 +38,7 @@ const RoomPage = () => {
     const { data: session } = useSession();
     const [openedRoomDetails, { open: openRoomDetails, close: closeRoomDetails }] = useDisclosure(false)
     const { room, currentGame, setRoom } = useRoom()
-    const { isHost, team } = useUser()
+    const { isHost } = useUser()
     const modPanelDisclosure = useDisclosure(false);
     const networkStatus = useNetwork();
 
@@ -75,7 +75,7 @@ const RoomPage = () => {
                 showInfoNotification({
                     message: "Raum wurde geschlossen"
                 })
-                router.push("/rooms")
+                void router.push("/rooms")
             })
 
         }

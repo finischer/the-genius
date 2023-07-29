@@ -1,4 +1,4 @@
-import { TMerkenGameState } from "./config";
+import { type TMerkenGameState } from "./config";
 
 type TMerkenTimerState = {
   isActive: boolean;

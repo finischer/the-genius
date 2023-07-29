@@ -116,15 +116,15 @@ const RoomPage = () => {
                             contentCentered
                             withShadow
                         >
-                            <Text>{currentGame?.name}</Text>
+                            <Text>{currentGame.name}</Text>
                         </ContainerBox>
                     }
                 </Container>
 
                 {/* Main View */}
-                <Flex h="100%" align="center" justify="center" direction="column" >
-                    <Text>Bist du der Host: {isHost.toString()} </Text>
-                    {team && <Text>Dein Team: {team.name}</Text>}
+                <Flex h="100%" align="center" justify="center" direction="column" bg="green" >
+                    {/* <Text>Bist du der Host: {isHost.toString()} </Text>
+                    {team && <Text>Dein Team: {team.name}</Text>} */}
                 </Flex>
 
                 {/* Footer View */}

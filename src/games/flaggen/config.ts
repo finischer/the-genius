@@ -14,6 +14,7 @@ export const DEFAULT_FLAGGEN_STATE: TDefaultFlaggenState = {
     answer: false,
     country: false,
   },
+  rules: "",
   getRules() {
     return `
       Ihr bekommt eine Flagge gezeigt. Meint ihr das Land dieser Flagge zu kennen, buzzert ihr und gebt innerhalb von 5 Sekunden eine Antwort. 

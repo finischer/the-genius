@@ -1,35 +1,57 @@
 import { Accordion, Button, ButtonProps, Drawer, Flex, ScrollArea, Title } from '@mantine/core';
-import React from 'react';
+import { useDisclosure, useLocalStorage } from '@mantine/hooks';
+import { IconQuestionMark } from '@tabler/icons-react';
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
 import { type TGameNames } from '~/games/game.types';
+import useNotification from '~/hooks/useNotification';
 import { useRoom } from '~/hooks/useRoom';
 import { socket } from '~/hooks/useSocket';
 import { type IModPanelProps } from './modPanel.types';
-import { useLocalStorage } from '@mantine/hooks';
-import { useRouter } from 'next/router';
-import useNotification from '~/hooks/useNotification';
+import Tooltip from '~/components/Tooltip/Tooltip';
+import GameRulesModal from '~/components/GameRulesModal/GameRulesModal';
+import { TGameSettingsMap } from '~/hooks/useConfigurator/useConfigurator.types';
 
 const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
     const { showErrorNotification, showSuccessNotification } = useNotification()
     const router = useRouter();
     const [openedItems, setOpenedItems] = useLocalStorage<string[]>({ key: "modPanelOpenedItems", defaultValue: [] })
 
+    // for game rules
+    const [openedGameRules, { open: openGameRules, close: closeGameRules }] = useDisclosure()
+    const [clickedGame, setClickedGame] = useState<TGameSettingsMap[TGameNames]>()
+
     const { room, currentGame } = useRoom()
     const [isOpen, { close: closeModPanel }] = disclosure;
     const btnVariantDefault: ButtonProps = { variant: "default" }
     const titleOrder = 3
 
+    const handleOpenGameRules = (game: TGameSettingsMap[TGameNames]) => {
+        setClickedGame(game)
+        openGameRules()
+    }
+
     const gameBtns = room.games.map(g => {
         const btnDisabled = g.identifier === currentGame?.identifier
 
         return (
-            <Button
-                {...btnVariantDefault}
-                key={g.identifier}
-                disabled={btnDisabled}
-                onClick={() => startGame(g.identifier)}
-            >
-                {g.name} {btnDisabled && "(Läuft gerade)"}
-            </Button>
+            <Button.Group key={g.identifier}>
+                <Button
+                    {...btnVariantDefault}
+                    disabled={btnDisabled}
+                    onClick={() => startGame(g.identifier)}
+                    w="100%"
+                >
+                    {g.name} {btnDisabled && "(Läuft gerade)"}
+                </Button>
+                {g.rules &&
+                    <Tooltip label="Regeln anzeigen" openDelay={500} >
+                        <Button {...btnVariantDefault} onClick={() => handleOpenGameRules(g)}>
+                            <IconQuestionMark />
+                        </Button>
+                    </Tooltip>
+                }
+            </Button.Group>
         )
     })
 
@@ -53,7 +75,8 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
         })
     }
 
-    return (
+    return (<>
+        {clickedGame && <GameRulesModal opened={openedGameRules} onClose={closeGameRules} gameName={clickedGame.name} rules={clickedGame.rules} />}
         <Drawer
             opened={isOpen}
             onClose={closeModPanel}
@@ -134,8 +157,8 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                 {/* <Flex direction="column" gap="sm">
                     
                     
-                </Flex>
-
+                    </Flex>
+                    
                 <Flex direction="column" gap="sm">
                     <Title order={titleOrder}>Aktionen</Title>
                     <Button.Group orientation='vertical' >
@@ -144,18 +167,18 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                         <Button {...btnVariantDefault}>Konfetti regnen lassen</Button>
                         <Button {...btnVariantDefault} disabled>Musik starten</Button>
                     </Button.Group>
-                </Flex>
-
-                <Flex direction="column" gap="sm">
+                    </Flex>
+                    
+                    <Flex direction="column" gap="sm">
                     <Title order={titleOrder}>Sounds</Title>
                     <Button.Group orientation='vertical' >
-                        <Button {...btnVariantDefault} disabled>Korrekte Antwort</Button>
-                        <Button {...btnVariantDefault} disabled>Falsche Antwort</Button>
-                        <Button {...btnVariantDefault} disabled>Winner Sound</Button>
+                    <Button {...btnVariantDefault} disabled>Korrekte Antwort</Button>
+                    <Button {...btnVariantDefault} disabled>Falsche Antwort</Button>
+                    <Button {...btnVariantDefault} disabled>Winner Sound</Button>
                     </Button.Group>
-                </Flex>
+                    </Flex>
 
-                <Flex direction="column" gap="sm">
+                    <Flex direction="column" gap="sm">
                     <Title order={titleOrder}>Allgemein</Title>
                     <Button.Group orientation='vertical'>
                         <Button color='red' disabled>Raum schließen</Button>
@@ -163,6 +186,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                 </Flex> */}
             </Flex>
         </Drawer >
+    </>
     )
 }
 

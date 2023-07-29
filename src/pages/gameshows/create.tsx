@@ -13,7 +13,7 @@ import { GAME_CONFIGURATORS } from '~/components/configurators/_game_configurato
 import PageLayout from '~/components/layout'
 import { type TGameNames } from '~/games/game.types'
 import { ConfiguratorProvider } from '~/hooks/useConfigurator'
-import { GAME_STATE_MAP, useConfigurator } from '~/hooks/useConfigurator/useConfigurator'
+import { GAME_STATE_MAP } from '~/hooks/useConfigurator/useConfigurator'
 import { type TGameshowConfig } from '~/hooks/useConfigurator/useConfigurator.types'
 import useNotification from '~/hooks/useNotification'
 import { api } from '~/utils/api'
@@ -38,8 +38,7 @@ const CreateGameshowPage = () => {
 
     const [selectedGames, setSelectedGames] = useState<ITransferListItem[]>([])
 
-    const _tmpSelectedGame = selectedGames[activeStep - 1] // -1 because Game configurators starts at step 1 and not 0
-    const activeGame = gameshow.games[activeStep - 1]
+    const activeGame = gameshow.games[activeStep - 1] // -1 because Game configurators starts at step 1 and not 0
 
     const { mutateAsync: createGameshow, isLoading, isSuccess } = api.gameshows.create.useMutation({
         onError: (e) => {
@@ -86,8 +85,19 @@ const CreateGameshowPage = () => {
 
     };
     const saveGameshow = async () => {
+        // generate rules as string
+        const gamesWithRules = gameshow.games.map(g => ({
+            ...g,
+            rules: g.getRules()
+        }))
+
+        const gameshowWithGameRules: TGameshowConfig = {
+            ...gameshow,
+            games: gamesWithRules
+        }
+
         try {
-            await createGameshow(gameshow)
+            await createGameshow(gameshowWithGameRules)
             // navigate back to gameshows
             router.push("/gameshows")
         } catch (err) { }
@@ -96,7 +106,6 @@ const CreateGameshowPage = () => {
 
     const updateGameshowConfig = (e: React.ChangeEvent<HTMLInputElement>) => {
         const key: keyof TGameshowConfigKeys = e.target.id as keyof TGameshowConfigKeys;
-
 
         setGameshow(draft => {
             draft[key] = e.target.value

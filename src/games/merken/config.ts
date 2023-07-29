@@ -15,6 +15,7 @@ export const DEFAULT_MERKEN_STATE: TDefaultMerkenState = {
     isActive: false,
     timeToThinkSeconds: 60,
   },
+  rules: "",
   getRules() {
     return `
         Vor euch seht ihr ein Feld mit verdeckten Feldern. Hinter diesen Feldern verbirgt sich eine Abbildung. 

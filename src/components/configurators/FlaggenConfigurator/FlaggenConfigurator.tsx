@@ -29,7 +29,6 @@ const FlaggenConfigurator = () => {
     const [flaggen, setFlaggen, { enableFurtherButton, disableFurtherButton }] = useConfigurator("flaggen")
     const [countries, setCountries] = useState(transferList)
 
-
     useEffect(() => {
         const selectedCountries = flaggen.countries.map(c => ({ key: c.shortCode, value: c.shortCode, label: c.country }))
         const notSelectedCountries = availableCountries.filter(c => !selectedCountries.map(c => c.value).includes(c.value))

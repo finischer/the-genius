@@ -8,6 +8,7 @@ export const DEFAULT_MEMORY_STATE: TDefaultMemoryState = {
   name: "Memory",
   maxPoints: 999,
   scorebarMode: "number",
+  rules: "",
   getRules() {
     return `
         Vor euch seht ihr 42 umgedrehte Karten. Auf jeder dieser Karten befindet sich ein Bild, dabei befindet sich ein Bild immer jeweils auf zwei Karten. 

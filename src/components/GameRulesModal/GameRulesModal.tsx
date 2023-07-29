@@ -1,6 +1,9 @@
 import React from 'react'
-import { IGameRulesModal } from './gameRulesModal.types'
+import { type IGameRulesModal } from './gameRulesModal.types'
 import { Modal, Text } from '@mantine/core'
+
+
+// TODO: Make modal more beatiful
 
 const GameRulesModal: React.FC<IGameRulesModal> = ({ gameName, rules, ...props }) => {
     return (

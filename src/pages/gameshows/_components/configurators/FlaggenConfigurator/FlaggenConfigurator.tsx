@@ -58,9 +58,10 @@ const FlaggenConfigurator = () => {
             // itemComponent={CountryItem}
             searchPlaceholder="Land suchen ..."
             nothingFound="Kein Land gefunden"
-            titles={["Verfügbare Länder", "Ausgewählte Länder"]}
+            titles={[`Verfügbare Länder (${countries[0].length})`, `Ausgewählte Länder (${countries[1].length})`]}
             breakpoint="sm"
             listHeight={600}
+
         />
     )
 }

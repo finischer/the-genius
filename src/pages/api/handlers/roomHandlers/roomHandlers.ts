@@ -150,4 +150,25 @@ export function roomHandler(
 
     room.update();
   });
+
+  socket.on(
+    "showAnswerBanner",
+    ({ answer, withSound = false, autoClose = false }) => {
+      const room = roomManager.getRoom(socket.roomId);
+      if (!room) return new NoRoomException(socket);
+
+      room.state.answerState.answer = answer;
+      room.state.answerState.showAnswer = true;
+      room.update();
+    }
+  );
+
+  socket.on("hideAnswerBanner", () => {
+    const room = roomManager.getRoom(socket.roomId);
+    if (!room) return new NoRoomException(socket);
+
+    room.state.answerState.showAnswer = false;
+    room.state.answerState.answer = "";
+    room.update();
+  });
 }

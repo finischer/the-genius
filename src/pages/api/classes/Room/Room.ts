@@ -4,7 +4,11 @@ import { io } from "../../socket";
 import Team from "../Team/Team";
 import { type IRoom } from "./room.types";
 import { roomManager } from "../../controllers/RoomManager";
-import { type TGameNames } from "~/pages/room/_components/Game/games/game.types";
+import {
+  TGame,
+  type TGameNames,
+} from "~/pages/room/_components/Game/games/game.types";
+import { type TGameSettingsMap } from "~/hooks/useConfigurator/useConfigurator.types";
 
 const ROOM_DEFAULTS = {
   roomSize: 12,
@@ -112,6 +116,12 @@ export default class Room implements IRoom {
 
   getTeamById(teamId: string) {
     return Object.values(this.teams).find((t) => t.id === teamId);
+  }
+
+  getGame<T extends TGameNames>(gameIdentifier: T): TGameSettingsMap[T] {
+    const game = this.games.find((g) => g.identifier === gameIdentifier) as
+      | TGameSettingsMap[T];
+    return game;
   }
 
   startGame(gameIdentifier: TGameNames) {

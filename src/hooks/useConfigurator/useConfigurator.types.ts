@@ -8,6 +8,7 @@ import {
 } from "~/pages/room/_components/Game/games/game.types";
 
 export type TGameSettingsMap = {
+  // [key in TGameNames]: TFlaggenGameState | TMemoryGameState | TMerkenGameState;
   flaggen: TFlaggenGameState;
   memory: TMemoryGameState;
   merken: TMerkenGameState;

@@ -50,6 +50,16 @@ export interface IClientToServerEvents {
   ) => void;
   listAllRooms: (cb: (rooms: Room[]) => void) => void;
   startGame: ({ gameIdentifier }: { gameIdentifier: TGameNames }) => void;
+  showAnswerBanner: ({
+    answer,
+    withSound,
+    autoClose,
+  }: {
+    answer: string;
+    withSound?: boolean;
+    autoClose?: boolean;
+  }) => void;
+  hideAnswerBanner: () => void;
 
   // +++ TEAM EVENTS +++
   increaseGameScore: ({
@@ -84,6 +94,12 @@ export interface IClientToServerEvents {
   resetTotalScore: ({ teamId }: { teamId: string }) => void;
   toggleTeamActive: ({ teamId }: { teamId: string }) => void;
   releaseBuzzer: () => void;
+
+  // +++ FLAGEN GAME EVENTS +++
+  showFlag: () => void;
+  nextFlag: () => void;
+  prevFlag: () => void;
+  showAnswer: () => void;
 }
 
 export interface IServerToClientEvents {

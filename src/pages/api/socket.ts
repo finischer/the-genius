@@ -14,6 +14,7 @@ import Room from "./classes/Room/Room";
 import { roomManager } from "./controllers/RoomManager";
 import { roomHandler } from "./handlers/roomHandlers";
 import { teamHandler } from "./handlers/teamHandlers";
+import { flaggenHandler } from "./handlers/games/flaggenHandlers";
 
 const prisma = new PrismaClient();
 
@@ -105,6 +106,9 @@ export default async function SocketHandler(
     // initialize all handlers
     roomHandler(io, socket);
     teamHandler(io, socket);
+
+    // handler for all games
+    flaggenHandler(io, socket);
   };
 
   io.on("connection", onConnection);

@@ -8,6 +8,7 @@ const ActionIcon: React.FC<IActionIconProps> = ({ toolTip, children, onClick, ..
         <Tooltip
             label={toolTip}
             disabled={!toolTip}
+            openDelay={500}
         >
             <MantineActionIcon onClick={onClick} {...props}>
                 {children}

@@ -84,7 +84,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team }) => {
                 }}
             />
 
-            <Flex gap="lg">
+            <Flex gap="lg" align="flex-end">
                 <Box
                     bg={theme.primaryColor}
                     sx={() => ({

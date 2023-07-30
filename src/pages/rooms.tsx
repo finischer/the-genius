@@ -82,13 +82,15 @@ const RoomsPage = () => {
     }, [])
 
     const rows = rooms?.map(room => {
+        const nameOfCurrentGame = room.games.find(g => g.identifier === room.currentGame)?.name
+
         return (
             <tr key={room.id} style={{ cursor: "pointer" }} onClick={() => handleRoomClick(room)}>
                 <td>{room.name}</td>
                 <td>{room.isPrivateRoom ? "Privat" : "Öffentlich"}</td>
                 <td>{room.modus}</td>
                 <td>{room.participants.length} / {room.roomSize}</td>
-                <td>{room.currentGame || "Kein Spiel gestartet"}</td>
+                <td>{nameOfCurrentGame || "Kein Spiel gestartet"}</td>
                 <td>{room.creator?.username}</td>
                 <td>{room.createdAt?.toLocaleString()} Uhr</td>
             </tr>

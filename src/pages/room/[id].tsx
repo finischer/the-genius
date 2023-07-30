@@ -5,21 +5,20 @@ import { IconArrowRight, IconInfoSmall, IconWifi, IconWifi0, IconWifi1, IconWifi
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-import ActionIcon from '~/components/ActionIcon/ActionIcon'
-import ContainerBox from '~/components/ContainerBox/ContainerBox'
+import ActionIcon from '~/components/ActionIcon'
+import ContainerBox from '~/components/ContainerBox'
 import Loader from '~/components/Loader/Loader'
-import RoomDetailsModal from '~/components/RoomDetailsModal'
-import Scorebar from '~/components/Scorebar'
-import Game from '~/games'
+import Scorebar from './_components/Scorebar'
+import Game from '~/pages/room/_components/Game/Game'
 import useNotification from '~/hooks/useNotification'
 import { useRoom } from '~/hooks/useRoom'
 import { socket } from '~/hooks/useSocket'
 import { useUser } from '~/hooks/useUser'
 import { sizes } from '~/styles/constants'
 import { type TUserReduced } from '~/types/socket.types'
-import ModPanel from '../../components/ModPanel'
+import ModPanel from './_components/ModPanel'
 import { type IRoom } from '../api/classes/Room/room.types'
-import { zoomInAnimation, zoomOutAnimation } from '~/utils/animations'
+import RoomDetailsModal from './_components/RoomDetailsModal'
 
 type TNetworkStatusEffectiveType = 'slow-2g' | '2g' | '3g' | '4g'
 
@@ -44,11 +43,7 @@ const RoomPage = () => {
     const networkStatus = useNetwork();
 
     const showGame = room?.state.display.game
-
-
-
     const roomId = router.query.id as string
-
 
     useEffect(() => {
         if (session?.user) {
@@ -61,6 +56,8 @@ const RoomPage = () => {
             }
 
             socket.emit("joinRoom", { user, roomId }, (room: IRoom) => {
+                console.log("User: ", user);
+                console.log("Room Creator: ", room.creator)
                 setRoom(room)
             })
 
@@ -145,7 +142,7 @@ const RoomPage = () => {
                 </Container>
 
                 {/* Main View */}
-                <Flex h="100%" align="center" justify="center" direction="column">
+                <Flex h="100%" align="center" justify="center" direction="column" bg="green">
                     {/* <Text>Bist du der Host: {isHost.toString()} </Text>
                     {team && <Text>Dein Team: {team.name}</Text>} */}
                     {currentGame && <Game game={currentGame} />}

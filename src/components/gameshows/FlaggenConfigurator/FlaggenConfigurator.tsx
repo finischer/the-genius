@@ -1,4 +1,4 @@
-import { TransferList, type TransferListData } from '@mantine/core';
+import { Checkbox, Group, Text, TransferList, type TransferListData, type TransferListItemComponentProps } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { COUNTRIES } from '~/components/room/Game/games/Flaggen/config';
 import type { TCountry } from '~/components/room/Game/games/Flaggen/flaggen.types';
@@ -13,17 +13,14 @@ const transferList: TransferListData = [
 
 // HINT: Not in use cause of performance problems
 // TODO: Optimize performance
-// const CountryItem: React.FC<TransferListItemComponentProps> = ({ data, selected }) => {
-//     const countryImg = useMemo(() => <img src={`https://flagcdn.com/w40/${data.value}.png`} alt={data.label} width={40} />, [data.value])
+const CountryItem: React.FC<TransferListItemComponentProps> = ({ data, selected }) => (
+    <Group noWrap>
+        <Checkbox checked={selected} onChange={() => { }} tabIndex={-1} sx={{ pointerEvents: 'none' }} />
+        <img src={`https://flagcdn.com/w40/${data.value}.png`} alt={data.label} width={40} />
+        <Text>{data.label}</Text>
+    </Group>
+)
 
-//     return (
-//         <Group noWrap>
-//             <Checkbox checked={selected} onChange={() => { }} tabIndex={-1} sx={{ pointerEvents: 'none' }} />
-//             {countryImg}
-//             <Text>{data.label}</Text>
-//         </Group>
-//     )
-// }
 
 const FlaggenConfigurator = () => {
     const [flaggen, setFlaggen, { enableFurtherButton, disableFurtherButton }] = useConfigurator("flaggen")
@@ -55,7 +52,7 @@ const FlaggenConfigurator = () => {
         <TransferList
             value={countries}
             onChange={setCountries}
-            // itemComponent={CountryItem}
+            itemComponent={CountryItem}
             searchPlaceholder="Land suchen ..."
             nothingFound="Kein Land gefunden"
             titles={[`Verfügbare Länder (${countries[0].length})`, `Ausgewählte Länder (${countries[1].length})`]}

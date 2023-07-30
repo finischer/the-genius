@@ -43,7 +43,6 @@ declare module "next-auth" {
 export const authOptions: NextAuthOptions = {
   callbacks: {
     signIn({ user }) {
-      console.log("Sign in!");
       if (user) {
         return true;
       }

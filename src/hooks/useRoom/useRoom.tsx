@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
-import { type IRoom } from "~/pages/api/classes/Room/room.types";
 import { type INonNullableUseRoomContext, type IUseRoomContext, type IUseRoomProvider } from "./useRoom.types";
+import type { IRoom } from "~/pages/api/classes/Room/room.types";
 
 const RoomContext = createContext<IUseRoomContext | undefined>(undefined);
 

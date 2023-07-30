@@ -15,12 +15,12 @@ import { socket } from '~/hooks/useSocket'
 import { useUser } from '~/hooks/useUser'
 import Game from '~/components/room/Game'
 import { type TUserReduced } from '~/types/socket.types'
-import { type IRoom } from '../api/classes/Room/room.types'
 import RoomDetailsModal from '~/components/room/RoomDetailsModal/RoomDetailsModal'
 import { sizes } from '~/styles/constants'
 import ModPanel from '~/components/room/ModPanel/ModPanel'
 import Scorebar from '~/components/room/Scorebar/Scorebar'
 import AnswerBanner from '~/components/room/AnswerBanner/AnswerBanner'
+import type { IRoom } from '../api/classes/Room/room.types'
 
 type TNetworkStatusEffectiveType = 'slow-2g' | '2g' | '3g' | '4g'
 

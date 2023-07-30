@@ -28,7 +28,6 @@ export default async function SocketHandler(
   req: NextApiRequest,
   res: TNextApiResponse
 ) {
-  console.log("Execute Socket handler");
   // means that socket server was already initialized
   if (res.socket.server.io) {
     console.log("Socket handler already initialized");
@@ -94,16 +93,6 @@ export default async function SocketHandler(
       IServerSocketData
     >
   ) => {
-    console.log("Socket connected: ", socket.id);
-    // const sockets = await io.fetchSockets();
-
-    // io.emit("getOnlinePlayers", { numOfOnlinePlayers: sockets.length });
-
-    // socket.on("disconnecting", async () => {
-    //   const sockets = await io.fetchSockets();
-    //   io.emit("getOnlinePlayers", { numOfOnlinePlayers: sockets.length - 1 });
-    // });
-
     // initialize all handlers
     roomHandler(io, socket);
     teamHandler(io, socket);

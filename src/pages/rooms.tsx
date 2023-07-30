@@ -7,7 +7,7 @@ import PageLayout from '~/components/layout'
 import useNotification from '~/hooks/useNotification'
 import { socket } from '~/hooks/useSocket'
 import { api } from '~/utils/api'
-import { type IRoom } from './api/classes/Room/room.types'
+import type { IRoom } from './api/classes/Room/room.types'
 
 // type TOnlinePlayersEvent = {
 //     numOfOnlinePlayers: number

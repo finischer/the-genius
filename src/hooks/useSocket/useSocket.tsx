@@ -7,12 +7,10 @@ const SocketContext = createContext<IUseSocketContext | undefined>(undefined);
 
 const socket: Socket<IServerToClientEvents, IClientToServerEvents> = io({
   path: "/api/socket/",
-  autoConnect: true,
   closeOnBeforeunload: false
 })
 
 const SocketProvider: React.FC<IUseSocketProvider> = ({ children }) => {
-
 
   return (
     <SocketContext.Provider value={{ socket }}>

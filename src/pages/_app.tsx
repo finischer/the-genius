@@ -9,7 +9,6 @@ import { UserProvider } from '~/hooks/useUser';
 import "~/styles/globals.css";
 import { api } from "~/utils/api";
 
-
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },

@@ -73,8 +73,6 @@ export function flaggenHandler(
     if (!room) return new NoRoomException(socket);
     const game = room.getGame(GAME_IDENTIFIER);
 
-    // TODO: Add handler to show answer in room -> write function in class Room who handles the answer banner
-
     game.display.answer = true;
     room.update();
   });

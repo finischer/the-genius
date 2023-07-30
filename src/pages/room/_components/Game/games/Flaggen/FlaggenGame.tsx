@@ -1,10 +1,10 @@
 import { Button, Flex, Image, Text, useMantineTheme } from '@mantine/core'
-import React, { useState } from 'react'
+import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react'
+import React from 'react'
+import ActionIcon from '~/components/ActionIcon/ActionIcon'
+import { socket } from '~/hooks/useSocket'
 import { useUser } from '~/hooks/useUser'
 import { type IFlaggenGameProps } from './flaggen.types'
-import ActionIcon from '~/components/ActionIcon/ActionIcon'
-import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react'
-import { socket } from '~/hooks/useSocket'
 
 const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
     const { isHost } = useUser()
@@ -56,22 +56,24 @@ const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
                         <IconArrowLeft />
                     </ActionIcon>
                 }
-                <Image
-                    src={`https://flagcdn.com/w640/${currFlag?.shortCode}.png`}
-                    alt='Image not found'
-                    radius="sm"
-                    opacity={displayFlag ? 1 : isHost ? 0.5 : 0}
-                    onClick={handleFlagClick}
-                    sx={{
-                        transform: `scale(${displayFlag ? "1" : "0.9"})`,
-                        transition: "all 500ms",
-                        userSelect: "none",
-                        ":hover": isHost && !displayFlag ? {
-                            cursor: isHost ? "pointer" : "auto",
-                            opacity: 0.3
-                        } : undefined
-                    }}
-                />
+                {currFlag &&
+                    <Image
+                        src={`https://flagcdn.com/w640/${currFlag.shortCode}.png`}
+                        alt='Image not found'
+                        radius="sm"
+                        opacity={displayFlag ? 1 : isHost ? 0.5 : 0}
+                        onClick={handleFlagClick}
+                        sx={{
+                            transform: `scale(${displayFlag ? "1" : "0.9"})`,
+                            transition: "all 500ms",
+                            userSelect: "none",
+                            ":hover": isHost && !displayFlag ? {
+                                cursor: isHost ? "pointer" : "auto",
+                                opacity: 0.3
+                            } : undefined
+                        }}
+                    />
+                }
                 {isHost &&
                     <ActionIcon
                         onClick={handleNextFlagClick}

@@ -1,10 +1,10 @@
 import { Button, Flex, Image, Text, useMantineTheme } from '@mantine/core'
 import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react'
 import React from 'react'
-import ActionIcon from '~/components/ActionIcon/ActionIcon'
 import { socket } from '~/hooks/useSocket'
 import { useUser } from '~/hooks/useUser'
 import { type IFlaggenGameProps } from './flaggen.types'
+import ActionIcon from '~/components/shared/ActionIcon/ActionIcon'
 
 const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
     const { isHost } = useUser()

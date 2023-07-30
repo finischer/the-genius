@@ -1,5 +1,5 @@
 import { type Dispatch } from "react";
-import { type TGameNames } from "~/pages/room/_components/Game/games/game.types";
+import type { TGameNames } from "~/components/room/Game/games/game.types";
 
 export interface IGamesPickerProps {
   setSelectedGames: Dispatch<TTransferListItem[]>;

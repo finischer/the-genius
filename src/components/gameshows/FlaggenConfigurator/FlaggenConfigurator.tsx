@@ -1,8 +1,8 @@
 import { TransferList, type TransferListData } from '@mantine/core';
 import { useEffect, useState } from 'react';
+import { COUNTRIES } from '~/components/room/Game/games/Flaggen/config';
+import type { TCountry } from '~/components/room/Game/games/Flaggen/flaggen.types';
 import { useConfigurator } from '~/hooks/useConfigurator';
-import { COUNTRIES } from '~/pages/room/_components/Game/games/Flaggen/config';
-import { type TCountry } from '~/pages/room/_components/Game/games/Flaggen/flaggen.types';
 
 const availableCountries = Object.keys(COUNTRIES).map(code => ({ key: code, value: code, label: COUNTRIES[code] as string }))
 

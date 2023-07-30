@@ -1,11 +1,11 @@
 import { type Updater } from "use-immer";
-import { type TFlaggenGameState } from "~/pages/room/_components/Game/games/Flaggen/config";
-import { type TMemoryGameState } from "~/pages/room/_components/Game/games/Memory/config";
-import { type TMerkenGameState } from "~/pages/room/_components/Game/games/Merken/config";
-import {
-  type TGame,
-  type TGameNames,
-} from "~/pages/room/_components/Game/games/game.types";
+import type { TFlaggenGameState } from "~/components/room/Game/games/Flaggen/config";
+import type { TMemoryGameState } from "~/components/room/Game/games/Memory/config";
+import type { TMerkenGameState } from "~/components/room/Game/games/Merken/config";
+import type {
+  TGame,
+  TGameNames,
+} from "~/components/room/Game/games/game.types";
 
 export type TGameSettingsMap = {
   // [key in TGameNames]: TFlaggenGameState | TMemoryGameState | TMerkenGameState;

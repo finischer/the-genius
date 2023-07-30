@@ -1,6 +1,5 @@
 import { Flex, keyframes } from '@mantine/core'
 import React, { useEffect, useState } from 'react'
-import FlipCard from '~/components/FlipCard/FlipCard'
 import { useRoom } from '~/hooks/useRoom'
 import { zoomInAnimation, zoomOutAnimation } from '~/utils/animations'
 import FlaggenGame from './games/Flaggen/FlaggenGame'
@@ -10,6 +9,7 @@ import MemoryGame from './games/Memory/MemoryGame'
 import { type TMemoryGameState } from './games/Memory/config'
 import MerkenGame from './games/Merken/MerkenGame'
 import { type TMerkenGameState } from './games/Merken/config'
+import FlipCard from '~/components/shared/FlipCard/FlipCard'
 
 const scaleAnimation = keyframes({
     "0%": { transform: "scale(1,1)" },

@@ -3,13 +3,13 @@ import { useDisclosure, useLocalStorage } from '@mantine/hooks';
 import { IconQuestionMark } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import GameRulesModal from '~/components/GameRulesModal/GameRulesModal';
-import Tooltip from '~/components/Tooltip/Tooltip';
-import { type TGameNames, type TGame } from "~/pages/room/_components/Game/games/game.types";
+import Tooltip from '~/components/shared/Tooltip/Tooltip';
 import useNotification from '~/hooks/useNotification';
 import { useRoom } from '~/hooks/useRoom';
 import { socket } from '~/hooks/useSocket';
 import { type IModPanelProps } from './modPanel.types';
+import type { TGame, TGameNames } from '../Game/games/game.types';
+import GameRulesModal from '~/components/shared/GameRulesModal/GameRulesModal';
 
 const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
     const { showErrorNotification, showSuccessNotification } = useNotification()

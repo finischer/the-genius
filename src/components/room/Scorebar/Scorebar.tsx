@@ -5,8 +5,8 @@ import { useRoom } from '~/hooks/useRoom'
 import { socket } from '~/hooks/useSocket'
 import { useUser } from '~/hooks/useUser'
 import { colors, sizes } from '~/styles/constants'
-import ActionIcon from '../../../../components/ActionIcon/ActionIcon'
 import { type IScoreCircleProps, type IScorebarProps } from './scorebar.types'
+import ActionIcon from '~/components/shared/ActionIcon/ActionIcon'
 
 
 const stretchAnimation = keyframes({

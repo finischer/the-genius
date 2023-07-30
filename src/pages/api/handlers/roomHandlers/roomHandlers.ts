@@ -146,14 +146,7 @@ export function roomHandler(
     const room = roomManager.getRoom(socket.roomId);
     if (!room) return new NoRoomException(socket);
 
-    Object.values(room.teams).forEach((t) => {
-      t.isActiveTurn = false;
-      t.buzzer = {
-        isPressed: false,
-        playerBuzzered: "",
-      };
-    });
-
+    room.releaseBuzzer();
     room.update();
   });
 

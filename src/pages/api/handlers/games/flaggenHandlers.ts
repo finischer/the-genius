@@ -26,6 +26,7 @@ export function flaggenHandler(
     const game = room.getGame(GAME_IDENTIFIER);
 
     game.display.country = true;
+    room.releaseBuzzer();
     room.update();
   });
 

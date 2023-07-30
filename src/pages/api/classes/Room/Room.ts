@@ -194,6 +194,16 @@ export default class Room implements IRoom {
     this.state.display.clock.isActive = false;
   }
 
+  releaseBuzzer() {
+    Object.values(this.teams).forEach((t) => {
+      t.isActiveTurn = false;
+      t.buzzer = {
+        isPressed: false,
+        playerBuzzered: "",
+      };
+    });
+  }
+
   update() {
     io.to(this.id).emit("updateRoom", { newRoomState: this });
 

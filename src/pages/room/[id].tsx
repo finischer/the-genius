@@ -90,7 +90,7 @@ const RoomPage = () => {
 
     useEffect(() => {
         if (isPlayer) {
-            window.addEventListener("keydown", handleBuzzerClick)
+            window.addEventListener("keydown", (e) => e.code === "Space" && handleBuzzerClick())
         }
 
         return () => {

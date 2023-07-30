@@ -1,9 +1,9 @@
 import { createContext, useContext, useEffect } from 'react'
 import { useImmer } from "use-immer"
-import { DEFAULT_FLAGGEN_STATE } from '~/games/flaggen/config'
-import { type TGame, type TGameNames } from '~/games/game.types'
-import { DEFAULT_MEMORY_STATE } from '~/games/memory/config'
-import { DEFAULT_MERKEN_STATE } from '~/games/merken/config'
+import { DEFAULT_FLAGGEN_STATE } from '~/pages/room/_components/Game/games/Flaggen/config'
+import { DEFAULT_MEMORY_STATE } from '~/pages/room/_components/Game/games/Memory/config'
+import { DEFAULT_MERKEN_STATE } from '~/pages/room/_components/Game/games/Merken/config'
+import { type TGame, type TGameNames } from '~/pages/room/_components/Game/games/game.types'
 import { type IConfiguratorProvider, type TConfiguratorContext, type TGameSettingsMap } from './useConfigurator.types'
 
 export const GAME_STATE_MAP: TGameSettingsMap = {

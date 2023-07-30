@@ -3,7 +3,7 @@ import { instrument } from "@socket.io/admin-ui";
 import { type NextApiRequest } from "next";
 import { Server, type Socket } from "socket.io";
 import { env } from "~/env.mjs";
-import { type TGame } from "~/games/game.types";
+import { type TGame } from "~/pages/room/_components/Game/games/game.types";
 import {
   type IClientToServerEvents,
   type IServerSocketData,

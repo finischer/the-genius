@@ -11,7 +11,7 @@ import { type TTransferListItem } from '~/components/GamesPicker/gamesPicker.typ
 import Loader from '~/components/Loader/Loader'
 import { GAME_CONFIGURATORS } from './_components/configurators/_game_configurator_map'
 import PageLayout from '~/components/layout'
-import { type TGameNames } from '~/games/game.types'
+import { type TGameNames } from "~/pages/room/_components/Game/games/game.types";
 import { ConfiguratorProvider } from '~/hooks/useConfigurator'
 import { GAME_STATE_MAP } from '~/hooks/useConfigurator/useConfigurator'
 import { type TGameshowConfig } from '~/hooks/useConfigurator/useConfigurator.types'

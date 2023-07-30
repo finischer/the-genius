@@ -4,7 +4,7 @@ import { io } from "../../socket";
 import Team from "../Team/Team";
 import { type IRoom } from "./room.types";
 import { roomManager } from "../../controllers/RoomManager";
-import { type TGameNames } from "~/games/game.types";
+import { type TGameNames } from "~/pages/room/_components/Game/games/game.types";
 
 const ROOM_DEFAULTS = {
   roomSize: 12,

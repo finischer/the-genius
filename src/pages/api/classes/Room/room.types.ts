@@ -1,5 +1,5 @@
 import { type GameshowMode } from "@prisma/client";
-import { type TGame } from "~/games/game.types";
+import { type TGame } from "~/pages/room/_components/Game/games/game.types";
 import { type TUserReduced } from "~/types/socket.types";
 import { type ITeam } from "../Team/team.types";
 

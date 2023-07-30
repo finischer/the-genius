@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import { ObjectId } from "mongodb";
 import { type Server, type Socket } from "socket.io";
-import { type TGame } from "~/games/game.types";
+import { type TGame } from "~/pages/room/_components/Game/games/game.types";
 import { prisma } from "~/server/db";
 import {
   type IClientToServerEvents,

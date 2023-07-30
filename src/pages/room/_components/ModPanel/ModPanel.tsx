@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import GameRulesModal from '~/components/GameRulesModal/GameRulesModal';
 import Tooltip from '~/components/Tooltip/Tooltip';
-import { type TGame, type TGameNames } from '~/games/game.types';
+import { type TGameNames, type TGame } from "~/pages/room/_components/Game/games/game.types";
 import useNotification from '~/hooks/useNotification';
 import { useRoom } from '~/hooks/useRoom';
 import { socket } from '~/hooks/useSocket';

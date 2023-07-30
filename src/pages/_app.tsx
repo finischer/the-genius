@@ -1,14 +1,13 @@
-import { MantineColor, MantineProvider } from '@mantine/core';
+import { MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
-import { UserProvider } from '~/hooks/useUser';
+import { RoomProvider } from '~/hooks/useRoom';
 import { SocketProvider } from '~/hooks/useSocket';
+import { UserProvider } from '~/hooks/useUser';
 import "~/styles/globals.css";
 import { api } from "~/utils/api";
-import { RoomProvider } from '~/hooks/useRoom';
-import { useState } from 'react';
 
 
 const MyApp: AppType<{ session: Session | null }> = ({

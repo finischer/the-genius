@@ -20,7 +20,8 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"]
-    }
+    },
+    "verbatimModuleSyntax": true
   },
   "include": [
     ".eslintrc.cjs",

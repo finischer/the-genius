@@ -3,6 +3,8 @@ import Player from "../Player/Player";
 import { type ITeam } from "./team.types";
 import { type TUserReduced } from "~/types/socket.types";
 
+export const SCOREBAR_TIMER_SECONDS = 5;
+
 export default class Team implements ITeam {
   id: ITeam["id"];
   name: ITeam["name"];
@@ -29,7 +31,7 @@ export default class Team implements ITeam {
     };
     this.scorebarTimer = {
       isActive: false,
-      seconds: 5,
+      seconds: SCOREBAR_TIMER_SECONDS,
     };
     this.isActiveTurn = false;
   }
@@ -77,5 +79,13 @@ export default class Team implements ITeam {
 
   resetTotalScore() {
     this.totalScore = 0;
+  }
+
+  startScorebarTimer() {
+    this.scorebarTimer.isActive = true;
+  }
+
+  stopScorebarTimer() {
+    this.scorebarTimer.isActive = false;
   }
 }

@@ -4,4 +4,5 @@ export interface IContainerBoxProps extends BoxProps {
   children: React.ReactNode;
   contentCentered?: boolean;
   withShadow?: boolean;
+  onClick?: () => void;
 }

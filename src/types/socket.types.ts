@@ -60,6 +60,13 @@ export interface IClientToServerEvents {
     autoClose?: boolean;
   }) => void;
   hideAnswerBanner: () => void;
+  buzzer: ({
+    teamId,
+    withTimer,
+  }: {
+    teamId: string;
+    withTimer?: boolean;
+  }) => void;
 
   // +++ TEAM EVENTS +++
   increaseGameScore: ({

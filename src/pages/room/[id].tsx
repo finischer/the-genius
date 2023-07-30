@@ -42,7 +42,7 @@ const RoomPage = () => {
     const [openedGameRules, { open: openGameRules, close: closeGameRules }] = useDisclosure()
 
     const { room, currentGame, setRoom } = useRoom()
-    const { isHost } = useUser()
+    const { isHost, isPlayer, team } = useUser()
     const modPanelDisclosure = useDisclosure(false);
     const networkStatus = useNetwork();
 
@@ -86,6 +86,22 @@ const RoomPage = () => {
             socket.removeAllListeners("userLeftRoom")
         }
     }, [session])
+
+
+    useEffect(() => {
+        if (isPlayer) {
+            window.addEventListener("keydown", handleBuzzerClick)
+        }
+
+        return () => {
+            window.removeEventListener("keydown", handleBuzzerClick)
+        }
+    }, [isPlayer])
+
+    const handleBuzzerClick = () => {
+        if (!isPlayer || room.state.teamWithTurn || !team) return
+        socket.emit("buzzer", ({ teamId: team.id, withTimer: true }))
+    }
 
     if (room === undefined) {
         return (
@@ -139,6 +155,7 @@ const RoomPage = () => {
                             top={0}
                             contentCentered
                             withShadow
+                            onClick={handleBuzzerClick}
                         >
                             <Text>{currentGame.name}</Text>
                         </ContainerBox>
@@ -154,9 +171,9 @@ const RoomPage = () => {
 
                 {/* Footer View */}
                 <Flex justify="space-between" align="flex-end">
-                    <Scorebar team={room.teams.teamOne} />
+                    <Scorebar team={room.teams.teamOne} timerPosition='right' />
                     {room.state.answerState.showAnswer && <AnswerBanner answer={room.state.answerState.answer} />}
-                    <Scorebar team={room.teams.teamTwo} />
+                    <Scorebar team={room.teams.teamTwo} timerPosition='left' />
                 </Flex>
             </Flex >
         </>

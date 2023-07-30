@@ -54,6 +54,10 @@ export function teamHandler(
     const { room, team } = res;
 
     team.isActiveTurn = !team.isActiveTurn;
+    team.buzzer = {
+      isPressed: false,
+      playerBuzzered: "",
+    };
 
     // set other teams active state to false
     const otherTeams = Object.values(room.teams).filter((t) => t.id !== teamId);

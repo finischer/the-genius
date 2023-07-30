@@ -3,14 +3,14 @@ import React from 'react'
 import { type IActionIconProps } from './actionIcon.types'
 import Tooltip from '../Tooltip/Tooltip'
 
-const ActionIcon: React.FC<IActionIconProps> = ({ toolTip, children, onClick, ...props }) => {
+const ActionIcon: React.FC<IActionIconProps> = ({ toolTip, children, onClick, disabled = false, ...props }) => {
     return (
         <Tooltip
             label={toolTip}
-            disabled={!toolTip}
+            disabled={!toolTip || disabled}
             openDelay={500}
         >
-            <MantineActionIcon onClick={onClick} {...props}>
+            <MantineActionIcon onClick={onClick} disabled={disabled} {...props}>
                 {children}
             </MantineActionIcon>
         </Tooltip>

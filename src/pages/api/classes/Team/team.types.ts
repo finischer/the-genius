@@ -30,4 +30,6 @@ export interface ITeam {
   increaseTotalScore: (step: number) => void;
   decreaseTotalScore: (step: number) => void;
   resetTotalScore: () => void;
+  startScorebarTimer: () => void;
+  stopScorebarTimer: () => void;
 }

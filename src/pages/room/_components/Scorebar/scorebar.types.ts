@@ -6,4 +6,5 @@ export interface IScoreCircleProps {
 
 export interface IScorebarProps {
   team: ITeam;
+  timerPosition?: "left" | "right";
 }

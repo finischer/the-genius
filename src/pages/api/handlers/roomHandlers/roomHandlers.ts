@@ -11,6 +11,8 @@ import {
 import Room from "../../classes/Room/Room";
 import { roomManager } from "../../controllers/RoomManager";
 import NoRoomException from "../../exceptions/NoRoomException";
+import { getRoomAndTeam } from "../helpers";
+import { SCOREBAR_TIMER_SECONDS } from "../../classes/Team/Team";
 
 // const prisma = new PrismaClient();
 
@@ -146,6 +148,10 @@ export function roomHandler(
 
     Object.values(room.teams).forEach((t) => {
       t.isActiveTurn = false;
+      t.buzzer = {
+        isPressed: false,
+        playerBuzzered: "",
+      };
     });
 
     room.update();
@@ -169,6 +175,44 @@ export function roomHandler(
 
     room.state.answerState.showAnswer = false;
     room.state.answerState.answer = "";
+    room.update();
+  });
+
+  socket.on("buzzer", ({ teamId, withTimer = false }) => {
+    const res = getRoomAndTeam(socket, socket.roomId, teamId);
+    if (!res) return;
+
+    const { room, team } = res;
+
+    if (team.buzzer.isPressed) return;
+
+    team.isActiveTurn = true;
+    team.buzzer = {
+      isPressed: true,
+      playerBuzzered: socket.user?.id || "",
+    };
+
+    if (withTimer) {
+      team.startScorebarTimer();
+      room.update();
+      const interval = setInterval(() => {
+        if (team.scorebarTimer.seconds === 0) {
+          clearInterval(interval);
+          team.stopScorebarTimer();
+          room.update();
+
+          setTimeout(() => {
+            team.scorebarTimer.seconds = SCOREBAR_TIMER_SECONDS;
+            room.update();
+          }, 1000);
+          return;
+        }
+
+        team.scorebarTimer.seconds--;
+        room.update();
+      }, 1000);
+    }
+
     room.update();
   });
 }

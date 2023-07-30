@@ -154,6 +154,46 @@ export default class Room implements IRoom {
     }, SECONDS_TOTAL_INTRO_DURATION * 1000);
   }
 
+  startTimer(seconds: number, cb: () => void = () => null) {
+    const timer = this.state.display.clock;
+
+    if (timer.isActive) return;
+
+    timer.currentSeconds = seconds;
+    timer.isActive = true;
+
+    this.update();
+
+    const interval = setInterval(() => {
+      if (!timer.isActive) {
+        clearInterval(interval);
+        return;
+      }
+
+      this.decrementTimer();
+      this.update();
+      if (timer.currentSeconds === 0) {
+        clearInterval(interval);
+        cb();
+        this.update();
+
+        // let timer disappear after 1 second
+        setTimeout(() => {
+          this.stopTimer();
+          this.update();
+        }, 1000);
+      }
+    }, 1000);
+  }
+
+  decrementTimer() {
+    this.state.display.clock.currentSeconds--;
+  }
+
+  stopTimer() {
+    this.state.display.clock.isActive = false;
+  }
+
   update() {
     io.to(this.id).emit("updateRoom", { newRoomState: this });
 

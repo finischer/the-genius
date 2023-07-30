@@ -25,6 +25,9 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
     const btnVariantDefault: ButtonProps = { variant: "default" }
     const titleOrder = 3
 
+    const buzzerPressed = Object.values(room.teams).filter(t => t.isActiveTurn || t.buzzer.isPressed).length > 0
+
+
     const handleOpenGameRules = (game: TGame) => {
         setClickedGame(game)
         openGameRules()
@@ -32,6 +35,10 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
 
     const releaseBuzzer = () => {
         socket.emit("releaseBuzzer")
+    }
+
+    const hideAnswer = () => {
+        socket.emit("hideAnswerBanner")
     }
 
     const gameBtns = room.games.map(g => {
@@ -125,7 +132,8 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                             <Accordion.Panel>
                                 <Button.Group orientation='vertical' >
                                     <Button {...btnVariantDefault} disabled>10s Timer starten</Button>
-                                    <Button {...btnVariantDefault} onClick={releaseBuzzer}>Buzzer freigeben</Button>
+                                    <Button {...btnVariantDefault} onClick={releaseBuzzer} disabled={!buzzerPressed}>Alle Buzzer freigeben</Button>
+                                    <Button {...btnVariantDefault} onClick={hideAnswer} disabled={!room.state.answerState.showAnswer}>Antwort ausblenden</Button>
                                     <Button {...btnVariantDefault} disabled>Konfetti regnen lassen</Button>
                                     <Button {...btnVariantDefault} disabled>Musik starten</Button>
                                 </Button.Group>

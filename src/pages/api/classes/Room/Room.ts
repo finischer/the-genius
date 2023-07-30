@@ -11,6 +11,10 @@ const ROOM_DEFAULTS = {
   currentGame: "",
 };
 
+const SECONDS_TO_ROTATE_TITLE_BANNER = 4;
+const SECONDS_TOTAL_INTRO_DURATION = 8;
+const SECONDS_DELAY_BEFORE_GAME_DISPLAYS = 2;
+
 export default class Room implements IRoom {
   id: IRoom["id"];
   name: IRoom["name"];
@@ -70,7 +74,11 @@ export default class Room implements IRoom {
         },
         confetti: false,
         game: false,
-        gameIntro: false,
+        gameIntro: {
+          alreadyPlayed: false,
+          flippedTitleBanner: false,
+          milliseconds: 0,
+        },
         notefields: false,
       },
       gameshowStarted: false,
@@ -107,7 +115,33 @@ export default class Room implements IRoom {
   }
 
   startGame(gameIdentifier: TGameNames) {
+    this.state.display.gameIntro = {
+      alreadyPlayed: false,
+      flippedTitleBanner: false,
+      milliseconds: 0,
+    };
+
     this.currentGame = gameIdentifier;
+    this.state.display.game = false;
+
+    // tbd: stop current music
+    // tbd: start intro music
+    this.update();
+
+    setTimeout(() => {
+      this.state.display.gameIntro.flippedTitleBanner = true;
+      this.update();
+    }, SECONDS_TO_ROTATE_TITLE_BANNER * 1000);
+
+    setTimeout(() => {
+      this.state.display.gameIntro.alreadyPlayed = true;
+      this.update();
+
+      setTimeout(() => {
+        this.state.display.game = true;
+        this.update();
+      }, SECONDS_DELAY_BEFORE_GAME_DISPLAYS * 1000);
+    }, SECONDS_TOTAL_INTRO_DURATION * 1000);
   }
 
   update() {

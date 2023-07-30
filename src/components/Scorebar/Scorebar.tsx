@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Group, Text, keyframes } from '@mantine/core'
+import { Box, Button, Flex, Group, Text, keyframes, useMantineTheme } from '@mantine/core'
 import { IconExposureMinus1, IconExposurePlus1, IconTargetArrow } from '@tabler/icons-react'
 import React from 'react'
 import { useRoom } from '~/hooks/useRoom'
@@ -35,6 +35,8 @@ const ScoreCircle: React.FC<IScoreCircleProps> = ({ filled }) => (
 )
 
 const Scorebar: React.FC<IScorebarProps> = ({ team }) => {
+    const theme = useMantineTheme()
+
     const { room, currentGame } = useRoom()
     const { user, isHost, isPlayer, setUserAsPlayer } = useUser();
     const scoreCircles = currentGame ? Array(currentGame.maxPoints).fill(null).map((_, index) => <ScoreCircle key={index} filled={team.gameScore > index} />) : undefined
@@ -83,24 +85,24 @@ const Scorebar: React.FC<IScorebarProps> = ({ team }) => {
             />
 
             <Flex gap="lg">
-                <Box sx={() => ({
-                    minWidth: "20%",
-                    maxWidth: "50%",
-                    height: "100%",
-                    background: colors.accent,
-                    display: "flex",
-                    alignItems: "center",
-                    padding: "0.25rem 1rem",
-                    borderRadius: "0.25rem 0.2rem 0 0",
-                    fontWeight: "bolder",
-                    overflow: "hidden",
-
-                    "span": {
+                <Box
+                    bg={theme.primaryColor}
+                    sx={() => ({
+                        minWidth: "20%",
+                        maxWidth: "50%",
+                        height: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        padding: "0.25rem 1rem",
+                        borderRadius: "0.25rem 0.2rem 0 0",
+                        fontWeight: "bolder",
                         overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap"
-                    }
-                })}>
+                        "span": {
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap"
+                        }
+                    })}>
                     <span>
                         {team.name} · ({team.players.length}/{room?.numOfPlayers})
                     </span>
@@ -138,7 +140,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team }) => {
 
             </Flex>
 
-            <Flex gap="1rem" bg={colors.accent} h="3rem" w="30rem" sx={(theme) => ({ borderRadius: "0.25rem", borderTopLeftRadius: 0, boxShadow: theme.shadows.xl })} p="0.5rem 1rem" pos="relative">
+            <Flex gap="1rem" bg={theme.primaryColor} h="3rem" w="30rem" sx={(theme) => ({ borderRadius: "0.25rem", borderTopLeftRadius: 0, boxShadow: theme.shadows.xl })} p="0.5rem 1rem" pos="relative">
                 {/* Player names */}
                 <Box
                     sx={() => ({

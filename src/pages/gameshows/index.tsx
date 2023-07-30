@@ -1,4 +1,5 @@
-import { Flex, Table, Text, Title } from '@mantine/core'
+import { ThemeContext } from '@emotion/react'
+import { Flex, Table, Text, Title, useMantineTheme } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { type Gameshow } from '@prisma/client'
 import { IconPlus } from '@tabler/icons-react'
@@ -8,10 +9,10 @@ import React, { useState } from 'react'
 import ActionIcon from '~/components/ActionIcon'
 import CreateRoomModal from '~/components/CreateRoomModal/CreateRoomModal'
 import PageLayout from '~/components/layout'
-import { colors } from '~/styles/constants'
 import { api } from '~/utils/api'
 
 const GameshowsPage = () => {
+    const theme = useMantineTheme()
     const router = useRouter()
     const { data: gameshows, isLoading } = api.gameshows.getAllByCreatorId.useQuery()
     const [openedCreateRoomModal, { open: openCreateRoomModal, close: closeCreateRoomModal }] = useDisclosure(false)
@@ -56,7 +57,7 @@ const GameshowsPage = () => {
                 <Title order={2}>
                     Meine Spielshows
                 </Title>
-                <ActionIcon toolTip='Spielshow erstellen' color={colors.accent} variant="filled" onClick={() => router.push("/gameshows/create")} >
+                <ActionIcon toolTip='Spielshow erstellen' color={theme.primaryColor} variant="filled" onClick={() => router.push("/gameshows/create")} >
                     <IconPlus />
                 </ActionIcon>
             </Flex>

@@ -18,9 +18,15 @@ export type TRoomClock = {
   variant: ClockVariants;
 };
 
+type TRoomDisplayGameIntro = {
+  alreadyPlayed: boolean;
+  flippedTitleBanner: boolean;
+  milliseconds: number;
+};
+
 export type TRoomDisplay = {
   confetti: boolean;
-  gameIntro: boolean;
+  gameIntro: TRoomDisplayGameIntro;
   game: boolean;
   notefields: boolean;
   clock: TRoomClock;

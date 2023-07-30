@@ -1,6 +1,20 @@
-export interface IFlipCardProps {
+import { Dispatch, SetStateAction } from "react";
+
+export type TConditionalFlippedState =
+  | {
+      clickable?: true;
+      isFlipped: boolean;
+      setFlipped: Dispatch<SetStateAction<boolean>>;
+    }
+  | {
+      clickable?: false;
+      isFlipped?: boolean;
+      setFlipped?: Dispatch<SetStateAction<boolean>>;
+    };
+
+export type IFlipCardProps = TConditionalFlippedState & {
   front?: React.ReactNode;
   back?: React.ReactNode;
   clickable?: boolean;
   onClick?: () => void;
-}
+};

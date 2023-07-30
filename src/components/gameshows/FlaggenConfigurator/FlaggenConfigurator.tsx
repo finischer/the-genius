@@ -11,7 +11,6 @@ const transferList: TransferListData = [
     [],
 ];
 
-// HINT: Not in use cause of performance problems
 // TODO: Optimize performance
 const CountryItem: React.FC<TransferListItemComponentProps> = ({ data, selected }) => (
     <Group noWrap>

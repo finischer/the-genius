@@ -1,4 +1,4 @@
-import { type GameshowMode, type Gameshow } from "@prisma/client";
+import { type Gameshow, type GameshowMode } from "@prisma/client";
 
 export interface ICreateRoomModalProps {
   openedModal: boolean;

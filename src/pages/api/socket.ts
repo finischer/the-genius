@@ -3,7 +3,6 @@ import { instrument } from "@socket.io/admin-ui";
 import { type NextApiRequest } from "next";
 import { Server, type Socket } from "socket.io";
 import { env } from "~/env.mjs";
-import { type TGame } from "~/pages/room/_components/Game/games/game.types";
 import {
   type IClientToServerEvents,
   type IServerSocketData,
@@ -15,6 +14,7 @@ import { roomManager } from "./controllers/RoomManager";
 import { roomHandler } from "./handlers/roomHandlers";
 import { teamHandler } from "./handlers/teamHandlers";
 import { flaggenHandler } from "./handlers/games/flaggenHandlers";
+import type { TGame } from "~/components/room/Game/games/game.types";
 
 const prisma = new PrismaClient();
 

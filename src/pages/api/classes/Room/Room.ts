@@ -1,11 +1,11 @@
 import { randomUUID } from "crypto";
 import { type TGameSettingsMap } from "~/hooks/useConfigurator/useConfigurator.types";
-import { type TGameNames } from "~/pages/room/_components/Game/games/game.types";
 import { copyNestedArray } from "~/utils/array";
 import { roomManager } from "../../controllers/RoomManager";
 import { io } from "../../socket";
 import Team from "../Team/Team";
 import { type IRoom } from "./room.types";
+import type { TGameNames } from "~/components/room/Game/games/game.types";
 
 const ROOM_DEFAULTS = {
   roomSize: 12,

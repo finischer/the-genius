@@ -1,7 +1,7 @@
 import { type GameshowMode } from "@prisma/client";
-import { type TGame } from "~/pages/room/_components/Game/games/game.types";
 import { type TUserReduced } from "~/types/socket.types";
 import { type ITeam } from "../Team/team.types";
+import type { TGame } from "~/components/room/Game/games/game.types";
 
 export type TRoomAnswerState = {
   showAnswer: boolean;

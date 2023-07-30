@@ -1,10 +1,9 @@
 import { useSession } from "next-auth/react";
 import { createContext, useContext, useEffect, useState } from "react";
+import type { ITeam } from "~/pages/api/classes/Team/team.types";
 import { type TUserReduced } from "~/types/socket.types";
 import { useRoom } from "../useRoom";
 import { type IUseUserContext, type IUseUserProvider } from "./useUser.types";
-import type { ITeam } from "~/pages/api/classes/Team/team.types";
-import type { IRoom } from "~/pages/api/classes/Room/room.types";
 
 const UserContext = createContext<IUseUserContext | undefined>(undefined);
 

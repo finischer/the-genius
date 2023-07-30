@@ -13,7 +13,6 @@ import bcrypt from "bcrypt";
 import { prisma } from "~/server/db";
 import { sendVerificationRequest } from "./emailService";
 import { filterUserForClient } from "./helpers/filterForUserClient";
-import { socket } from "~/hooks/useSocket";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`

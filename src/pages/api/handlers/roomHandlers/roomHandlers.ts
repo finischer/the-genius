@@ -12,7 +12,7 @@ import { roomManager } from "../../controllers/RoomManager";
 import NoRoomException from "../../exceptions/NoRoomException";
 import { getRoomAndTeam } from "../helpers";
 import { SCOREBAR_TIMER_SECONDS } from "../../classes/Team/Team";
-import type { TGame } from "~/components/room/Game/games/game.types";
+import { type TGame } from "~/components/room/Game/games/game.types";
 
 // const prisma = new PrismaClient();
 

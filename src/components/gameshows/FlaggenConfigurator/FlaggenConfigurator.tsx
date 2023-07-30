@@ -1,4 +1,4 @@
-import { Checkbox, Group, Text, TransferList, type TransferListData, type TransferListItemComponentProps } from '@mantine/core';
+import { Checkbox, Group, Image, Text, TransferList, type TransferListData, type TransferListItemComponentProps } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { COUNTRIES } from '~/components/room/Game/games/Flaggen/config';
 import type { TCountry } from '~/components/room/Game/games/Flaggen/flaggen.types';
@@ -14,8 +14,8 @@ const transferList: TransferListData = [
 // TODO: Optimize performance
 const CountryItem: React.FC<TransferListItemComponentProps> = ({ data, selected }) => (
     <Group noWrap>
-        <Checkbox checked={selected} onChange={() => { }} tabIndex={-1} sx={{ pointerEvents: 'none' }} />
-        <img src={`https://flagcdn.com/w40/${data.value}.png`} alt={data.label} width={40} />
+        <Checkbox checked={selected} tabIndex={-1} sx={{ pointerEvents: 'none' }} />
+        <Image src={`https://flagcdn.com/w40/${data.value}.png`} alt={data.label} width={40} />
         <Text>{data.label}</Text>
     </Group>
 )

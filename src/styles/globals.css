@@ -2,3 +2,8 @@
   font-family: "Montserrat"; /*a name to be used later*/
   src: url("../assets/fonts/montserrat/Montserrat-Regular.ttf"); /*URL to font*/
 }
+
+@font-face {
+  font-family: "Montserrat-Bold"; /*a name to be used later*/
+  src: url("../assets/fonts/montserrat/Montserrat-Bold.ttf"); /*URL to font*/
+}

@@ -31,7 +31,9 @@ const AnswerBanner: React.FC<IAnswerBannerProps> = ({ answer }) => {
         transform='uppercase'
         sx={{
           textOverflow: "ellipsis",
-          overflow: "hidden"
+          overflow: "hidden",
+          fontFamily: "Montserrat-Bold, sans-serif",
+          letterSpacing: 3
         }} >
         {answer}
       </Text>

@@ -96,6 +96,7 @@ export default async function SocketHandler(
   ) => {
     console.log("Socket connected: ", socket.id);
     // const sockets = await io.fetchSockets();
+
     // io.emit("getOnlinePlayers", { numOfOnlinePlayers: sockets.length });
 
     // socket.on("disconnecting", async () => {

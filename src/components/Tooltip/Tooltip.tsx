@@ -1,5 +1,5 @@
 import React from 'react'
-import { Tooltip as MantineTooltip, TooltipProps, useMantineTheme } from '@mantine/core'
+import { Tooltip as MantineTooltip, type TooltipProps, useMantineTheme } from '@mantine/core'
 import { colors } from '~/styles/constants'
 
 

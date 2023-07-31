@@ -61,22 +61,22 @@ model Friendship {
 }
 
 model Room {
-  id           String       @id @default(auto()) @map("_id") @db.ObjectId
-  name         String
-  modus        GameshowMode
-  roomSize     Int?         @default(12)
-  participants String[]     @default([])
-  password     String?    
-  isPrivate    Boolean      @default(true)
-  currentGame  String?
-  creator      User         @relation("roomCreator", fields: [creatorId], references: [id], onDelete: Cascade)
-  creatorId    String       @db.ObjectId
-  createdAt    DateTime?    @default(now())
-  updatedAt    DateTime?    @updatedAt
-  games        Json[]
+  id                String       @id @default(auto()) @map("_id") @db.ObjectId
+  name              String
+  modus             GameshowMode
+  roomSize          Int?         @default(12)
+  participants      String[]     @default([])
+  password          String?
+  isPrivate         Boolean      @default(true)
+  currentGame       String?
+  creator           User         @relation("roomCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId         String       @db.ObjectId
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  games             Json[]
   defaultGameStates Json[]
-  teams        Json[]
-  
+  teams             Json[]
+
   @@map("rooms")
 }
 

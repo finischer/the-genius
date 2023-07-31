@@ -61,7 +61,7 @@ export interface IRoom {
   modus: GameshowMode;
   roomSize: number;
   currentGame: string;
-  createdAt: Date;
+  createdAt: string; // socket io stringify dates. So we will save it as string and on client site we will create a date, depends on the string
   isPrivateRoom: boolean;
   creator: TUserReduced | null;
   numOfPlayers: number;

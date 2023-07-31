@@ -45,7 +45,7 @@ export default class Room implements IRoom {
     this.name = name;
     this.modus = modus;
     this.roomSize = ROOM_DEFAULTS.roomSize;
-    this.createdAt = new Date();
+    this.createdAt = new Date().toString();
     this.currentGame = ROOM_DEFAULTS.currentGame;
     this.isPrivateRoom = isPrivateRoom;
     this.creator = creator;

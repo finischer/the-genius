@@ -9,6 +9,7 @@ import ActionIcon from '~/components/shared/ActionIcon'
 import CreateRoomModal from '~/components/shared/CreateRoomModal'
 import PageLayout from '~/components/layout'
 import { api } from '~/utils/api'
+import { formatTimestamp } from '~/utils/dates'
 
 const GameshowsPage = () => {
     const theme = useMantineTheme()
@@ -29,7 +30,7 @@ const GameshowsPage = () => {
             <tr key={gameshow.id}>
                 <td>{gameshow.name}</td>
                 <td>{gameshow.games.length}</td>
-                <td>{gameshow.createdAt.toLocaleString()}</td>
+                <td>{formatTimestamp(gameshow.createdAt.toString())} Uhr</td>
                 <td>
                     <Flex gap="xl">
                         <ActionIcon toolTip='Bearbeiten' disabled >

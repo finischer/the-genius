@@ -8,6 +8,7 @@ import useNotification from '~/hooks/useNotification'
 import { socket } from '~/hooks/useSocket'
 import { api } from '~/utils/api'
 import type { IRoom } from './api/classes/Room/room.types'
+import { formatTimestamp } from '~/utils/dates'
 
 // type TOnlinePlayersEvent = {
 //     numOfOnlinePlayers: number
@@ -81,6 +82,7 @@ const RoomsPage = () => {
         }
     }, [])
 
+
     const rows = rooms?.map(room => {
         const nameOfCurrentGame = room.games.find(g => g.identifier === room.currentGame)?.name
 
@@ -92,7 +94,7 @@ const RoomsPage = () => {
                 <td>{room.participants.length} / {room.roomSize}</td>
                 <td>{nameOfCurrentGame || "Kein Spiel gestartet"}</td>
                 <td>{room.creator?.username}</td>
-                <td>{room.createdAt?.toLocaleString()} Uhr</td>
+                <td>{formatTimestamp(room.createdAt)} Uhr</td>
             </tr>
         )
     }) ?? []

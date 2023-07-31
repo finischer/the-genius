@@ -6,10 +6,9 @@
     "node": "19.7.0"
   },
   "scripts": {
-    "prebuild": "npm install typescript eslint eslint-config-next",
     "build": "next build",
     "dev": "next dev",
-    "postinstall": "prisma generate",
+    "postinstall": "tsc && prisma generate",
     "lint": "next lint",
     "start": "next start"
   },

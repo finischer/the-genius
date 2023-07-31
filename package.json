@@ -6,7 +6,7 @@
     "node": "19.7.0"
   },
   "scripts": {
-    "build": "npm install --save-dev typescript && next build",
+    "build": "next build",
     "dev": "next dev",
     "postinstall": "prisma generate",
     "lint": "next lint",

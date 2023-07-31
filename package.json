@@ -8,7 +8,7 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
-    "postinstall": "prisma generate",
+    "postinstall": "npm install --save-dev typescript && tsc && prisma generate",
     "lint": "next lint",
     "start": "next start"
   },

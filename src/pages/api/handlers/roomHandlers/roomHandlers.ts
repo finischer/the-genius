@@ -177,8 +177,9 @@ export function roomHandler(
 
     const { room, team } = res;
 
-    if (team.buzzer.isPressed) return;
+    if (team.buzzer.isPressed || room.state.teamWithTurn) return;
 
+    room.state.teamWithTurn = teamId;
     team.isActiveTurn = true;
     team.buzzer = {
       isPressed: true,

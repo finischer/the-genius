@@ -192,6 +192,7 @@ export default class Room implements IRoom {
   }
 
   releaseBuzzer() {
+    this.state.teamWithTurn = "";
     Object.values(this.teams).forEach((t) => {
       t.isActiveTurn = false;
       t.buzzer = {

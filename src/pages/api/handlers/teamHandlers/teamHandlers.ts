@@ -58,6 +58,7 @@ export function teamHandler(
       isPressed: false,
       playerBuzzered: "",
     };
+    room.state.teamWithTurn = "";
 
     // set other teams active state to false
     const otherTeams = Object.values(room.teams).filter((t) => t.id !== teamId);

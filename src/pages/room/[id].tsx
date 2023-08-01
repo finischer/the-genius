@@ -1,7 +1,7 @@
-import { Box, Center, Container, Flex, Text, useMantineTheme } from '@mantine/core'
+import { Alert, Box, Center, Container, Flex, Notification, Text, useMantineTheme } from '@mantine/core'
 import { useDisclosure, useNetwork } from '@mantine/hooks'
 import { notifications } from '@mantine/notifications'
-import { IconArrowRight, IconInfoSmall, IconWifi, IconWifi0, IconWifi1, IconWifi2, IconWifiOff } from '@tabler/icons-react'
+import { IconAlertCircle, IconArrowRight, IconCircle, IconInfoSmall, IconWifi, IconWifi0, IconWifi1, IconWifi2, IconWifiOff } from '@tabler/icons-react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
@@ -50,7 +50,19 @@ const RoomPage = () => {
     const roomId = router.query.id as string
 
     useEffect(() => {
+        // show info banner that no sounds/music are available until we have a license to use it
+        notifications.show({
+            title: "Info",
+            message: "Aus Lizenzgründen stehen Sounds/Musik aktuell nicht zur Verfügung",
+            color: "orange",
+            icon: <IconAlertCircle size="1rem" />,
+        })
+    }, [])
+
+    useEffect(() => {
         if (session?.user) {
+
+
             const user: TUserReduced = {
                 id: session.user.id,
                 username: session.user.name || "",

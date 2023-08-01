@@ -12,12 +12,13 @@ import type { TGame, TGameNames } from '../Game/games/game.types';
 import GameRulesModal from '~/components/shared/GameRulesModal/GameRulesModal';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
+import useLoadingState from '~/hooks/useLoadingState/useLoadingState';
 
 const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
-    const { showErrorNotification, showSuccessNotification } = useNotification()
+    const { showErrorNotification } = useNotification()
     const router = useRouter();
+    const { pageIsLoading } = useLoadingState()
     const [openedItems, setOpenedItems] = useLocalStorage<string[]>({ key: "modPanelOpenedItems", defaultValue: [] })
-    const [closeRoomIsLoading, setCloseRoomIsLoading] = useState(false)
 
     // for game rules
     const [openedGameRules, { open: openGameRules, close: closeGameRules }] = useDisclosure()
@@ -85,7 +86,6 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
             labels: { confirm: 'Ja', cancel: 'Nein' },
             confirmProps: { color: 'red' },
             onConfirm: async () => {
-                setCloseRoomIsLoading(true)
                 notifications.show({
                     id: "closeRoom",
                     message: "Raum wird geschlossen",
@@ -97,7 +97,6 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                         const routeDone = await router.push("/rooms")
 
                         if (routeDone) {
-                            setCloseRoomIsLoading(false)
                             notifications.update({
                                 id: "closeRoom",
                                 title: "Erfolgreich",
@@ -187,7 +186,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                             </Accordion.Control>
                             <Accordion.Panel>
                                 <Button.Group orientation='vertical'>
-                                    <Button color='red' onClick={closeRoom}>Raum schließen</Button>
+                                    <Button color='red' onClick={closeRoom} loading={pageIsLoading}>Raum schließen</Button>
                                 </Button.Group>
                             </Accordion.Panel>
                         </Accordion.Item>

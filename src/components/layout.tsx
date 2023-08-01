@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Loader from './shared/Loader';
 import Navbar from './Navbar';
 import AuthenticationModal from './shared/modals/AuthenticationModal';
+import useLoadingState from '~/hooks/useLoadingState/useLoadingState';
 
 interface IPageLayout {
     showLoader?: boolean
@@ -14,6 +15,7 @@ interface IPageLayout {
 
 const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage = "Lädt ...", children }) => {
     const { data: session, update: updateSession, status } = useSession();
+    const { pageIsLoading } = useLoadingState()
     const theme = useMantineTheme();
     const [isNavbarOpened, setIsNavbarOpened] = useState(false)
     const [usernameInput, setUsernameInput] = useState("");
@@ -96,11 +98,10 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
                         </Header>
                     }
                 >
-                    {showLoader ?
-                        <Loader message={loadingMessage} />
-                        :
-                        <Text>{children}</Text>
-                    }
+                    {pageIsLoading && !showLoader && <Loader message='Lädt ...' />}
+                    {showLoader && !pageIsLoading && <Loader message={loadingMessage} />}
+
+                    {!showLoader && !pageIsLoading && <Text>{children}</Text>}
 
                 </AppShell>
             </>

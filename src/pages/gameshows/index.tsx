@@ -10,9 +10,11 @@ import CreateRoomModal from '~/components/shared/CreateRoomModal'
 import PageLayout from '~/components/layout'
 import { api } from '~/utils/api'
 import { formatTimestamp } from '~/utils/dates'
+import useLoadingState from '~/hooks/useLoadingState/useLoadingState'
 
 const GameshowsPage = () => {
     const theme = useMantineTheme()
+    const { pageIsLoading } = useLoadingState()
     const router = useRouter()
     const { data: gameshows, isLoading } = api.gameshows.getAllByCreatorId.useQuery()
     const [openedCreateRoomModal, { open: openCreateRoomModal, close: closeCreateRoomModal }] = useDisclosure(false)
@@ -23,6 +25,10 @@ const GameshowsPage = () => {
     const createRoom = (gameshow: Gameshow) => {
         setActiveGameshow(gameshow)
         openCreateRoomModal()
+    }
+
+    const handleCreateGameshow = () => {
+        router.push("/gameshows/create")
     }
 
     const rows = gameshows?.map(gameshow => {
@@ -57,7 +63,7 @@ const GameshowsPage = () => {
                 <Title order={2}>
                     Meine Spielshows
                 </Title>
-                <ActionIcon toolTip='Spielshow erstellen' color={theme.primaryColor} variant="filled" onClick={() => router.push("/gameshows/create")} >
+                <ActionIcon toolTip='Spielshow erstellen' color={theme.primaryColor} variant="filled" onClick={handleCreateGameshow} loading={pageIsLoading} >
                     <IconPlus />
                 </ActionIcon>
             </Flex>

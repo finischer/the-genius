@@ -62,8 +62,6 @@ const RoomPage = () => {
 
     useEffect(() => {
         if (session?.user) {
-
-
             const user: TUserReduced = {
                 id: session.user.id,
                 username: session.user.name || "",

@@ -42,9 +42,10 @@ const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
             direction="column"
             gap="md"
             align="center"
+            pos="absolute"
         >
             {isHost && <Text>Flagge {game.qIndex + 1} / {game.countries.length}</Text>}
-            <Flex gap="4rem" align="center">
+            <Flex gap="4rem" align="center" pos="relative">
                 {isHost &&
                     <ActionIcon
                         onClick={handlePrevFlagClick}

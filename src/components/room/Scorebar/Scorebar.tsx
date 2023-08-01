@@ -131,7 +131,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
                             }
                         })}>
                         <span>
-                            {team.name} · ({team.players.length}/{room?.numOfPlayers})
+                            {team.name} · ({team.players.length}/{room.maxPlayersPerTeam})
                         </span>
 
                     </Box>

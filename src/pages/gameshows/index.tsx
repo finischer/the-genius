@@ -19,6 +19,7 @@ const GameshowsPage = () => {
     const { data: gameshows, isLoading } = api.gameshows.getAllByCreatorId.useQuery()
     const [openedCreateRoomModal, { open: openCreateRoomModal, close: closeCreateRoomModal }] = useDisclosure(false)
     const [activeGameshow, setActiveGameshow] = useState<Gameshow | undefined>(undefined)
+    const [loadingMessage, setLoadingMessage] = useState("Spielshows werden geladen ...")
 
     const subtitleText = gameshows?.length === 0 ? "Du hast bisher noch keine Spielshow erstellt" : `Du hast bereits ${gameshows?.length || "NOT_FOUND"} Spielshows erstellt`
 
@@ -57,7 +58,7 @@ const GameshowsPage = () => {
     }) ?? []
 
     return (
-        <PageLayout showLoader={isLoading} loadingMessage='Spielshows werden geladen ...'>
+        <PageLayout showLoader={isLoading} loadingMessage="Spielshows werden geladen ...">
             {activeGameshow && <CreateRoomModal openedModal={openedCreateRoomModal} onClose={closeCreateRoomModal} gameshow={activeGameshow} />}
             <Flex gap="md" align="center">
                 <Title order={2}>

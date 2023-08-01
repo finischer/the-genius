@@ -6,9 +6,10 @@ import { socket } from '~/hooks/useSocket'
 import { type IRoomDetailsModalProps } from './roomDetailsModal.types'
 import { modals } from '@mantine/modals'
 import { notifications } from '@mantine/notifications'
+import useLoadingState from '~/hooks/useLoadingState/useLoadingState'
 
 const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClose, room }) => {
-    const [isLoading, setIsLoading] = useState(false);
+    const { pageIsLoading } = useLoadingState()
     const router = useRouter()
     const roomId = router.query.id as string
 
@@ -24,7 +25,6 @@ const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClo
             ),
             labels: { confirm: 'Ja', cancel: 'Nein' },
             onConfirm: async () => {
-                setIsLoading(true)
                 notifications.show({
                     id: "leaveRoom",
                     title: "Raum verlassen",
@@ -35,7 +35,6 @@ const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClo
                 // initUser();
                 const routeDone = await router.push("/rooms/")
                 if (routeDone) {
-                    setIsLoading(false)
                     notifications.update({
                         id: "leaveRoom",
                         title: "Erfolgreich",
@@ -92,7 +91,7 @@ const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClo
                     </tbody>
                 </Table>
 
-                <Button variant='subtle' onClick={leaveRoom} loading={isLoading}>
+                <Button variant='subtle' onClick={leaveRoom} loading={pageIsLoading}>
                     Raum verlassen
                 </Button>
             </Flex>

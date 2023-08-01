@@ -11,6 +11,7 @@ import type { IRoom } from './api/classes/Room/room.types'
 import { formatTimestamp } from '~/utils/dates'
 import { notifications } from '@mantine/notifications'
 import { IconCheck } from '@tabler/icons-react'
+import { useUser } from '~/hooks/useUser'
 
 // type TOnlinePlayersEvent = {
 //     numOfOnlinePlayers: number
@@ -18,6 +19,7 @@ import { IconCheck } from '@tabler/icons-react'
 
 const RoomsPage = () => {
     const router = useRouter();
+    const { user } = useUser()
     const { showErrorNotification } = useNotification()
 
     const { mutate: validatePassword, isLoading: isLoadingValidatePassword } = api.rooms.validatePassword.useMutation({
@@ -103,7 +105,7 @@ const RoomsPage = () => {
 
     const handleRoomClick = (room: IRoom) => {
         setActiveRoom(room)
-        if (room.isPrivateRoom) {
+        if (room.isPrivateRoom && user.id !== room.creator?.id) {
             form.reset();
             openPasswordModal()
         } else {

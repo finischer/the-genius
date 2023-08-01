@@ -98,11 +98,9 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
                         </Header>
                     }
                 >
-                    {pageIsLoading && !showLoader && <Loader message='Lädt ...' />}
-                    {showLoader && !pageIsLoading && <Loader message={loadingMessage} />}
-
+                    {showLoader && <Loader message={loadingMessage} />}
+                    {pageIsLoading && <Loader message="Lädt" />}
                     {!showLoader && !pageIsLoading && <Text>{children}</Text>}
-
                 </AppShell>
             </>
 

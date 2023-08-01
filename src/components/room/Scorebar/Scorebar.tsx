@@ -178,7 +178,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
 
                             <Flex direction="column" gap="xs" pos="absolute" right={0}>
                                 {playerNamesWhoBuzzered.map((p, idx) => (
-                                    <Tooltip label="hat gebuzzered">
+                                    <Tooltip label="hat gebuzzert">
                                         <Badge key={idx} maw="10rem">{p || `Spieler ${idx + 1}`}</Badge>
                                     </Tooltip>
                                 ))}

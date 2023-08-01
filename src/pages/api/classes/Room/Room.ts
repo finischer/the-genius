@@ -197,7 +197,7 @@ export default class Room implements IRoom {
       t.isActiveTurn = false;
       t.buzzer = {
         isPressed: false,
-        playerBuzzered: "",
+        playersBuzzered: [],
       };
     });
   }

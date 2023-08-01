@@ -27,7 +27,7 @@ export default class Team implements ITeam {
     this.players = [];
     this.buzzer = {
       isPressed: false,
-      playerBuzzered: "",
+      playersBuzzered: [],
     };
     this.scorebarTimer = {
       isActive: false,

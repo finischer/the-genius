@@ -56,7 +56,7 @@ export function teamHandler(
     team.isActiveTurn = !team.isActiveTurn;
     team.buzzer = {
       isPressed: false,
-      playerBuzzered: "",
+      playersBuzzered: [],
     };
     room.state.teamWithTurn = "";
 

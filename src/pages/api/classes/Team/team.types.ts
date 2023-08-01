@@ -3,7 +3,7 @@ import { type IPlayer } from "../Player/player.types";
 
 export type TBuzzer = {
   isPressed: boolean;
-  playerBuzzered: string; // id of player
+  playersBuzzered: string[]; // id of players who buzzered
 };
 
 export type TScorebarTimer = {

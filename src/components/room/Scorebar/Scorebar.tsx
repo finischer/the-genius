@@ -1,4 +1,4 @@
-import { Box, Button, Container, Flex, Group, type Sx, Text, keyframes, useMantineTheme } from '@mantine/core'
+import { Box, Button, Container, Flex, Group, type Sx, Text, keyframes, useMantineTheme, Badge } from '@mantine/core'
 import { IconExposureMinus1, IconExposurePlus1, IconTargetArrow } from '@tabler/icons-react'
 import React from 'react'
 import { useRoom } from '~/hooks/useRoom'
@@ -7,6 +7,7 @@ import { useUser } from '~/hooks/useUser'
 import { colors, sizes } from '~/styles/constants'
 import { type IScoreCircleProps, type IScorebarProps } from './scorebar.types'
 import ActionIcon from '~/components/shared/ActionIcon/ActionIcon'
+import Tooltip from '~/components/shared/Tooltip'
 
 
 const stretchAnimation = keyframes({
@@ -50,6 +51,15 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
     const disableModBtns = !room.state.display.game
     const disableIncreaseScoreBtn = disableModBtns || (currentGame && team.gameScore >= currentGame.maxPoints)
     const disableDecreaseScoreBtn = disableModBtns || team.gameScore <= 0
+
+
+    const playerNamesWhoBuzzered = team.players.map(p => {
+        if (p.userId && team.buzzer.playersBuzzered.includes(p.userId)) {
+            return p.name
+        }
+
+        return undefined
+    }).filter(p => p)
 
     const scorebarTimerStyle: Sx = {
         height: SCOREBAR_HEIGHT,
@@ -143,7 +153,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
                         <Group mb="xs">
                             <ActionIcon
                                 variant='outline'
-                                disabled={disableModBtns || team.scorebarTimer.isActive}
+                                disabled={team.scorebarTimer.isActive}
                                 toolTip={highlightBoxShadow ? "Buzzer freigeben" : `${team.name} an der Reihe sein lassen`}
                                 onClick={toggleTeamActiveState}
                             >
@@ -165,6 +175,14 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
                             >
                                 <IconExposurePlus1 size={sizes.icon.s} />
                             </ActionIcon>
+
+                            <Flex direction="column" gap="xs" pos="absolute" right={0}>
+                                {playerNamesWhoBuzzered.map((p, idx) => (
+                                    <Tooltip label="hat gebuzzered">
+                                        <Badge key={idx} maw="10rem">{p || `Spieler ${idx + 1}`}</Badge>
+                                    </Tooltip>
+                                ))}
+                            </Flex>
                         </Group>
                     }
 

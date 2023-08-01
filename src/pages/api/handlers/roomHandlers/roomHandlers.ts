@@ -183,7 +183,7 @@ export function roomHandler(
     team.isActiveTurn = true;
     team.buzzer = {
       isPressed: true,
-      playerBuzzered: socket.user?.id || "",
+      playersBuzzered: [...team.buzzer.playersBuzzered, socket.user?.id || ""],
     };
 
     if (withTimer) {

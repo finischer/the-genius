@@ -11,6 +11,8 @@ export type TRoomAnswerState = {
 
 type ClockVariants = "countdown" | "timer";
 
+export type TRoomView = "empty" | "game" | "scoreboard";
+
 export type TRoomClock = {
   isActive: boolean;
   currentSeconds: number;
@@ -53,6 +55,7 @@ export type TRoomState = {
   display: TRoomDisplay;
   sounds: TRoomSounds;
   music: TRoomMusic;
+  view: TRoomView;
 };
 
 export interface IRoom {

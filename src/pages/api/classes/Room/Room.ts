@@ -82,6 +82,7 @@ export default class Room implements IRoom {
         },
         notefields: false,
       },
+      view: "empty",
       gameshowStarted: false,
       music: {
         isActive: false,

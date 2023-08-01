@@ -185,7 +185,6 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
                             </Flex>
                         </Group>
                     }
-
                 </Flex>
 
                 <Flex gap="1rem" bg={theme.primaryColor} h={SCOREBAR_HEIGHT} w="30rem" sx={(theme) => ({ borderRadius: "0.25rem", borderTopLeftRadius: 0, boxShadow: theme.shadows.xl })} p="0.5rem 1rem" pos="relative">

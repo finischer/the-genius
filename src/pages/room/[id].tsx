@@ -20,7 +20,8 @@ import { sizes } from '~/styles/constants'
 import ModPanel from '~/components/room/ModPanel/ModPanel'
 import Scorebar from '~/components/room/Scorebar/Scorebar'
 import AnswerBanner from '~/components/room/AnswerBanner/AnswerBanner'
-import type { IRoom } from '../api/classes/Room/room.types'
+import type { IRoom, TRoomView } from '../api/classes/Room/room.types'
+import Scoreboard from '~/components/room/Scoreboard/Scoreboard'
 
 type TNetworkStatusEffectiveType = 'slow-2g' | '2g' | '3g' | '4g'
 
@@ -31,7 +32,6 @@ const NETWORK_STATUS_ICON_MAP: { [key in TNetworkStatusEffectiveType]: React.Rea
     "3g": <IconWifi2 color='yellow' />,
     "4g": <IconWifi color='green' />
 }
-
 
 const RoomPage = () => {
     const theme = useMantineTheme()
@@ -177,7 +177,14 @@ const RoomPage = () => {
                 <Flex h="100%" align="center" justify="center" direction="column" >
                     {/* <Text>Bist du der Host: {isHost.toString()} </Text>
                     {team && <Text>Dein Team: {team.name}</Text>} */}
-                    {currentGame && <Game game={currentGame} />}
+                    {currentGame && room.state.view === "game" && <Game game={currentGame} />}
+                    {room.state.view === "empty" && (
+                        <Flex direction="column" gap="xl">
+                            <Scoreboard team={room.teams.teamOne} color='green' />
+                            <Scoreboard team={room.teams.teamTwo} color='red' />
+                        </Flex>
+
+                    )}
                 </Flex>
 
                 {/* Footer View */}

@@ -1,24 +1,54 @@
-import { ActionIcon, Button, CopyButton, Flex, Modal, Table } from '@mantine/core'
+import { ActionIcon, Button, CopyButton, Flex, Modal, Table, Text } from '@mantine/core'
 import { IconCheck, IconCopy } from '@tabler/icons-react'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useState } from 'react'
 import { socket } from '~/hooks/useSocket'
 import { type IRoomDetailsModalProps } from './roomDetailsModal.types'
+import { modals } from '@mantine/modals'
+import { notifications } from '@mantine/notifications'
 
 const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClose, room }) => {
+    const [isLoading, setIsLoading] = useState(false);
     const router = useRouter()
     const roomId = router.query.id as string
 
     const leaveRoom = async () => {
-        if (window.confirm("Möchtest du wirklich den Raum verlassen?")) {
-            socket.emit("leaveRoom", { roomId })
-            // initUser();
-            await router.push("/rooms/")
-        }
+
+        modals.openConfirmModal({
+            id: "leaveRoom",
+            title: 'Bist du dir sicher?',
+            children: (
+                <Text size="sm">
+                    Möchtest du wirklich den Raum verlassen?
+                </Text>
+            ),
+            labels: { confirm: 'Ja', cancel: 'Nein' },
+            onConfirm: async () => {
+                setIsLoading(true)
+                notifications.show({
+                    id: "leaveRoom",
+                    title: "Raum verlassen",
+                    message: "Du verlässt jetzt den Raum",
+                    loading: true
+                })
+                socket.emit("leaveRoom", { roomId })
+                // initUser();
+                const routeDone = await router.push("/rooms/")
+                if (routeDone) {
+                    setIsLoading(false)
+                    notifications.update({
+                        id: "leaveRoom",
+                        title: "Erfolgreich",
+                        message: "Raum erfolgreich verlassen",
+                        icon: <IconCheck size="1rem" />
+                    })
+                }
+            },
+        });
     }
 
     return (
-        <Modal opened={openedModal} onClose={onClose} title="Rauminformationen">
+        <Modal opened={openedModal} onClose={onClose} title="Rauminformationen" centered>
             <Flex direction="column" gap="xl">
                 <Table>
                     <tbody>
@@ -62,7 +92,7 @@ const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClo
                     </tbody>
                 </Table>
 
-                <Button variant='subtle' onClick={leaveRoom}>
+                <Button variant='subtle' onClick={leaveRoom} loading={isLoading}>
                     Raum verlassen
                 </Button>
             </Flex>

@@ -76,6 +76,7 @@ export const roomsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const room = await ctx.prisma.room.findUnique({
         select: {
+          id: true,
           password: true,
         },
         where: {
@@ -102,6 +103,11 @@ export const roomsRouter = createTRPCRouter({
         room.password
       );
 
-      return isValidPassword;
+      const res = {
+        roomId: room.id,
+        isValidPassword,
+      };
+
+      return res;
     }),
 });

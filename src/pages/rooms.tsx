@@ -9,6 +9,8 @@ import { socket } from '~/hooks/useSocket'
 import { api } from '~/utils/api'
 import type { IRoom } from './api/classes/Room/room.types'
 import { formatTimestamp } from '~/utils/dates'
+import { notifications } from '@mantine/notifications'
+import { IconCheck } from '@tabler/icons-react'
 
 // type TOnlinePlayersEvent = {
 //     numOfOnlinePlayers: number
@@ -19,9 +21,9 @@ const RoomsPage = () => {
     const { showErrorNotification } = useNotification()
 
     const { mutate: validatePassword, isLoading: isLoadingValidatePassword } = api.rooms.validatePassword.useMutation({
-        onSuccess: (isPasswordValid) => {
-            if (isPasswordValid) {
-                joinRoom()
+        onSuccess: ({ isValidPassword, roomId }) => {
+            if (isValidPassword) {
+                joinRoom(roomId)
             } else {
                 form.setFieldError("password", "Falsches Passwort")
             }
@@ -105,13 +107,26 @@ const RoomsPage = () => {
             form.reset();
             openPasswordModal()
         } else {
-            joinRoom()
+            joinRoom(room.id)
         }
     }
 
-    const joinRoom = () => {
-        if (!activeRoom) return
-        void router.push(`/room/${activeRoom.id}`)
+    const joinRoom = async (roomId: string) => {
+        notifications.show({
+            id: "joinRoom",
+            title: "Trete bei ...",
+            message: "Du trittst dem Raum jetzt bei",
+            loading: true
+        })
+        const routeDone = await router.push(`/room/${roomId}`)
+        if (routeDone) {
+            notifications.update({
+                id: "joinRoom",
+                title: "Erfolgreich",
+                message: "Raum erfolgreich beigetreten",
+                icon: <IconCheck size="1rem" />
+            })
+        }
     }
 
     const handleJoinRoomWithPassword = form.onSubmit(values => {
@@ -119,10 +134,9 @@ const RoomsPage = () => {
 
         // validate password on server side
         validatePassword({
-            roomId: activeRoom?.id,
+            roomId: activeRoom.id,
             password: values.password
         })
-
     })
 
 

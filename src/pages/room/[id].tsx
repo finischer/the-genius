@@ -56,6 +56,7 @@ const RoomPage = () => {
             message: "Aus Lizenzgründen stehen Sounds/Musik aktuell nicht zur Verfügung",
             color: "orange",
             icon: <IconAlertCircle size="1rem" />,
+            autoClose: false,
         })
     }, [])
 

@@ -1,6 +1,6 @@
 import { Accordion, Button, type ButtonProps, Drawer, Flex, ScrollArea, Text, Title } from '@mantine/core';
 import { useDisclosure, useLocalStorage } from '@mantine/hooks';
-import { IconQuestionMark } from '@tabler/icons-react';
+import { IconCheck, IconQuestionMark } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import Tooltip from '~/components/shared/Tooltip/Tooltip';
@@ -10,11 +10,14 @@ import { socket } from '~/hooks/useSocket';
 import { type IModPanelProps } from './modPanel.types';
 import type { TGame, TGameNames } from '../Game/games/game.types';
 import GameRulesModal from '~/components/shared/GameRulesModal/GameRulesModal';
+import { modals } from '@mantine/modals';
+import { notifications } from '@mantine/notifications';
 
 const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
     const { showErrorNotification, showSuccessNotification } = useNotification()
     const router = useRouter();
     const [openedItems, setOpenedItems] = useLocalStorage<string[]>({ key: "modPanelOpenedItems", defaultValue: [] })
+    const [closeRoomIsLoading, setCloseRoomIsLoading] = useState(false)
 
     // for game rules
     const [openedGameRules, { open: openGameRules, close: closeGameRules }] = useDisclosure()
@@ -71,20 +74,45 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
     }
 
     const closeRoom = () => {
-        if (!window.confirm("Möchtest du wirklich den Raum schließen? Der Spielfortschritt geht verloren")) return
+        modals.openConfirmModal({
+            id: "closeRoom",
+            title: 'Bist du dir sicher?',
+            children: (
+                <Text size="sm">
+                    Möchtest du wirklich den Raum schließen? Der aktuelle Fortschritt geht verloren und kann nicht wiederhergestellt werden.
+                </Text>
+            ),
+            labels: { confirm: 'Ja', cancel: 'Nein' },
+            confirmProps: { color: 'red' },
+            onConfirm: async () => {
+                setCloseRoomIsLoading(true)
+                notifications.show({
+                    id: "closeRoom",
+                    message: "Raum wird geschlossen",
+                    loading: true
+                })
 
-        socket.emit("closeRoom", ({ roomId: room.id }), ({ closeSuccessful }) => {
-            if (closeSuccessful) {
-                showSuccessNotification({
-                    message: "Raum wurde geschlossen"
+                socket.emit("closeRoom", ({ roomId: room.id }), async ({ closeSuccessful }) => {
+                    if (closeSuccessful) {
+                        const routeDone = await router.push("/rooms")
+
+                        if (routeDone) {
+                            setCloseRoomIsLoading(false)
+                            notifications.update({
+                                id: "closeRoom",
+                                title: "Erfolgreich",
+                                message: "Raum wurde erfolgreich geschlossen",
+                                icon: <IconCheck size="1rem" />
+                            })
+                        }
+                    } else {
+                        showErrorNotification({
+                            message: "Raum konnte nicht geschlossen werden"
+                        })
+                    }
                 })
-                void router.push("/rooms")
-            } else {
-                showErrorNotification({
-                    message: "Raum konnte nicht geschlossen werden"
-                })
-            }
-        })
+            },
+        });
     }
 
     return (<>

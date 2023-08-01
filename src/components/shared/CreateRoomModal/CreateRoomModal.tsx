@@ -2,7 +2,7 @@ import { Button, Checkbox, Flex, Modal, NumberInput, Select, TextInput, type Sel
 import { useForm } from '@mantine/form'
 import { type GameshowMode } from '@prisma/client'
 import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { socket } from '~/hooks/useSocket'
 import { useUser } from '~/hooks/useUser'
 import { GAMESHOW_MODES } from '~/styles/constants'
@@ -19,6 +19,11 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
             games: []
         }
     })
+    const [loader, setLoader] = useState({
+        isLoading: false,
+        loaderMsg: ""
+    })
+
     const { user } = useUser()
     const router = useRouter();
 
@@ -34,8 +39,16 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
 
 
     const createRoom = form.onSubmit(values => {
+        setLoader({
+            isLoading: true,
+            loaderMsg: "Raum wird erstellt ..."
+        })
         // create room on server
         socket.emit("createRoom", ({ user, roomConfig: values, gameshow }), (room) => {
+            setLoader({
+                isLoading: true,
+                loaderMsg: "Raum wird beigetreten ..."
+            })
             // connect to room
             void router.push(`/room/${room.id}`)
         })
@@ -79,7 +92,7 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
                         readOnly
 
                     />
-                    <Button type="submit">Raum erstellen</Button>
+                    <Button type="submit" loading={loader.isLoading} >{loader.isLoading ? loader.loaderMsg : "Raum erstellen"}</Button>
                 </Flex>
             </form>
         </Modal>

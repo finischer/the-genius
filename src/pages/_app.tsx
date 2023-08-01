@@ -8,6 +8,8 @@ import { SocketProvider } from '~/hooks/useSocket';
 import { UserProvider } from '~/hooks/useUser';
 import "~/styles/globals.css";
 import { api } from "~/utils/api";
+import { ModalsProvider } from '@mantine/modals';
+
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -26,17 +28,19 @@ const MyApp: AppType<{ session: Session | null }> = ({
       withGlobalStyles
       withNormalizeCSS
     >
-      <Notifications position='top-center' />
+      <ModalsProvider>
+        <Notifications position='top-center' />
 
-      <SessionProvider session={session}>
-        <SocketProvider>
-          <RoomProvider>
-            <UserProvider>
-              <Component {...pageProps} />
-            </UserProvider>
-          </RoomProvider>
-        </SocketProvider>
-      </SessionProvider>
+        <SessionProvider session={session}>
+          <SocketProvider>
+            <RoomProvider>
+              <UserProvider>
+                <Component {...pageProps} />
+              </UserProvider>
+            </RoomProvider>
+          </SocketProvider>
+        </SessionProvider>
+      </ModalsProvider>
     </MantineProvider>
   );
 };

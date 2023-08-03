@@ -47,6 +47,26 @@ export function teamHandler(
     room.update();
   });
 
+  socket.on("increaseTotalScore", ({ teamId, step }) => {
+    const res = getRoomAndTeam(socket, socket.roomId, teamId);
+    if (!res) return;
+
+    const { room, team } = res;
+
+    team.increaseTotalScore(step);
+    room.update();
+  });
+
+  socket.on("decreaseTotalScore", ({ teamId, step }) => {
+    const res = getRoomAndTeam(socket, socket.roomId, teamId);
+    if (!res) return;
+
+    const { room, team } = res;
+
+    team.decreaseTotalScore(step);
+    room.update();
+  });
+
   socket.on("toggleTeamActive", ({ teamId }) => {
     const res = getRoomAndTeam(socket, socket.roomId, teamId);
     if (!res) return;

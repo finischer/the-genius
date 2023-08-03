@@ -2,6 +2,10 @@ import { Avatar, Container, Flex, Text, useMantineTheme } from '@mantine/core';
 import React from 'react';
 import { useRoom } from '~/hooks/useRoom';
 import type { IScoreboardProps } from './scoreboard.types';
+import ActionIcon from '~/components/shared/ActionIcon/ActionIcon';
+import { IconMinus, IconPlus } from '@tabler/icons-react';
+import { socket } from '~/hooks/useSocket';
+import { useUser } from '~/hooks/useUser';
 
 const SCOREBOARD_BORDER_BACKGROUND_COLOR = "#7b68ee"
 const SCOREBOARD_BACKGROUND_COLOR = "#D8BFD8"
@@ -10,6 +14,8 @@ const DIVIDER_COLOR = "#f7f1f1"
 const Scoreboard: React.FC<IScoreboardProps> = ({ team, color }) => {
     const theme = useMantineTheme()
     const { room } = useRoom()
+    const { isHost } = useUser();
+
     const minNumOfGamesToWin = Math.round((room.games.length + 1) / 2) + 2;
 
     const GREEN_GRADIENT = theme.fn.linearGradient(90, "#00C9FF", "#92FE9D")
@@ -23,12 +29,18 @@ const Scoreboard: React.FC<IScoreboardProps> = ({ team, color }) => {
 
     const scoreColor = color === "green" ? GREEN_GRADIENT : RED_GRADIENT
 
-    const increaseScore = () => { }
-    const decreaseScore = () => { }
+    const increaseScore = () => {
+        if (team.totalScore >= minNumOfGamesToWin) return
+        socket.emit("increaseTotalScore", { teamId: team.id, step: 1 })
+    }
+    const decreaseScore = () => {
+        if (team.totalScore <= 0) return
+        socket.emit("decreaseTotalScore", { teamId: team.id, step: 1 })
+    }
 
     return (
         <Flex h="10rem" align="center" p="2rem">
-            <Flex align="center">
+            <Flex align="center" gap="xl">
                 <Text color='white' p="0 1rem" weight="bold">{team.name}</Text>
                 <Avatar radius="100px" size="xl" variant="filled" />
 
@@ -55,6 +67,17 @@ const Scoreboard: React.FC<IScoreboardProps> = ({ team, color }) => {
                     />
                 </Flex>
 
+                {isHost &&
+                    <Flex direction="column" gap="md">
+                        <ActionIcon variant="outline" onClick={increaseScore}>
+                            <IconPlus />
+                        </ActionIcon>
+                        <ActionIcon variant="outline" onClick={decreaseScore}>
+                            <IconMinus />
+                        </ActionIcon>
+
+                    </Flex>
+                }
             </Flex>
 
         </Flex>

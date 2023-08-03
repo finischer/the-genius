@@ -142,6 +142,15 @@ export function roomHandler(
     room.update();
   });
 
+  socket.on("changeView", ({ newView }) => {
+    const room = roomManager.getRoom(socket.roomId);
+
+    if (!room) return new NoRoomException(socket);
+
+    room.changeView(newView);
+    room.update();
+  });
+
   socket.on("releaseBuzzer", () => {
     const room = roomManager.getRoom(socket.roomId);
     if (!room) return new NoRoomException(socket);

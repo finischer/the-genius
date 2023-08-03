@@ -4,7 +4,7 @@ import { copyNestedArray } from "~/utils/array";
 import { roomManager } from "../../controllers/RoomManager";
 import { io } from "../../socket";
 import Team from "../Team/Team";
-import { type IRoom } from "./room.types";
+import { type IRoom, type TRoomView } from "./room.types";
 import type { TGameNames } from "~/components/room/Game/games/game.types";
 
 const ROOM_DEFAULTS = {
@@ -128,6 +128,7 @@ export default class Room implements IRoom {
       flippedTitleBanner: false,
       milliseconds: 0,
     };
+    this.state.view = "game";
 
     this.currentGame = gameIdentifier;
     this.state.display.game = false;
@@ -201,6 +202,10 @@ export default class Room implements IRoom {
         playersBuzzered: [],
       };
     });
+  }
+
+  changeView(newView: TRoomView) {
+    this.state.view = newView;
   }
 
   update() {

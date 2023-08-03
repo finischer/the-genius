@@ -13,6 +13,7 @@ import GameRulesModal from '~/components/shared/GameRulesModal/GameRulesModal';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
 import useLoadingState from '~/hooks/useLoadingState/useLoadingState';
+import type { TRoomView } from '~/pages/api/classes/Room/room.types';
 
 const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
     const { showErrorNotification } = useNotification()
@@ -72,6 +73,10 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
     const startGame = (gameIdentifier: TGameNames) => {
         console.log("+++ room - Start game +++ ", gameIdentifier)
         socket.emit("startGame", ({ gameIdentifier }))
+    }
+
+    const changeView = (newView: TRoomView) => {
+        socket.emit("changeView", { newView })
     }
 
     const closeRoom = () => {
@@ -147,7 +152,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                             <Accordion.Panel>
                                 <Button.Group orientation='vertical' >
                                     <Button {...btnVariantDefault} disabled>Leer</Button>
-                                    <Button {...btnVariantDefault} disabled>Scoreboard</Button>
+                                    <Button {...btnVariantDefault} onClick={() => changeView("scoreboard")}>Scoreboard</Button>
                                 </Button.Group>
                             </Accordion.Panel>
                         </Accordion.Item>

@@ -178,7 +178,7 @@ const RoomPage = () => {
                     {/* <Text>Bist du der Host: {isHost.toString()} </Text>
                     {team && <Text>Dein Team: {team.name}</Text>} */}
                     {currentGame && room.state.view === "game" && <Game game={currentGame} />}
-                    {room.state.view === "empty" && (
+                    {room.state.view === "scoreboard" && (
                         <Flex direction="column" gap="xl">
                             <Scoreboard team={room.teams.teamOne} color='green' />
                             <Scoreboard team={room.teams.teamTwo} color='red' />

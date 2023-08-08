@@ -44,6 +44,7 @@
     "bson": "^5.2.0",
     "dayjs": "^1.11.7",
     "embla-carousel-react": "^7.1.0",
+    "framer-motion": "^10.15.1",
     "immer": "^10.0.2",
     "moment": "^2.29.4",
     "mongodb": "^5.7.0",

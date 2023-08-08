@@ -1,7 +1,7 @@
 import { Flex, keyframes } from '@mantine/core'
 import React, { useEffect, useState } from 'react'
 import { useRoom } from '~/hooks/useRoom'
-import { zoomInAnimation, zoomOutAnimation } from '~/utils/animations'
+import { animations, zoomInAnimation, zoomOutAnimation } from '~/utils/animations'
 import FlaggenGame from './games/Flaggen/FlaggenGame'
 import { type TFlaggenGameState } from './games/Flaggen/config'
 import { type IGameProps, type TGameMap, type TGameNames } from './games/game.types'
@@ -10,6 +10,7 @@ import { type TMemoryGameState } from './games/Memory/config'
 import MerkenGame from './games/Merken/MerkenGame'
 import { type TMerkenGameState } from './games/Merken/config'
 import FlipCard from '~/components/shared/FlipCard/FlipCard'
+import { AnimatePresence, motion } from 'framer-motion'
 
 const scaleAnimation = keyframes({
     "0%": { transform: "scale(1,1)" },
@@ -53,7 +54,14 @@ const Game: React.FC<IGameProps> = ({ game }) => {
 
     return (
         <>
-            {showGame && getGame(game.identifier)}
+            <AnimatePresence>
+                {showGame &&
+                    <motion.div {...animations.fadeInOut}>
+                        {getGame(game.identifier)}
+                    </motion.div>
+                }
+            </AnimatePresence>
+
             {mountIntroContainer &&
                 <Flex
                     direction="column"

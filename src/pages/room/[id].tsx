@@ -1,10 +1,18 @@
-import { Alert, Box, Center, Container, Flex, Notification, Text, useMantineTheme } from '@mantine/core'
+import { Box, Center, Container, Flex, Text, useMantineTheme } from '@mantine/core'
 import { useDisclosure, useNetwork } from '@mantine/hooks'
 import { notifications } from '@mantine/notifications'
-import { IconAlertCircle, IconArrowRight, IconCircle, IconInfoSmall, IconWifi, IconWifi0, IconWifi1, IconWifi2, IconWifiOff } from '@tabler/icons-react'
+import { IconArrowRight, IconInfoSmall, IconWifi, IconWifi0, IconWifi1, IconWifi2, IconWifiOff } from '@tabler/icons-react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
+import AnswerBanner from '~/components/room/AnswerBanner/AnswerBanner'
+import Game from '~/components/room/Game'
+import ModPanel from '~/components/room/ModPanel/ModPanel'
+import RoomDetailsModal from '~/components/room/RoomDetailsModal/RoomDetailsModal'
+import Scorebar from '~/components/room/Scorebar/Scorebar'
+import Scoreboard from '~/components/room/Scoreboard/Scoreboard'
+import Timer from '~/components/room/Timer/Timer'
 import ActionIcon from '~/components/shared/ActionIcon'
 import ContainerBox from '~/components/shared/ContainerBox'
 import GameRulesModal from '~/components/shared/GameRulesModal/GameRulesModal'
@@ -13,15 +21,10 @@ import useNotification from '~/hooks/useNotification'
 import { useRoom } from '~/hooks/useRoom'
 import { socket } from '~/hooks/useSocket'
 import { useUser } from '~/hooks/useUser'
-import Game from '~/components/room/Game'
-import { type TUserReduced } from '~/types/socket.types'
-import RoomDetailsModal from '~/components/room/RoomDetailsModal/RoomDetailsModal'
 import { sizes } from '~/styles/constants'
-import ModPanel from '~/components/room/ModPanel/ModPanel'
-import Scorebar from '~/components/room/Scorebar/Scorebar'
-import AnswerBanner from '~/components/room/AnswerBanner/AnswerBanner'
-import type { IRoom, TRoomView } from '../api/classes/Room/room.types'
-import Scoreboard from '~/components/room/Scoreboard/Scoreboard'
+import { type TUserReduced } from '~/types/socket.types'
+import type { IRoom } from '../api/classes/Room/room.types'
+import { animations } from '~/utils/animations'
 
 type TNetworkStatusEffectiveType = 'slow-2g' | '2g' | '3g' | '4g'
 
@@ -49,16 +52,16 @@ const RoomPage = () => {
     const showGame = room?.state.display.game
     const roomId = router.query.id as string
 
-    useEffect(() => {
-        // show info banner that no sounds/music are available until we have a license to use it
-        notifications.show({
-            title: "Info",
-            message: "Aus Lizenzgründen stehen Sounds/Musik aktuell nicht zur Verfügung",
-            color: "orange",
-            icon: <IconAlertCircle size="1rem" />,
-            autoClose: false,
-        })
-    }, [])
+    // useEffect(() => {
+    //     // show info banner that no sounds/music are available until we have a license to use it
+    //     notifications.show({
+    //         title: "Info",
+    //         message: "Aus Lizenzgründen stehen Sounds/Musik aktuell nicht zur Verfügung",
+    //         color: "orange",
+    //         icon: <IconAlertCircle size="1rem" />,
+    //         autoClose: false,
+    //     })
+    // }, [])
 
     useEffect(() => {
         if (session?.user) {
@@ -143,6 +146,7 @@ const RoomPage = () => {
 
                 {/* Header */}
                 <Container size="100%" w="100%" pos="relative">
+                    {/* Top Left Corner */}
                     <Flex align="center" gap="sm">
 
                         {/* Room Info Button */}
@@ -155,36 +159,46 @@ const RoomPage = () => {
                         {networkStatus.rtt}
                     </Flex>
 
+                    {/* Top Middle */}
+                    <Flex w="100%" justify="center" pos="absolute" top={0} >
+                        <Timer />
+                    </Flex>
+                    {/* Top Right Corner */}
                     {/* Current Game */}
-                    {currentGame && showGame &&
-                        <ContainerBox
-                            px="xl"
-                            bg={theme.primaryColor}
-                            pos="absolute"
-                            h="100%"
-                            right={0}
-                            top={0}
-                            contentCentered
-                            withShadow
-                            onClick={handleBuzzerClick}
-                        >
-                            <Text>{currentGame.name}</Text>
-                        </ContainerBox>
-                    }
+                    <AnimatePresence>
+                        {currentGame && showGame &&
+                            <motion.div {...animations.fadeInOut}>
+                                <ContainerBox
+                                    px="xl"
+                                    bg={theme.primaryColor}
+                                    pos="absolute"
+                                    h="100%"
+                                    right={0}
+                                    top={0}
+                                    contentCentered
+                                    withShadow
+                                    onClick={handleBuzzerClick}
+                                >
+                                    <Text>{currentGame.name}</Text>
+                                </ContainerBox>
+                            </motion.div>
+                        }
+                    </AnimatePresence>
                 </Container>
 
                 {/* Main View */}
                 <Flex h="100%" align="center" justify="center" direction="column" >
-                    {/* <Text>Bist du der Host: {isHost.toString()} </Text>
-                    {team && <Text>Dein Team: {team.name}</Text>} */}
                     {currentGame && room.state.view === "game" && <Game game={currentGame} />}
-                    {room.state.view === "scoreboard" && (
-                        <Flex direction="column" gap="xl">
-                            <Scoreboard team={room.teams.teamOne} color='green' />
-                            <Scoreboard team={room.teams.teamTwo} color='red' />
-                        </Flex>
-
-                    )}
+                    <AnimatePresence>
+                        {room.state.view === "scoreboard" && (
+                            <motion.div {...animations.fadeInOut}>
+                                <Flex direction="column" gap="xl">
+                                    <Scoreboard team={room.teams.teamOne} color='green' />
+                                    <Scoreboard team={room.teams.teamTwo} color='red' />
+                                </Flex>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </Flex>
 
                 {/* Footer View */}

@@ -1,90 +1,77 @@
+import { SimpleGrid, Text, type Sx } from '@mantine/core'
 import React from 'react'
+import FlipCard from '~/components/shared/FlipCard/FlipCard'
+import { socket } from '~/hooks/useSocket'
+import { shuffleArray } from '~/utils/array'
 import type { IMerkenPlaygroundProps } from './merkenPlayground.types'
-import { Grid, Text, type Sx, Container } from '@mantine/core'
-import { colors } from '~/styles/constants'
+import { useUser } from '~/hooks/useUser'
 
 const MerkenPlayground: React.FC<IMerkenPlaygroundProps> = ({ cards, openCards = [], allCardsFlipped = false }) => {
-    const tstArrayData = new Array(24).fill(null).map((_, idx) => idx)
+    const { isHost } = useUser()
 
-    // FOR MERKEN CARDS
     const defaultCardStyle: Sx = {
-        backfaceVisibility: "hidden",
-        position: "absolute",
-        top: 0,
-        left: 0,
-
-        userSelect: "none",
+        height: "5rem",
+        width: "5rem",
+        backgroundColor: "whitesmoke",
+        color: "black",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        userSelect: "none",
     }
 
-    const handleClick = () => {
-        // if (clickable) {
-        //     setFlipped(oldState => !oldState)
-        //     onClick()
-        // }
+    const handleFlipCard = (index: number) => {
+        console.log("Click card: ", index)
+        socket.emit("merken:flipCard", { cardIndex: index })
+    }
+
+    const FrontContent = ({ content }: { content: number }) => {
+        return (
+            <Text size="1.5rem">{content}</Text>
+        )
+    }
+
+    const BackContent = ({ content, index }: { content: any, index: number }) => {
+        return (
+            <div>
+                <span
+                    style={{
+                        position: "absolute",
+                        top: "0.25rem",
+                        left: "0.5rem",
+                        fontSize: "1rem",
+                        fontWeight: "500",
+                        opacity: 0.7,
+                    }}
+                >
+                    {index + 1}
+                </span>
+                <Text>{content}</Text>
+            </div>
+        )
     }
 
     return (
-        <Grid>
-            <Grid.Col span={2}>1</Grid.Col>
-            <Grid.Col span={2}>2</Grid.Col>
-            <Grid.Col span={2}>3</Grid.Col>
-            <Grid.Col span={2}>4</Grid.Col>
-            <Grid.Col span={2}>5</Grid.Col>
-            <Grid.Col span={2}>6</Grid.Col>
-            <Grid.Col span={2}>7</Grid.Col>
-            <Grid.Col span={2}>8</Grid.Col>
-        </Grid>
+        <SimpleGrid cols={6}>
+            {cards.map((elem, idx) => (
+                <FlipCard
+                    key={idx}
+                    isFlipped={allCardsFlipped || openCards.includes(idx)}
+                    clickable={isHost}
+                    onClick={() => handleFlipCard(idx)}
+                    front={<FrontContent content={idx + 1} />}
+                    back={<BackContent index={idx} content={elem} />}
+                    frontStyle={{
+                        ...defaultCardStyle
+                    }}
+                    backStyle={{
+                        ...defaultCardStyle
+                    }}
+                />
+            ))}
+        </SimpleGrid>
     )
 
-    // return (
-    //     <Grid align='center' justify='center' gutter={0} >
-    //         {tstArrayData.map((elem, idx) => (
-    //             <Grid.Col span={2}   >
-    //                 <Container
-    //                     p={0}
-    //                     m={0}
-    //                     h="5rem"
-    //                     w="5rem"
-    //                     bg="white"
-    //                     onClick={handleClick}
-    //                 >
-    //                     <Container
-    //                         sx={{
-    //                             transformStyle: "preserve-3d",
-    //                             transition: "300ms linear 0.1s",
-    //                             position: "relative",
-    //                             transform: openCards.includes(idx) ? "rotateY(180deg)" : "unset"
-    //                         }}
-    //                     >
-    //                         <Container
-    //                             sx={(theme) => ({
-    //                                 ...defaultCardStyle,
-    //                                 transform: "rotateY(0)",
-    //                                 background: theme.primaryColor
-    //                             })}
-    //                         >
-    //                             {elem}
-    //                         </Container>
-    //                         <Container
-    //                             sx={(theme) => ({
-    //                                 ...defaultCardStyle,
-    //                                 transform: "rotateY(180deg)",
-    //                                 background: theme.primaryColor
-    //                             })}
-
-    //                         >
-    //                             Ich weiß, was du nicht weißt
-    //                         </Container>
-    //                     </Container>
-    //                 </Container>
-    //             </Grid.Col>
-
-    //         ))}
-    //     </Grid>
-    // )
 }
 
 export default MerkenPlayground

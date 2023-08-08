@@ -1,7 +1,12 @@
+import { shuffleArray } from "~/utils/array";
 import { type IGameGeneralState } from "../game.types";
 import { type IMerkenState } from "./merken.types";
 
 export type TMerkenGameState = IMerkenState & IGameGeneralState;
+
+const tstArrayData = new Array(24).fill(null).map((_, idx) => idx.toString());
+
+const shuffledCards: string[] = shuffleArray(tstArrayData);
 
 export const DEFAULT_MERKEN_STATE: TMerkenGameState = {
   identifier: "merken",
@@ -9,7 +14,7 @@ export const DEFAULT_MERKEN_STATE: TMerkenGameState = {
   maxPoints: 7,
   scorebarMode: "circle",
   allCardsFlipped: false,
-  cards: [],
+  cards: shuffledCards,
   openCards: [],
   timerState: {
     isActive: false,

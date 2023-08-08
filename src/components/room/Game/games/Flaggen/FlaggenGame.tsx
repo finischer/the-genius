@@ -16,18 +16,18 @@ const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
 
     const handleFlagClick = () => {
         if (!isHost || displayFlag) return
-        socket.emit("showFlag")
+        socket.emit("flaggen:showFlag")
     }
 
     const handleNextFlagClick = () => {
         socket.emit("hideAnswerBanner")
-        socket.emit("nextFlag")
+        socket.emit("flaggen:nextFlag")
 
     }
 
     const handlePrevFlagClick = () => {
         socket.emit("hideAnswerBanner")
-        socket.emit("prevFlag")
+        socket.emit("flaggen:prevFlag")
     }
 
     const handleShowAnswerClick = () => {
@@ -42,7 +42,6 @@ const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
             direction="column"
             gap="md"
             align="center"
-            pos="absolute"
         >
             {isHost && <Text>Flagge {game.qIndex + 1} / {game.countries.length}</Text>}
             <Flex gap="4rem" align="center" pos="relative">

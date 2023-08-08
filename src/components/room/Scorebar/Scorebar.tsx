@@ -8,7 +8,8 @@ import { colors, sizes } from '~/styles/constants'
 import { type IScoreCircleProps, type IScorebarProps } from './scorebar.types'
 import ActionIcon from '~/components/shared/ActionIcon/ActionIcon'
 import Tooltip from '~/components/shared/Tooltip'
-
+import { AnimatePresence, motion } from 'framer-motion'
+import { animations } from '~/utils/animations'
 
 const stretchAnimation = keyframes({
     "0%": { transform: "scale(0.75)" },
@@ -226,11 +227,16 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
             </Flex>
 
             {/* Right scorbar timer */}
-            {timerPosition === "right" && team.scorebarTimer.isActive &&
-                <Container bg={theme.primaryColor} sx={scorebarTimerStyle}>
-                    {team.scorebarTimer.seconds}
-                </Container>
-            }
+            <AnimatePresence>
+                {timerPosition === "right" && team.scorebarTimer.isActive &&
+                    <motion.div {...animations.fadeInOut}>
+
+                        <Container bg={theme.primaryColor} sx={scorebarTimerStyle}>
+                            {team.scorebarTimer.seconds}
+                        </Container>
+                    </motion.div>
+                }
+            </AnimatePresence>
         </Flex>
     )
 }

@@ -105,10 +105,14 @@ export interface IClientToServerEvents {
   releaseBuzzer: () => void;
 
   // +++ FLAGEN GAME EVENTS +++
-  showFlag: () => void;
-  nextFlag: () => void;
-  prevFlag: () => void;
-  showAnswer: () => void;
+  "flaggen:showFlag": () => void;
+  "flaggen:nextFlag": () => void;
+  "flaggen:prevFlag": () => void;
+  "flaggen:showAnswer": () => void;
+
+  // +++ MERKEN GAME EVENTS +++
+  "merken:flipCard": ({ cardIndex }: { cardIndex: number }) => void;
+  "merken:startGame": () => void;
 }
 
 export interface IServerToClientEvents {

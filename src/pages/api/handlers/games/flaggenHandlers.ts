@@ -19,7 +19,7 @@ export function flaggenHandler(
   > &
     IServerSocketData
 ) {
-  socket.on("showFlag", () => {
+  socket.on("flaggen:showFlag", () => {
     const room = roomManager.getRoom(socket.roomId);
     if (!room) return new NoRoomException(socket);
 
@@ -30,7 +30,7 @@ export function flaggenHandler(
     room.update();
   });
 
-  socket.on("nextFlag", () => {
+  socket.on("flaggen:nextFlag", () => {
     const room = roomManager.getRoom(socket.roomId);
     if (!room) return new NoRoomException(socket);
     const game = room.getGame(GAME_IDENTIFIER);
@@ -49,7 +49,7 @@ export function flaggenHandler(
     }, msDelay);
   });
 
-  socket.on("prevFlag", () => {
+  socket.on("flaggen:prevFlag", () => {
     const room = roomManager.getRoom(socket.roomId);
     if (!room) return new NoRoomException(socket);
     const game = room.getGame(GAME_IDENTIFIER);
@@ -68,7 +68,7 @@ export function flaggenHandler(
     }, msDelay);
   });
 
-  socket.on("showAnswer", () => {
+  socket.on("flaggen:showAnswer", () => {
     const room = roomManager.getRoom(socket.roomId);
     if (!room) return new NoRoomException(socket);
     const game = room.getGame(GAME_IDENTIFIER);

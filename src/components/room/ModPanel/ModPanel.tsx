@@ -90,7 +90,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
             ),
             labels: { confirm: 'Ja', cancel: 'Nein' },
             confirmProps: { color: 'red' },
-            onConfirm: async () => {
+            onConfirm: () => {
                 notifications.show({
                     id: "closeRoom",
                     message: "Raum wird geschlossen",

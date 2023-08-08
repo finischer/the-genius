@@ -21,7 +21,7 @@ const Scoreboard: React.FC<IScoreboardProps> = ({ team, color }) => {
     const GREEN_GRADIENT = theme.fn.linearGradient(90, "#00C9FF", "#92FE9D")
     const RED_GRADIENT = theme.fn.linearGradient(90, "#D53369", "#DAAE51")
 
-    const lineElements = [...Array(minNumOfGamesToWin)].map((_, index) => (
+    const lineElements = new Array(minNumOfGamesToWin).fill(null).map((_, index) => (
         <Container p={0} key={index} m="1.2rem 0" w="12rem" opacity={0.8} sx={{
             borderRight: index + 1 < minNumOfGamesToWin ? `1px solid ${DIVIDER_COLOR}` : "none"
         }} />

@@ -25,7 +25,7 @@ const RoomsPage = () => {
     const { mutate: validatePassword, isLoading: isLoadingValidatePassword } = api.rooms.validatePassword.useMutation({
         onSuccess: ({ isValidPassword, roomId }) => {
             if (isValidPassword) {
-                joinRoom(roomId)
+                void joinRoom(roomId)
             } else {
                 form.setFieldError("password", "Falsches Passwort")
             }
@@ -109,7 +109,7 @@ const RoomsPage = () => {
             form.reset();
             openPasswordModal()
         } else {
-            joinRoom(room.id)
+            void joinRoom(room.id)
         }
     }
 

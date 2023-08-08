@@ -1,19 +1,19 @@
 import { ActionIcon, Button, CopyButton, Flex, Modal, Table, Text } from '@mantine/core'
-import { IconCheck, IconCopy } from '@tabler/icons-react'
-import { useRouter } from 'next/router'
-import React, { useState } from 'react'
-import { socket } from '~/hooks/useSocket'
-import { type IRoomDetailsModalProps } from './roomDetailsModal.types'
 import { modals } from '@mantine/modals'
 import { notifications } from '@mantine/notifications'
+import { IconCheck, IconCopy } from '@tabler/icons-react'
+import { useRouter } from 'next/router'
+import React from 'react'
 import useLoadingState from '~/hooks/useLoadingState/useLoadingState'
+import { socket } from '~/hooks/useSocket'
+import { type IRoomDetailsModalProps } from './roomDetailsModal.types'
 
 const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClose, room }) => {
     const { pageIsLoading } = useLoadingState()
     const router = useRouter()
     const roomId = router.query.id as string
 
-    const leaveRoom = async () => {
+    const leaveRoom = () => {
 
         modals.openConfirmModal({
             id: "leaveRoom",

@@ -31,7 +31,7 @@ export function roomHandler(
   });
 
   socket.on("createRoom", async ({ user, roomConfig, gameshow }, cb) => {
-    const { name, modus, isPrivateRoom, password, games } = roomConfig;
+    const { name, modus, isPrivateRoom, password } = roomConfig;
 
     const roomId = new ObjectId().toString();
     const room = new Room(

@@ -2,9 +2,8 @@ import { SimpleGrid, Text, type Sx } from '@mantine/core'
 import React from 'react'
 import FlipCard from '~/components/shared/FlipCard/FlipCard'
 import { socket } from '~/hooks/useSocket'
-import { shuffleArray } from '~/utils/array'
-import type { IMerkenPlaygroundProps } from './merkenPlayground.types'
 import { useUser } from '~/hooks/useUser'
+import type { IMerkenPlaygroundProps } from './merkenPlayground.types'
 
 const MerkenPlayground: React.FC<IMerkenPlaygroundProps> = ({ cards, openCards = [], allCardsFlipped = false }) => {
     const { isHost } = useUser()

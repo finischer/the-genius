@@ -29,7 +29,7 @@ const GameshowsPage = () => {
     }
 
     const handleCreateGameshow = () => {
-        router.push("/gameshows/create")
+        void router.push("/gameshows/create")
     }
 
     const rows = gameshows?.map(gameshow => {

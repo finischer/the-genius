@@ -23,8 +23,8 @@ import { socket } from '~/hooks/useSocket'
 import { useUser } from '~/hooks/useUser'
 import { sizes } from '~/styles/constants'
 import { type TUserReduced } from '~/types/socket.types'
-import type { IRoom } from '../api/classes/Room/room.types'
 import { animations } from '~/utils/animations'
+import type { IRoom } from '../api/classes/Room/room.types'
 
 type TNetworkStatusEffectiveType = 'slow-2g' | '2g' | '3g' | '4g'
 

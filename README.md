@@ -1,28 +1,68 @@
-# Create T3 App
+# TheGenius
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+TheGenius is a game show application that allows users to create their own game show and play it with friends. The project is inspired by the game show "Brain Battle", which appears on the YouTube channel [PietSmiet](https://www.pietsmiet.de/).
 
-## What's next? How do I make an app with this?
+## Techstack
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+All technologies you should be familiar with.
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+- [Next.JS](https://nextjs.org/)
+- [Prisma](https://www.prisma.io/)
+- [TRPC](https://trpc.io/)
+- [MongoDB](https://www.mongodb.com/de-de)
+- [ReactJS](https://react.dev/)
+- [Socket.IO](https://socket.io/)
+- [Typescript](https://www.typescriptlang.org/)
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+Also we use [Mantine](https://mantine.dev/) to customize our UI React Components
 
-## Learn More
+## Set up local environment
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+Requirements:
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+- [Docker](https://docs.docker.com/desktop/)
+- [Node.JS ](https://nodejs.org/de)
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+### Create environment variables
 
-## How do I deploy this?
+Step 1: Create a file called .env.local  
+Step 2: Insert the following environment variables
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+```
+MONGODB_URI="mongodb://admin:password@localhost:27017/db?authSource=admin&retryWrites=true&w=majority"
+```
+
+Step 3: Create a file called .env.development
+Step 4: Insert the following environment variables
+
+```
+NODE_ENV="development"
+MONGODB_URI="<FILL_IN>"
+NEXTAUTH_SECRET="<FILL_IN>"
+```
+
+**Note:** .env.local will overwrite every other env variable in other env files
+
+### Prepare Docker Container
+
+Step 1: open new terminal  
+Step 2: Run command
+
+```
+docker-compose up -d
+```
+
+### Start next.js Server
+
+Step 1: Open new terminal  
+Step 2: Run command
+
+```
+npm run dev
+```
+
+### Additional hints
+
+Prisma will run on Port: 4466  
+Webiste will run in Port: 3000  
+MongoDB will run on Port: 27017

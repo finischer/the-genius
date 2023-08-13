@@ -43,7 +43,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
     const theme = useMantineTheme()
 
     const { room, currentGame } = useRoom()
-    const { user, isHost, isPlayer, setUserAsPlayer } = useUser();
+    const { user, team: userTeam, isHost, isPlayer, setUserAsPlayer } = useUser();
 
     const scoreCircles = currentGame ? Array(currentGame.maxPoints).fill(null).map((_, index) => <ScoreCircle key={index} filled={team.gameScore > index} />) : undefined
     const isTeamFull = team.players.length >= room.maxPlayersPerTeam
@@ -54,6 +54,8 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
     const disableIncreaseScoreBtn = disableModBtns || (currentGame && team.gameScore >= currentGame.maxPoints)
     const disableDecreaseScoreBtn = disableModBtns || team.gameScore <= 0
 
+    console.log("UserTeamID: ", userTeam?.id)
+    console.log("TeamID: ", team.id)
 
     const playerNamesWhoBuzzered = team.players.map(p => {
         if (p.userId && team.buzzer.playersBuzzered.includes(p.userId)) {
@@ -108,20 +110,24 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
                 </Container>
             }
 
-            <Flex pos="absolute" top={-300} w="100%" gap="md">
-                {team.players.map(p => (
-                    <AnimatePresence>
-                        {p.states.notefield.isActive &&
-                            <Notefield
-                                value={p.states.notefield.value}
-                                onChange={(e) => handleNotefieldChange(p.id, p.teamId, e.target.value)}
-                                player={p}
-                            />
-                        }
-                    </AnimatePresence>
-                )
-                )}
-            </Flex>
+            {/* Only show notefields to own team players or viewers */}
+            {(team.id === userTeam?.id || !isPlayer) &&
+                <Flex pos="absolute" top={-300} w="100%" gap="md">
+                    {team.players.map(p => (
+                        <AnimatePresence>
+                            {p.states.notefield.isActive &&
+                                <Notefield
+                                    disabled={p.userId !== user.id} // only this player can edit the notefield
+                                    value={p.states.notefield.value}
+                                    onChange={(e) => handleNotefieldChange(p.id, p.teamId, e.target.value)}
+                                    player={p}
+                                />
+                            }
+                        </AnimatePresence>
+                    )
+                    )}
+                </Flex>
+            }
 
             <Flex direction="column" pos="relative" >
                 {/* Highlight container to represent that it is the turn of this team  */}

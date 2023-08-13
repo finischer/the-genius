@@ -1,15 +1,14 @@
-import { Button, Checkbox, Flex, Modal, NumberInput, Select, TextInput, type SelectItem, Text } from '@mantine/core'
+import { Button, Checkbox, Flex, Modal, NumberInput, Select, Text, TextInput, type SelectItem } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { type GameshowMode } from '@prisma/client'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+import type { TGame } from '~/components/room/Game/games/game.types'
 import { socket } from '~/hooks/useSocket'
 import { useUser } from '~/hooks/useUser'
 import { GAMESHOW_MODES } from '~/styles/constants'
 import { capitalize } from '~/utils/strings'
 import { type ICreateRoomModalProps } from './createRoomModal.types'
-import type { TGame } from '~/components/room/Game/games/game.types'
-import Tooltip from '../Tooltip/Tooltip'
 
 const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose, gameshow }) => {
     const gameshowGames = gameshow.games as unknown as TGame[]

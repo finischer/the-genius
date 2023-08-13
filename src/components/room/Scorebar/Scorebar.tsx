@@ -1,15 +1,16 @@
-import { Box, Button, Container, Flex, Group, type Sx, Text, keyframes, useMantineTheme, Badge } from '@mantine/core'
+import { Badge, Box, Button, Container, Flex, Group, Text, keyframes, useMantineTheme, type Sx } from '@mantine/core'
 import { IconExposureMinus1, IconExposurePlus1, IconTargetArrow } from '@tabler/icons-react'
+import { AnimatePresence, motion } from 'framer-motion'
 import React from 'react'
+import ActionIcon from '~/components/shared/ActionIcon/ActionIcon'
+import Tooltip from '~/components/shared/Tooltip'
 import { useRoom } from '~/hooks/useRoom'
 import { socket } from '~/hooks/useSocket'
 import { useUser } from '~/hooks/useUser'
 import { colors, sizes } from '~/styles/constants'
+import { animations, fadeInOutVariant } from '~/utils/animations'
+import Notefield from '../Notefield/Notefield'
 import { type IScoreCircleProps, type IScorebarProps } from './scorebar.types'
-import ActionIcon from '~/components/shared/ActionIcon/ActionIcon'
-import Tooltip from '~/components/shared/Tooltip'
-import { AnimatePresence, motion } from 'framer-motion'
-import { animations } from '~/utils/animations'
 
 const stretchAnimation = keyframes({
     "0%": { transform: "scale(0.75)" },
@@ -94,14 +95,33 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
         socket.emit("toggleTeamActive", { teamId: team.id })
     }
 
+    const handleNotefieldChange = (playerId: string, teamId: string, newValue: string) => {
+        socket.emit("updateNotefield", { playerId, teamId, newValue })
+    }
+
     return (
-        <Flex align="flex-end" gap="lg">
+        <Flex align="flex-end" gap="lg" pos="relative">
             {/* Left Scorbar timer */}
             {timerPosition === "left" && team.scorebarTimer.isActive &&
                 <Container bg={theme.primaryColor} sx={scorebarTimerStyle}>
                     {team.scorebarTimer.seconds}
                 </Container>
             }
+
+            <Flex pos="absolute" top={-300} w="100%" gap="md">
+                {team.players.map(p => (
+                    <AnimatePresence>
+                        {p.states.notefield.isActive &&
+                            <Notefield
+                                value={p.states.notefield.value}
+                                onChange={(e) => handleNotefieldChange(p.id, p.teamId, e.target.value)}
+                                player={p}
+                            />
+                        }
+                    </AnimatePresence>
+                )
+                )}
+            </Flex>
 
             <Flex direction="column" pos="relative" >
                 {/* Highlight container to represent that it is the turn of this team  */}

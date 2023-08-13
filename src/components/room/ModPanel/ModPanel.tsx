@@ -30,8 +30,14 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
     const btnVariantDefault: ButtonProps = { variant: "default" }
     const titleOrder = 3
 
-    const buzzerPressed = Object.values(room.teams).filter(t => t.isActiveTurn || t.buzzer.isPressed).length > 0
-    const isOneScorebarTimerActive = Object.values(room.teams).filter(t => t.scorebarTimer.isActive).length > 0
+    const teamArray = Object.values(room.teams)
+
+    const buzzerPressed = teamArray.filter(t => t.isActiveTurn || t.buzzer.isPressed).length > 0
+    const isOneScorebarTimerActive = teamArray.filter(t => t.scorebarTimer.isActive).length > 0
+
+    const allPlayers = teamArray.map(t => t.players).flat()
+    const atLeastOneNotefieldIsActive = allPlayers.filter(p => p.states.notefield.isActive).length > 0
+
 
     const handleOpenGameRules = (game: TGame) => {
         setClickedGame(game)
@@ -46,8 +52,13 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
         socket.emit("hideAnswerBanner")
     }
 
+    const toggleNotefields = () => {
+        // TODO: handle if one notefield is not active and other ones are active
+        socket.emit("toggleNotefields")
+    }
+
     const gameBtns = room.games.map(g => {
-        const btnDisabled = g.identifier === currentGame?.identifier
+        const btnDisabled = g.identifier === currentGame?.identifier && room.state.view === "game"
 
         return (
             <Button.Group key={g.identifier}>
@@ -151,7 +162,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                             </Accordion.Control>
                             <Accordion.Panel>
                                 <Button.Group orientation='vertical' >
-                                    <Button {...btnVariantDefault} disabled>Leer</Button>
+                                    <Button {...btnVariantDefault} onClick={() => changeView("empty")}>Leer</Button>
                                     <Button {...btnVariantDefault} onClick={() => changeView("scoreboard")}>Scoreboard</Button>
                                 </Button.Group>
                             </Accordion.Panel>
@@ -164,6 +175,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                             <Accordion.Panel>
                                 <Button.Group orientation='vertical' >
                                     <Button {...btnVariantDefault} disabled>10s Timer starten</Button>
+                                    <Button {...btnVariantDefault} onClick={toggleNotefields}>Notizfelder {atLeastOneNotefieldIsActive ? "ausblenden" : "einblenden"}</Button>
                                     <Button {...btnVariantDefault} onClick={releaseBuzzer} disabled={!buzzerPressed || isOneScorebarTimerActive}>Alle Buzzer freigeben</Button>
                                     <Button {...btnVariantDefault} onClick={hideAnswer} disabled={!room.state.answerState.showAnswer}>Antwort ausblenden</Button>
                                     <Button {...btnVariantDefault} disabled>Konfetti regnen lassen</Button>

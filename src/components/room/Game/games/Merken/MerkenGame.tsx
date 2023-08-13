@@ -7,16 +7,16 @@ import { useUser } from "~/hooks/useUser";
 
 const MerkenGame: React.FC<IMerkenGameProps> = ({ game }) => {
   const { isHost } = useUser()
+  const isStartButtonDisabled = game.timerState.isActive
 
   const handleStartGame = () => {
-    if (!isHost) return
+    if (!isHost || isStartButtonDisabled) return // to make sure not start the game unintentionally
     socket.emit("merken:startGame")
   }
 
   return <Flex direction="column" gap="lg">
-
     <MerkenPlayground cards={game.cards} openCards={game.openCards} allCardsFlipped={game.allCardsFlipped} />
-    {isHost && <Button onClick={handleStartGame}>Spiel starten</Button>}
+    {isHost && <Button onClick={handleStartGame} disabled={isStartButtonDisabled}>Spiel starten</Button>}
   </Flex>;
 };
 

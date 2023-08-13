@@ -8,7 +8,7 @@ import { useRoom } from '~/hooks/useRoom'
 import { socket } from '~/hooks/useSocket'
 import { useUser } from '~/hooks/useUser'
 import { colors, sizes } from '~/styles/constants'
-import { animations, fadeInOutVariant } from '~/utils/animations'
+import { animations } from '~/utils/animations'
 import Notefield from '../Notefield/Notefield'
 import { type IScoreCircleProps, type IScorebarProps } from './scorebar.types'
 
@@ -114,7 +114,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
             {(team.id === userTeam?.id || !isPlayer) &&
                 <Flex pos="absolute" top={-300} w="100%" gap="md">
                     {team.players.map(p => (
-                        <AnimatePresence>
+                        <AnimatePresence key={p.id}>
                             {p.states.notefield.isActive &&
                                 <Notefield
                                     disabled={p.userId !== user.id} // only this player can edit the notefield

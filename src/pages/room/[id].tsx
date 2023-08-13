@@ -23,9 +23,8 @@ import { socket } from '~/hooks/useSocket'
 import { useUser } from '~/hooks/useUser'
 import { sizes } from '~/styles/constants'
 import { type TUserReduced } from '~/types/socket.types'
-import { animations, fadeInOutVariant } from '~/utils/animations'
+import { animations } from '~/utils/animations'
 import type { IRoom } from '../api/classes/Room/room.types'
-import Notefield from '~/components/room/Notefield/Notefield'
 
 type TNetworkStatusEffectiveType = 'slow-2g' | '2g' | '3g' | '4g'
 

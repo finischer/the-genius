@@ -103,6 +103,16 @@ export interface IClientToServerEvents {
   resetTotalScore: ({ teamId }: { teamId: string }) => void;
   toggleTeamActive: ({ teamId }: { teamId: string }) => void;
   releaseBuzzer: () => void;
+  updateNotefield: ({
+    playerId,
+    teamId,
+    newValue,
+  }: {
+    playerId: string;
+    teamId: string;
+    newValue: string;
+  }) => void;
+  toggleNotefields: () => void;
 
   // +++ FLAGEN GAME EVENTS +++
   "flaggen:showFlag": () => void;

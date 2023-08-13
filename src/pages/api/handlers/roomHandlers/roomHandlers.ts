@@ -151,6 +151,33 @@ export function roomHandler(
     room.update();
   });
 
+  socket.on("updateNotefield", ({ playerId, teamId, newValue }) => {
+    const res = getRoomAndTeam(socket, socket.roomId, teamId);
+    if (!res) return;
+
+    const { room, team } = res;
+
+    const player = team.getPlayer(playerId);
+
+    if (!player) return;
+
+    player.states.notefield.value = newValue;
+    room.update();
+  });
+
+  socket.on("toggleNotefields", () => {
+    const room = roomManager.getRoom(socket.roomId);
+    if (!room) return new NoRoomException(socket);
+
+    const allPlayers = Object.values(room.teams)
+      .map((t) => t.players)
+      .flat();
+    allPlayers.forEach(
+      (p) => (p.states.notefield.isActive = !p.states.notefield.isActive)
+    );
+    room.update();
+  });
+
   socket.on("releaseBuzzer", () => {
     const room = roomManager.getRoom(socket.roomId);
     if (!room) return new NoRoomException(socket);

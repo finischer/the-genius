@@ -6,6 +6,7 @@ export type TMemoryGameState = IMemoryState & IGameGeneralState;
 export const DEFAULT_MEMORY_STATE: TMemoryGameState = {
   identifier: "memory",
   name: "Memory",
+  modes: ["DUELL", "TEAM"],
   maxPoints: 999,
   scorebarMode: "number",
   rules: "",

@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
+import { type TUserReduced } from "~/types/socket.types";
 import Player from "../Player/Player";
 import { type ITeam } from "./team.types";
-import { type TUserReduced } from "~/types/socket.types";
 
 export const SCOREBAR_TIMER_SECONDS = 5;
 
@@ -52,6 +52,7 @@ export default class Team implements ITeam {
 
   join(user: TUserReduced) {
     const newPlayer = new Player(user.id, this.id, user.username);
+
     this.players.push(newPlayer);
   }
 

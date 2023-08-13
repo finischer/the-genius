@@ -6,9 +6,10 @@ export default class Player implements IPlayer {
   userId: IPlayer["userId"];
   teamId: IPlayer["teamId"];
   name: IPlayer["name"];
+  states: IPlayer["states"];
 
   public constructor(
-    userId: IPlayer["userId"] = null,
+    userId: IPlayer["userId"],
     teamId: IPlayer["teamId"],
     name: IPlayer["name"] = null
   ) {
@@ -16,5 +17,11 @@ export default class Player implements IPlayer {
     this.userId = userId;
     this.teamId = teamId;
     this.name = name;
+    this.states = {
+      notefield: {
+        isActive: false,
+        value: "",
+      },
+    };
   }
 }

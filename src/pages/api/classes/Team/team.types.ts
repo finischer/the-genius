@@ -11,6 +11,11 @@ export type TScorebarTimer = {
   seconds: number;
 };
 
+export type TNotefield = {
+  isActive: boolean;
+  value: string;
+};
+
 export interface ITeam {
   id: string;
   name: string;

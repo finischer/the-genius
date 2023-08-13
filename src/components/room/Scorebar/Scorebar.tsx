@@ -1,15 +1,16 @@
-import { Box, Button, Container, Flex, Group, type Sx, Text, keyframes, useMantineTheme, Badge } from '@mantine/core'
+import { Badge, Box, Button, Container, Flex, Group, Text, keyframes, useMantineTheme, type Sx } from '@mantine/core'
 import { IconExposureMinus1, IconExposurePlus1, IconTargetArrow } from '@tabler/icons-react'
+import { AnimatePresence, motion } from 'framer-motion'
 import React from 'react'
+import ActionIcon from '~/components/shared/ActionIcon/ActionIcon'
+import Tooltip from '~/components/shared/Tooltip'
 import { useRoom } from '~/hooks/useRoom'
 import { socket } from '~/hooks/useSocket'
 import { useUser } from '~/hooks/useUser'
 import { colors, sizes } from '~/styles/constants'
+import { animations, fadeInOutVariant } from '~/utils/animations'
+import Notefield from '../Notefield/Notefield'
 import { type IScoreCircleProps, type IScorebarProps } from './scorebar.types'
-import ActionIcon from '~/components/shared/ActionIcon/ActionIcon'
-import Tooltip from '~/components/shared/Tooltip'
-import { AnimatePresence, motion } from 'framer-motion'
-import { animations } from '~/utils/animations'
 
 const stretchAnimation = keyframes({
     "0%": { transform: "scale(0.75)" },
@@ -42,7 +43,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
     const theme = useMantineTheme()
 
     const { room, currentGame } = useRoom()
-    const { user, isHost, isPlayer, setUserAsPlayer } = useUser();
+    const { user, team: userTeam, isHost, isPlayer, setUserAsPlayer } = useUser();
 
     const scoreCircles = currentGame ? Array(currentGame.maxPoints).fill(null).map((_, index) => <ScoreCircle key={index} filled={team.gameScore > index} />) : undefined
     const isTeamFull = team.players.length >= room.maxPlayersPerTeam
@@ -53,6 +54,8 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
     const disableIncreaseScoreBtn = disableModBtns || (currentGame && team.gameScore >= currentGame.maxPoints)
     const disableDecreaseScoreBtn = disableModBtns || team.gameScore <= 0
 
+    console.log("UserTeamID: ", userTeam?.id)
+    console.log("TeamID: ", team.id)
 
     const playerNamesWhoBuzzered = team.players.map(p => {
         if (p.userId && team.buzzer.playersBuzzered.includes(p.userId)) {
@@ -94,13 +97,36 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
         socket.emit("toggleTeamActive", { teamId: team.id })
     }
 
+    const handleNotefieldChange = (playerId: string, teamId: string, newValue: string) => {
+        socket.emit("updateNotefield", { playerId, teamId, newValue })
+    }
+
     return (
-        <Flex align="flex-end" gap="lg">
+        <Flex align="flex-end" gap="lg" pos="relative">
             {/* Left Scorbar timer */}
             {timerPosition === "left" && team.scorebarTimer.isActive &&
                 <Container bg={theme.primaryColor} sx={scorebarTimerStyle}>
                     {team.scorebarTimer.seconds}
                 </Container>
+            }
+
+            {/* Only show notefields to own team players or viewers */}
+            {(team.id === userTeam?.id || !isPlayer) &&
+                <Flex pos="absolute" top={-300} w="100%" gap="md">
+                    {team.players.map(p => (
+                        <AnimatePresence>
+                            {p.states.notefield.isActive &&
+                                <Notefield
+                                    disabled={p.userId !== user.id} // only this player can edit the notefield
+                                    value={p.states.notefield.value}
+                                    onChange={(e) => handleNotefieldChange(p.id, p.teamId, e.target.value)}
+                                    player={p}
+                                />
+                            }
+                        </AnimatePresence>
+                    )
+                    )}
+                </Flex>
             }
 
             <Flex direction="column" pos="relative" >

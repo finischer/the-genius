@@ -50,6 +50,7 @@ const RoomPage = () => {
     const networkStatus = useNetwork();
 
     const showGame = room?.state.display.game
+    const showCurrentGameCornerBanner = currentGame && room.state.view === "game" && showGame
     const roomId = router.query.id as string
 
     useEffect(() => {
@@ -166,7 +167,7 @@ const RoomPage = () => {
                     {/* Top Right Corner */}
                     {/* Current Game */}
                     <AnimatePresence>
-                        {currentGame && showGame &&
+                        {showCurrentGameCornerBanner &&
                             <motion.div {...animations.fadeInOut}>
                                 <ContainerBox
                                     px="xl"

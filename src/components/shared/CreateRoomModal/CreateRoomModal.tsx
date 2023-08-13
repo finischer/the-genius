@@ -1,8 +1,9 @@
-import { Button, Checkbox, Flex, Modal, NumberInput, Select, TextInput, type SelectItem } from '@mantine/core'
+import { Button, Checkbox, Flex, Modal, NumberInput, Select, Text, TextInput, type SelectItem } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { type GameshowMode } from '@prisma/client'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+import type { TGame } from '~/components/room/Game/games/game.types'
 import { socket } from '~/hooks/useSocket'
 import { useUser } from '~/hooks/useUser'
 import { GAMESHOW_MODES } from '~/styles/constants'
@@ -10,10 +11,14 @@ import { capitalize } from '~/utils/strings'
 import { type ICreateRoomModalProps } from './createRoomModal.types'
 
 const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose, gameshow }) => {
+    const gameshowGames = gameshow.games as unknown as TGame[]
+    const hasGameForOnlyTeamMode = gameshowGames.filter((g) => g.modes.every(m => m === "TEAM")).length > 0
+
+
     const form = useForm({
         initialValues: {
             name: "",
-            modus: "DUELL" as GameshowMode,
+            modus: hasGameForOnlyTeamMode ? "TEAM" as GameshowMode : "DUELL" as GameshowMode,
             isPrivateRoom: true,
             password: "",
             games: []
@@ -27,9 +32,10 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
     const { user } = useUser()
     const router = useRouter();
 
-    const selectData: (string | SelectItem)[] = GAMESHOW_MODES.map(m => ({
+
+    const selectData: SelectItem[] = GAMESHOW_MODES.map(m => ({
         value: m,
-        label: capitalize(m)
+        label: capitalize(m),
     }))
 
     useEffect(() => {
@@ -64,15 +70,19 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
                         required
                         {...form.getInputProps("name")}
                     />
+
                     <Select
                         required
                         label="Spielmodus"
                         placeholder='Wähle einen Modus'
                         data={selectData}
                         dropdownPosition='bottom'
+                        readOnly={hasGameForOnlyTeamMode}
                         {...form.getInputProps("modus")}
-
                     />
+                    {hasGameForOnlyTeamMode &&
+                        <Text color="dimmed" size="sm">Hinweis: Der Modus kann nicht geändert werden, da die Spielshow mind. 1 Spiel enthält, welches im Team gespielt werden muss</Text>
+                    }
                     <Checkbox
                         label="Privater Raum"
                         {...form.getInputProps("isPrivateRoom", { type: "checkbox" })}

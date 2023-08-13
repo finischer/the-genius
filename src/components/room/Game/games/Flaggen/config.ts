@@ -5,6 +5,7 @@ export type TFlaggenGameState = IFlaggenState & IGameGeneralState;
 
 export const DEFAULT_FLAGGEN_STATE: TFlaggenGameState = {
   identifier: "flaggen",
+  modes: ["DUELL", "TEAM"],
   maxPoints: 7,
   name: "Flaggen",
   scorebarMode: "circle",

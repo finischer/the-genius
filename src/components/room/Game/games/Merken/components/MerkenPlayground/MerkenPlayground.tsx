@@ -1,13 +1,9 @@
 import { SimpleGrid, Text, type Sx } from '@mantine/core'
 import React from 'react'
 import FlipCard from '~/components/shared/FlipCard/FlipCard'
-import { socket } from '~/hooks/useSocket'
-import { useUser } from '~/hooks/useUser'
 import type { IMerkenPlaygroundProps } from './merkenPlayground.types'
 
-const MerkenPlayground: React.FC<IMerkenPlaygroundProps> = ({ cards, openCards = [], allCardsFlipped = false }) => {
-    const { isHost } = useUser()
-
+const MerkenPlayground: React.FC<IMerkenPlaygroundProps> = ({ cards, openCards = [], clickable = false, allCardsFlipped = false, onCardClick }) => {
     const defaultCardStyle: Sx = {
         height: "5rem",
         width: "5rem",
@@ -17,11 +13,6 @@ const MerkenPlayground: React.FC<IMerkenPlaygroundProps> = ({ cards, openCards =
         justifyContent: "center",
         alignItems: "center",
         userSelect: "none",
-    }
-
-    const handleFlipCard = (index: number) => {
-        console.log("Click card: ", index)
-        socket.emit("merken:flipCard", { cardIndex: index })
     }
 
     const FrontContent = ({ content }: { content: number }) => {
@@ -56,8 +47,8 @@ const MerkenPlayground: React.FC<IMerkenPlaygroundProps> = ({ cards, openCards =
                 <FlipCard
                     key={idx}
                     isFlipped={allCardsFlipped || openCards.includes(idx)}
-                    clickable={isHost}
-                    onClick={() => handleFlipCard(idx)}
+                    clickable={clickable}
+                    onClick={() => onCardClick && onCardClick(idx)}
                     front={<FrontContent content={idx + 1} />}
                     back={<BackContent index={idx} content={elem} />}
                     frontStyle={{

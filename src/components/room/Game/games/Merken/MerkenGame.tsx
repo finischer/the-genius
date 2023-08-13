@@ -14,8 +14,12 @@ const MerkenGame: React.FC<IMerkenGameProps> = ({ game }) => {
     socket.emit("merken:startGame")
   }
 
+  const handleCardClick = (index: number) => {
+    socket.emit("merken:flipCard", { cardIndex: index })
+  }
+
   return <Flex direction="column" gap="lg">
-    <MerkenPlayground cards={game.cards} openCards={game.openCards} allCardsFlipped={game.allCardsFlipped} />
+    <MerkenPlayground cards={game.cards} openCards={game.openCards} clickable={isHost} allCardsFlipped={game.allCardsFlipped} onCardClick={handleCardClick} />
     {isHost && <Button onClick={handleStartGame} disabled={isStartButtonDisabled}>Spiel starten</Button>}
   </Flex>;
 };

@@ -11,6 +11,7 @@ const shuffledCards: string[] = shuffleArray(tstArrayData);
 export const DEFAULT_MERKEN_STATE: TMerkenGameState = {
   identifier: "merken",
   name: "Merken",
+  modes: ["DUELL", "TEAM"],
   maxPoints: 7,
   scorebarMode: "circle",
   allCardsFlipped: false,

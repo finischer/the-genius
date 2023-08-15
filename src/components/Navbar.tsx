@@ -1,5 +1,5 @@
 import { Avatar, Box, Group, Navbar as MantineNavbar, Menu, NavLink, Text, UnstyledButton, rem, useMantineTheme } from "@mantine/core";
-import { IconChevronLeft, IconChevronRight, IconDoor, IconHome, IconLogout, IconTools } from "@tabler/icons-react";
+import { IconChevronLeft, IconChevronRight, IconDoor, IconHome, IconLogout, IconSettings, IconTools } from "@tabler/icons-react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import useNotification from "~/hooks/useNotification";
@@ -17,6 +17,10 @@ const User = () => {
             title: "Logout erfolgreich",
             message: "Ich hoffe, wir sehen uns bald wieder 👋"
         })
+    }
+
+    const goTo = (subUrl: string) => {
+        void router.push(subUrl)
     }
 
     return (
@@ -70,6 +74,7 @@ const User = () => {
 
             <Menu.Dropdown>
                 <Menu.Label>Account</Menu.Label>
+                <Menu.Item icon={<IconSettings size={14} />} onClick={() => goTo("/settings")}>Einstellungen</Menu.Item>
                 <Menu.Item icon={<IconLogout size={14} />} onClick={() => void handleLogout()}>Ausloggen</Menu.Item>
             </Menu.Dropdown>
         </Menu>

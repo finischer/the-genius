@@ -8,7 +8,8 @@ import {
     PasswordInput,
     Text,
     TextInput,
-    Title
+    Title,
+    useMantineTheme
 } from '@mantine/core';
 import { isEmail, useForm } from '@mantine/form';
 import { useToggle } from '@mantine/hooks';
@@ -22,6 +23,7 @@ const AuthenticationModal = () => {
     const { showErrorNotification } = useNotification()
     const [isLoggingIn, setIsLoggingIn] = useState(false)
     const [type, toggle] = useToggle<"login" | "register">(['login', 'register']);
+    const theme = useMantineTheme()
     const { mutate: register, isLoading: isRegistering } = api.users.create.useMutation({
         onSuccess: () => {
             void signIn("credentials", {
@@ -94,10 +96,12 @@ const AuthenticationModal = () => {
         <Container size={420} my={40}>
             <Title
                 align="center"
-                sx={(theme) => ({ fontFamily: `${theme.fontFamily ?? "Greycliff CF"}`, fontWeight: 900 })}
+                variant='gradient'
+                gradient={{ from: theme.primaryColor, to: theme.colors.gray[5], deg: 45 }}
             >
-                Willkommen zurück!
+                The Genius
             </Title>
+            <Title order={2} align="center">Willkommen zurück!</Title>
             <Text color="dimmed" size="sm" align="center" mt={5}>
                 {type === "login" ? "Noch keinen Account? " : "Du hast bereits einen Account? "}
                 <Anchor size="sm" component="button" onClick={() => toggle()}>

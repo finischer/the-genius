@@ -54,9 +54,6 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
     const disableIncreaseScoreBtn = disableModBtns || (currentGame && team.gameScore >= currentGame.maxPoints)
     const disableDecreaseScoreBtn = disableModBtns || team.gameScore <= 0
 
-    console.log("UserTeamID: ", userTeam?.id)
-    console.log("TeamID: ", team.id)
-
     const playerNamesWhoBuzzered = team.players.map(p => {
         if (p.userId && team.buzzer.playersBuzzered.includes(p.userId)) {
             return p.name

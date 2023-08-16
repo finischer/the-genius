@@ -1,8 +1,8 @@
 import { Tabs, Title } from '@mantine/core';
-import { IconMessageCircle, IconPhoto, IconSettings, IconUser } from '@tabler/icons-react';
+import { IconSettings, IconUser } from '@tabler/icons-react';
 import PageLayout from '~/components/layout';
-import AccountSettingsSection from '~/components/settings/AccountSettingsSection/AccountSettingsSection';
-import GeneralSettingsSection from '~/components/settings/GeneralSettingsSection/GeneralSettingsSection';
+import AccountSettingsSection from '~/components/settings/AccountSettingsSection';
+import GeneralSettingsSection from '~/components/settings/GeneralSettingsSection';
 
 const SettingsPage = () => {
     return (

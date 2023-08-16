@@ -1,6 +1,8 @@
 import { Button, CheckIcon, ColorSwatch, Flex, Group, Text, Title, rem, useMantineTheme } from '@mantine/core';
 import PageLayout from '~/components/layout';
+import Tooltip from '~/components/shared/Tooltip/Tooltip';
 import useSettings from '~/hooks/useSettings/useSettings';
+import { capitalize } from '~/utils/strings';
 
 const SettingsPage = () => {
     const { updatePrimaryColor, primaryColor } = useSettings()
@@ -11,15 +13,17 @@ const SettingsPage = () => {
         const displayedColor = theme.colors[color] || ""
 
         return (
-            <ColorSwatch
-                component='button'
-                key={color}
-                color={displayedColor[5]}
-                sx={{ color: '#fff', cursor: 'pointer' }}
-                onClick={() => updatePrimaryColor(color)}
-            >
-                {checked && <CheckIcon width={rem(10)} />}
-            </ColorSwatch>
+            <Tooltip label={capitalize(color)}>
+                <ColorSwatch
+                    component='button'
+                    key={color}
+                    color={displayedColor[5]}
+                    sx={{ color: '#fff', cursor: 'pointer' }}
+                    onClick={() => updatePrimaryColor(color)}
+                >
+                    {checked && <CheckIcon width={rem(10)} />}
+                </ColorSwatch>
+            </Tooltip>
 
         )
 
@@ -28,7 +32,6 @@ const SettingsPage = () => {
     return (
         <PageLayout>
             <Title order={2}>Einstellungen</Title>
-            <Button variant="filled">Das ist ein Test Button</Button>
             <Flex mt="xl">
                 <Group spacing="md">
                     <Text>Akzentfarbe:</Text>

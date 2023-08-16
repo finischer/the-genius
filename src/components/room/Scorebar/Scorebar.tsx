@@ -1,7 +1,7 @@
 import { Badge, Box, Button, Container, Flex, Group, Text, keyframes, useMantineTheme, type Sx } from '@mantine/core'
 import { IconExposureMinus1, IconExposurePlus1, IconTargetArrow } from '@tabler/icons-react'
 import { AnimatePresence, motion } from 'framer-motion'
-import React from 'react'
+import React, { useEffect } from 'react'
 import ActionIcon from '~/components/shared/ActionIcon/ActionIcon'
 import Tooltip from '~/components/shared/Tooltip'
 import { useRoom } from '~/hooks/useRoom'
@@ -11,6 +11,7 @@ import { colors, sizes } from '~/styles/constants'
 import { animations } from '~/utils/animations'
 import Notefield from '../Notefield/Notefield'
 import { type IScoreCircleProps, type IScorebarProps } from './scorebar.types'
+import useBuzzer from '~/hooks/useBuzzer/useBuzzer'
 
 const stretchAnimation = keyframes({
     "0%": { transform: "scale(0.75)" },
@@ -41,7 +42,7 @@ const ScoreCircle: React.FC<IScoreCircleProps> = ({ filled }) => (
 
 const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
     const theme = useMantineTheme()
-
+    const { buzzer, activateBuzzer, deactivateBuzzer } = useBuzzer()
     const { room, currentGame } = useRoom()
     const { user, team: userTeam, isHost, isPlayer, setUserAsPlayer } = useUser();
 
@@ -72,6 +73,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
         fontSize: theme.fontSizes.xl,
         fontWeight: "bold"
     }
+
 
     const joinTeam = () => {
         if (isPlayer) return
@@ -118,6 +120,8 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
                                     value={p.states.notefield.value}
                                     onChange={(e) => handleNotefieldChange(p.id, p.teamId, e.target.value)}
                                     player={p}
+                                    onFocus={deactivateBuzzer}
+                                    onBlur={activateBuzzer}
                                 />
                             }
                         </AnimatePresence>

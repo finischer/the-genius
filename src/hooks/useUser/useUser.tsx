@@ -18,7 +18,7 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
     function initUser() {
         const user: TUserReduced = {
             id: session?.user.id || "",
-            username: session?.user.name || "",
+            name: session?.user.name || "",
             email: session?.user.email || "",
             image: session?.user.image || null,
             role: session?.user.role || "USER"

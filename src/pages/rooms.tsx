@@ -97,7 +97,7 @@ const RoomsPage = () => {
                 <td>{room.modus}</td>
                 <td>{room.participants.length} / {room.roomSize}</td>
                 <td>{nameOfCurrentGame || "Kein Spiel gestartet"}</td>
-                <td>{room.creator?.username}</td>
+                <td>{room.creator?.name}</td>
                 <td>{formatTimestamp(room.createdAt)} Uhr</td>
             </tr>
         )

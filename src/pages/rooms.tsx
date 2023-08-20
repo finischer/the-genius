@@ -19,6 +19,8 @@ import type { SafedRoom } from '~/server/api/routers/rooms'
 //     numOfOnlinePlayers: number
 // }
 
+const REFETCH_INTERVAL = 5000
+
 const RoomsPage = () => {
     const router = useRouter();
     const { user } = useUser()
@@ -61,7 +63,9 @@ const RoomsPage = () => {
         }
     })
     const [openedPasswordModal, { open: openPasswordModal, close: closePasswordModal }] = useDisclosure()
-    const { data: rooms, isLoading } = api.rooms.getAll.useQuery()
+    const { data: rooms, isLoading } = api.rooms.getAll.useQuery(undefined, {
+        refetchInterval: REFETCH_INTERVAL
+    })
     // const [rooms, setRooms] = useState<IRoom[]>([])
     // const [isLoading, setIsLoading] = useState(true);
     const [activeRoom, setActiveRoom] = useState<SafedRoom | undefined>(undefined)

@@ -74,7 +74,7 @@ const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClo
                         </tr>
                         <tr>
                             <td>Erstellt von:</td>
-                            <td>{room.creator?.username || "-"}</td>
+                            <td>{room.creator?.name || "-"}</td>
                         </tr>
                         <tr>
                             <td>Modus:</td>

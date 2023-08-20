@@ -34,6 +34,8 @@ export function roomHandler(
     const { name, modus, isPrivateRoom, password } = roomConfig;
 
     const roomId = new ObjectId().toString();
+
+    // create room which is used for sockets at client
     const room = new Room(
       roomId,
       name,
@@ -45,7 +47,8 @@ export function roomHandler(
 
     // push room to room manager
     roomManager.addRoom(room);
-    // push room to database
+
+    // push room to database to make rooms available for users that are not in the room
     const dbRoom = await prisma.room.create({
       data: {
         id: roomId,

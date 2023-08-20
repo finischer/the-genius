@@ -51,7 +51,7 @@ export default class Team implements ITeam {
   }
 
   join(user: TUserReduced) {
-    const newPlayer = new Player(user.id, this.id, user.username);
+    const newPlayer = new Player(user.id, this.id, user.name);
 
     this.players.push(newPlayer);
   }

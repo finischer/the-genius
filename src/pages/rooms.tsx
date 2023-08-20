@@ -12,10 +12,14 @@ import { formatTimestamp } from '~/utils/dates'
 import { notifications } from '@mantine/notifications'
 import { IconCheck } from '@tabler/icons-react'
 import { useUser } from '~/hooks/useUser'
+import type { Room } from '@prisma/client'
+import type { SafedRoom } from '~/server/api/routers/rooms'
 
 // type TOnlinePlayersEvent = {
 //     numOfOnlinePlayers: number
 // }
+
+const REFETCH_INTERVAL = 5000
 
 const RoomsPage = () => {
     const router = useRouter();
@@ -59,27 +63,30 @@ const RoomsPage = () => {
         }
     })
     const [openedPasswordModal, { open: openPasswordModal, close: closePasswordModal }] = useDisclosure()
-    const [rooms, setRooms] = useState<IRoom[]>([])
-    const [isLoading, setIsLoading] = useState(true);
-    const [activeRoom, setActiveRoom] = useState<IRoom | undefined>(undefined)
+    const { data: rooms, isLoading } = api.rooms.getAll.useQuery(undefined, {
+        refetchInterval: REFETCH_INTERVAL
+    })
+    // const [rooms, setRooms] = useState<IRoom[]>([])
+    // const [isLoading, setIsLoading] = useState(true);
+    const [activeRoom, setActiveRoom] = useState<SafedRoom | undefined>(undefined)
     // const [playersOnline, setPlayersOnline] = useState<number | undefined>(undefined)
 
     useEffect(() => {
-        socket.emit("listAllRooms", (rooms) => {
-            console.log("+++ listAllRooms +++ : ", rooms)
-            setRooms(rooms)
-            setIsLoading(false)
-        })
+        // socket.emit("listAllRooms", (rooms) => {
+        //     console.log("+++ listAllRooms +++ : ", rooms)
+        //     setRooms(rooms)
+        //     setIsLoading(false)
+        // })
 
         // socket.on("getOnlinePlayers", ({ numOfOnlinePlayers }: TOnlinePlayersEvent) => {
         //     console.log("+++ getOnlinePlayers +++ : ", numOfOnlinePlayers)
         //     setPlayersOnline(numOfOnlinePlayers)
         // })
 
-        socket.on("updateAllRooms", ({ newRooms }) => {
-            console.log("+++ updateAllRooms +++ : ", newRooms)
-            setRooms(newRooms)
-        })
+        // socket.on("updateAllRooms", ({ newRooms }) => {
+        //     console.log("+++ updateAllRooms +++ : ", newRooms)
+        //     setRooms(newRooms)
+        // })
 
         return () => {
             socket.removeAllListeners("updateAllRooms")
@@ -88,24 +95,25 @@ const RoomsPage = () => {
 
 
     const rows = rooms?.map(room => {
-        const nameOfCurrentGame = room.games.find(g => g.identifier === room.currentGame)?.name
+        // const nameOfCurrentGame = room.games.find(g => g.identifier === room.currentGame)?.name
 
         return (
             <tr key={room.id} style={{ cursor: "pointer" }} onClick={() => handleRoomClick(room)}>
                 <td>{room.name}</td>
-                <td>{room.isPrivateRoom ? "Privat" : "Öffentlich"}</td>
+                <td>{room.isPrivate ? "Privat" : "Öffentlich"}</td>
                 <td>{room.modus}</td>
                 <td>{room.participants.length} / {room.roomSize}</td>
-                <td>{nameOfCurrentGame || "Kein Spiel gestartet"}</td>
-                <td>{room.creator?.username}</td>
-                <td>{formatTimestamp(room.createdAt)} Uhr</td>
+                {/* <td>{nameOfCurrentGame || "Kein Spiel gestartet"}</td> */}
+                <td>{room.creator.name}</td>
+                <td>{formatTimestamp(room.createdAt.toString())} Uhr</td>
             </tr>
         )
     }) ?? []
 
-    const handleRoomClick = (room: IRoom) => {
+    // TODO: Pass correct Type for Room instead of hardcoded type 
+    const handleRoomClick = (room: SafedRoom) => {
         setActiveRoom(room)
-        if (room.isPrivateRoom && user.id !== room.creator?.id) {
+        if (room.isPrivate && user.id !== room.creator.id) {
             form.reset();
             openPasswordModal()
         } else {
@@ -181,7 +189,7 @@ const RoomsPage = () => {
                             <th>Sichtbarkeit</th>
                             <th>Modus</th>
                             <th>Spieler</th>
-                            <th>Aktuelles Spiel</th>
+                            {/* <th>Aktuelles Spiel</th> */}
                             <th>Erstellt von</th>
                             <th>Erstellt am</th>
                         </tr>

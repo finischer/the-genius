@@ -14,7 +14,6 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
     const gameshowGames = gameshow.games as unknown as TGame[]
     const hasGameForOnlyTeamMode = gameshowGames.filter((g) => g.modes.every(m => m === "TEAM")).length > 0
 
-
     const form = useForm({
         initialValues: {
             name: "",

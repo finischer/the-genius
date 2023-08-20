@@ -3,7 +3,7 @@ import { type UserWithRelations } from "~/types/prisma.types";
 export const filterUserForClient = (user: UserWithRelations) => {
   return {
     id: user.id,
-    name: user.username,
+    name: user.name,
     image: user.image,
     gameshows: user.gameshows,
     email: user.email,

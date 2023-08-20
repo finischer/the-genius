@@ -17,6 +17,7 @@ import {
   type PrismaRoomFixed,
   type TRoomTeams,
 } from "./room.types";
+import { prisma } from "~/server/db";
 
 const SECONDS_TO_ROTATE_TITLE_BANNER = 4;
 const SECONDS_TOTAL_INTRO_DURATION = 8;
@@ -223,12 +224,23 @@ export default class Room implements PrismaRoomFixed {
     this.state.view = newView;
   }
 
-  update() {
+  async update() {
     // TODO: add safe room schema to prevent leaks of sensible information
 
-    // TODO: update room state in db
     io.to(this.id).emit("updateRoom", { newRoomState: this });
 
+    // update room state in db
+    void prisma.room.update({
+      where: {
+        id: this.id,
+      },
+      data: {
+        teams: this.teams,
+        state: this.state,
+      },
+    });
+
+    // DEPRECATED
     // const allRooms = roomManager.getRoomsAsArray();
     // io.emit("updateAllRooms", { newRooms: allRooms });
   }

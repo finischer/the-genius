@@ -1,23 +1,16 @@
 import { Button, Flex, LoadingOverlay, Modal, PasswordInput, Table, Text, Title } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useDisclosure } from '@mantine/hooks'
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-import PageLayout from '~/components/layout'
-import useNotification from '~/hooks/useNotification'
-import { socket } from '~/hooks/useSocket'
-import { api } from '~/utils/api'
-import type { IRoom } from './api/classes/Room/room.types'
-import { formatTimestamp } from '~/utils/dates'
 import { notifications } from '@mantine/notifications'
 import { IconCheck } from '@tabler/icons-react'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
+import PageLayout from '~/components/layout'
+import useNotification from '~/hooks/useNotification'
 import { useUser } from '~/hooks/useUser'
-import type { Room } from '@prisma/client'
 import type { SafedRoom } from '~/server/api/routers/rooms'
-
-// type TOnlinePlayersEvent = {
-//     numOfOnlinePlayers: number
-// }
+import { api } from '~/utils/api'
+import { formatTimestamp } from '~/utils/dates'
 
 const REFETCH_INTERVAL = 5000
 
@@ -66,33 +59,7 @@ const RoomsPage = () => {
     const { data: rooms, isLoading } = api.rooms.getAll.useQuery(undefined, {
         refetchInterval: REFETCH_INTERVAL
     })
-    // const [rooms, setRooms] = useState<IRoom[]>([])
-    // const [isLoading, setIsLoading] = useState(true);
     const [activeRoom, setActiveRoom] = useState<SafedRoom | undefined>(undefined)
-    // const [playersOnline, setPlayersOnline] = useState<number | undefined>(undefined)
-
-    useEffect(() => {
-        // socket.emit("listAllRooms", (rooms) => {
-        //     console.log("+++ listAllRooms +++ : ", rooms)
-        //     setRooms(rooms)
-        //     setIsLoading(false)
-        // })
-
-        // socket.on("getOnlinePlayers", ({ numOfOnlinePlayers }: TOnlinePlayersEvent) => {
-        //     console.log("+++ getOnlinePlayers +++ : ", numOfOnlinePlayers)
-        //     setPlayersOnline(numOfOnlinePlayers)
-        // })
-
-        // socket.on("updateAllRooms", ({ newRooms }) => {
-        //     console.log("+++ updateAllRooms +++ : ", newRooms)
-        //     setRooms(newRooms)
-        // })
-
-        return () => {
-            socket.removeAllListeners("updateAllRooms")
-        }
-    }, [])
-
 
     const rows = rooms?.map(room => {
         // const nameOfCurrentGame = room.games.find(g => g.identifier === room.currentGame)?.name

@@ -136,7 +136,7 @@ export interface IServerToClientEvents {
   // +++ ROOM EVENTS +++
   userLeftRoom: ({ user }: { user: TSocketUser | null }) => void;
   updateRoom: ({ newRoomState }: { newRoomState: Room }) => void;
-  updateAllRooms: ({ newRooms }: { newRooms: Room[] }) => void;
+  // updateAllRooms: ({ newRooms }: { newRooms: Room[] }) => void; // Currently not in use
   roomWasClosed: () => void;
 }
 

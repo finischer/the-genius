@@ -73,7 +73,7 @@ export function roomHandler(
 
     cb(room);
     const allRooms = roomManager.getRoomsAsArray();
-    io.emit("updateAllRooms", { newRooms: allRooms });
+    // io.emit("updateAllRooms", { newRooms: allRooms });
   });
 
   socket.on("closeRoom", async ({ roomId }, cb) => {
@@ -97,7 +97,7 @@ export function roomHandler(
     if (deleteSuccessful) {
       socket.to(roomId).emit("roomWasClosed");
       const allRooms = roomManager.getRoomsAsArray();
-      io.emit("updateAllRooms", { newRooms: allRooms });
+      // io.emit("updateAllRooms", { newRooms: allRooms });
     }
 
     if (cb) cb({ closeSuccessful: deleteSuccessful });

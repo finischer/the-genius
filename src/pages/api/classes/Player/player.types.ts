@@ -1,16 +1,3 @@
-export type TNotefield = {
-  isActive: boolean;
-  value: string;
-};
+import type { Player } from "@prisma/client";
 
-export type TPlayerStates = {
-  notefield: TNotefield;
-};
-
-export interface IPlayer {
-  id: string;
-  userId: string;
-  teamId: string;
-  name: string | null;
-  states: TPlayerStates;
-}
+export type TPlayer = Omit<Player, "id" | "states">;

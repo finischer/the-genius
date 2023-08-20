@@ -1,6 +1,6 @@
-import type { ITeam } from "~/pages/api/classes/Team/team.types";
+import type { Team } from "@prisma/client";
 
 export interface IScoreboardProps {
-  team: ITeam;
+  team: Team;
   color: "red" | "green";
 }

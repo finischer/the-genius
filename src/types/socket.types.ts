@@ -1,10 +1,9 @@
-import { type Gameshow, type User } from "@prisma/client";
+import { RoomViews, type Gameshow, type User } from "@prisma/client";
 import { type NextApiResponse } from "next";
 import { type Server, type Socket } from "socket.io";
 import type { TGameNames } from "~/components/room/Game/games/game.types";
 import type { ICreateRoomConfig } from "~/components/shared/CreateRoomModal/createRoomModal.types";
 import type Room from "~/pages/api/classes/Room/Room";
-import type { TRoomView } from "~/pages/api/classes/Room/room.types";
 
 type TSocketUser = {
   id: string;
@@ -68,7 +67,7 @@ export interface IClientToServerEvents {
     teamId: string;
     withTimer?: boolean;
   }) => void;
-  changeView: ({ newView }: { newView: TRoomView }) => void;
+  changeView: ({ newView }: { newView: RoomViews }) => void;
 
   // +++ TEAM EVENTS +++
   increaseGameScore: ({

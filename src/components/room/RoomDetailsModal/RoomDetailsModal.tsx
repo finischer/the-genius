@@ -72,10 +72,10 @@ const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClo
                             <td>Name:</td>
                             <td>{room.name}</td>
                         </tr>
-                        <tr>
+                        {/* <tr>
                             <td>Erstellt von:</td>
-                            <td>{room.creator?.name || "-"}</td>
-                        </tr>
+                            <td>{room.creatorId || "-"}</td>
+                        </tr> */}
                         <tr>
                             <td>Modus:</td>
                             <td>{room.modus}</td>
@@ -86,7 +86,7 @@ const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClo
                         </tr>
                         <tr>
                             <td>Sichtbarkeit:</td>
-                            <td>{room.isPrivateRoom ? "Privat" : "Öffentlich"}</td>
+                            <td>{room.isPrivate ? "Privat" : "Öffentlich"}</td>
                         </tr>
                     </tbody>
                 </Table>

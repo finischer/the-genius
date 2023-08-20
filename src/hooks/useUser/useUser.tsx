@@ -1,6 +1,6 @@
+import type { Team } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { createContext, useContext, useEffect, useState } from "react";
-import type { ITeam } from "~/pages/api/classes/Team/team.types";
 import { type TUserReduced } from "~/types/socket.types";
 import { useRoom } from "../useRoom";
 import { type IUseUserContext, type IUseUserProvider } from "./useUser.types";
@@ -11,7 +11,7 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
     const { data: session } = useSession()
     const { room } = useRoom()
     const [user, setUser] = useState<TUserReduced>(initUser())
-    const [team, setTeam] = useState<ITeam | undefined>(undefined)
+    const [team, setTeam] = useState<Team | undefined>(undefined)
     const isPlayer = team !== undefined;
     const [isHost, setIsHost] = useState(false);
 
@@ -50,14 +50,14 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
     }, [room, user])
 
     useEffect(() => {
-        if (room && room.creator?.id === user?.id) {
+        if (room && room.creatorId === user?.id) {
             setIsHost(true)
         } else {
             setIsHost(false)
         }
     }, [room?.id])
 
-    const setUserAsPlayer = (team: ITeam) => {
+    const setUserAsPlayer = (team: Team) => {
         setTeam(team)
     }
 

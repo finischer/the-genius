@@ -1,14 +1,13 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import { UserRole } from "@prisma/client";
+import bcrypt from "bcrypt";
 import {
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-import bcrypt from "bcrypt";
-import { filterUserForClient } from "~/server/helpers/filterForUserClient";
-import { UserRole } from "@prisma/client";
 
 export const safedUserSchema = z.object({
   id: z.string(),

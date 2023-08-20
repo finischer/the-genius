@@ -10,7 +10,7 @@ export interface ICreateRoomModalProps {
 export interface ICreateRoomConfig {
   name: string;
   modus: GameshowMode;
-  isPrivateRoom: boolean;
+  isPrivate: boolean;
   password: string;
   games: unknown[]; // TODO: Create Game Type
 }

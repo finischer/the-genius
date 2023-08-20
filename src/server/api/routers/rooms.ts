@@ -20,19 +20,38 @@ function exclude<Room, Key extends keyof Room>(
   return newRooms;
 }
 
+export const safedRoomSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  isPrivate: z.boolean(),
+  modus: z.nativeEnum(GameshowMode),
+  participants: z.array(z.string()),
+  creator: z.object({
+    id: z.string(),
+    name: z.string(),
+  }),
+  roomSize: z.number(),
+  createdAt: z.date(),
+});
+
+export type SafedRoom = z.infer<typeof safedRoomSchema>;
+
 export const roomsRouter = createTRPCRouter({
-  getAll: protectedProcedure.query(async ({ ctx }) => {
-    const rooms = await ctx.prisma.room.findMany({
-      include: {
-        creator: {
-          select: {
-            username: true,
+  getAll: protectedProcedure
+    .output(z.array(safedRoomSchema))
+    .query(async ({ ctx }) => {
+      const rooms = await ctx.prisma.room.findMany({
+        include: {
+          creator: {
+            select: {
+              id: true,
+              name: true,
+            },
           },
         },
-      },
-    });
-    return exclude(rooms, ["password"]);
-  }),
+      });
+      return rooms;
+    }),
 
   create: protectedProcedure
     .input(

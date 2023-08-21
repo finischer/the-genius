@@ -1,19 +1,19 @@
-import { Accordion, Button, type ButtonProps, Drawer, Flex, ScrollArea, Text, Title } from '@mantine/core';
+import { Accordion, Button, Drawer, Flex, ScrollArea, Text, Title, type ButtonProps } from '@mantine/core';
 import { useDisclosure, useLocalStorage } from '@mantine/hooks';
+import { modals } from '@mantine/modals';
+import { notifications } from '@mantine/notifications';
+import type { RoomViews } from '@prisma/client';
 import { IconCheck, IconQuestionMark } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
+import GameRulesModal from '~/components/shared/GameRulesModal/GameRulesModal';
 import Tooltip from '~/components/shared/Tooltip/Tooltip';
+import useLoadingState from '~/hooks/useLoadingState/useLoadingState';
 import useNotification from '~/hooks/useNotification';
 import { useRoom } from '~/hooks/useRoom';
 import { socket } from '~/hooks/useSocket';
-import { type IModPanelProps } from './modPanel.types';
 import type { TGame, TGameNames } from '../Game/games/game.types';
-import GameRulesModal from '~/components/shared/GameRulesModal/GameRulesModal';
-import { modals } from '@mantine/modals';
-import { notifications } from '@mantine/notifications';
-import useLoadingState from '~/hooks/useLoadingState/useLoadingState';
-import type { TRoomView } from '~/pages/api/classes/Room/room.types';
+import { type IModPanelProps } from './modPanel.types';
 
 const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
     const { showErrorNotification } = useNotification()
@@ -58,7 +58,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
     }
 
     const gameBtns = room.games.map(g => {
-        const btnDisabled = g.identifier === currentGame?.identifier && room.state.view === "game"
+        const btnDisabled = g.identifier === currentGame?.identifier && room.state.view === "GAME"
 
         return (
             <Button.Group key={g.identifier}>
@@ -86,7 +86,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
         socket.emit("startGame", ({ gameIdentifier }))
     }
 
-    const changeView = (newView: TRoomView) => {
+    const changeView = (newView: RoomViews) => {
         socket.emit("changeView", { newView })
     }
 
@@ -162,8 +162,8 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                             </Accordion.Control>
                             <Accordion.Panel>
                                 <Button.Group orientation='vertical' >
-                                    <Button {...btnVariantDefault} onClick={() => changeView("empty")}>Leer</Button>
-                                    <Button {...btnVariantDefault} onClick={() => changeView("scoreboard")}>Scoreboard</Button>
+                                    <Button {...btnVariantDefault} onClick={() => changeView("EMPTY")}>Leer</Button>
+                                    <Button {...btnVariantDefault} onClick={() => changeView("SCOREBOARD")}>Scoreboard</Button>
                                 </Button.Group>
                             </Accordion.Panel>
                         </Accordion.Item>

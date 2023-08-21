@@ -8,12 +8,12 @@ import { roomManager } from "../controllers/RoomManager";
 import NoRoomException from "../exceptions/NoRoomException";
 import NoTeamException from "../exceptions/NoTeamException";
 import type Room from "../classes/Room/Room";
-import { type ITeam } from "../classes/Team/team.types";
+import type Team from "../classes/Team/Team";
 
 type GetRoomAndTeamReturnType =
   | {
       room: Room;
-      team: ITeam;
+      team: Team;
     }
   | undefined;
 

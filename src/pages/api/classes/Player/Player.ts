@@ -1,22 +1,19 @@
-import { randomUUID } from "crypto";
-import { type IPlayer } from "./player.types";
+import type { PlayerStates, Player as PrismaPlayer } from "@prisma/client";
+import { ObjectId } from "bson";
+import type { TPlayer } from "./player.types";
 
-export default class Player implements IPlayer {
-  id: IPlayer["id"];
-  userId: IPlayer["userId"];
-  teamId: IPlayer["teamId"];
-  name: IPlayer["name"];
-  states: IPlayer["states"];
+export default class Player implements PrismaPlayer {
+  id: string;
+  name: string;
+  userId: string;
+  teamId: string;
+  states: PlayerStates;
 
-  public constructor(
-    userId: IPlayer["userId"],
-    teamId: IPlayer["teamId"],
-    name: IPlayer["name"] = null
-  ) {
-    this.id = randomUUID();
-    this.userId = userId;
-    this.teamId = teamId;
-    this.name = name;
+  public constructor(player: TPlayer) {
+    this.id = new ObjectId().toString();
+    this.name = player.name;
+    this.userId = player.userId;
+    this.teamId = player.teamId;
     this.states = {
       notefield: {
         isActive: false,

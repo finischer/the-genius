@@ -1,65 +1,79 @@
-import { randomUUID } from "crypto";
+import type {
+  GameshowMode,
+  Prisma,
+  Room as PrismaRoom,
+  RoomState,
+  RoomViews,
+} from "@prisma/client";
+import type {
+  TGame,
+  TGameNames,
+} from "~/components/room/Game/games/game.types";
 import { type TGameSettingsMap } from "~/hooks/useConfigurator/useConfigurator.types";
-import { copyNestedArray } from "~/utils/array";
-import { roomManager } from "../../controllers/RoomManager";
 import { io } from "../../socket";
 import Team from "../Team/Team";
-import { type IRoom, type TRoomView } from "./room.types";
-import type { TGameNames } from "~/components/room/Game/games/game.types";
-
-const ROOM_DEFAULTS = {
-  roomSize: 12,
-  currentGame: "",
-};
+import {
+  type IRoomMaxPlayersTeamMap,
+  type PrismaRoomFixed,
+  type TRoomTeams,
+} from "./room.types";
+import { prisma } from "~/server/db";
 
 const SECONDS_TO_ROTATE_TITLE_BANNER = 4;
 const SECONDS_TOTAL_INTRO_DURATION = 8;
 const SECONDS_DELAY_BEFORE_GAME_DISPLAYS = 2;
 
-export default class Room implements IRoom {
-  id: IRoom["id"];
-  name: IRoom["name"];
-  isPrivateRoom: IRoom["isPrivateRoom"];
-  creator: IRoom["creator"];
-  numOfPlayers: IRoom["numOfPlayers"];
-  games: IRoom["games"];
-  defaultGameStates: IRoom["defaultGameStates"];
-  teams: IRoom["teams"];
-  state: IRoom["state"];
-  participants: IRoom["participants"];
-  modus: IRoom["modus"];
-  roomSize: IRoom["roomSize"];
-  createdAt: IRoom["createdAt"];
-  currentGame: IRoom["currentGame"];
-  maxPlayersPerTeam: IRoom["maxPlayersPerTeam"];
+export default class Room implements PrismaRoomFixed {
+  id: string;
+  name: string;
+  modus: GameshowMode;
+  maxPlayersPerTeam: number;
+  roomSize: number;
+  participants: string[];
+  password: string | null;
+  isPrivate: boolean;
+  currentGame: string | null;
+  creatorId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  games: TGame[];
+  defaultGameStates: Prisma.JsonValue[];
+  teams: TRoomTeams;
+  state: RoomState;
 
-  public constructor(
-    id: IRoom["id"] | undefined = undefined,
-    name: IRoom["name"],
-    isPrivateRoom: IRoom["isPrivateRoom"],
-    creator: IRoom["creator"],
-    modus: IRoom["modus"],
-    games: IRoom["games"]
-  ) {
-    this.id = id !== undefined ? id : randomUUID();
-    this.name = name;
-    this.modus = modus;
-    this.roomSize = ROOM_DEFAULTS.roomSize;
-    this.createdAt = new Date().toString();
-    this.currentGame = ROOM_DEFAULTS.currentGame;
-    this.isPrivateRoom = isPrivateRoom;
-    this.creator = creator;
-    this.numOfPlayers = modus === "DUELL" ? 2 : 4;
-    this.maxPlayersPerTeam = this.numOfPlayers / 2;
-    this.participants = [];
-    this.games = games;
-    this.defaultGameStates = copyNestedArray(games);
+  public constructor(room: PrismaRoom) {
+    this.id = room.id;
+    this.name = room.name;
+    this.modus = room.modus;
+    this.roomSize = room.roomSize;
+    this.participants = room.participants;
+    this.password = room.password;
+    this.isPrivate = room.isPrivate;
+    this.currentGame = room.currentGame;
+    this.maxPlayersPerTeam = room.maxPlayersPerTeam;
+    this.creatorId = room.creatorId; // TODO: Add only name of creator -> userIds are sensible data which should not be leaked to the client
+    this.createdAt = room.createdAt;
+    this.updatedAt = room.updatedAt;
+    this.games = room.games as unknown as TGame[];
+    this.defaultGameStates = room.defaultGameStates;
     this.teams = {
-      teamOne: new Team("Team 1", "teamOne"),
-      teamTwo: new Team("Team 2", "teamTwo"),
+      teamOne: new Team(room.teams.teamOne),
+      teamTwo: new Team(room.teams.teamTwo),
     };
-    // state which changed dynamically
-    this.state = {
+    this.state = room.state;
+  }
+
+  static getMaxPlayersPerTeam(modus: GameshowMode) {
+    const map: IRoomMaxPlayersTeamMap = {
+      DUELL: 1,
+      TEAM: 2,
+    };
+
+    return map[modus];
+  }
+
+  static createDefaultRoomState(): RoomState {
+    return {
       answerState: {
         showAnswer: false,
         answer: "",
@@ -71,7 +85,7 @@ export default class Room implements IRoom {
           isActive: false,
           currentSeconds: 0,
           to: 0,
-          variant: "countdown",
+          variant: "COUNTDOWN",
         },
         confetti: false,
         game: false,
@@ -82,7 +96,7 @@ export default class Room implements IRoom {
         },
         notefields: false,
       },
-      view: "empty",
+      view: "EMPTY",
       gameshowStarted: false,
       music: {
         isActive: false,
@@ -117,8 +131,10 @@ export default class Room implements IRoom {
   }
 
   getGame<T extends TGameNames>(gameIdentifier: T): TGameSettingsMap[T] {
-    const game = this.games.find((g) => g.identifier === gameIdentifier) as
-      | TGameSettingsMap[T];
+    const games = this.games as unknown as TGame[];
+    const game = games.find(
+      (g) => g.identifier === gameIdentifier
+    ) as unknown as TGameSettingsMap[T];
     return game;
   }
 
@@ -128,7 +144,7 @@ export default class Room implements IRoom {
       flippedTitleBanner: false,
       milliseconds: 0,
     };
-    this.state.view = "game";
+    this.state.view = "GAME";
 
     this.currentGame = gameIdentifier;
     this.state.display.game = false;
@@ -204,14 +220,28 @@ export default class Room implements IRoom {
     });
   }
 
-  changeView(newView: TRoomView) {
+  changeView(newView: RoomViews) {
     this.state.view = newView;
   }
 
-  update() {
+  async update() {
+    // TODO: add safe room schema to prevent leaks of sensible information
+
     io.to(this.id).emit("updateRoom", { newRoomState: this });
 
-    const allRooms = roomManager.getRoomsAsArray();
-    io.emit("updateAllRooms", { newRooms: allRooms });
+    // update room state in db
+    void prisma.room.update({
+      where: {
+        id: this.id,
+      },
+      data: {
+        teams: this.teams,
+        state: this.state,
+      },
+    });
+
+    // DEPRECATED
+    // const allRooms = roomManager.getRoomsAsArray();
+    // io.emit("updateAllRooms", { newRooms: allRooms });
   }
 }

@@ -1,15 +1,15 @@
 import { type Dispatch } from "react";
 import type { TGame } from "~/components/room/Game/games/game.types";
-import { type IRoom } from "~/pages/api/classes/Room/room.types";
+import type Room from "~/pages/api/classes/Room/Room";
 
 export interface IUseRoomProvider {
   children: React.ReactNode;
 }
 
 export interface IUseRoomContext {
-  room: IRoom | undefined;
+  room: Room | undefined;
   currentGame: TGame | undefined;
-  setRoom: Dispatch<IRoom>;
+  setRoom: Dispatch<Room>;
 }
 
 type NonNullableExceptCurrentGame<T> = {

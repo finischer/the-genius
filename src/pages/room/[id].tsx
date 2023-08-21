@@ -1,7 +1,7 @@
 import { Box, Center, Container, Flex, Text, useMantineTheme } from '@mantine/core'
 import { useDisclosure, useNetwork } from '@mantine/hooks'
 import { notifications } from '@mantine/notifications'
-import { IconAlertCircle, IconArrowRight, IconInfoSmall, IconWifi, IconWifi0, IconWifi1, IconWifi2, IconWifiOff } from '@tabler/icons-react'
+import { IconArrowRight, IconInfoSmall, IconWifi, IconWifi0, IconWifi1, IconWifi2, IconWifiOff } from '@tabler/icons-react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
@@ -17,6 +17,7 @@ import ActionIcon from '~/components/shared/ActionIcon'
 import ContainerBox from '~/components/shared/ContainerBox'
 import GameRulesModal from '~/components/shared/GameRulesModal/GameRulesModal'
 import Loader from '~/components/shared/Loader/Loader'
+import useBuzzer from '~/hooks/useBuzzer/useBuzzer'
 import useNotification from '~/hooks/useNotification'
 import { useRoom } from '~/hooks/useRoom'
 import { socket } from '~/hooks/useSocket'
@@ -24,8 +25,7 @@ import { useUser } from '~/hooks/useUser'
 import { sizes } from '~/styles/constants'
 import { type TUserReduced } from '~/types/socket.types'
 import { animations } from '~/utils/animations'
-import type { IRoom } from '../api/classes/Room/room.types'
-import useBuzzer from '~/hooks/useBuzzer/useBuzzer'
+import type Room from '../api/classes/Room/Room'
 
 type TNetworkStatusEffectiveType = 'slow-2g' | '2g' | '3g' | '4g'
 
@@ -52,7 +52,7 @@ const RoomPage = () => {
     const networkStatus = useNetwork();
 
     const showGame = room?.state.display.game
-    const showCurrentGameCornerBanner = currentGame && room.state.view === "game" && showGame
+    const showCurrentGameCornerBanner = currentGame && room.state.view === "GAME" && showGame
     const roomId = router.query.id as string
 
     // useEffect(() => {
@@ -70,13 +70,13 @@ const RoomPage = () => {
         if (session?.user) {
             const user: TUserReduced = {
                 id: session.user.id,
-                username: session.user.name || "",
+                name: session.user.name || "",
                 email: session.user.email || "",
                 image: session.user.image || null,
                 role: session.user.role
             }
 
-            socket.emit("joinRoom", { user, roomId }, (room: IRoom) => {
+            socket.emit("joinRoom", { user, roomId }, (room: Room) => {
                 setRoom(room)
             })
 
@@ -178,9 +178,9 @@ const RoomPage = () => {
 
                 {/* Main View */}
                 <Flex h="100%" align="center" justify="center" direction="column" >
-                    {currentGame && room.state.view === "game" && <Game game={currentGame} />}
+                    {currentGame && room.state.view === "GAME" && <Game game={currentGame} />}
                     <AnimatePresence>
-                        {room.state.view === "scoreboard" && (
+                        {room.state.view === "SCOREBOARD" && (
                             <motion.div {...animations.fadeInOut}>
                                 <Flex direction="column" gap="xl">
                                     <Scoreboard team={room.teams.teamOne} color='green' />

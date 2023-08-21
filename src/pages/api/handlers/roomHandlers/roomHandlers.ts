@@ -1,5 +1,5 @@
+import type { RoomTeams } from "@prisma/client";
 import bcrypt from "bcrypt";
-import { ObjectId } from "mongodb";
 import { type Server, type Socket } from "socket.io";
 import { prisma } from "~/server/db";
 import {
@@ -8,13 +8,10 @@ import {
   type IServerToClientEvents,
 } from "~/types/socket.types";
 import Room from "../../classes/Room/Room";
+import Team, { SCOREBAR_TIMER_SECONDS } from "../../classes/Team/Team";
 import { roomManager } from "../../controllers/RoomManager";
 import NoRoomException from "../../exceptions/NoRoomException";
 import { getRoomAndTeam } from "../helpers";
-import { SCOREBAR_TIMER_SECONDS } from "../../classes/Team/Team";
-import { type TGame } from "~/components/room/Game/games/game.types";
-
-// const prisma = new PrismaClient();
 
 export function roomHandler(
   io: Server,
@@ -31,46 +28,44 @@ export function roomHandler(
   });
 
   socket.on("createRoom", async ({ user, roomConfig, gameshow }, cb) => {
-    const { name, modus, isPrivateRoom, password } = roomConfig;
+    const { name, modus, isPrivate, password } = roomConfig;
 
-    const roomId = new ObjectId().toString();
-    const room = new Room(
-      roomId,
-      name,
-      isPrivateRoom,
-      user,
-      modus,
-      gameshow.games as unknown as TGame[]
-    );
+    const teams: RoomTeams = {
+      teamOne: Team.createTeam("Team 1"),
+      teamTwo: Team.createTeam("Team 2"),
+    };
 
-    // push room to room manager
-    roomManager.addRoom(room);
-    // push room to database
+    // push room to database to make rooms available for users that are not in the room
     const dbRoom = await prisma.room.create({
+      include: {
+        creator: {
+          select: {
+            name: true,
+          },
+        },
+      },
       data: {
-        id: roomId,
-        name: name,
-        modus: modus,
-        creatorId: user.id,
-        isPrivate: isPrivateRoom,
+        name,
+        modus,
+        isPrivate,
+        teams,
+        games: gameshow.games,
         password: await bcrypt.hash(password, 10),
-        roomSize: room.roomSize,
-        // @ts-ignore
-        teams: room.teams,
-        // @ts-ignore
-        games: room.games,
-        // @ts-ignore
-        defaultGameStates: room.defaultGameStates,
+        creator: {
+          connect: {
+            id: user.id,
+          },
+        },
+        maxPlayersPerTeam: Room.getMaxPlayersPerTeam(modus),
+        state: Room.createDefaultRoomState(),
       },
     });
 
-    if (!dbRoom) {
-      // TODO: send error that room could not be created -> at least not created to database
-    }
-
+    // create room for gameshow
+    const room = new Room(dbRoom);
+    // push room to room manager
+    roomManager.addRoom(room);
     cb(room);
-    const allRooms = roomManager.getRoomsAsArray();
-    io.emit("updateAllRooms", { newRooms: allRooms });
   });
 
   socket.on("closeRoom", async ({ roomId }, cb) => {
@@ -94,7 +89,7 @@ export function roomHandler(
     if (deleteSuccessful) {
       socket.to(roomId).emit("roomWasClosed");
       const allRooms = roomManager.getRoomsAsArray();
-      io.emit("updateAllRooms", { newRooms: allRooms });
+      // io.emit("updateAllRooms", { newRooms: allRooms });
     }
 
     if (cb) cb({ closeSuccessful: deleteSuccessful });
@@ -106,7 +101,7 @@ export function roomHandler(
 
     socket.user = {
       id: user.id,
-      name: user.username,
+      name: user.name,
     };
     socket.roomId = roomId;
     await socket.join(roomId);

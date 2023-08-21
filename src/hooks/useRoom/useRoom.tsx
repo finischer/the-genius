@@ -1,12 +1,13 @@
 import { createContext, useContext, useState } from "react";
 import { type INonNullableUseRoomContext, type IUseRoomContext, type IUseRoomProvider } from "./useRoom.types";
-import type { IRoom } from "~/pages/api/classes/Room/room.types";
+import type { TGame } from "~/components/room/Game/games/game.types";
+import type Room from "~/pages/api/classes/Room/Room";
 
 const RoomContext = createContext<IUseRoomContext | undefined>(undefined);
 
 const RoomProvider: React.FC<IUseRoomProvider> = ({ children }) => {
-    const [room, setRoom] = useState<IRoom>()
-    const currentGame = room?.games.find(g => g.identifier === room.currentGame)
+    const [room, setRoom] = useState<Room>()
+    const currentGame = room?.games.find(g => g.identifier === room?.currentGame)
 
     return (
         <RoomContext.Provider value={{ room, currentGame, setRoom }}>

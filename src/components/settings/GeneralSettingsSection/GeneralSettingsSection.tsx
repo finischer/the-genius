@@ -1,5 +1,4 @@
-import { CheckIcon, ColorInput, ColorSwatch, Flex, Group, Text, Tooltip, rem, useMantineTheme } from '@mantine/core'
-import React from 'react'
+import { CheckIcon, ColorSwatch, Flex, Group, Text, Tooltip, rem, useMantineTheme } from '@mantine/core';
 import useSettings from '~/hooks/useSettings/useSettings';
 import { capitalize } from '~/utils/strings';
 

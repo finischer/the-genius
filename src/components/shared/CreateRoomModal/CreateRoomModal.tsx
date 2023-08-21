@@ -8,18 +8,17 @@ import { socket } from '~/hooks/useSocket'
 import { useUser } from '~/hooks/useUser'
 import { GAMESHOW_MODES } from '~/styles/constants'
 import { capitalize } from '~/utils/strings'
-import { type ICreateRoomModalProps } from './createRoomModal.types'
+import { type ICreateRoomConfig, type ICreateRoomModalProps } from './createRoomModal.types'
 
 const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose, gameshow }) => {
     const gameshowGames = gameshow.games as unknown as TGame[]
     const hasGameForOnlyTeamMode = gameshowGames.filter((g) => g.modes.every(m => m === "TEAM")).length > 0
 
-
-    const form = useForm({
+    const form = useForm<ICreateRoomConfig>({
         initialValues: {
             name: "",
             modus: hasGameForOnlyTeamMode ? "TEAM" as GameshowMode : "DUELL" as GameshowMode,
-            isPrivateRoom: true,
+            isPrivate: true,
             password: "",
             games: []
         }
@@ -55,6 +54,7 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
                 isLoading: true,
                 loaderMsg: "Raum wird beigetreten ..."
             })
+            console.log("Room: ", room)
             // connect to room
             void router.push(`/room/${room.id}`)
         })
@@ -85,9 +85,9 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
                     }
                     <Checkbox
                         label="Privater Raum"
-                        {...form.getInputProps("isPrivateRoom", { type: "checkbox" })}
+                        {...form.getInputProps("isPrivate", { type: "checkbox" })}
                     />
-                    {form.values.isPrivateRoom &&
+                    {form.values.isPrivate &&
                         <TextInput
                             label="Passwort"
                             placeholder='mySecretRoomPassword'

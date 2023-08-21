@@ -1,19 +1,30 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import { UserRole } from "@prisma/client";
+import bcrypt from "bcrypt";
 import {
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-import bcrypt from "bcrypt";
-import { filterUserForClient } from "~/server/helpers/filterForUserClient";
+
+export const safedUserSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  image: z.string().nullable(),
+  email: z.string(),
+  role: z.nativeEnum(UserRole),
+});
+
+export type SafedUser = z.infer<typeof safedUserSchema>;
 
 export const usersRouter = createTRPCRouter({
   create: publicProcedure
+    .output(safedUserSchema)
     .input(
       z.object({
-        username: z
+        name: z
           .string()
           .trim()
           .min(3, "Dein Username muss mindestens 3 Zeichen enthalten")
@@ -41,16 +52,16 @@ export const usersRouter = createTRPCRouter({
           message: "Die E-Mail Adresse existiert bereits",
         });
 
-      const isUsernameAlreadyRegisterd = await ctx.prisma.user.findUnique({
+      const isUsernameAlreadyRegisterd = await ctx.prisma.user.findFirst({
         where: {
-          username: input.username,
+          name: input.name,
         },
       });
 
       if (isUsernameAlreadyRegisterd)
         throw new TRPCError({
           code: "CONFLICT",
-          message: `Der Username ${input.username} existiert bereits`,
+          message: `Der Username ${input.name} existiert bereits`,
         });
 
       const user = await ctx.prisma.user.create({
@@ -63,7 +74,7 @@ export const usersRouter = createTRPCRouter({
         },
       });
 
-      return filterUserForClient(user);
+      return user;
     }),
 
   getAll: protectedProcedure.query(() => {

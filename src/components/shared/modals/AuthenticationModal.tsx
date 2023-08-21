@@ -57,7 +57,7 @@ const AuthenticationModal = () => {
 
     const form = useForm({
         initialValues: {
-            username: "",
+            name: "",
             email: "",
             password: "",
             rememberMe: false
@@ -117,7 +117,7 @@ const AuthenticationModal = () => {
                         <TextInput
                             label="Username"
                             placeholder="Quizmaster9000"
-                            required {...form.getInputProps("username")}
+                            required {...form.getInputProps("name")}
                             disabled={isRegistering}
                         />
 

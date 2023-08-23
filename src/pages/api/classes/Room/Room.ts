@@ -23,6 +23,9 @@ const SECONDS_TO_ROTATE_TITLE_BANNER = 4;
 const SECONDS_TOTAL_INTRO_DURATION = 8;
 const SECONDS_DELAY_BEFORE_GAME_DISPLAYS = 2;
 
+const NUM_PLAYERS_DUELL = 1; // per Team
+const NUM_PLAYERS_TEAM = 2; // per Team
+
 export default class Room implements PrismaRoomFixed {
   id: string;
   name: string;
@@ -47,7 +50,7 @@ export default class Room implements PrismaRoomFixed {
     this.modus = room.modus;
     this.roomSize = room.roomSize;
     this.participants = room.participants;
-    this.password = room.password;
+    this.password = room.password; // TODO: should not be leaked to the client
     this.isPrivate = room.isPrivate;
     this.currentGame = room.currentGame;
     this.maxPlayersPerTeam = room.maxPlayersPerTeam;
@@ -65,8 +68,8 @@ export default class Room implements PrismaRoomFixed {
 
   static getMaxPlayersPerTeam(modus: GameshowMode) {
     const map: IRoomMaxPlayersTeamMap = {
-      DUELL: 1,
-      TEAM: 2,
+      DUELL: NUM_PLAYERS_DUELL,
+      TEAM: NUM_PLAYERS_TEAM,
     };
 
     return map[modus];
@@ -244,4 +247,7 @@ export default class Room implements PrismaRoomFixed {
     // const allRooms = roomManager.getRoomsAsArray();
     // io.emit("updateAllRooms", { newRooms: allRooms });
   }
+
+  // function which defines which information can be send to the client
+  getFilteredRoom() {}
 }

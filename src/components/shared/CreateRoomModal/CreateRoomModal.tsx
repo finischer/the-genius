@@ -54,7 +54,6 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
                 isLoading: true,
                 loaderMsg: "Raum wird beigetreten ..."
             })
-            console.log("Room: ", room)
             // connect to room
             void router.push(`/room/${room.id}`)
         })

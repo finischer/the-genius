@@ -2,6 +2,7 @@ import { SimpleGrid, Text, type Sx } from '@mantine/core'
 import React from 'react'
 import FlipCard from '~/components/shared/FlipCard/FlipCard'
 import type { IMerkenPlaygroundProps } from './merkenPlayground.types'
+import Image from 'next/image'
 
 const MerkenPlayground: React.FC<IMerkenPlaygroundProps> = ({ cards, openCards = [], clickable = false, allCardsFlipped = false, onCardClick }) => {
     const defaultCardStyle: Sx = {
@@ -21,7 +22,7 @@ const MerkenPlayground: React.FC<IMerkenPlaygroundProps> = ({ cards, openCards =
         )
     }
 
-    const BackContent = ({ content, index }: { content: any, index: number }) => {
+    const BackContent = ({ content, index }: { content: string, index: number }) => {
         return (
             <div>
                 <span
@@ -36,7 +37,7 @@ const MerkenPlayground: React.FC<IMerkenPlaygroundProps> = ({ cards, openCards =
                 >
                     {index + 1}
                 </span>
-                <Text>{content}</Text>
+                <Image src={content} alt={index.toString()} width={48} height={48} />
             </div>
         )
     }

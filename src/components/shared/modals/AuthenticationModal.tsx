@@ -3,6 +3,7 @@ import {
     Button,
     Checkbox,
     Container,
+    Flex,
     Group,
     Paper,
     PasswordInput,
@@ -17,6 +18,7 @@ import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import useNotification from '~/hooks/useNotification';
 import { api } from '~/utils/api';
+import SignInButton from '../SignInButton/SignInButton';
 
 
 const AuthenticationModal = () => {
@@ -102,54 +104,57 @@ const AuthenticationModal = () => {
                 The Genius
             </Title>
             <Title order={2} align="center">Willkommen zurück!</Title>
-            <Text color="dimmed" size="sm" align="center" mt={5}>
-                {type === "login" ? "Noch keinen Account? " : "Du hast bereits einen Account? "}
-                <Anchor size="sm" component="button" onClick={() => toggle()}>
-                    {type === "login" ? "Registriere dich hier" : "Log dich ein"}
-                </Anchor>
-            </Text>
+            <Flex direction="column" color='green' mt="md" gap="md">
+                {/* Auth Providers SignInButtons */}
+                <SignInButton />
 
+                <Text color="dimmed" size="sm" align="center" mt={5}>
+                    {type === "login" ? "Noch keinen Account? " : "Du hast bereits einen Account? "}
+                    <Anchor size="sm" component="button" onClick={() => toggle()}>
+                        {type === "login" ? "Registriere dich hier" : "Log dich ein"}
+                    </Anchor>
+                </Text>
 
+                <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+                    <form onSubmit={handleSubmit}>
+                        {type === "register" &&
+                            <TextInput
+                                label="Username"
+                                placeholder="Quizmaster9000"
+                                required {...form.getInputProps("name")}
+                                disabled={isRegistering}
+                            />
 
-            <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-                <form onSubmit={handleSubmit}>
-                    {type === "register" &&
+                        }
                         <TextInput
-                            label="Username"
-                            placeholder="Quizmaster9000"
-                            required {...form.getInputProps("name")}
+                            label="E-Mail"
+                            placeholder="you@mail.de"
+                            required {...form.getInputProps("email")}
                             disabled={isRegistering}
                         />
+                        <PasswordInput
+                            label="Passwort"
+                            placeholder="Dein starkes Passwort 👀"
+                            required
+                            mt="md"
+                            disabled={isRegistering}
 
-                    }
-                    <TextInput
-                        label="E-Mail"
-                        placeholder="you@mail.de"
-                        required {...form.getInputProps("email")}
-                        disabled={isRegistering}
-                    />
-                    <PasswordInput
-                        label="Passwort"
-                        placeholder="Dein starkes Passwort 👀"
-                        required
-                        mt="md"
-                        disabled={isRegistering}
-
-                        {...form.getInputProps("password")} />
-                    {type === "login" &&
-                        <Group position="apart" mt="lg">
-                            <Checkbox label="Remember me" disabled {...form.getInputProps("rememberMe", { type: "checkbox" })} />
-                            {/* <Anchor component="button" size="sm">
-                                Passwort vergessen?
-                            </Anchor> */}
-                        </Group>
-                    }
-                    <Button fullWidth mt="xl" type='submit' disabled={isRegistering} loading={isLoggingIn || isRegistering}
-                    >
-                        {type === "login" ? "Einloggen" : "Registrieren"}
-                    </Button>
-                </form>
-            </Paper>
+                            {...form.getInputProps("password")} />
+                        {type === "login" &&
+                            <Group position="apart" mt="lg">
+                                <Checkbox label="Remember me" disabled {...form.getInputProps("rememberMe", { type: "checkbox" })} />
+                                <Anchor component="button" size="sm">
+                                    Passwort vergessen?
+                                </Anchor>
+                            </Group>
+                        }
+                        <Button fullWidth mt="xl" type='submit' disabled={isRegistering} loading={isLoggingIn || isRegistering}
+                        >
+                            {type === "login" ? "Einloggen" : "Registrieren"}
+                        </Button>
+                    </form>
+                </Paper>
+            </Flex>
         </Container>
     )
 }

@@ -43,6 +43,7 @@ declare module "next-auth" {
 
 declare module "next-auth/jwt" {
   interface JWT {
+    id: string;
     role: UserRole;
     username: string | undefined;
   }
@@ -59,7 +60,6 @@ const sessionCallback: CallbacksOptions["session"] = async ({
   token,
   trigger,
 }) => {
-  console.log("session callback", { token, session });
   if (session.user && token.sub) {
     session.user.name = token.name;
     session.user.email = token.email;
@@ -72,8 +72,6 @@ const sessionCallback: CallbacksOptions["session"] = async ({
     }
   }
 
-  console.log("Session: ", session);
-
   return {
     ...session,
   };
@@ -83,13 +81,22 @@ const jwtCallback: CallbacksOptions["jwt"] = async ({
   session,
   token,
   trigger,
-  account,
-  user,
 }) => {
-  console.log("jwt callback", { token, session, user });
+  token.id = token.sub ?? "";
 
-  if (trigger === "update") {
+  console.log("Token: ", token);
+  if (trigger === "update" && session) {
     token.username = session.user.username;
+
+    // update user in database
+    const newUser = await prisma.user.update({
+      where: {
+        id: token.id,
+      },
+      data: {
+        username: token.username,
+      },
+    });
   }
 
   return {

@@ -80,6 +80,9 @@ const AccountSettingsSection = () => {
                 type="email"
                 value={session?.user.email || "EMAIL NOT FOUND"}
             />
+
+            <Button mt="lg" color='red' disabled>Account löschen</Button>
+            <Text color="dimmed" size="sm">Diese Funktion ist noch nicht verfügbar</Text>
         </Flex>
     )
 }

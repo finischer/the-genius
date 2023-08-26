@@ -1,7 +1,8 @@
 import { Avatar, Button, Flex, Text, TextInput, rem } from '@mantine/core';
 import { IconCheck, IconEdit } from '@tabler/icons-react';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import Tooltip from '~/components/shared/Tooltip/Tooltip';
 import { useUser } from '~/hooks/useUser';
 
 const AccountSettingsSection = () => {
@@ -10,6 +11,7 @@ const AccountSettingsSection = () => {
     const [username, setUsername] = useState<string>(session?.user.username ?? "")
     const isEditable = editMode && session?.user.username
     const { updateUsername, isLoading, user } = useUser()
+    const usernameInputRef = useRef<HTMLInputElement>(null)
 
     const handleUpdateUsername = async () => {
         if (!username) return
@@ -18,12 +20,25 @@ const AccountSettingsSection = () => {
         setUsername(user.username || "")
     }
 
+    const enableEditMode = () => {
+        setEditMode(true)
+        console.log("FOKUS")
+    }
+
+    // when edit mode is on, then we want to focus the username input
+    useEffect(() => {
+        if (editMode) {
+            usernameInputRef.current?.focus()
+        }
+    }, [editMode])
+
     return (
         <Flex direction="column" gap="md" maw={rem(300)}>
             <Avatar src={session?.user.image} radius="100%" size="xl" />
             <>
                 <Flex align="flex-end" gap="sm" >
                     <TextInput
+                        ref={usernameInputRef}
                         readOnly={!isEditable}
                         disabled={!isEditable}
                         label='Username'
@@ -33,13 +48,17 @@ const AccountSettingsSection = () => {
                     />
 
                     {editMode ?
-                        <Button onClick={handleUpdateUsername} loading={isLoading}>
-                            <IconCheck />
-                        </Button>
+                        <Tooltip label="Username speichern">
+                            <Button onClick={handleUpdateUsername} loading={isLoading} >
+                                <IconCheck />
+                            </Button>
+                        </Tooltip>
                         :
-                        <Button variant='default' onClick={() => setEditMode(true)} loading={isLoading}>
-                            <IconEdit />
-                        </Button>
+                        <Tooltip label="Username ändern">
+                            <Button variant='default' onClick={enableEditMode} loading={isLoading}>
+                                <IconEdit />
+                            </Button>
+                        </Tooltip>
                     }
                 </Flex>
                 <Text color="dimmed" size="sm">Der Username wird in den Spielshows verwendet und ist für andere User sichtbar</Text>
@@ -52,7 +71,7 @@ const AccountSettingsSection = () => {
                     type="text"
                     value={session?.user.name || "NAME NOT FOUND"}
                 />
-                <Text color="dimmed" size="sm">Der Name wird nicht öffentlich angezeigt und kann nicht geändert werden</Text>
+                <Text color="dimmed" size="sm">Dein Name wird nicht öffentlich angezeigt und kann nicht geändert werden</Text>
             </>
             <TextInput
                 readOnly

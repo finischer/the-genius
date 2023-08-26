@@ -5,6 +5,7 @@ import Loader from './shared/Loader';
 import Navbar from './Navbar';
 import AuthenticationModal from './shared/modals/AuthenticationModal';
 import useLoadingState from '~/hooks/useLoadingState/useLoadingState';
+import { useUser } from '~/hooks/useUser';
 
 interface IPageLayout {
     showLoader?: boolean
@@ -19,16 +20,10 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
     const theme = useMantineTheme();
     const [isNavbarOpened, setIsNavbarOpened] = useState(false)
     const [usernameInput, setUsernameInput] = useState("");
+    const { updateUsername, isLoading } = useUser()
 
-    useEffect(() => {
-        console.log("Sesion: ", session)
-    }, [session])
-
-    const updateUser = async () => {
-        const newUser = { ...session, user: { ...session?.user, username: usernameInput } }
-        console.log("New user: ", newUser)
-        const res = await updateSession(newUser)
-        console.log("Result: ", res)
+    const handleSaveUsername = async () => {
+        await updateUsername(usernameInput)
     }
 
     if (status === "unauthenticated") {
@@ -65,7 +60,7 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
                             onChange={(e) => setUsernameInput(e.target.value)}
                         />
 
-                        <Button variant="filled" onClick={updateUser} >
+                        <Button variant="filled" onClick={handleSaveUsername} loading={isLoading} >
                             Namen speichern
                         </Button>
                     </Flex>

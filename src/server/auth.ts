@@ -9,7 +9,6 @@ import GoogleProvider, { type GoogleProfile } from "next-auth/providers/google";
 
 import { type UserRole } from "@prisma/client";
 import type { CallbacksOptions } from "next-auth";
-import type { JWT } from "next-auth/jwt";
 import { prisma } from "~/server/db";
 
 /**
@@ -80,10 +79,22 @@ const jwtCallback: CallbacksOptions["jwt"] = async ({
   if (user) {
     token.username = user?.username;
   }
-
-  console.log("jwtCallback ", { token, user, session });
   if (trigger === "update" && session) {
-    token.username = session.user.username;
+    const newUsername = session.user.username;
+
+    // check if username already exists in database
+    const user = await prisma.user.findUnique({
+      where: { username: newUsername },
+    });
+
+    if (user) {
+      throw new Error(
+        `Der Username "${newUsername}" ist leider schon vergeben 🙁`
+      );
+    }
+
+    // otherwise upate session and username in database
+    token.username = newUsername;
 
     // update user in database
     await prisma.user.update({

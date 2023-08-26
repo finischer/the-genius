@@ -45,7 +45,7 @@ const SignInButton = () => {
     return (
         <>
             <GoogleButton>Mit Google fortfahren</GoogleButton>
-            <DiscordButton>Mit Discord einloggen</DiscordButton>
+            {/* <DiscordButton>Mit Discord einloggen</DiscordButton> */}
         </>
     )
 }

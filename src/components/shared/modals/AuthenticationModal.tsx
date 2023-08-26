@@ -108,7 +108,7 @@ const AuthenticationModal = () => {
                 {/* Auth Providers SignInButtons */}
                 <SignInButton />
 
-                <Text color="dimmed" size="sm" align="center" mt={5}>
+                {/* <Text color="dimmed" size="sm" align="center" mt={5}>
                     {type === "login" ? "Noch keinen Account? " : "Du hast bereits einen Account? "}
                     <Anchor size="sm" component="button" onClick={() => toggle()}>
                         {type === "login" ? "Registriere dich hier" : "Log dich ein"}
@@ -153,7 +153,7 @@ const AuthenticationModal = () => {
                             {type === "login" ? "Einloggen" : "Registrieren"}
                         </Button>
                     </form>
-                </Paper>
+                </Paper> */}
             </Flex>
         </Container>
     )

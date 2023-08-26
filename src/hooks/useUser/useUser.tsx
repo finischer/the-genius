@@ -4,16 +4,21 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { type TUserReduced } from "~/types/socket.types";
 import { useRoom } from "../useRoom";
 import { type IUseUserContext, type IUseUserProvider } from "./useUser.types";
+import { api } from "~/utils/api";
+import useNotification from "../useNotification";
+import { check } from "prettier";
 
 const UserContext = createContext<IUseUserContext | undefined>(undefined);
 
 const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
-    const { data: session } = useSession()
+    const { data: session, update: updateSession } = useSession()
     const { room } = useRoom()
     const [user, setUser] = useState<TUserReduced>(initUser())
     const [team, setTeam] = useState<Team | undefined>(undefined)
     const isPlayer = team !== undefined;
     const [isHost, setIsHost] = useState(false);
+    const { showErrorNotification } = useNotification()
+    const { mutateAsync: checkUsername, isLoading } = api.users.isUsernameInUse.useMutation()
 
     function initUser() {
         const user: TUserReduced = {
@@ -21,7 +26,8 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
             name: session?.user.name || "",
             email: session?.user.email || "",
             image: session?.user.image || null,
-            role: session?.user.role || "USER"
+            role: session?.user.role || "USER",
+            username: session?.user.username || "NOT_FOUND"
         }
 
         return user
@@ -37,6 +43,23 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
             const team = teamArray.find(t => t.id === player.teamId)
             setTeam(team)
         }
+    }
+
+    async function updateUsername(newUsername: string) {
+        if (newUsername === user.username) return true
+
+        const usernameExists = await checkUsername({ username: newUsername })
+
+        if (usernameExists) {
+            showErrorNotification({
+                message: `Username "${newUsername}" ist bereits vergeben 🙁`
+            })
+            return false
+        }
+
+        const newUser = { ...session, user: { ...session?.user, username: newUsername } }
+        await updateSession(newUser)
+        return true
     }
 
     useEffect(() => {
@@ -62,7 +85,7 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
     }
 
     return (
-        <UserContext.Provider value={{ user, team, setUser, setUserAsPlayer, isPlayer, isHost }}>
+        <UserContext.Provider value={{ user, team, setUser, setUserAsPlayer, isPlayer, isHost, updateUsername, isLoading }}>
             {children}
         </UserContext.Provider>
     );

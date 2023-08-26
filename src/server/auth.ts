@@ -4,21 +4,13 @@ import {
   getServerSession,
   type DefaultSession,
   type NextAuthOptions,
-  type Profile,
 } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider, { type GoogleProfile } from "next-auth/providers/google";
-import EmailProvider from "next-auth/providers/email";
 
 import { type UserRole } from "@prisma/client";
-import bcrypt from "bcrypt";
-import { prisma } from "~/server/db";
-import { sendVerificationRequest } from "./emailService";
-import { filterUserForClient } from "./helpers/filterForUserClient";
-import type { OAuthProvider } from "next-auth/providers";
 import type { CallbacksOptions } from "next-auth";
 import type { JWT } from "next-auth/jwt";
-import { ObjectId } from "bson";
+import { prisma } from "~/server/db";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -81,15 +73,20 @@ const jwtCallback: CallbacksOptions["jwt"] = async ({
   session,
   token,
   trigger,
+  user,
 }) => {
   token.id = token.sub ?? "";
 
-  console.log("Token: ", token);
+  if (user) {
+    token.username = user?.username;
+  }
+
+  console.log("jwtCallback ", { token, user, session });
   if (trigger === "update" && session) {
     token.username = session.user.username;
 
     // update user in database
-    const newUser = await prisma.user.update({
+    await prisma.user.update({
       where: {
         id: token.id,
       },
@@ -173,14 +170,12 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID ?? "",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
-      profile(profile: GoogleProfile, tokens) {
-        console.log("Google Profile: ", { profile, tokens });
-        console.log("Profile sub: ", profile.sub);
+      profile(profile: GoogleProfile) {
         return {
           id: profile.sub,
           role: "USER",
           emailVerified: profile.email_verified,
-          name: profile.given_name,
+          name: profile.name,
           email: profile.email,
           image: profile.picture,
         };

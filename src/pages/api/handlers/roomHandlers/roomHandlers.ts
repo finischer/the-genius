@@ -101,7 +101,7 @@ export function roomHandler(
 
     socket.user = {
       id: user.id,
-      name: user.name,
+      name: user.username ?? "",
     };
     socket.roomId = roomId;
     await socket.join(roomId);

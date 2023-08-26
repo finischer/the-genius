@@ -69,8 +69,10 @@ export default class Team implements PrismaTeam {
   }
 
   join(user: TUserReduced) {
+    const alternativePlayerName = `Spieler ${this.players.length + 1}`;
+
     const p: TPlayer = {
-      name: user.name,
+      name: user.username ?? alternativePlayerName,
       userId: user.id,
       teamId: this.id,
     };

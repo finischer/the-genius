@@ -101,7 +101,7 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
                                     />
                                 </MediaQuery>
 
-                                {session.user.name &&
+                                {session.user.username &&
                                     <Text>Schön dich zu sehen, {session.user.username}!</Text>
                                 }
                             </div>

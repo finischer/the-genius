@@ -7,7 +7,11 @@ import { signIn } from 'next-auth/react';
 const DISCORD_PRIMARY_COLOR = "#7289DA"
 
 export const GoogleButton: React.FC<ButtonProps> = ({ ...props }) => {
-    return <Button leftIcon={<IconBrandGoogle />} variant="filled" color="gray" onClick={() => signIn("google")} {...props} />;
+    const handleSignIn = async () => {
+        signIn("google")
+    }
+
+    return <Button leftIcon={<IconBrandGoogle />} variant="filled" color="gray" onClick={handleSignIn} {...props} />;
 }
 
 export function FacebookButton(props: ButtonProps) {

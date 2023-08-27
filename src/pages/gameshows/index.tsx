@@ -1,16 +1,15 @@
 import { Flex, Table, Text, Title, useMantineTheme } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
-import { type Gameshow } from '@prisma/client'
-import { IconPlus } from '@tabler/icons-react'
-import { IconPlayerPlay, IconSettings, IconStar, IconStarFilled } from '@tabler/icons-react'
+import { IconPlayerPlay, IconPlus, IconSettings, IconStar, IconStarFilled } from '@tabler/icons-react'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import { useState } from 'react'
+import PageLayout from '~/components/layout'
 import ActionIcon from '~/components/shared/ActionIcon'
 import CreateRoomModal from '~/components/shared/CreateRoomModal'
-import PageLayout from '~/components/layout'
+import useLoadingState from '~/hooks/useLoadingState/useLoadingState'
+import type { SafedGameshow } from '~/server/api/routers/gameshows'
 import { api } from '~/utils/api'
 import { formatTimestamp } from '~/utils/dates'
-import useLoadingState from '~/hooks/useLoadingState/useLoadingState'
 
 const GameshowsPage = () => {
     const theme = useMantineTheme()
@@ -18,12 +17,12 @@ const GameshowsPage = () => {
     const router = useRouter()
     const { data: gameshows, isLoading } = api.gameshows.getAllByCreatorId.useQuery()
     const [openedCreateRoomModal, { open: openCreateRoomModal, close: closeCreateRoomModal }] = useDisclosure(false)
-    const [activeGameshow, setActiveGameshow] = useState<Gameshow | undefined>(undefined)
-    const [loadingMessage, setLoadingMessage] = useState("Spielshows werden geladen ...")
+    const [activeGameshow, setActiveGameshow] = useState<SafedGameshow | undefined>(undefined)
 
     const subtitleText = gameshows?.length === 0 ? "Du hast bisher noch keine Spielshow erstellt" : `Du hast bereits ${gameshows?.length || "NOT_FOUND"} Spielshows erstellt`
 
-    const createRoom = (gameshow: Gameshow) => {
+    const createRoom = (gameshow: SafedGameshow) => {
+        // get whole gameshow from db
         setActiveGameshow(gameshow)
         openCreateRoomModal()
     }
@@ -36,7 +35,7 @@ const GameshowsPage = () => {
         return (
             <tr key={gameshow.id}>
                 <td>{gameshow.name}</td>
-                <td>{gameshow.games.length}</td>
+                <td>{gameshow.numOfGames}</td>
                 <td>{formatTimestamp(gameshow.createdAt.toString())} Uhr</td>
                 <td>
                     <Flex gap="xl">

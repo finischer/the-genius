@@ -1,39 +1,57 @@
-import { randomUUID } from "crypto";
+import type {
+  BuzzerState,
+  Player as PrismaPlayer,
+  Team as PrismaTeam,
+  ScorebarTimerState,
+} from "@prisma/client";
+import { ObjectId } from "bson";
 import { type TUserReduced } from "~/types/socket.types";
 import Player from "../Player/Player";
-import { type ITeam } from "./team.types";
+import type { TPlayer } from "../Player/player.types";
 
 export const SCOREBAR_TIMER_SECONDS = 5;
 
-export default class Team implements ITeam {
-  id: ITeam["id"];
-  name: ITeam["name"];
-  identifierKey: ITeam["identifierKey"];
-  totalScore: ITeam["totalScore"];
-  gameScore: ITeam["gameScore"];
-  avatarImage: ITeam["avatarImage"];
-  players: ITeam["players"];
-  buzzer: ITeam["buzzer"];
-  scorebarTimer: ITeam["scorebarTimer"];
-  isActiveTurn: ITeam["isActiveTurn"];
+export default class Team implements PrismaTeam {
+  id: string;
+  name: string;
+  totalScore: number;
+  gameScore: number;
+  avatarImage: string;
+  players: PrismaPlayer[];
+  buzzer: BuzzerState;
+  scorebarTimer: ScorebarTimerState;
+  isActiveTurn: boolean;
 
-  public constructor(name: string, identifierKey: string) {
-    this.id = randomUUID();
-    this.name = name;
-    this.identifierKey = identifierKey;
-    this.totalScore = 0;
-    this.gameScore = 0;
-    this.avatarImage = "";
-    this.players = [];
-    this.buzzer = {
-      isPressed: false,
-      playersBuzzered: [],
+  public constructor(team: PrismaTeam) {
+    this.id = team.id;
+    this.name = team.name;
+    this.totalScore = team.totalScore;
+    this.gameScore = team.gameScore;
+    this.avatarImage = team.avatarImage;
+    this.players = team.players.map((player) => new Player(player));
+    this.buzzer = team.buzzer;
+    this.scorebarTimer = team.scorebarTimer;
+    this.isActiveTurn = team.isActiveTurn;
+  }
+
+  static createTeam(name: string): PrismaTeam {
+    return {
+      id: new ObjectId().toString(),
+      name,
+      avatarImage: "",
+      buzzer: {
+        isPressed: false,
+        playersBuzzered: [],
+      },
+      totalScore: 0,
+      gameScore: 0,
+      isActiveTurn: false,
+      players: [],
+      scorebarTimer: {
+        isActive: false,
+        seconds: 0,
+      },
     };
-    this.scorebarTimer = {
-      isActive: false,
-      seconds: SCOREBAR_TIMER_SECONDS,
-    };
-    this.isActiveTurn = false;
   }
 
   getPlayer(playerId: string) {
@@ -51,7 +69,19 @@ export default class Team implements ITeam {
   }
 
   join(user: TUserReduced) {
-    const newPlayer = new Player(user.id, this.id, user.username);
+    const alternativePlayerName = `Spieler ${this.players.length + 1}`;
+
+    const p: TPlayer = {
+      name: user.username ?? alternativePlayerName,
+      userId: user.id,
+      teamId: this.id,
+    };
+    const newPlayer = new Player(p);
+
+    // take team image from the avatar of the first joined player
+    if (this.players.length === 0) {
+      this.avatarImage = user.image ?? "";
+    }
 
     this.players.push(newPlayer);
   }

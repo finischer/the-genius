@@ -11,11 +11,10 @@ import {
 } from "~/types/socket.types";
 import Room from "./classes/Room/Room";
 import { roomManager } from "./controllers/RoomManager";
+import { flaggenHandler } from "./handlers/games/flaggenHandlers";
+import { merkenHandler } from "./handlers/games/merkenHandlers";
 import { roomHandler } from "./handlers/roomHandlers";
 import { teamHandler } from "./handlers/teamHandlers";
-import { flaggenHandler } from "./handlers/games/flaggenHandlers";
-import type { TGame } from "~/components/room/Game/games/game.types";
-import { merkenHandler } from "./handlers/games/merkenHandlers";
 
 const prisma = new PrismaClient();
 
@@ -67,24 +66,10 @@ export default async function SocketHandler(
   const rooms = await prisma.room.findMany();
 
   console.log("Rooms found: ", rooms.length);
-  rooms.forEach(async (room) => {
-    const { id, name, creatorId, modus, games, isPrivate } = room;
-    const user = await prisma.user.findUnique({
-      where: {
-        id: creatorId,
-      },
-    });
 
-    const tmpRoom = new Room(
-      id,
-      name,
-      isPrivate,
-      user,
-      modus,
-      games as unknown as TGame[]
-    );
-
-    roomManager.addRoom(tmpRoom);
+  rooms.forEach((room) => {
+    const newRoom = new Room(room);
+    roomManager.addRoom(newRoom);
   });
 
   const onConnection = (

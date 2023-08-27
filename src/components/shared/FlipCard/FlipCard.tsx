@@ -58,58 +58,6 @@ const FlipCard: React.FC<IFlipCardProps> = ({ isFlipped = false, setFlipped, cli
             </ReactCardFlip>
         </Container>
     )
-
-    // FOR MERKEN CARDS
-    // const defaultCardStyle: Sx = {
-    //     backfaceVisibility: "hidden",
-    //     position: "absolute",
-    //     top: 0,
-    //     left: 0,
-
-    //     userSelect: "none",
-    //     display: "flex",
-    //     justifyContent: "center",
-    //     alignItems: "center",
-    // }
-
-    // return (
-    //     <Container
-    //         h="5rem"
-    //         w="5rem"
-    //         bg="green"
-    //         onClick={handleClick}
-    //     >
-    //         <Container
-    //             sx={{
-    //                 transformStyle: "preserve-3d",
-    //                 transition: "300ms linear 0.1s",
-    //                 position: "relative",
-    //                 transform: isFlipped ? "rotateY(180deg)" : "unset"
-    //             }}
-    //         >
-    //             <Container
-    //                 sx={{
-    //                     ...defaultCardStyle,
-    //                     transform: "rotateY(0)",
-    //                     background: colors.accent
-    //                 }}
-    //             >
-    //                 Spiel 1
-    //             </Container>
-    //             <Container
-    //                 sx={{
-    //                     ...defaultCardStyle,
-
-    //                     transform: "rotateY(180deg)",
-    //                     background: colors.accent
-    //                 }}
-
-    //             >
-    //                 Ich weiß, was du nicht weißt
-    //             </Container>
-    //         </Container>
-    //     </Container>
-    // )
 }
 
 export default FlipCard

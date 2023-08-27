@@ -1,26 +1,20 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "mongodb"
-  // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-  // Further reading:
-  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
   url      = env("MONGODB_URI")
 }
 
 model User {
   id            String       @id @default(auto()) @map("_id") @db.ObjectId
-  username      String       @unique
+  name          String
+  username      String?      @unique
   role          UserRole?    @default(USER)
   email         String       @unique
   emailVerified DateTime?
-  password      String
+  password      String?
   image         String?
   gameshows     Gameshow[]   @relation(name: "gameshowCreator")
   friends       Friendship[] @relation(name: "users")
@@ -64,7 +58,8 @@ model Room {
   id                String       @id @default(auto()) @map("_id") @db.ObjectId
   name              String
   modus             GameshowMode
-  roomSize          Int?         @default(12)
+  maxPlayersPerTeam Int
+  roomSize          Int          @default(12)
   participants      String[]     @default([])
   password          String?
   isPrivate         Boolean      @default(true)
@@ -75,17 +70,10 @@ model Room {
   updatedAt         DateTime     @updatedAt
   games             Json[]
   defaultGameStates Json[]
-  teams             Json[]
+  teams             RoomTeams
+  state             RoomState
 
   @@map("rooms")
-}
-
-model Team {
-  id    String  @id @default(auto()) @map("_id") @db.ObjectId
-  name  String
-  image String?
-
-  @@map("teams")
 }
 
 model Account {
@@ -128,6 +116,7 @@ model VerificationToken {
   @@map("verificationTokens")
 }
 
+// enums
 enum UserRole {
   USER
   ADMIN
@@ -137,4 +126,111 @@ enum UserRole {
 enum GameshowMode {
   DUELL
   TEAM
+}
+
+enum RoomViews {
+  EMPTY
+  GAME
+  SCOREBOARD
+}
+
+enum RoomClockVariants {
+  COUNTDOWN
+  TIMER
+}
+
+// composite types
+type RoomState {
+  currentView     String          @default("")
+  answerState     RoomAnswerState
+  gameshowStarted Boolean         @default(false)
+  teamWithTurn    String          @default("")
+  display         RoomDisplay
+  sounds          RoomSounds
+  music           RoomMusic
+  view            RoomViews
+}
+
+type RoomAnswerState {
+  showAnswer Boolean @default(false)
+  answer     String  @default("")
+  withSound  Boolean @default(false)
+}
+
+type RoomClock {
+  isActive       Boolean           @default(false)
+  currentSeconds Int               @default(0)
+  to             Int               @default(0)
+  variant        RoomClockVariants @default(COUNTDOWN)
+}
+
+type RoomDisplayGameIntro {
+  alreadyPlayed      Boolean @default(false)
+  flippedTitleBanner Boolean @default(false)
+  milliseconds       Int     @default(0)
+}
+
+type RoomDisplay {
+  confetti   Boolean              @default(false)
+  gameIntro  RoomDisplayGameIntro
+  game       Boolean              @default(false)
+  notefields Boolean              @default(false)
+  clock      RoomClock
+}
+
+type RoomSounds {
+  correctAnswer Boolean @default(false)
+  wrongAnswer   Boolean @default(false)
+  buzzer        Boolean @default(false)
+  winning       Boolean @default(false)
+  intro         Boolean @default(false)
+}
+
+type RoomMusic {
+  title    String  @default("")
+  isActive Boolean @default(false)
+}
+
+type NotefieldState {
+  isActive Boolean @default(false)
+  value    String  @default("")
+}
+
+type PlayerStates {
+  notefield NotefieldState
+}
+
+type Player {
+  id     String       @db.ObjectId
+  name   String
+  userId String       @db.ObjectId
+  teamId String       @db.ObjectId
+  states PlayerStates
+}
+
+type BuzzerState {
+  isPressed       Boolean  @default(false)
+  playersBuzzered String[]
+}
+
+type ScorebarTimerState {
+  isActive Boolean @default(false)
+  seconds  Int     @default(0)
+}
+
+type RoomTeams {
+  teamOne Team
+  teamTwo Team
+}
+
+type Team {
+  id            String             @db.ObjectId
+  name          String
+  totalScore    Int                @default(0)
+  gameScore     Int                @default(0)
+  avatarImage   String             @default("")
+  players       Player[]
+  buzzer        BuzzerState
+  scorebarTimer ScorebarTimerState
+  isActiveTurn  Boolean            @default(false)
 }

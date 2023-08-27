@@ -1,10 +1,10 @@
-import { type ITeam } from "~/pages/api/classes/Team/team.types";
+import type { Team } from "@prisma/client";
 
 export interface IScoreCircleProps {
   filled: boolean;
 }
 
 export interface IScorebarProps {
-  team: ITeam;
+  team: Team;
   timerPosition?: "left" | "right";
 }

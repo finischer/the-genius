@@ -22,6 +22,7 @@ export function teamHandler(
     const { room, team } = res;
 
     team.join(user);
+
     socket.teamId = teamId;
     room.update();
     cb();

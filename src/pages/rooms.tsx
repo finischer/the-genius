@@ -1,21 +1,18 @@
 import { Button, Flex, LoadingOverlay, Modal, PasswordInput, Table, Text, Title } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useDisclosure } from '@mantine/hooks'
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-import PageLayout from '~/components/layout'
-import useNotification from '~/hooks/useNotification'
-import { socket } from '~/hooks/useSocket'
-import { api } from '~/utils/api'
-import type { IRoom } from './api/classes/Room/room.types'
-import { formatTimestamp } from '~/utils/dates'
 import { notifications } from '@mantine/notifications'
 import { IconCheck } from '@tabler/icons-react'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
+import PageLayout from '~/components/layout'
+import useNotification from '~/hooks/useNotification'
 import { useUser } from '~/hooks/useUser'
+import type { SafedRoom } from '~/server/api/routers/rooms'
+import { api } from '~/utils/api'
+import { formatTimestamp } from '~/utils/dates'
 
-// type TOnlinePlayersEvent = {
-//     numOfOnlinePlayers: number
-// }
+const REFETCH_INTERVAL = 5000
 
 const RoomsPage = () => {
     const router = useRouter();
@@ -59,53 +56,31 @@ const RoomsPage = () => {
         }
     })
     const [openedPasswordModal, { open: openPasswordModal, close: closePasswordModal }] = useDisclosure()
-    const [rooms, setRooms] = useState<IRoom[]>([])
-    const [isLoading, setIsLoading] = useState(true);
-    const [activeRoom, setActiveRoom] = useState<IRoom | undefined>(undefined)
-    // const [playersOnline, setPlayersOnline] = useState<number | undefined>(undefined)
-
-    useEffect(() => {
-        socket.emit("listAllRooms", (rooms) => {
-            console.log("+++ listAllRooms +++ : ", rooms)
-            setRooms(rooms)
-            setIsLoading(false)
-        })
-
-        // socket.on("getOnlinePlayers", ({ numOfOnlinePlayers }: TOnlinePlayersEvent) => {
-        //     console.log("+++ getOnlinePlayers +++ : ", numOfOnlinePlayers)
-        //     setPlayersOnline(numOfOnlinePlayers)
-        // })
-
-        socket.on("updateAllRooms", ({ newRooms }) => {
-            console.log("+++ updateAllRooms +++ : ", newRooms)
-            setRooms(newRooms)
-        })
-
-        return () => {
-            socket.removeAllListeners("updateAllRooms")
-        }
-    }, [])
-
+    const { data: rooms, isLoading } = api.rooms.getAll.useQuery(undefined, {
+        refetchInterval: REFETCH_INTERVAL
+    })
+    const [activeRoom, setActiveRoom] = useState<SafedRoom | undefined>(undefined)
 
     const rows = rooms?.map(room => {
-        const nameOfCurrentGame = room.games.find(g => g.identifier === room.currentGame)?.name
+        // const nameOfCurrentGame = room.games.find(g => g.identifier === room.currentGame)?.name
 
         return (
             <tr key={room.id} style={{ cursor: "pointer" }} onClick={() => handleRoomClick(room)}>
                 <td>{room.name}</td>
-                <td>{room.isPrivateRoom ? "Privat" : "Öffentlich"}</td>
+                <td>{room.isPrivate ? "Privat" : "Öffentlich"}</td>
                 <td>{room.modus}</td>
                 <td>{room.participants.length} / {room.roomSize}</td>
-                <td>{nameOfCurrentGame || "Kein Spiel gestartet"}</td>
-                <td>{room.creator?.username}</td>
-                <td>{formatTimestamp(room.createdAt)} Uhr</td>
+                {/* <td>{nameOfCurrentGame || "Kein Spiel gestartet"}</td> */}
+                <td>{room.creator.username}</td>
+                <td>{formatTimestamp(room.createdAt.toString())} Uhr</td>
             </tr>
         )
     }) ?? []
 
-    const handleRoomClick = (room: IRoom) => {
+
+    const handleRoomClick = (room: SafedRoom) => {
         setActiveRoom(room)
-        if (room.isPrivateRoom && user.id !== room.creator?.id) {
+        if (room.isPrivate && room.isCreator) {
             form.reset();
             openPasswordModal()
         } else {
@@ -181,7 +156,7 @@ const RoomsPage = () => {
                             <th>Sichtbarkeit</th>
                             <th>Modus</th>
                             <th>Spieler</th>
-                            <th>Aktuelles Spiel</th>
+                            {/* <th>Aktuelles Spiel</th> */}
                             <th>Erstellt von</th>
                             <th>Erstellt am</th>
                         </tr>

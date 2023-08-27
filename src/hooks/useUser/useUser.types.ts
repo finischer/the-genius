@@ -1,5 +1,5 @@
+import type { Team } from "@prisma/client";
 import { type Dispatch } from "react";
-import { type ITeam } from "~/pages/api/classes/Team/team.types";
 import { type TUserReduced } from "~/types/socket.types";
 
 export interface IUseUserProvider {
@@ -8,9 +8,11 @@ export interface IUseUserProvider {
 
 export interface IUseUserContext {
   user: TUserReduced;
-  team: ITeam | undefined;
+  team: Team | undefined;
   setUser: Dispatch<TUserReduced>;
-  setUserAsPlayer: (team: ITeam) => void;
+  setUserAsPlayer: (team: Team) => void;
   isPlayer: boolean;
   isHost: boolean;
+  updateUsername: (newUsername: string) => Promise<boolean>;
+  isLoading: boolean;
 }

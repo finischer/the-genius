@@ -1,11 +1,11 @@
 import { Textarea, type TextareaProps } from '@mantine/core'
 import { motion } from "framer-motion"
 import React from 'react'
-import type { IPlayer } from '~/pages/api/classes/Player/player.types'
+import type Player from '~/pages/api/classes/Player/Player'
 import { animations } from '~/utils/animations'
 
 interface INotefieldProps extends TextareaProps {
-    player?: IPlayer
+    player?: Player
 }
 
 const Notefield: React.FC<INotefieldProps> = ({ player, ...props }) => {
@@ -17,7 +17,6 @@ const Notefield: React.FC<INotefieldProps> = ({ player, ...props }) => {
                 minRows={8}
                 maxRows={8}
                 {...props}
-
             />
         </motion.div>
     )

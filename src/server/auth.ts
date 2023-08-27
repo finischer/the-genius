@@ -6,6 +6,9 @@ import {
   type NextAuthOptions,
 } from "next-auth";
 import GoogleProvider, { type GoogleProfile } from "next-auth/providers/google";
+import DiscordProvider, {
+  type DiscordProfile,
+} from "next-auth/providers/discord";
 
 import { type UserRole } from "@prisma/client";
 import type { CallbacksOptions } from "next-auth";
@@ -189,6 +192,28 @@ export const authOptions: NextAuthOptions = {
           name: profile.name,
           email: profile.email,
           image: profile.picture,
+        };
+      },
+    }),
+    DiscordProvider({
+      clientId: process.env.DISCORD_CLIENT_ID ?? "",
+      clientSecret: process.env.DISCORD_CLIENT_SECRET ?? "",
+      profile(profile: DiscordProfile) {
+        if (profile.avatar === null) {
+          const defaultAvatarNumber = parseInt(profile.discriminator) % 5;
+          profile.image_url = `https://cdn.discordapp.com/embed/avatars/${defaultAvatarNumber}.png`;
+        } else {
+          const format = profile.avatar.startsWith("a_") ? "gif" : "png";
+          profile.image_url = `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.${format}`;
+        }
+
+        return {
+          id: profile.id,
+          role: "USER",
+          emailVerified: profile.verified,
+          name: profile.username,
+          email: profile.email,
+          image: profile.image_url,
         };
       },
     }),

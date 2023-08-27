@@ -77,6 +77,12 @@ export default class Team implements PrismaTeam {
       teamId: this.id,
     };
     const newPlayer = new Player(p);
+
+    // take team image from the avatar of the first joined player
+    if (this.players.length === 0) {
+      this.avatarImage = user.image ?? "";
+    }
+
     this.players.push(newPlayer);
   }
 

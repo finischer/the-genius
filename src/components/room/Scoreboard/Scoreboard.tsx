@@ -42,7 +42,7 @@ const Scoreboard: React.FC<IScoreboardProps> = ({ team, color }) => {
         <Flex h="10rem" align="center" p="2rem">
             <Flex align="center" gap="xl">
                 <Text color='white' p="0 1rem" weight="bold">{team.name}</Text>
-                <Avatar radius="100px" size="xl" variant="filled" />
+                <Avatar src={team.avatarImage} radius="100px" size="xl" variant="filled" />
 
                 <Flex bg={SCOREBOARD_BACKGROUND_COLOR} h="7rem" ml="2rem" pos="relative" sx={{ border: `1px solid ${SCOREBOARD_BORDER_BACKGROUND_COLOR}`, borderRadius: "100px", overflow: "hidden" }} >
                     <Flex h="100%" bg="red" sx={{ borderRadius: "100px" }} />

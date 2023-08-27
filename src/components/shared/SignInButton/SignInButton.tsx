@@ -31,6 +31,9 @@ export function FacebookButton(props: ButtonProps) {
 }
 
 export function DiscordButton(props: ButtonProps) {
+    const handleSignIn = async () => {
+        signIn("discord")
+    }
     return (
         <Button
             leftIcon={<IconBrandDiscordFilled size="1.5rem" />}
@@ -40,6 +43,7 @@ export function DiscordButton(props: ButtonProps) {
                     backgroundColor: theme.fn.darken(DISCORD_PRIMARY_COLOR, 0.05),
                 },
             })}
+            onClick={handleSignIn}
             {...props}
         />
     );
@@ -49,7 +53,7 @@ const SignInButton = () => {
     return (
         <>
             <GoogleButton>Mit Google fortfahren</GoogleButton>
-            {/* <DiscordButton>Mit Discord einloggen</DiscordButton> */}
+            <DiscordButton>Mit Discord einloggen</DiscordButton>
         </>
     )
 }

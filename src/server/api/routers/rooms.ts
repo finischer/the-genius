@@ -28,9 +28,9 @@ export const safedRoomSchema = z.object({
   modus: z.nativeEnum(GameshowMode),
   participants: z.array(z.string()),
   creator: z.object({
-    id: z.string(),
-    name: z.string(),
+    username: z.string(),
   }),
+  isCreator: z.boolean(),
   roomSize: z.number(),
   createdAt: z.date(),
 });
@@ -45,13 +45,20 @@ export const roomsRouter = createTRPCRouter({
         include: {
           creator: {
             select: {
-              id: true,
-              name: true,
+              username: true,
             },
           },
         },
       });
-      return rooms;
+
+      // check if user is the room creator
+
+      const roomsWithIsCreatorField = rooms.map((room) => ({
+        ...room,
+        isCreator: room.creatorId === ctx.session.user.id,
+      }));
+
+      return roomsWithIsCreatorField;
     }),
   validatePassword: protectedProcedure
     .input(

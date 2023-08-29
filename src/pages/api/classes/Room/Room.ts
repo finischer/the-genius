@@ -249,5 +249,5 @@ export default class Room implements PrismaRoomFixed {
   }
 
   // function which defines which information can be send to the client
-  getFilteredRoom() {}
+  // getFilteredRoom() {}
 }

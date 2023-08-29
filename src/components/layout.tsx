@@ -15,7 +15,7 @@ interface IPageLayout {
 
 
 const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage = "Lädt ...", children }) => {
-    const { data: session, update: updateSession, status } = useSession();
+    const { data: session, status } = useSession();
     const { pageIsLoading } = useLoadingState()
     const theme = useMantineTheme();
     const [isNavbarOpened, setIsNavbarOpened] = useState(false)

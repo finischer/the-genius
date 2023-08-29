@@ -5,15 +5,14 @@ import {
   type DefaultSession,
   type NextAuthOptions,
 } from "next-auth";
-import GoogleProvider, { type GoogleProfile } from "next-auth/providers/google";
 import DiscordProvider, {
   type DiscordProfile,
 } from "next-auth/providers/discord";
+import GoogleProvider, { type GoogleProfile } from "next-auth/providers/google";
 
 import { type UserRole } from "@prisma/client";
 import type { CallbacksOptions, Session } from "next-auth";
 import { prisma } from "~/server/db";
-import { z } from "zod";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -78,7 +77,8 @@ const jwtCallback: CallbacksOptions["jwt"] = async ({
   trigger,
   user,
 }) => {
-  const validatedSession: Session | null | undefined = session;
+  // @ts-ignore
+  const validatedSession = session as Session | null | undefined;
   token.id = token.sub ?? "";
 
   if (user) {

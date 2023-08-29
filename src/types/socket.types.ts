@@ -1,4 +1,4 @@
-import { RoomViews, type Gameshow, type User } from "@prisma/client";
+import { type RoomViews, type Gameshow, type User } from "@prisma/client";
 import { type NextApiResponse } from "next";
 import { type Server, type Socket } from "socket.io";
 import type { TGameNames } from "~/components/room/Game/games/game.types";

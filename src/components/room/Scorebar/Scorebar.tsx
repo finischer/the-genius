@@ -1,9 +1,10 @@
 import { Badge, Box, Button, Container, Flex, Group, Text, keyframes, useMantineTheme, type Sx } from '@mantine/core'
 import { IconExposureMinus1, IconExposurePlus1, IconTargetArrow } from '@tabler/icons-react'
 import { AnimatePresence, motion } from 'framer-motion'
-import React, { useEffect } from 'react'
+import React from 'react'
 import ActionIcon from '~/components/shared/ActionIcon/ActionIcon'
 import Tooltip from '~/components/shared/Tooltip'
+import useBuzzer from '~/hooks/useBuzzer/useBuzzer'
 import { useRoom } from '~/hooks/useRoom'
 import { socket } from '~/hooks/useSocket'
 import { useUser } from '~/hooks/useUser'
@@ -11,7 +12,6 @@ import { colors, sizes } from '~/styles/constants'
 import { animations } from '~/utils/animations'
 import Notefield from '../Notefield/Notefield'
 import { type IScoreCircleProps, type IScorebarProps } from './scorebar.types'
-import useBuzzer from '~/hooks/useBuzzer/useBuzzer'
 
 const stretchAnimation = keyframes({
     "0%": { transform: "scale(0.75)" },

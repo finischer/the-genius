@@ -11,10 +11,9 @@ const GeneralSettingsSection = () => {
         const displayedColor = theme.colors[color] || ""
 
         return (
-            <Tooltip label={capitalize(color)}>
+            <Tooltip key={color} label={capitalize(color)}>
                 <ColorSwatch
                     component='button'
-                    key={color}
                     color={displayedColor[5]}
                     sx={{ color: '#fff', cursor: 'pointer' }}
                     onClick={() => updatePrimaryColor(color)}

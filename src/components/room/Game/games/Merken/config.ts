@@ -1,4 +1,3 @@
-import { shuffleArray } from "~/utils/array";
 import { type IGameGeneralState } from "../game.types";
 import { type IMerkenState } from "./merken.types";
 

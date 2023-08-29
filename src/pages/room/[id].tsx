@@ -43,10 +43,10 @@ const RoomPage = () => {
     const router = useRouter()
     const { data: session } = useSession();
     const [openedRoomDetails, { open: openRoomDetails, close: closeRoomDetails }] = useDisclosure(false)
-    const [openedGameRules, { open: openGameRules, close: closeGameRules }] = useDisclosure()
+    const [openedGameRules, { close: closeGameRules }] = useDisclosure()
 
     const { room, currentGame, setRoom } = useRoom()
-    const { isHost, isPlayer, team } = useUser()
+    const { isHost } = useUser()
     const { buzzer } = useBuzzer()
     const modPanelDisclosure = useDisclosure(false);
     const networkStatus = useNetwork();

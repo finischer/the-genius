@@ -7,7 +7,6 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import PageLayout from '~/components/layout'
 import useNotification from '~/hooks/useNotification'
-import { useUser } from '~/hooks/useUser'
 import type { SafedRoom } from '~/server/api/routers/rooms'
 import { api } from '~/utils/api'
 import { formatTimestamp } from '~/utils/dates'
@@ -16,7 +15,6 @@ const REFETCH_INTERVAL = 5000
 
 const RoomsPage = () => {
     const router = useRouter();
-    const { user } = useUser()
     const { showErrorNotification } = useNotification()
 
     const { mutate: validatePassword, isLoading: isLoadingValidatePassword } = api.rooms.validatePassword.useMutation({

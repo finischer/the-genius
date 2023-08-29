@@ -227,7 +227,7 @@ export default class Room implements PrismaRoomFixed {
     this.state.view = newView;
   }
 
-  async update() {
+  update() {
     // TODO: add safe room schema to prevent leaks of sensible information
 
     io.to(this.id).emit("updateRoom", { newRoomState: this });

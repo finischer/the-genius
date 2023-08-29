@@ -6,7 +6,7 @@ import Tooltip from '~/components/shared/Tooltip/Tooltip';
 import { useUser } from '~/hooks/useUser';
 
 const AccountSettingsSection = () => {
-    const { data: session, update } = useSession();
+    const { data: session } = useSession();
     const [editMode, setEditMode] = useState(false)
     const [username, setUsername] = useState<string>(session?.user.username ?? "")
     const isEditable = editMode && session?.user.username

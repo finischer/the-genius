@@ -42,7 +42,7 @@ const ScoreCircle: React.FC<IScoreCircleProps> = ({ filled }) => (
 
 const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
     const theme = useMantineTheme()
-    const { buzzer, activateBuzzer, deactivateBuzzer } = useBuzzer()
+    const { activateBuzzer, deactivateBuzzer } = useBuzzer()
     const { room, currentGame } = useRoom()
     const { user, team: userTeam, isHost, isPlayer, setUserAsPlayer } = useUser();
 

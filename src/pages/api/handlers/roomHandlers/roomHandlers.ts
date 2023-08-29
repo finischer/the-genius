@@ -88,7 +88,7 @@ export function roomHandler(
     }
     if (deleteSuccessful) {
       socket.to(roomId).emit("roomWasClosed");
-      const allRooms = roomManager.getRoomsAsArray();
+      // const allRooms = roomManager.getRoomsAsArray();
       // io.emit("updateAllRooms", { newRooms: allRooms });
     }
 
@@ -181,17 +181,14 @@ export function roomHandler(
     room.update();
   });
 
-  socket.on(
-    "showAnswerBanner",
-    ({ answer, withSound = false, autoClose = false }) => {
-      const room = roomManager.getRoom(socket.roomId);
-      if (!room) return new NoRoomException(socket);
+  socket.on("showAnswerBanner", ({ answer }) => {
+    const room = roomManager.getRoom(socket.roomId);
+    if (!room) return new NoRoomException(socket);
 
-      room.state.answerState.answer = answer;
-      room.state.answerState.showAnswer = true;
-      room.update();
-    }
-  );
+    room.state.answerState.answer = answer;
+    room.state.answerState.showAnswer = true;
+    room.update();
+  });
 
   socket.on("hideAnswerBanner", () => {
     const room = roomManager.getRoom(socket.roomId);

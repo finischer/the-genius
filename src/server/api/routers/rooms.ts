@@ -1,25 +1,8 @@
 import { GameshowMode } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
+import bcrypt from "bcrypt";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import bcrypt from "bcrypt";
-import { TRPCError } from "@trpc/server";
-import Team from "~/pages/api/classes/Team/Team";
-
-// Exclude keys from user
-function exclude<Room, Key extends keyof Room>(
-  rooms: Room[],
-  keys: Key[]
-): Omit<Room[], Key> {
-  const newRooms = rooms.map((room) => {
-    for (const key of keys) {
-      delete room[key];
-    }
-
-    return room;
-  });
-
-  return newRooms;
-}
 
 export const safedRoomSchema = z.object({
   id: z.string(),
@@ -28,9 +11,9 @@ export const safedRoomSchema = z.object({
   modus: z.nativeEnum(GameshowMode),
   participants: z.array(z.string()),
   creator: z.object({
-    id: z.string(),
-    name: z.string(),
+    username: z.string().nullish(),
   }),
+  isCreator: z.boolean(),
   roomSize: z.number(),
   createdAt: z.date(),
 });
@@ -45,13 +28,19 @@ export const roomsRouter = createTRPCRouter({
         include: {
           creator: {
             select: {
-              id: true,
-              name: true,
+              username: true,
             },
           },
         },
       });
-      return rooms;
+
+      // check if user is the room creator
+      const roomsWithIsCreatorField = rooms.map((room) => ({
+        ...room,
+        isCreator: room.creatorId === ctx.session.user.id,
+      }));
+
+      return roomsWithIsCreatorField;
     }),
   validatePassword: protectedProcedure
     .input(

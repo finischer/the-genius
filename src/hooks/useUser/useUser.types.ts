@@ -13,4 +13,6 @@ export interface IUseUserContext {
   setUserAsPlayer: (team: Team) => void;
   isPlayer: boolean;
   isHost: boolean;
+  updateUsername: (newUsername: string) => Promise<boolean>;
+  isLoading: boolean;
 }

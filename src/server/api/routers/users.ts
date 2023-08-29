@@ -14,7 +14,7 @@ export const safedUserSchema = z.object({
   name: z.string(),
   image: z.string().nullable(),
   email: z.string(),
-  role: z.nativeEnum(UserRole),
+  role: z.nativeEnum(UserRole).nullable(),
 });
 
 export type SafedUser = z.infer<typeof safedUserSchema>;
@@ -77,11 +77,20 @@ export const usersRouter = createTRPCRouter({
       return user;
     }),
 
-  getAll: protectedProcedure.query(() => {
-    return "all users can see this message";
-  }),
+  isUsernameInUse: protectedProcedure
+    .input(z.object({ username: z.string() }))
+    .output(z.boolean())
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.findUnique({
+        where: {
+          username: input.username,
+        },
+      });
 
-  getSecretMessage: protectedProcedure.query(() => {
-    return "you can now see this secret message!";
-  }),
+      if (user) {
+        return true;
+      }
+
+      return false;
+    }),
 });

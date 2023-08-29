@@ -1,10 +1,11 @@
 import { AppShell, Burger, Button, Flex, Footer, Header, MediaQuery, Modal, Text, TextInput, useMantineTheme } from '@mantine/core';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Loader from './shared/Loader';
 import Navbar from './Navbar';
 import AuthenticationModal from './shared/modals/AuthenticationModal';
 import useLoadingState from '~/hooks/useLoadingState/useLoadingState';
+import { useUser } from '~/hooks/useUser';
 
 interface IPageLayout {
     showLoader?: boolean
@@ -19,6 +20,11 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
     const theme = useMantineTheme();
     const [isNavbarOpened, setIsNavbarOpened] = useState(false)
     const [usernameInput, setUsernameInput] = useState("");
+    const { updateUsername, isLoading } = useUser()
+
+    const handleSaveUsername = async () => {
+        await updateUsername(usernameInput)
+    }
 
     if (status === "unauthenticated") {
         return (
@@ -37,7 +43,7 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
 
             <>
                 <Modal
-                    opened={!session.user.name}
+                    opened={!session.user.username}
                     title="Zeig den Leuten, wer du bist"
                     onClose={() => null}
                     withCloseButton={false}
@@ -46,16 +52,15 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
                     transitionProps={{ transition: 'fade', duration: 200 }}
                 >
                     <Flex gap="md" direction="column">
-
                         <TextInput
                             placeholder=""
-                            label="Dein Name"
+                            label="Dein Username"
                             withAsterisk
                             maxLength={30}
                             onChange={(e) => setUsernameInput(e.target.value)}
                         />
 
-                        <Button variant="filled" onClick={() => void updateSession({ name: usernameInput })} >
+                        <Button variant="filled" onClick={handleSaveUsername} loading={isLoading} >
                             Namen speichern
                         </Button>
                     </Flex>
@@ -91,8 +96,8 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
                                     />
                                 </MediaQuery>
 
-                                {session.user.name &&
-                                    <Text>Schön dich zu sehen, {session.user.name}!</Text>
+                                {session.user.username &&
+                                    <Text>Schön dich zu sehen, {session.user.username}!</Text>
                                 }
                             </div>
                         </Header>

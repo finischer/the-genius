@@ -9,11 +9,12 @@ datasource db {
 
 model User {
   id            String       @id @default(auto()) @map("_id") @db.ObjectId
-  name          String       @unique
-  role          UserRole     @default(USER)
+  name          String
+  username      String?      @unique
+  role          UserRole?    @default(USER)
   email         String       @unique
   emailVerified DateTime?
-  password      String
+  password      String?
   image         String?
   gameshows     Gameshow[]   @relation(name: "gameshowCreator")
   friends       Friendship[] @relation(name: "users")

@@ -71,16 +71,16 @@ const RoomsPage = () => {
                 <td>{room.modus}</td>
                 <td>{room.participants.length} / {room.roomSize}</td>
                 {/* <td>{nameOfCurrentGame || "Kein Spiel gestartet"}</td> */}
-                <td>{room.creator.name}</td>
+                <td>{room.creator.username}</td>
                 <td>{formatTimestamp(room.createdAt.toString())} Uhr</td>
             </tr>
         )
     }) ?? []
 
-    // TODO: Pass correct Type for Room instead of hardcoded type 
+
     const handleRoomClick = (room: SafedRoom) => {
         setActiveRoom(room)
-        if (room.isPrivate && user.id !== room.creator.id) {
+        if (room.isPrivate && room.isCreator) {
             form.reset();
             openPasswordModal()
         } else {

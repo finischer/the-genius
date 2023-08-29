@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRoom } from '../useRoom'
 import { socket } from '../useSocket'
 import { useUser } from '../useUser'

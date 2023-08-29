@@ -2,11 +2,10 @@ import type { Team } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { createContext, useContext, useEffect, useState } from "react";
 import { type TUserReduced } from "~/types/socket.types";
-import { useRoom } from "../useRoom";
-import { type IUseUserContext, type IUseUserProvider } from "./useUser.types";
 import { api } from "~/utils/api";
 import useNotification from "../useNotification";
-import { check } from "prettier";
+import { useRoom } from "../useRoom";
+import { type IUseUserContext, type IUseUserProvider } from "./useUser.types";
 
 const UserContext = createContext<IUseUserContext | undefined>(undefined);
 

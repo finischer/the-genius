@@ -1,97 +1,82 @@
 import {
-    Anchor,
-    Button,
-    Checkbox,
     Container,
     Flex,
-    Group,
-    Paper,
-    PasswordInput,
-    Text,
-    TextInput,
     Title,
     useMantineTheme
 } from '@mantine/core';
-import { isEmail, useForm } from '@mantine/form';
-import { useToggle } from '@mantine/hooks';
-import { signIn } from 'next-auth/react';
-import { useState } from 'react';
-import useNotification from '~/hooks/useNotification';
-import { api } from '~/utils/api';
 import SignInButton from '../SignInButton/SignInButton';
 
-
 const AuthenticationModal = () => {
-    const { showErrorNotification } = useNotification()
-    const [isLoggingIn, setIsLoggingIn] = useState(false)
-    const [type, toggle] = useToggle<"login" | "register">(['login', 'register']);
+    // const { showErrorNotification } = useNotification()
+    // const [isLoggingIn, setIsLoggingIn] = useState(false)
+    // const [type] = useToggle<"login" | "register">(['login', 'register']);
     const theme = useMantineTheme()
-    const { mutate: register, isLoading: isRegistering } = api.users.create.useMutation({
-        onSuccess: () => {
-            void signIn("credentials", {
-                ...form.values,
-                redirect: false
-            })
+    // const { mutate: register, isLoading: isRegistering } = api.users.create.useMutation({
+    //     onSuccess: () => {
+    //         void signIn("credentials", {
+    //             ...form.values,
+    //             redirect: false
+    //         })
 
-        },
-        onError: (e) => {
-            const errorMessage = e.data?.zodError?.fieldErrors;
-            const errorMessagesArray = errorMessage ? Object.values(errorMessage) : []
+    //     },
+    //     onError: (e) => {
+    //         const errorMessage = e.data?.zodError?.fieldErrors;
+    //         const errorMessagesArray = errorMessage ? Object.values(errorMessage) : []
 
-            if (errorMessagesArray.length > 0) {
-                errorMessagesArray.forEach(messages => {
-                    if (messages && messages[0]) {
-                        showErrorNotification({
-                            title: "Ein Fehler ist aufgetreten",
-                            message: messages[0]
-                        })
-                    }
-                })
-            }
-            else {
-                showErrorNotification({
-                    title: "Ein Fehler ist aufgetreten",
-                    message: e.message ?? "Probiere es später nochmal"
-                })
-            }
-        }
-    })
+    //         if (errorMessagesArray.length > 0) {
+    //             errorMessagesArray.forEach(messages => {
+    //                 if (messages && messages[0]) {
+    //                     showErrorNotification({
+    //                         title: "Ein Fehler ist aufgetreten",
+    //                         message: messages[0]
+    //                     })
+    //                 }
+    //             })
+    //         }
+    //         else {
+    //             showErrorNotification({
+    //                 title: "Ein Fehler ist aufgetreten",
+    //                 message: e.message ?? "Probiere es später nochmal"
+    //             })
+    //         }
+    //     }
+    // })
 
-    const form = useForm({
-        initialValues: {
-            name: "",
-            email: "",
-            password: "",
-            rememberMe: false
-        },
+    // const form = useForm({
+    //     initialValues: {
+    //         name: "",
+    //         email: "",
+    //         password: "",
+    //         rememberMe: false
+    //     },
 
-        validate: {
-            email: isEmail("Ungültige E-Mail"),
-        },
-    })
+    //     validate: {
+    //         email: isEmail("Ungültige E-Mail"),
+    //     },
+    // })
 
-    const handleSubmit = form.onSubmit(async (formValues) => {
-        if (type === "login") {
-            setIsLoggingIn(true)
-            const res = await signIn("credentials", {
-                ...formValues,
-                redirect: false
-            })
+    // const handleSubmit = form.onSubmit(async (formValues) => {
+    //     if (type === "login") {
+    //         setIsLoggingIn(true)
+    //         const res = await signIn("credentials", {
+    //             ...formValues,
+    //             redirect: false
+    //         })
 
-            if (!res?.ok) {
-                showErrorNotification({
-                    title: "Falsche Zugangsdaten",
-                    message: res?.error ?? "Probiere es später nochmal"
-                })
-            }
+    //         if (!res?.ok) {
+    //             showErrorNotification({
+    //                 title: "Falsche Zugangsdaten",
+    //                 message: res?.error ?? "Probiere es später nochmal"
+    //             })
+    //         }
 
-            setIsLoggingIn(false)
+    //         setIsLoggingIn(false)
 
-        } else if (type === "register") {
-            register(formValues)
-        }
+    //     } else if (type === "register") {
+    //         register(formValues)
+    //     }
 
-    })
+    // })
 
 
     return (

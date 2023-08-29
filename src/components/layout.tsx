@@ -1,11 +1,11 @@
 import { AppShell, Burger, Button, Flex, Footer, Header, MediaQuery, Modal, Text, TextInput, useMantineTheme } from '@mantine/core';
 import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
-import Loader from './shared/Loader';
-import Navbar from './Navbar';
-import AuthenticationModal from './shared/modals/AuthenticationModal';
+import { useState } from 'react';
 import useLoadingState from '~/hooks/useLoadingState/useLoadingState';
 import { useUser } from '~/hooks/useUser';
+import Navbar from './Navbar';
+import Loader from './shared/Loader';
+import AuthenticationModal from './shared/modals/AuthenticationModal';
 
 interface IPageLayout {
     showLoader?: boolean

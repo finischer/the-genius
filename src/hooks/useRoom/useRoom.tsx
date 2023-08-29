@@ -1,7 +1,6 @@
 import { createContext, useContext, useState } from "react";
-import { type INonNullableUseRoomContext, type IUseRoomContext, type IUseRoomProvider } from "./useRoom.types";
-import type { TGame } from "~/components/room/Game/games/game.types";
 import type Room from "~/pages/api/classes/Room/Room";
+import { type INonNullableUseRoomContext, type IUseRoomContext, type IUseRoomProvider } from "./useRoom.types";
 
 const RoomContext = createContext<IUseRoomContext | undefined>(undefined);
 

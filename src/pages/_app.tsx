@@ -1,10 +1,9 @@
-import { Button, MantineProvider, type MantineThemeColors } from '@mantine/core';
+import { MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
-import { useState } from 'react';
 import { RoomProvider } from '~/hooks/useRoom';
 import useSettings from '~/hooks/useSettings/useSettings';
 import { SocketProvider } from '~/hooks/useSocket';

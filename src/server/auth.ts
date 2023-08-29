@@ -11,8 +11,9 @@ import DiscordProvider, {
 } from "next-auth/providers/discord";
 
 import { type UserRole } from "@prisma/client";
-import type { CallbacksOptions } from "next-auth";
+import type { CallbacksOptions, Session } from "next-auth";
 import { prisma } from "~/server/db";
+import { z } from "zod";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -49,7 +50,7 @@ declare module "next-auth/jwt" {
  * @see https://next-auth.js.org/configuration/options
  */
 
-const sessionCallback: CallbacksOptions["session"] = async ({
+const sessionCallback: CallbacksOptions["session"] = ({
   session,
   token,
   trigger,
@@ -77,20 +78,25 @@ const jwtCallback: CallbacksOptions["jwt"] = async ({
   trigger,
   user,
 }) => {
+  const validatedSession: Session | null | undefined = session;
   token.id = token.sub ?? "";
 
   if (user) {
     token.username = user?.username;
   }
-  if (trigger === "update" && session) {
-    const newUsername = session.user.username;
+  if (trigger === "update" && validatedSession) {
+    const newUsername = validatedSession.user.username;
+
+    if (!newUsername) {
+      throw new Error("Kein gültiger Username");
+    }
 
     // check if username already exists in database
-    const user = await prisma.user.findUnique({
+    const newUser = await prisma.user.findUnique({
       where: { username: newUsername },
     });
 
-    if (user) {
+    if (newUser) {
       throw new Error(
         `Der Username "${newUsername}" ist leider schon vergeben 🙁`
       );

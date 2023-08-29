@@ -73,7 +73,8 @@ const RoomPage = () => {
                 name: session.user.name || "",
                 email: session.user.email || "",
                 image: session.user.image || null,
-                role: session.user.role
+                role: session.user.role,
+                username: session.user.username || ""
             }
 
             socket.emit("joinRoom", { user, roomId }, (room: Room) => {

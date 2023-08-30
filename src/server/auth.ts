@@ -7,7 +7,6 @@ import {
 } from "next-auth";
 
 import { type UserRole } from "@prisma/client";
-import type { CallbacksOptions, Session } from "next-auth";
 import { prisma } from "~/server/db";
 import { sessionCallback, signInCallback } from "./auth/callbacks";
 import DiscordProvider from "./auth/providers/DiscordProvider";

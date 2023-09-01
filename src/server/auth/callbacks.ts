@@ -1,7 +1,7 @@
-import type { Account, CallbacksOptions, Session } from "next-auth";
-import { prisma } from "../db";
-import type { GoogleProfile } from "next-auth/providers/google";
+import type { CallbacksOptions, Session } from "next-auth";
 import type { DiscordProfile } from "next-auth/providers/discord";
+import type { GoogleProfile } from "next-auth/providers/google";
+import { prisma } from "../db";
 
 const isOtherProviderAlreadyInUse = async (
   userEmail: string | null | undefined,
@@ -75,7 +75,7 @@ export const sessionCallback: CallbacksOptions["session"] = async ({
 
   if (trigger === "update") {
     const newSession = toValidateNewSession as Session;
-    const newUsername = newSession.user.username;
+    const newUsername = newSession.user.username ?? "";
 
     const newUser = await prisma.user.findUnique({
       where: { username: newUsername },

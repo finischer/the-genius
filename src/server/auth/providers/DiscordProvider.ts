@@ -3,7 +3,8 @@ import NextAuthDiscordProvider, {
 } from "next-auth/providers/discord";
 import { DEFAULT_ROLE } from "../../auth";
 
-const IMG_URL = "https://cdn.discordapp.com/embed/avatars";
+const IMG_EMBED_URL = "https://cdn.discordapp.com/embed/avatars/";
+const IMG_URL = "https://cdn.discordapp.com/avatars";
 const AVATAR_FORMATS = {
   GIF: "gif",
   PNG: "png",
@@ -18,7 +19,7 @@ const buildImageUrl = (
 
   if (avatar === null) {
     const defaultAvatarNumber = parseInt(discriminator) % 5;
-    imgUrl = `${IMG_URL}/${defaultAvatarNumber}.${AVATAR_FORMATS.PNG}`;
+    imgUrl = `${IMG_EMBED_URL}/${defaultAvatarNumber}.${AVATAR_FORMATS.PNG}`;
   } else {
     const avatarFormat = avatar.startsWith("a_")
       ? AVATAR_FORMATS.GIF
@@ -38,7 +39,6 @@ export default NextAuthDiscordProvider({
       profile.avatar,
       profile.discriminator
     );
-
     return {
       id: profile.id,
       role: DEFAULT_ROLE,

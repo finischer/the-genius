@@ -1,3 +1,4 @@
+import { type TExceptionReason } from "./../pages/api/exceptions/exceptions.types";
 import { type RoomViews, type Gameshow, type User } from "@prisma/client";
 import { type NextApiResponse } from "next";
 import { type Server, type Socket } from "socket.io";
@@ -133,10 +134,17 @@ export interface IServerToClientEvents {
   }) => void;
 
   // +++ ROOM EVENTS +++
-  userLeftRoom: ({ user }: { user: TSocketUser | null }) => void;
+  userLeftRoom: ({ user }: { user: TSocketUser | null | undefined }) => void;
   updateRoom: ({ newRoomState }: { newRoomState: Room }) => void;
   // updateAllRooms: ({ newRooms }: { newRooms: Room[] }) => void; // Currently not in use
   roomWasClosed: () => void;
+  raiseException: ({
+    reason,
+    msg,
+  }: {
+    reason: TExceptionReason;
+    msg: string;
+  }) => void;
 }
 
 export interface TNextApiResponse extends NextApiResponse {

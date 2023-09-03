@@ -98,10 +98,19 @@ const RoomPage = () => {
                 void router.push("/rooms")
             })
 
+            socket.on("raiseException", ({ msg, reason }) => {
+                if (reason === "noRoomException") {
+                    showInfoNotification({
+                        message: "Raum wurde nicht gefunden"
+                    })
+                    void router.push("/rooms")
+                }
+            })
+
         }
 
         return () => {
-            socket.removeAllListeners("userLeftRoom")
+            socket.removeAllListeners()
         }
     }, [session])
 

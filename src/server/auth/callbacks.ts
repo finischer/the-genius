@@ -18,9 +18,7 @@ const isOtherProviderAlreadyInUse = async (
     },
   });
 
-  if (!user) {
-    throw new Error("This User does not exists");
-  }
+  if (!user) return false; // no user found, so no other provider is used
 
   // check if another provider is already in use
   const alreadyUsedProviders = user.accounts.filter(

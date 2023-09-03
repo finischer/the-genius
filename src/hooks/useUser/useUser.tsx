@@ -41,6 +41,8 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
             // if user is a player, join team
             const team = teamArray.find(t => t.id === player.teamId)
             setTeam(team)
+        } else {
+            setTeam(undefined)
         }
     }
 

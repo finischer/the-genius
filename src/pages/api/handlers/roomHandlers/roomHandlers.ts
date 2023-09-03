@@ -13,6 +13,8 @@ import { roomManager } from "../../controllers/RoomManager";
 import NoRoomException from "../../exceptions/NoRoomException";
 import { getRoomAndTeam } from "../helpers";
 
+const DISCONNECTING_TIMEOUT_MS = 5000;
+
 export function roomHandler(
   io: Server,
   socket: Socket<
@@ -96,6 +98,7 @@ export function roomHandler(
   });
 
   socket.on("joinRoom", async ({ user, roomId }, cb) => {
+    console.log("join Room");
     const room = roomManager.getRoom(roomId);
     if (!room) return new NoRoomException(socket);
 
@@ -121,6 +124,14 @@ export function roomHandler(
         (p) => p !== socket.user?.name
       );
       room.update();
+
+      if (socket.teamId && socket.user) {
+        const team = room.getTeamById(socket.teamId);
+        if (team) {
+          team.removePlayer(socket.user?.id);
+          room.update();
+        }
+      }
 
       socket.to(roomId).emit("userLeftRoom", { user: socket.user || null });
       await socket.leave(roomId);
@@ -236,5 +247,44 @@ export function roomHandler(
     }
 
     room.update();
+  });
+
+  socket.on("disconnecting", (reason) => {
+    const room = roomManager.getRoom(socket.roomId);
+    if (!room) return new NoRoomException(socket);
+
+    const timeout = setTimeout(async () => {
+      // clearTimeout(timeout);
+      const allSockets = (await io
+        .in(room.id)
+        .fetchSockets()) as unknown as IServerSocketData[];
+
+      const isClientReconnected = allSockets.find(
+        (s) => s.user?.id === socket.user?.id
+      )
+        ? true
+        : false;
+
+      if (isClientReconnected) return;
+
+      if (socket.roomId) {
+        if (socket.teamId) {
+          const room = roomManager.getRoom(socket.roomId);
+          if (!room) return new NoRoomException(socket);
+
+          const team = room.getTeamById(socket.teamId);
+
+          if (team && socket.user?.id) {
+            team.removePlayer(socket.user.id);
+            room.update();
+          }
+
+          socket.to(socket.roomId).emit("userLeftRoom", { user: socket.user });
+          socket.leave(socket.roomId);
+          socket.disconnect(true);
+          socket.roomId = null;
+        }
+      }
+    }, DISCONNECTING_TIMEOUT_MS);
   });
 }

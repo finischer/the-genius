@@ -86,6 +86,10 @@ export default class Team implements PrismaTeam {
     this.players.push(newPlayer);
   }
 
+  removePlayer(userId: string) {
+    this.players = this.players.filter((p) => p.userId !== userId);
+  }
+
   increaseGameScore(step = 1) {
     this.gameScore += step;
   }

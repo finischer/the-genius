@@ -5,6 +5,7 @@ import CodeList from './components/CodeList/CodeList'
 import type { TCodeList, TCodeListItem } from './components/CodeList/codeList.types';
 import CreateQuestionContainer from './components/CreateQuestionContainer/CreateQuestionContainer';
 import type { TGeheimwoerterQuestionItem } from '~/components/room/Game/games/Geheimwörter/geheimwörter.types';
+import QuestionList from './components/QuestionList/QuestionList';
 
 const ALPHABET = [...'abcdefghijklmnoprstuvwxyz'];
 const DEFAULT_CODE_WORD_LIST = [
@@ -70,10 +71,6 @@ const GeheimwörterConfigurator = () => {
         })
     }
 
-    useEffect(() => {
-        console.log("Questions: ", geheimwoerter.questions)
-    }, [geheimwoerter.questions])
-
     return (
         <Flex gap="md">
             <Flex direction="column" gap="sm" w="100%">
@@ -83,8 +80,7 @@ const GeheimwörterConfigurator = () => {
 
             <CreateQuestionContainer onAddQuestion={addQuestion} codeList={geheimwoerter.codeList} />
 
-            {/* <AllQuestionsList /> */}
-
+            <QuestionList questions={geheimwoerter.questions} />
         </Flex>
     )
 }

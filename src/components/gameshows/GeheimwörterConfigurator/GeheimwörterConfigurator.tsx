@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react'
 import { useConfigurator } from '~/hooks/useConfigurator'
 import CodeList from './components/CodeList/CodeList'
 import type { TCodeList, TCodeListItem } from './components/CodeList/codeList.types';
+import CreateQuestionContainer from './components/CreateQuestionContainer/CreateQuestionContainer';
+import type { TGeheimwoerterQuestionItem } from '~/components/room/Game/games/Geheimwörter/geheimwörter.types';
 
 const ALPHABET = [...'abcdefghijklmnoprstuvwxyz'];
 const DEFAULT_CODE_WORD_LIST = [
@@ -39,7 +41,7 @@ const generateCodeList = (alphabetList: string[], codeWords: string[]) => {
         if (codeWord) {
             let codeListItem: TCodeListItem = {
                 letter,
-                word: codeWord
+                category: codeWord
             }
 
             codeList.push(codeListItem)
@@ -62,16 +64,27 @@ const GeheimwörterConfigurator = () => {
         }
     }, [])
 
+    const addQuestion = (newQuestion: TGeheimwoerterQuestionItem) => {
+        setGeheimwoerter(draft => {
+            draft.geheimwoerter.questions.push(newQuestion)
+        })
+    }
+
+    useEffect(() => {
+        console.log("Questions: ", geheimwoerter.questions)
+    }, [geheimwoerter.questions])
+
     return (
         <Flex gap="md">
-            <Flex direction="column" gap="sm">
+            <Flex direction="column" gap="sm" w="100%">
                 <CodeList codeList={geheimwoerter.codeList} setCodeList={setGeheimwoerter} editable={codeListEditable} />
                 <Button onClick={() => setCodeListEditable(oldState => !oldState)}>{codeListEditable ? "Liste speichern" : "Liste bearbeiten"}</Button>
             </Flex>
 
-            {/* <CreateQuestionContainer/> */}
+            <CreateQuestionContainer onAddQuestion={addQuestion} codeList={geheimwoerter.codeList} />
 
             {/* <AllQuestionsList /> */}
+
         </Flex>
     )
 }

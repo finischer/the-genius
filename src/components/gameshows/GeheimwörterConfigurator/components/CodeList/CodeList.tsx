@@ -22,9 +22,9 @@ const CodeListItem: React.FC<ICodeListItemProps> = ({ item, editable = false, on
             sx={{
                 borderBottom: "1px solid white"
             }}
-            value={item.word}
+            value={item.category}
             onChange={handleWordChange}
-        /> : <span>{item.word}</span>
+        /> : <span>{item.category}</span>
 
 
     return <Flex gap="xl" align="center" >
@@ -46,7 +46,7 @@ const CodeList: React.FC<ICodeListProps> = ({ codeList, setCodeList, editable = 
 
                 draft.geheimwoerter.codeList[indexItem] = {
                     letter,
-                    word: newWord || letter.toUpperCase()
+                    category: newWord || letter.toUpperCase()
                 }
             })
         }

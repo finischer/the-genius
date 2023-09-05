@@ -1,8 +1,13 @@
 import type { TCodeList } from "~/components/gameshows/GeheimwörterConfigurator/components/CodeList/codeList.types";
 import { type TGeheimwörterGameState } from "./config";
 
+export type TGeheimWoerterQuestionsWordsItem = {
+  word: string;
+  category: string;
+};
+
 export type TGeheimwoerterQuestionItem = {
-  words: string[];
+  words: TGeheimWoerterQuestionsWordsItem[];
   answer: string;
 };
 

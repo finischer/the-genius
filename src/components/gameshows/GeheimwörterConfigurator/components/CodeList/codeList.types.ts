@@ -4,7 +4,7 @@ import type { TGameSettingsMap } from "~/hooks/useConfigurator/useConfigurator.t
 
 export type TCodeListItem = {
   letter: string;
-  word: string;
+  category: string;
 };
 
 export type TCodeList = TCodeListItem[];

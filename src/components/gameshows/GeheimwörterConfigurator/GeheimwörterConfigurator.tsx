@@ -1,5 +1,5 @@
-import { Flex } from '@mantine/core'
-import React, { useEffect } from 'react'
+import { Button, Flex } from '@mantine/core'
+import React, { useEffect, useState } from 'react'
 import { useConfigurator } from '~/hooks/useConfigurator'
 import CodeList from './components/CodeList/CodeList'
 import type { TCodeList, TCodeListItem } from './components/CodeList/codeList.types';
@@ -51,19 +51,23 @@ const generateCodeList = (alphabetList: string[], codeWords: string[]) => {
 
 const GeheimwörterConfigurator = () => {
     const [geheimwoerter, setGeheimwoerter, { enableFurtherButton, disableFurtherButton }] = useConfigurator("geheimwoerter")
+    const [codeListEditable, setCodeListEditable] = useState(false)
 
     useEffect(() => {
         // set default code list
-        setGeheimwoerter(draft => {
-            draft.geheimwoerter.codeList = generateCodeList(ALPHABET, DEFAULT_CODE_WORD_LIST)
-        })
-
-
+        if (geheimwoerter.codeList.length === 0) {
+            setGeheimwoerter(draft => {
+                draft.geheimwoerter.codeList = generateCodeList(ALPHABET, DEFAULT_CODE_WORD_LIST)
+            })
+        }
     }, [])
 
     return (
         <Flex gap="md">
-            <CodeList codeList={geheimwoerter.codeList} />
+            <Flex direction="column" gap="sm">
+                <CodeList codeList={geheimwoerter.codeList} setCodeList={setGeheimwoerter} editable={codeListEditable} />
+                <Button onClick={() => setCodeListEditable(oldState => !oldState)}>{codeListEditable ? "Liste speichern" : "Liste bearbeiten"}</Button>
+            </Flex>
 
             {/* <CreateQuestionContainer/> */}
 

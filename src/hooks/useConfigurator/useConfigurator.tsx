@@ -5,11 +5,13 @@ import { DEFAULT_FLAGGEN_STATE } from '~/components/room/Game/games/Flaggen/conf
 import { DEFAULT_MEMORY_STATE } from '~/components/room/Game/games/Memory/config';
 import { DEFAULT_MERKEN_STATE } from '~/components/room/Game/games/Merken/config';
 import type { TGame, TGameNames } from '~/components/room/Game/games/game.types';
+import { DEFAULT_GEHEIMWOERTER_STATE } from '~/components/room/Game/games/Geheimwörter/config';
 
 export const GAME_STATE_MAP: TGameSettingsMap = {
     flaggen: DEFAULT_FLAGGEN_STATE,
     memory: DEFAULT_MEMORY_STATE,
-    merken: DEFAULT_MERKEN_STATE
+    merken: DEFAULT_MERKEN_STATE,
+    geheimwoerter: DEFAULT_GEHEIMWOERTER_STATE
 }
 
 export type TSelectedGameSettingsArray = TGame[];

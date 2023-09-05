@@ -6,6 +6,7 @@ const availableGames: TTransferListData = [
     [
         { value: 'flaggen', label: 'Flaggen' },
         { value: 'merken', label: 'Merken' },
+        { value: "geheimwoerter", label: "Geheimwörter" }
         // { value: 'zehnSetzen', label: 'Zehn setzen' },
         // { value: 'fragenhagel', label: 'Fragenhagel' },
         // { value: 'duSagst', label: 'Du sagst ...' },

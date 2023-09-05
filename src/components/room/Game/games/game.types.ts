@@ -8,7 +8,7 @@ export enum Games {
   MEMORY = "memory",
 }
 
-export type TGameNames = "flaggen" | "memory" | "merken";
+export type TGameNames = "flaggen" | "memory" | "merken" | "geheimwoerter";
 
 export interface IGameGeneralState {
   name: string;

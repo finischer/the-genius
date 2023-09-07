@@ -93,6 +93,7 @@ const CreateQuestionForm: React.FC<ICreateQuestionContainerProps> = ({ codeList,
                             <Text size="sm">Wörter</Text>
                             {questionItem.words.map((_, index) => {
                                 const word = questionItem.words[index]
+                                // TODO: Make WordItem required for form -> it does not work yet
                                 return <WordItem required key={index} word={word} onChange={(e) => handleWordsChange(e, index)} />
                             }
                             )}

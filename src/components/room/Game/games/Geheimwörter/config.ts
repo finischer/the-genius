@@ -22,12 +22,11 @@ export const DEFAULT_GEHEIMWOERTER_STATE: TGeheimwörterGameState = {
   getRules() {
     return `
     Ihr müsst gleich Wörter mithilfe eines Codes entschlüssseln. 
-    Ihr seht die Codetabelle vor euch mit der ihr die gesuchte Antwort entschlüsseln könnt. Diese wird auch dauerhaft eingeblendet, also ihr müsst euch die nicht merken oder auswendig lernen. 
-    Ihr erhaltet gleich ein paar Wörter, die stehen untereinander. 
-    Und jedes Wort gehört immer zu einem der Oberbegriffe in dieser Tabelle. 
-    Zum Beispiel das Wort Kotflügel gehört dann zum Begriff Autoteil. 
-    Dann würde das Kotflügel für den Buchstaben A stehen. 
-    Meint ihr die Antwort zu wissen, könnt ihr buzzern und habt dann anschließend 5 Sekunden Zeit eine Antwort zu geben. 
+    Ihr seht die Codetabelle vor euch mit der ihr gleich eine gesuchte Antwort entschlüsseln müsst. Diese bleibt dauerhaft eingeblendet. 
+    Gleich seht ihr ein paar untereinanderstehende Wörter, wobei jedes Wort immer zu einem Oberbegriff aus der Codetabelle gehört. 
+    Ein Beispiel: In der Codetabelle würde für den Buchstaben A der Oberbegriff "Automarke" stehen. Bei den Wörtern steht dann als erstes Wort "Ford".
+    Ford ordnet ihr also dem Oberbegriff "Automarke" zu und dementsprechend beginnt auch die gesuchte Antwort mit einem "A".
+    Meint ihr also die Antwort zu wissen, könnt ihr buzzern und habt dann anschließend 5 Sekunden Zeit eine Antwort zu geben. 
     Wer zuerst ${this.maxPoints} Punkte hat, hat das Spiel gewonnen.
     `;
   },

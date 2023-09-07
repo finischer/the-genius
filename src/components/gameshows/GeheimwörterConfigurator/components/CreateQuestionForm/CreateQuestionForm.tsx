@@ -2,7 +2,7 @@ import { Button, Flex, Text, TextInput, Title } from '@mantine/core'
 import React, { useEffect } from 'react'
 import { useImmer } from 'use-immer'
 import type { TGeheimwoerterQuestionItem } from '~/components/room/Game/games/Geheimwörter/geheimwörter.types'
-import type { ICreateQuestionContainerProps, IWordItemProps } from './createQuestionContainer.types'
+import type { ICreateQuestionContainerProps, IWordItemProps } from './createQuestionForm.types'
 
 const WordItem: React.FC<IWordItemProps> = ({ word, ...props }) => {
     return <Flex gap="md">
@@ -11,7 +11,7 @@ const WordItem: React.FC<IWordItemProps> = ({ word, ...props }) => {
     </Flex>
 }
 
-const CreateQuestionContainer: React.FC<ICreateQuestionContainerProps> = ({ codeList, onAddQuestion }) => {
+const CreateQuestionForm: React.FC<ICreateQuestionContainerProps> = ({ codeList, onAddQuestion }) => {
     const [questionItem, setQuestionItem] = useImmer<TGeheimwoerterQuestionItem>({
         answer: "",
         words: []
@@ -83,25 +83,27 @@ const CreateQuestionContainer: React.FC<ICreateQuestionContainerProps> = ({ code
     return (
         <Flex direction="column" gap="lg" w="100%">
             <Title order={3} >Antwort erstellen</Title>
-            <Flex direction="column" gap="md" px="md" sx={theme => ({
-                borderRadius: theme.radius.md
-            })}>
-                <TextInput label="Antwort" onChange={handleAnswerChange} placeholder='Antwort eingeben ...' value={questionItem.answer} />
-                {questionItem.answer &&
-                    <Flex direction="column" gap="sm">
-                        <Text size="sm">Wörter</Text>
-                        {questionItem.words.map((_, index) => {
-                            const word = questionItem.words[index]
-                            return <WordItem key={index} word={word} onChange={(e) => handleWordsChange(e, index)} />
-                        }
-                        )}
-                    </Flex>
-                }
+            <form>
+                <Flex direction="column" gap="md" px="md" sx={theme => ({
+                    borderRadius: theme.radius.md
+                })}>
+                    <TextInput required label="Antwort" onChange={handleAnswerChange} placeholder='Antwort eingeben ...' value={questionItem.answer} />
+                    {questionItem.answer &&
+                        <Flex direction="column" gap="sm">
+                            <Text size="sm">Wörter</Text>
+                            {questionItem.words.map((_, index) => {
+                                const word = questionItem.words[index]
+                                return <WordItem required key={index} word={word} onChange={(e) => handleWordsChange(e, index)} />
+                            }
+                            )}
+                        </Flex>
+                    }
 
-                <Button onClick={handleAddQuestion}>Hinzufügen</Button>
-            </Flex>
+                    <Button onClick={handleAddQuestion} type="submit">Hinzufügen</Button>
+                </Flex>
+            </form>
         </Flex>
     )
 }
 
-export default CreateQuestionContainer
+export default CreateQuestionForm

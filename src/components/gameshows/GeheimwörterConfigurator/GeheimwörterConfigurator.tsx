@@ -1,11 +1,11 @@
 import { Button, Flex } from '@mantine/core'
 import React, { useEffect, useState } from 'react'
 import { useConfigurator } from '~/hooks/useConfigurator'
-import CodeList from './components/CodeList/CodeList'
+import CodeList from './components/CodeList'
 import type { TCodeList, TCodeListItem } from './components/CodeList/codeList.types';
-import CreateQuestionContainer from './components/CreateQuestionContainer/CreateQuestionContainer';
+import CreateQuestionForm from './components/CreateQuestionForm';
 import type { TGeheimwoerterQuestionItem } from '~/components/room/Game/games/Geheimwörter/geheimwörter.types';
-import QuestionList from './components/QuestionList/QuestionList';
+import QuestionList from './components/QuestionList';
 
 const ALPHABET = [...'abcdefghijklmnoprstuvwxyz'];
 const DEFAULT_CODE_WORD_LIST = [
@@ -78,7 +78,7 @@ const GeheimwörterConfigurator = () => {
                 <Button onClick={() => setCodeListEditable(oldState => !oldState)}>{codeListEditable ? "Liste speichern" : "Liste bearbeiten"}</Button>
             </Flex>
 
-            <CreateQuestionContainer onAddQuestion={addQuestion} codeList={geheimwoerter.codeList} />
+            <CreateQuestionForm onAddQuestion={addQuestion} codeList={geheimwoerter.codeList} />
 
             <QuestionList questions={geheimwoerter.questions} />
         </Flex>

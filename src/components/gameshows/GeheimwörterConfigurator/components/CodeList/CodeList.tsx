@@ -1,6 +1,7 @@
-import { Box, Button, Flex, TextInput } from '@mantine/core'
+import { Box, Button, Flex, TextInput, Title } from '@mantine/core'
 import React from 'react'
 import type { ICodeListItemProps, ICodeListProps } from './codeList.types'
+import { capitalize } from '~/utils/strings'
 
 const CodeListItem: React.FC<ICodeListItemProps> = ({ item, editable = false, onWordChange = () => null }) => {
     const handleWordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -8,12 +9,12 @@ const CodeListItem: React.FC<ICodeListItemProps> = ({ item, editable = false, on
         const startsWithLetter = newWord.toLowerCase().startsWith(item.letter.toLowerCase())
 
         if (newWord.length === 0) {
-            newWord = item.letter
+            newWord = item.letter.toUpperCase()
         } else if (newWord.length > 0 && !startsWithLetter) {
             newWord = item.letter.toUpperCase() + newWord.slice(1)
         }
 
-        onWordChange(item.letter, newWord)
+        onWordChange(item.letter, capitalize(newWord))
     }
 
     const wordElement = editable ?
@@ -53,11 +54,15 @@ const CodeList: React.FC<ICodeListProps> = ({ codeList, setCodeList, editable = 
     }
 
     return (
-        <Flex direction="column" bg="brand" p="md" sx={theme => ({
-            borderRadius: theme.radius.md,
-            boxShadow: theme.shadows.xl
-        })}>
-            {codeListElements}
+        <Flex direction="column" gap="lg" w="100%">
+            <Title order={3} >Codeliste</Title>
+            <Flex direction="column" bg="brand" p="md" sx={theme => ({
+                borderRadius: theme.radius.md,
+                boxShadow: theme.shadows.xl
+            })}>
+
+                {codeListElements}
+            </Flex>
         </Flex>
     )
 }

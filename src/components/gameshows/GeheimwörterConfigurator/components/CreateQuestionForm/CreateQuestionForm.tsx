@@ -45,7 +45,8 @@ const CreateQuestionForm: React.FC<ICreateQuestionContainerProps> = ({ codeList,
         })
     }
 
-    const handleAddQuestion = () => {
+    const handleAddQuestion = (e: React.FormEvent<HTMLButtonElement>) => {
+        e.preventDefault()
         onAddQuestion(questionItem)
         setQuestionItem({
             answer: "",

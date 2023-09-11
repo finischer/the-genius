@@ -6,6 +6,8 @@ import type { TCodeList, TCodeListItem } from './components/CodeList/codeList.ty
 import CreateQuestionForm from './components/CreateQuestionForm';
 import type { TGeheimwoerterQuestionItem } from '~/components/room/Game/games/Geheimwörter/geheimwörter.types';
 import QuestionList from './components/QuestionList';
+import List from '~/components/shared/List/List';
+import type { IListItem } from '~/components/shared/List/list.types';
 
 const ALPHABET = [...'abcdefghijklmnoprstuvwxyz'];
 const DEFAULT_CODE_WORD_LIST = [
@@ -55,6 +57,7 @@ const generateCodeList = (alphabetList: string[], codeWords: string[]) => {
 const GeheimwörterConfigurator = () => {
     const [geheimwoerter, setGeheimwoerter, { enableFurtherButton, disableFurtherButton }] = useConfigurator("geheimwoerter")
     const [codeListEditable, setCodeListEditable] = useState(false)
+    const [questionList, setQuestionList] = useState<TGeheimwoerterQuestionItem[]>([])
 
     useEffect(() => {
         // set default code list
@@ -66,10 +69,14 @@ const GeheimwörterConfigurator = () => {
     }, [])
 
     const addQuestion = (newQuestion: TGeheimwoerterQuestionItem) => {
-        setGeheimwoerter(draft => {
-            draft.geheimwoerter.questions.push(newQuestion)
-        })
+        setQuestionList((oldQuestions) => [...oldQuestions, newQuestion])
     }
+
+    useEffect(() => {
+        setGeheimwoerter(draft => {
+            draft.geheimwoerter.questions = questionList
+        })
+    }, [questionList])
 
     return (
         <Flex gap="md">
@@ -80,7 +87,7 @@ const GeheimwörterConfigurator = () => {
 
             <CreateQuestionForm onAddQuestion={addQuestion} codeList={geheimwoerter.codeList} />
 
-            <QuestionList questions={geheimwoerter.questions} />
+            <QuestionList questions={questionList} setQuestions={setQuestionList} />
         </Flex>
     )
 }

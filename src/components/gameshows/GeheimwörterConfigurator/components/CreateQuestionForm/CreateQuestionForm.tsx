@@ -3,6 +3,7 @@ import React, { useEffect } from 'react'
 import { useImmer } from 'use-immer'
 import type { TGeheimwoerterQuestionItem } from '~/components/room/Game/games/Geheimwörter/geheimwörter.types'
 import type { ICreateQuestionContainerProps, IWordItemProps } from './createQuestionForm.types'
+import { v4 as uuidv4 } from 'uuid';
 
 const WordItem: React.FC<IWordItemProps> = ({ word, ...props }) => {
     return <Flex gap="md">
@@ -13,6 +14,7 @@ const WordItem: React.FC<IWordItemProps> = ({ word, ...props }) => {
 
 const CreateQuestionForm: React.FC<ICreateQuestionContainerProps> = ({ codeList, onAddQuestion }) => {
     const [questionItem, setQuestionItem] = useImmer<TGeheimwoerterQuestionItem>({
+        id: uuidv4(),
         answer: "",
         words: []
     })
@@ -49,6 +51,7 @@ const CreateQuestionForm: React.FC<ICreateQuestionContainerProps> = ({ codeList,
         e.preventDefault()
         onAddQuestion(questionItem)
         setQuestionItem({
+            id: uuidv4(),
             answer: "",
             words: []
         })

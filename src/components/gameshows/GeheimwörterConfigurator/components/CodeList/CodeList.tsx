@@ -1,9 +1,10 @@
-import { Box, Button, Flex, TextInput, Title } from '@mantine/core'
+import { Box, Button, Flex, TextInput, Title, useMantineTheme } from '@mantine/core'
 import React from 'react'
 import type { ICodeListItemProps, ICodeListProps } from './codeList.types'
 import { capitalize } from '~/utils/strings'
 
 const CodeListItem: React.FC<ICodeListItemProps> = ({ item, editable = false, onWordChange = () => null }) => {
+
     const handleWordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let newWord = e.target.value
         const startsWithLetter = newWord.toLowerCase().startsWith(item.letter.toLowerCase())
@@ -38,6 +39,8 @@ const CodeListItem: React.FC<ICodeListItemProps> = ({ item, editable = false, on
 }
 
 const CodeList: React.FC<ICodeListProps> = ({ codeList, setCodeList, editable = false }) => {
+    const theme = useMantineTheme()
+
     const codeListElements = codeList.map(item => <CodeListItem key={item.letter} item={item} editable={editable} onWordChange={onWordChange} />)
 
     function onWordChange(letter: string, newWord: string) {
@@ -56,7 +59,7 @@ const CodeList: React.FC<ICodeListProps> = ({ codeList, setCodeList, editable = 
     return (
         <Flex direction="column" gap="lg" w="100%">
             <Title order={3} >Codeliste</Title>
-            <Flex direction="column" bg="brand" p="md" sx={theme => ({
+            <Flex direction="column" bg={theme.primaryColor} p="md" sx={theme => ({
                 borderRadius: theme.radius.md,
                 boxShadow: theme.shadows.xl
             })}>

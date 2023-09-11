@@ -7,6 +7,7 @@ export type TGeheimWoerterQuestionsWordsItem = {
 };
 
 export type TGeheimwoerterQuestionItem = {
+  id: string;
   words: TGeheimWoerterQuestionsWordsItem[];
   answer: string;
 };

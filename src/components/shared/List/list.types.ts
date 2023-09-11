@@ -1,6 +1,15 @@
+import type { Dispatch, SetStateAction } from "react";
+
+export type IListItem = {
+  id: string;
+  [key: string]: any;
+};
+
 export interface IListProps {
-  draggable?: boolean;
+  canReorder?: boolean;
   onClickItem?: () => void;
   onDeleteItem?: () => void;
-  data: string[];
+  data: IListItem[];
+  setData: Dispatch<SetStateAction<any>>;
+  renderValueByKey: keyof IListItem;
 }

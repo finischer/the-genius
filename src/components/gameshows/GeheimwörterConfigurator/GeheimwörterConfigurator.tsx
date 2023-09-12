@@ -1,13 +1,11 @@
-import { Button, Flex } from '@mantine/core'
-import React, { useEffect, useState } from 'react'
-import { useConfigurator } from '~/hooks/useConfigurator'
-import CodeList from './components/CodeList'
+import { Button, Flex } from '@mantine/core';
+import { useEffect, useState } from 'react';
+import type { TGeheimwoerterQuestionItem } from '~/components/room/Game/games/Geheimwörter/geheimwörter.types';
+import { useConfigurator } from '~/hooks/useConfigurator';
+import CodeList from './components/CodeList';
 import type { TCodeList, TCodeListItem } from './components/CodeList/codeList.types';
 import CreateQuestionForm from './components/CreateQuestionForm';
-import type { TGeheimwoerterQuestionItem } from '~/components/room/Game/games/Geheimwörter/geheimwörter.types';
 import QuestionList from './components/QuestionList';
-import List from '~/components/shared/List/List';
-import type { IListItem } from '~/components/shared/List/list.types';
 
 const ALPHABET = [...'abcdefghijklmnoprstuvwxyz'];
 const DEFAULT_CODE_WORD_LIST = [

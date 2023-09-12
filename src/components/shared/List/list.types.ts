@@ -1,9 +1,5 @@
 import type { Dispatch, SetStateAction } from "react";
-
-export type IListItem = {
-  id: string;
-  [key: string]: any;
-};
+import type { IListItem } from "./components/ListItem/listItem.types";
 
 export interface IListProps {
   canReorder?: boolean;

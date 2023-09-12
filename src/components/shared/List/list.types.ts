@@ -2,7 +2,7 @@ import type { Dispatch, SetStateAction } from "react";
 import type { IListItem } from "./components/ListItem/listItem.types";
 
 export interface IListProps {
-  canReorder?: boolean;
+  editable?: boolean;
   onClickItem?: () => void;
   onDeleteItem?: () => void;
   data: IListItem[];

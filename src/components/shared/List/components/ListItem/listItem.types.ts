@@ -5,6 +5,6 @@ export type IListItem = {
 
 export interface IListItemProps {
   item: IListItem;
-  draggable: boolean;
+  editable: boolean;
   renderValueByKey: keyof IListItem;
 }

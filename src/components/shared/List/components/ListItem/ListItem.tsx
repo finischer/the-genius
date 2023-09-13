@@ -18,11 +18,18 @@ const ListItem: React.FC<IListItemProps> = ({ item, editable, renderValueByKey, 
         }
     }
 
+    const handleDelete = (e: React.SyntheticEvent) => {
+        if (onDelete) {
+            onDelete()
+            e.stopPropagation()
+        }
+    }
+
     return (
         <Reorder.Item id={item.id} value={item} dragListener={false} style={{ boxShadow, y, listStyle: "none", cursor: editable ? "pointer" : "auto" }} dragControls={controls} onClick={() => handleClick(item.id)}>
             <Flex bg={selected ? theme.primaryColor : theme.colors.dark[5]} sx={{ borderRadius: theme.radius.md }} px="md" py="sm" justify="space-between">
-                <Flex gap="md" align="center">
-                    <ActionIcon size="sm" toolTip='Antwort löschen' onClick={onDelete}>
+                <Flex gap="md" align="flex-start">
+                    <ActionIcon size="sm" toolTip='Antwort löschen' onClick={handleDelete}>
                         <IconX />
                     </ActionIcon>
                     <span>{item[renderValueByKey]}</span>

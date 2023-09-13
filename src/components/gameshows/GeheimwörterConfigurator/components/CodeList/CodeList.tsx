@@ -26,19 +26,28 @@ const CodeListItem: React.FC<ICodeListItemProps> = ({ item, editable = false, on
             }}
             value={item.category}
             onChange={handleWordChange}
-        /> : <span>{item.category}</span>
+        /> : <span style={{ fontWeight: "bold" }}>{item.category[0]}</span>
 
 
-    return <Flex gap="xl" align="center" >
-        <Box w="2rem">
-            {item.letter.toUpperCase()}
-        </Box>
-        -
-        {wordElement}
+    return <Flex gap="xl" justify="space-between" >
+        <Flex w="80%" justify="space-between">
+            <span>
+                {wordElement}
+                {item.category.slice(1)}{" "}
+            </span>
+        </Flex>
+        <div>
+            <span>=</span>
+        </div>
+        <Flex w="2rem" sx={{ fontWeight: "bold", textAlign: "center" }}>
+            <span>
+                {item.letter.toUpperCase()}
+            </span>
+        </Flex>
     </Flex>
 }
 
-const CodeList: React.FC<ICodeListProps> = ({ codeList, setCodeList, editable = false }) => {
+const CodeList: React.FC<ICodeListProps> = ({ codeList, setCodeList, editable = false, showTitle = true }) => {
     const theme = useMantineTheme()
 
     const codeListElements = codeList.map(item => <CodeListItem key={item.letter} item={item} editable={editable} onWordChange={onWordChange} />)
@@ -57,8 +66,8 @@ const CodeList: React.FC<ICodeListProps> = ({ codeList, setCodeList, editable = 
     }
 
     return (
-        <Flex direction="column" gap="lg" w="100%">
-            <Title order={3} >Codeliste</Title>
+        <Flex direction="column" gap="lg" w="20rem">
+            {showTitle && <Title order={3} >Codeliste</Title>}
             <Flex direction="column" bg={theme.primaryColor} p="md" sx={theme => ({
                 borderRadius: theme.radius.md,
                 boxShadow: theme.shadows.xl

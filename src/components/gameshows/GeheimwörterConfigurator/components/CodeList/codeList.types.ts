@@ -13,6 +13,7 @@ export interface ICodeListProps {
   codeList: TCodeList;
   setCodeList?: Updater<TGameSettingsMap>;
   editable?: boolean;
+  showTitle?: boolean;
 }
 
 export interface ICodeListItemProps {

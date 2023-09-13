@@ -33,7 +33,8 @@ const CodeListItem: React.FC<ICodeListItemProps> = ({ item, editable = false, on
         <Flex w="80%" justify="space-between">
             <span>
                 {wordElement}
-                {item.category.slice(1)}{" "}
+                {!editable && item.category.slice(1)}
+
             </span>
         </Flex>
         <div>

@@ -82,7 +82,6 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
     })
 
     const startGame = (gameIdentifier: TGameNames) => {
-        console.log("+++ room - Start game +++ ", gameIdentifier)
         socket.emit("startGame", ({ gameIdentifier }))
     }
 

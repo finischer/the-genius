@@ -6,6 +6,7 @@ export interface IListProps {
   onClickItem?: (item: IListItem) => void;
   onDeleteItem?: () => void;
   data: IListItem[];
+  selectedItemId?: string;
   setData: Dispatch<SetStateAction<any>>;
   renderValueByKey: keyof IListItem;
 }

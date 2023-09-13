@@ -7,6 +7,7 @@ import type { IListItem } from '~/components/shared/List/components/ListItem/lis
 
 
 const QuestionList: React.FC<IQuestionListProps> = ({ questions, setQuestions, setQuestionItem, questionItem }) => {
+    const selectedItemId = questionItem.id
     const keyForRendering: keyof TGeheimwoerterQuestionItem = "answer"
 
     const handleItemClick = (item: IListItem) => {
@@ -17,7 +18,7 @@ const QuestionList: React.FC<IQuestionListProps> = ({ questions, setQuestions, s
     return (
         <Flex direction="column" gap="lg" w="100%">
             <Title order={3}>Antworten ({questions.length})</Title>
-            <List data={questions} setData={setQuestions} onClickItem={handleItemClick} renderValueByKey={keyForRendering} editable />
+            <List data={questions} setData={setQuestions} onClickItem={handleItemClick} renderValueByKey={keyForRendering} editable selectedItemId={selectedItemId} />
         </Flex>
     )
 }

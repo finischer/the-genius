@@ -1,7 +1,8 @@
 import { Button, Flex, Text, TextInput, Title } from '@mantine/core'
-import React, { useEffect } from 'react'
+import React, { useEffect, type FormEvent, type FormEventHandler } from 'react'
 import type { ICreateQuestionContainerProps, IWordItemProps } from './createQuestionForm.types'
 import { v4 as uuidv4 } from 'uuid';
+import { useForm } from '@mantine/form';
 
 const WordItem: React.FC<IWordItemProps> = ({ word, ...props }) => {
     return <Flex gap="md">
@@ -11,6 +12,13 @@ const WordItem: React.FC<IWordItemProps> = ({ word, ...props }) => {
 }
 
 const CreateQuestionForm: React.FC<ICreateQuestionContainerProps> = ({ codeList, onAddQuestion, onUpdateQuestion, question, setQuestion, mode }) => {
+    const form = useForm({
+        initialValues: {
+            id: question.id,
+            name: question.answer,
+            words: question.words
+        }
+    })
 
 
     const handleAnswerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,7 +49,7 @@ const CreateQuestionForm: React.FC<ICreateQuestionContainerProps> = ({ codeList,
         })
     }
 
-    const handleSubmitQuestion = (e: React.FormEvent<HTMLButtonElement>) => {
+    const handleSubmitQuestion = (e: React.SyntheticEvent) => {
         e.preventDefault()
 
         if (mode === "ADD") {
@@ -87,7 +95,7 @@ const CreateQuestionForm: React.FC<ICreateQuestionContainerProps> = ({ codeList,
     return (
         <Flex direction="column" gap="lg" w="100%">
             <Title order={3} >Antwort erstellen</Title>
-            <form>
+            <form onSubmit={handleSubmitQuestion}>
                 <Flex direction="column" gap="md" px="md" sx={theme => ({
                     borderRadius: theme.radius.md
                 })}>
@@ -97,14 +105,13 @@ const CreateQuestionForm: React.FC<ICreateQuestionContainerProps> = ({ codeList,
                             <Text size="sm">Wörter</Text>
                             {question.words.map((_, index) => {
                                 const word = question.words[index]
-                                // TODO: Make WordItem required for form -> it does not work yet
                                 return <WordItem required key={index} word={word} onChange={(e) => handleWordsChange(e, index)} />
                             }
                             )}
                         </Flex>
                     }
 
-                    <Button onClick={handleSubmitQuestion} type="submit">{mode === "ADD" ? "Hinzufügen" : "Speichern"}</Button>
+                    <Button type="submit">{mode === "ADD" ? "Hinzufügen" : "Speichern"}</Button>
                 </Flex>
             </form>
         </Flex>

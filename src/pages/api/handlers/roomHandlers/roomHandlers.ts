@@ -98,7 +98,6 @@ export function roomHandler(
   });
 
   socket.on("joinRoom", async ({ user, roomId }, cb) => {
-    console.log("join Room");
     const room = roomManager.getRoom(roomId);
     if (!room) return new NoRoomException(socket);
 
@@ -112,6 +111,7 @@ export function roomHandler(
     room.participants = [...room.participants, socket.user.name];
     room.update();
 
+    console.log(`user ${user.id} joined Room: ${room.id}`);
     cb(room);
   });
 

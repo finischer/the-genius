@@ -6,6 +6,8 @@ import type { IListItem } from './components/ListItem/listItem.types';
 
 const List: React.FC<IListProps> = ({ editable = false, onClickItem = () => null, onDeleteItem = () => null, data, renderValueByKey, setData, selectedItemId }) => {
     const handleDeleteItem = (itemId: string) => {
+        if (!editable) return
+
         setData((oldState: IListItem[]) => {
             const newList = oldState.filter(item => item.id !== itemId)
             return newList
@@ -13,7 +15,7 @@ const List: React.FC<IListProps> = ({ editable = false, onClickItem = () => null
     }
 
     const handleSelectItem = (item: IListItem) => {
-        if (onClickItem) {
+        if (onClickItem && editable) {
             onClickItem(item)
         }
     }

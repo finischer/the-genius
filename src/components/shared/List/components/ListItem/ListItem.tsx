@@ -27,11 +27,13 @@ const ListItem: React.FC<IListItemProps> = ({ item, editable, renderValueByKey, 
 
     return (
         <Reorder.Item id={item.id} value={item} dragListener={false} style={{ boxShadow, y, listStyle: "none", cursor: editable ? "pointer" : "auto" }} dragControls={controls} onClick={() => handleClick(item.id)}>
-            <Flex bg={selected ? theme.primaryColor : theme.colors.dark[5]} sx={{ borderRadius: theme.radius.md }} px="md" py="sm" justify="space-between">
+            <Flex bg={selected && editable ? theme.primaryColor : theme.colors.dark[5]} sx={{ borderRadius: theme.radius.md }} px="md" py="sm" justify="space-between">
                 <Flex gap="md" align="flex-start">
-                    <ActionIcon size="sm" toolTip='Antwort löschen' onClick={handleDelete}>
-                        <IconX />
-                    </ActionIcon>
+                    {editable &&
+                        <ActionIcon size="sm" toolTip='Antwort löschen' onClick={handleDelete}>
+                            <IconX />
+                        </ActionIcon>
+                    }
                     <span>{item[renderValueByKey]}</span>
                 </Flex>
                 {editable &&

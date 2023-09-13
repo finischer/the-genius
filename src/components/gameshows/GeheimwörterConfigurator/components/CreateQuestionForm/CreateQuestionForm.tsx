@@ -1,5 +1,5 @@
 import { Button, Flex, Text, TextInput, Title } from '@mantine/core'
-import React, { useEffect, type FormEvent, type FormEventHandler } from 'react'
+import React, { useEffect, type FormEvent, type FormEventHandler, useRef } from 'react'
 import type { ICreateQuestionContainerProps, IWordItemProps } from './createQuestionForm.types'
 import { v4 as uuidv4 } from 'uuid';
 import { useForm } from '@mantine/form';
@@ -12,14 +12,7 @@ const WordItem: React.FC<IWordItemProps> = ({ word, ...props }) => {
 }
 
 const CreateQuestionForm: React.FC<ICreateQuestionContainerProps> = ({ codeList, onAddQuestion, onUpdateQuestion, question, setQuestion, mode }) => {
-    const form = useForm({
-        initialValues: {
-            id: question.id,
-            name: question.answer,
-            words: question.words
-        }
-    })
-
+    const inputRef = useRef<HTMLInputElement | null>(null)
 
     const handleAnswerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setQuestion(draft => {
@@ -63,6 +56,8 @@ const CreateQuestionForm: React.FC<ICreateQuestionContainerProps> = ({ codeList,
             answer: "",
             words: []
         })
+
+        inputRef.current?.focus()
     }
 
     const getCategory = (letter: string | undefined) => {
@@ -99,7 +94,7 @@ const CreateQuestionForm: React.FC<ICreateQuestionContainerProps> = ({ codeList,
                 <Flex direction="column" gap="md" px="md" sx={theme => ({
                     borderRadius: theme.radius.md
                 })}>
-                    <TextInput required label="Antwort" onChange={handleAnswerChange} placeholder='Antwort eingeben ...' value={question.answer} />
+                    <TextInput ref={inputRef} required label="Antwort" onChange={handleAnswerChange} placeholder='Antwort eingeben ...' value={question.answer} />
                     {question.answer &&
                         <Flex direction="column" gap="sm">
                             <Text size="sm">Wörter</Text>

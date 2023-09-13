@@ -6,6 +6,9 @@ import CodeList from './components/CodeList';
 import type { TCodeList, TCodeListItem } from './components/CodeList/codeList.types';
 import CreateQuestionForm from './components/CreateQuestionForm';
 import QuestionList from './components/QuestionList';
+import { useImmer } from 'use-immer';
+import { v4 as uuidv4 } from 'uuid';
+import type { TQuestionFormMode } from './components/CreateQuestionForm/createQuestionForm.types';
 
 const ALPHABET = [...'abcdefghijklmnoprstuvwxyz'];
 const DEFAULT_CODE_WORD_LIST = [
@@ -56,6 +59,12 @@ const GeheimwörterConfigurator = () => {
     const [geheimwoerter, setGeheimwoerter, { enableFurtherButton, disableFurtherButton }] = useConfigurator("geheimwoerter")
     const [codeListEditable, setCodeListEditable] = useState(false)
     const [questionList, setQuestionList] = useState<TGeheimwoerterQuestionItem[]>([])
+    const [questionItem, setQuestionItem] = useImmer<TGeheimwoerterQuestionItem>({
+        id: uuidv4(),
+        answer: "",
+        words: []
+    })
+    const questionFormMode: TQuestionFormMode = questionList.map(i => i.id).includes(questionItem.id) ? "UPDATE" : "ADD"
 
     useEffect(() => {
         // set default code list
@@ -68,6 +77,17 @@ const GeheimwörterConfigurator = () => {
 
     const addQuestion = (newQuestion: TGeheimwoerterQuestionItem) => {
         setQuestionList((oldQuestions) => [...oldQuestions, newQuestion])
+    }
+
+    const updateQuestion = (newQuestion: TGeheimwoerterQuestionItem) => {
+        setQuestionList(oldQuestions => {
+            let index = oldQuestions.findIndex(q => q.id === newQuestion.id)
+            let newQuestions = [...oldQuestions]
+
+            newQuestions[index] = newQuestion
+
+            return newQuestions
+        })
     }
 
     useEffect(() => {
@@ -83,9 +103,21 @@ const GeheimwörterConfigurator = () => {
                 <Button onClick={() => setCodeListEditable(oldState => !oldState)}>{codeListEditable ? "Liste speichern" : "Liste bearbeiten"}</Button>
             </Flex>
 
-            <CreateQuestionForm onAddQuestion={addQuestion} codeList={geheimwoerter.codeList} />
+            <CreateQuestionForm
+                onAddQuestion={addQuestion}
+                onUpdateQuestion={updateQuestion}
+                codeList={geheimwoerter.codeList}
+                question={questionItem}
+                setQuestion={setQuestionItem}
+                mode={questionFormMode}
+            />
 
-            <QuestionList questions={questionList} setQuestions={setQuestionList} />
+            <QuestionList
+                questions={questionList}
+                setQuestions={setQuestionList}
+                setQuestionItem={setQuestionItem}
+                questionItem={questionItem}
+            />
         </Flex>
     )
 }

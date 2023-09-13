@@ -3,7 +3,7 @@ import type { IListItem } from "./components/ListItem/listItem.types";
 
 export interface IListProps {
   editable?: boolean;
-  onClickItem?: () => void;
+  onClickItem?: (item: IListItem) => void;
   onDeleteItem?: () => void;
   data: IListItem[];
   setData: Dispatch<SetStateAction<any>>;

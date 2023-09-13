@@ -1,7 +1,5 @@
 import { Button, Flex, Text, TextInput, Title } from '@mantine/core'
 import React, { useEffect } from 'react'
-import { useImmer } from 'use-immer'
-import type { TGeheimwoerterQuestionItem } from '~/components/room/Game/games/Geheimwörter/geheimwörter.types'
 import type { ICreateQuestionContainerProps, IWordItemProps } from './createQuestionForm.types'
 import { v4 as uuidv4 } from 'uuid';
 
@@ -12,15 +10,11 @@ const WordItem: React.FC<IWordItemProps> = ({ word, ...props }) => {
     </Flex>
 }
 
-const CreateQuestionForm: React.FC<ICreateQuestionContainerProps> = ({ codeList, onAddQuestion }) => {
-    const [questionItem, setQuestionItem] = useImmer<TGeheimwoerterQuestionItem>({
-        id: uuidv4(),
-        answer: "",
-        words: []
-    })
+const CreateQuestionForm: React.FC<ICreateQuestionContainerProps> = ({ codeList, onAddQuestion, onUpdateQuestion, question, setQuestion, mode }) => {
+
 
     const handleAnswerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setQuestionItem(draft => {
+        setQuestion(draft => {
             const newAnswer = e.target.value
             draft.answer = newAnswer
 
@@ -28,7 +22,7 @@ const CreateQuestionForm: React.FC<ICreateQuestionContainerProps> = ({ codeList,
 
             // add new word for every new char in answer
             draft.words = splittedAnswer.map((_, index) => ({
-                word: questionItem.words[index]?.word ?? "",
+                word: question.words[index]?.word ?? "",
                 category: getCategory(newAnswer[index])
             }))
 
@@ -37,9 +31,9 @@ const CreateQuestionForm: React.FC<ICreateQuestionContainerProps> = ({ codeList,
 
     const handleWordsChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
         const newWord = e.target.value
-        const currCategory = questionItem.words[index]?.category ?? ""
+        const currCategory = question.words[index]?.category ?? ""
 
-        setQuestionItem(draft => {
+        setQuestion(draft => {
             draft.words[index] = {
                 category: currCategory,
                 word: newWord,
@@ -47,10 +41,16 @@ const CreateQuestionForm: React.FC<ICreateQuestionContainerProps> = ({ codeList,
         })
     }
 
-    const handleAddQuestion = (e: React.FormEvent<HTMLButtonElement>) => {
+    const handleSubmitQuestion = (e: React.FormEvent<HTMLButtonElement>) => {
         e.preventDefault()
-        onAddQuestion(questionItem)
-        setQuestionItem({
+
+        if (mode === "ADD") {
+            onAddQuestion(question)
+        } else if (mode === "UPDATE") {
+            onUpdateQuestion(question)
+        }
+
+        setQuestion({
             id: uuidv4(),
             answer: "",
             words: []
@@ -72,7 +72,7 @@ const CreateQuestionForm: React.FC<ICreateQuestionContainerProps> = ({ codeList,
     }
 
     useEffect(() => {
-        setQuestionItem(draft => {
+        setQuestion(draft => {
             draft.words = draft.words.map((word, index) => {
                 const splittedAnswer = draft.answer.split("")
                 return {
@@ -91,12 +91,12 @@ const CreateQuestionForm: React.FC<ICreateQuestionContainerProps> = ({ codeList,
                 <Flex direction="column" gap="md" px="md" sx={theme => ({
                     borderRadius: theme.radius.md
                 })}>
-                    <TextInput required label="Antwort" onChange={handleAnswerChange} placeholder='Antwort eingeben ...' value={questionItem.answer} />
-                    {questionItem.answer &&
+                    <TextInput required label="Antwort" onChange={handleAnswerChange} placeholder='Antwort eingeben ...' value={question.answer} />
+                    {question.answer &&
                         <Flex direction="column" gap="sm">
                             <Text size="sm">Wörter</Text>
-                            {questionItem.words.map((_, index) => {
-                                const word = questionItem.words[index]
+                            {question.words.map((_, index) => {
+                                const word = question.words[index]
                                 // TODO: Make WordItem required for form -> it does not work yet
                                 return <WordItem required key={index} word={word} onChange={(e) => handleWordsChange(e, index)} />
                             }
@@ -104,7 +104,7 @@ const CreateQuestionForm: React.FC<ICreateQuestionContainerProps> = ({ codeList,
                         </Flex>
                     }
 
-                    <Button onClick={handleAddQuestion} type="submit">Hinzufügen</Button>
+                    <Button onClick={handleSubmitQuestion} type="submit">{mode === "ADD" ? "Hinzufügen" : "Speichern"}</Button>
                 </Flex>
             </form>
         </Flex>

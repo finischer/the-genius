@@ -204,7 +204,7 @@ const RoomPage = () => {
                 {/* Footer View */}
                 <Flex justify="space-between" align="flex-end">
                     <Scorebar team={room.teams.teamOne} timerPosition='right' />
-                    <AnswerBanner answer={room.state.answerState.answer} size='l' showAnswer={room.state.answerState.showAnswer} />
+                    <AnswerBanner answer={room.state.answerState.answer} size='l' showAnswer={room.state.answerState.showAnswer} mx="xl" />
                     <Scorebar team={room.teams.teamTwo} timerPosition='left' />
                 </Flex>
             </Flex >

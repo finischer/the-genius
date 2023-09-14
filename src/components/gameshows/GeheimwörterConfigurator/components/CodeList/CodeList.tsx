@@ -2,6 +2,8 @@ import { Box, Button, Flex, TextInput, Title, useMantineTheme } from '@mantine/c
 import React from 'react'
 import type { ICodeListItemProps, ICodeListProps } from './codeList.types'
 import { capitalize } from '~/utils/strings'
+import { motion } from 'framer-motion'
+import { animations } from '~/utils/animations'
 
 const CodeListItem: React.FC<ICodeListItemProps> = ({ item, editable = false, onWordChange = () => null }) => {
 
@@ -67,16 +69,18 @@ const CodeList: React.FC<ICodeListProps> = ({ codeList, setCodeList, editable = 
     }
 
     return (
-        <Flex direction="column" gap="lg" w="20rem">
-            {showTitle && <Title order={3} >Codeliste</Title>}
-            <Flex direction="column" bg={theme.primaryColor} p="md" sx={theme => ({
-                borderRadius: theme.radius.md,
-                boxShadow: theme.shadows.xl
-            })}>
+        <motion.div {...animations.fadeInOut} >
+            <Flex direction="column" gap="lg" w="20rem">
+                {showTitle && <Title order={3} >Codeliste</Title>}
+                <Flex direction="column" bg={theme.primaryColor} p="md" sx={theme => ({
+                    borderRadius: theme.radius.md,
+                    boxShadow: theme.shadows.xl
+                })}>
 
-                {codeListElements}
+                    {codeListElements}
+                </Flex>
             </Flex>
-        </Flex>
+        </motion.div>
     )
 }
 

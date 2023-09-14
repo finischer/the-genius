@@ -15,6 +15,7 @@ import { flaggenHandler } from "./handlers/games/flaggenHandlers";
 import { merkenHandler } from "./handlers/games/merkenHandlers";
 import { roomHandler } from "./handlers/roomHandlers";
 import { teamHandler } from "./handlers/teamHandlers";
+import { geheimwoerterHandler } from "./handlers/games/geheimwoerterHandlers";
 
 const prisma = new PrismaClient();
 
@@ -86,6 +87,7 @@ export default async function SocketHandler(
     // handler for all games
     flaggenHandler(io, socket);
     merkenHandler(io, socket);
+    geheimwoerterHandler(io, socket);
   };
 
   io.on("connection", onConnection);

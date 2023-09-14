@@ -2,14 +2,25 @@ import React from 'react'
 import { type IAnswerBannerProps } from './answerBanner.types'
 import { Box, Text, useMantineTheme } from '@mantine/core'
 
-const AnswerBanner: React.FC<IAnswerBannerProps> = ({ answer }) => {
+const AnswerBanner: React.FC<IAnswerBannerProps> = ({ answer, size = "m", miw = "30rem", showAnswer = true }) => {
   const theme = useMantineTheme()
+
+  const getFontSize = () => {
+    if (size === "s") return "0.5rem"
+    if (size === "m") return "1rem"
+    if (size === "l") return "1.75rem"
+
+    return "1rem"
+  }
+
+  if (!showAnswer) return <></>
 
   return (
     <Box
       bg={theme.white}
       mah="5rem"
-      miw="30rem"
+      miw={miw}
+      maw="100%"
       p="0.5rem 4rem"
       display="flex"
       ml="xl"
@@ -18,7 +29,7 @@ const AnswerBanner: React.FC<IAnswerBannerProps> = ({ answer }) => {
         justifyContent: "center",
         alignItems: "center",
         color: "black",
-        fontSize: "1.75rem",
+        fontSize: getFontSize(),
         fontWeight: "bold",
         textAlign: "center",
         overflow: "hidden",

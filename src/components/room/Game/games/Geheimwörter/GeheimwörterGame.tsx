@@ -1,15 +1,15 @@
-import { Box, Container, Flex, SimpleGrid, useMantineTheme } from '@mantine/core'
+import { Box, Flex, SimpleGrid, useMantineTheme } from '@mantine/core'
+import { IconEye, IconEyeOff } from '@tabler/icons-react'
+import { AnimatePresence, motion } from 'framer-motion'
 import React from 'react'
 import CodeList from '~/components/gameshows/GeheimwörterConfigurator/components/CodeList'
 import AnswerBanner from '~/components/room/AnswerBanner'
-import type { IGeheimwörterGameProps } from './geheimwörter.types'
-import { AnimatePresence } from 'framer-motion'
-import { useUser } from '~/hooks/useUser'
-import { IconEye, IconEyeClosed, IconEyeOff, type TablerIconsProps } from '@tabler/icons-react'
-import { useSocket } from '~/hooks/useSocket'
 import ActionIcon from '~/components/shared/ActionIcon'
-import { motion } from 'framer-motion'
+import { useSocket } from '~/hooks/useSocket'
+import { useUser } from '~/hooks/useUser'
 import { animations } from '~/utils/animations'
+import type { IGeheimwörterGameProps } from './geheimwörter.types'
+
 const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
     const theme = useMantineTheme()
     const question = game.questions[game.qIndex]

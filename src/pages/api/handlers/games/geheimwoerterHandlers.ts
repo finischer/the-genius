@@ -35,6 +35,7 @@ export function geheimwoerterHandler(
     const game = room.getGame(GAME_IDENTIFIER);
 
     game.display.words = !game.display.words;
+    game.display.answer = false;
 
     room.update();
   });

@@ -123,6 +123,13 @@ export interface IClientToServerEvents {
   // +++ MERKEN GAME EVENTS +++
   "merken:flipCard": ({ cardIndex }: { cardIndex: number }) => void;
   "merken:startGame": () => void;
+
+  // +++ GEHEIMWOERTER GAME EVENTS +++
+  "geheimwoerter:toggleCodeList": () => void;
+  "geheimwoerter:toggleWords": () => void;
+  "geheimwoerter:showAnswer": () => void;
+  "geheimwoerter:nextQuestion": () => void;
+  "geheimwoerter:prevQuestion": () => void;
 }
 
 export interface IServerToClientEvents {

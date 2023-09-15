@@ -5,6 +5,7 @@ import { socket } from '~/hooks/useSocket'
 import { useUser } from '~/hooks/useUser'
 import { type IFlaggenGameProps } from './flaggen.types'
 import ActionIcon from '~/components/shared/ActionIcon/ActionIcon'
+import ArrowActionButton from '~/components/shared/ArrowActionButton'
 
 const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
     const { isHost } = useUser()
@@ -46,15 +47,12 @@ const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
             {isHost && <Text>Flagge {game.qIndex + 1} / {game.countries.length}</Text>}
             <Flex gap="4rem" align="center" pos="relative">
                 {isHost &&
-                    <ActionIcon
-                        onClick={handlePrevFlagClick}
-                        color={theme.primaryColor}
-                        variant='filled'
-                        toolTip='Vorherige Flagge zeigen'
+                    <ArrowActionButton
+                        arrowDirection='left'
+                        tooltip='Vorherige Flagge zeigen'
                         disabled={prevBtnDisabled}
-                    >
-                        <IconArrowLeft />
-                    </ActionIcon>
+                        onClick={handlePrevFlagClick}
+                    />
                 }
                 {currFlag &&
                     <Image
@@ -75,15 +73,12 @@ const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
                     />
                 }
                 {isHost &&
-                    <ActionIcon
-                        onClick={handleNextFlagClick}
-                        color={theme.primaryColor}
-                        variant='filled'
-                        toolTip='Nächste Flagge zeigen'
+                    <ArrowActionButton
+                        arrowDirection='right'
+                        tooltip='Nächste Flagge zeigen'
                         disabled={nxtBtnDisabled}
-                    >
-                        <IconArrowRight />
-                    </ActionIcon>
+                        onClick={handleNextFlagClick}
+                    />
                 }
             </Flex>
             {isHost && (

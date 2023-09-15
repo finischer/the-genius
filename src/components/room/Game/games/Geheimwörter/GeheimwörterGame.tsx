@@ -1,4 +1,4 @@
-import { Box, Flex, SimpleGrid, useMantineTheme } from '@mantine/core'
+import { Box, Button, Flex, SimpleGrid, useMantineTheme } from '@mantine/core'
 import { IconEye, IconEyeOff } from '@tabler/icons-react'
 import { AnimatePresence, motion } from 'framer-motion'
 import React from 'react'
@@ -86,6 +86,12 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
                                         ))}
                                     </SimpleGrid>
                                 </Flex>
+                                {!showAnswer && isHost &&
+                                    <Button variant='default' mt="md" disabled={!showWords}>
+                                        Antwort anzeigen
+                                    </Button>
+
+                                }
                                 <AnswerBanner
                                     answer={question.answer}
                                     showAnswer={showWords && showAnswer}

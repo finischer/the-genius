@@ -96,6 +96,18 @@ const GeheimwörterConfigurator = () => {
         })
     }, [questionList])
 
+    useEffect(() => {
+        const codes = geheimwoerter.codeList.map(item => item.category)
+
+        if (codes.some(item => item.length === 1) || geheimwoerter.questions.length === 0) {
+            disableFurtherButton()
+        } else {
+            enableFurtherButton()
+        }
+
+
+    }, [geheimwoerter.codeList, geheimwoerter.questions])
+
     return (
         <Flex gap="md">
             <Flex direction="column" gap="sm" w="100%">

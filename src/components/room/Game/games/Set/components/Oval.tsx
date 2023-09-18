@@ -16,6 +16,7 @@ const Oval = ({ color, fill }: { color: TSetCard["color"], fill: TSetCard["filli
             id="svg5"
             stroke={svgStroke}
             fill={svgFill}
+            fillOpacity={isFilled ? 1 : 0}
         >
             <g id="layer1" transform="translate(106.77267,-26.045438)">
                 <g

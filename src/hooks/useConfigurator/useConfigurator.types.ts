@@ -3,6 +3,7 @@ import type { TFlaggenGameState } from "~/components/room/Game/games/Flaggen/con
 import type { TGeheimwörterGameState } from "~/components/room/Game/games/Geheimwörter/config";
 import type { TMemoryGameState } from "~/components/room/Game/games/Memory/config";
 import type { TMerkenGameState } from "~/components/room/Game/games/Merken/config";
+import type { TSetGameState } from "~/components/room/Game/games/Set/config";
 import type {
   TGame,
   TGameNames,
@@ -14,6 +15,7 @@ export type TGameSettingsMap = {
   memory: TMemoryGameState;
   merken: TMerkenGameState;
   geheimwoerter: TGeheimwörterGameState;
+  set: TSetGameState;
 };
 
 export type TGameshowConfig = {

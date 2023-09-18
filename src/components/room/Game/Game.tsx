@@ -13,6 +13,8 @@ import FlipCard from '~/components/shared/FlipCard/FlipCard'
 import { AnimatePresence, motion } from 'framer-motion'
 import GeheimwörterGame from './games/Geheimwörter/GeheimwörterGame'
 import type { TGeheimwörterGameState } from './games/Geheimwörter/config'
+import SetGame from './games/Set/SetGame'
+import type { TSetGameState } from './games/Set/config'
 
 const scaleAnimation = keyframes({
     "0%": { transform: "scale(1,1)" },
@@ -35,7 +37,8 @@ const Game: React.FC<IGameProps> = ({ game }) => {
             flaggen: <FlaggenGame game={game as TFlaggenGameState} />,
             merken: <MerkenGame game={game as TMerkenGameState} />,
             memory: <MemoryGame game={game as TMemoryGameState} />,
-            geheimwoerter: <GeheimwörterGame game={game as TGeheimwörterGameState} />
+            geheimwoerter: <GeheimwörterGame game={game as TGeheimwörterGameState} />,
+            set: <SetGame game={game as TSetGameState} />
         }
 
         return GAME_MAP[identifier]

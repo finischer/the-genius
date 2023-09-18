@@ -3,6 +3,7 @@ import FlaggenConfigurator from "./FlaggenConfigurator"
 import GeheimwörterConfigurator from "./GeheimwörterConfigurator/GeheimwörterConfigurator"
 import MemoryConfigurator from "./MemoryConfigurator/MemoryConfigurator"
 import MerkenConfigurator from "./MerkenConfigurator/MerkenConfigurator"
+import SetConfigurator from "./SetConfigurator"
 
 
 export type TGameConfigurators = {
@@ -13,5 +14,6 @@ export const GAME_CONFIGURATORS: TGameConfigurators = {
     flaggen: <FlaggenConfigurator />,
     memory: <MemoryConfigurator />,
     merken: <MerkenConfigurator />,
-    geheimwoerter: <GeheimwörterConfigurator />
+    geheimwoerter: <GeheimwörterConfigurator />,
+    set: <SetConfigurator />
 }

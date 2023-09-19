@@ -18,15 +18,24 @@ export enum SET_FILLING {
 
 export type TSetCardList = TSetCard[];
 
+export type TSetCardForm = "rectangle" | "oval" | "diamond";
+export type TSetCardColor = "red" | "green" | "blue";
+export type TSetCardFilling = "filled" | "none" | "dashed";
+export type TSetCardAmount = 1 | 2 | 3;
+
+export type TForm = {
+  id: string;
+  form: TSetCardForm;
+  color: TSetCardColor;
+  fill: TSetCardFilling;
+};
+
 export type TSetCard = {
-  form: "rectangle" | "oval" | "diamond";
-  amount: 1 | 2 | 3;
-  color: "red" | "green" | "blue";
-  filling: "filled" | "none" | "dashed";
+  displayedForms: TForm[];
 };
 
 export interface ISetGameState {
-  allCards: TSetCardList[];
+  allCards: TSetCardList;
   qIndex: number;
   display: {
     cards: boolean;
@@ -38,3 +47,8 @@ export interface ISetGameState {
 export interface ISetGameProps {
   game: ISetGameState;
 }
+
+export type TCardFormList = {
+  id: string;
+  forms: TForm[];
+};

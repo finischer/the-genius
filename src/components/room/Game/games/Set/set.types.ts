@@ -7,7 +7,7 @@ export enum SET_COLORS {
 export enum SET_FORMS {
   RECTANGLE = "rectangle",
   OVAL = "oval",
-  DIAMONG = "diamond",
+  DIAMOND = "diamond",
 }
 
 export enum SET_FILLING {

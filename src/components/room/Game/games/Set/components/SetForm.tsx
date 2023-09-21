@@ -1,11 +1,11 @@
-import { Flex, Menu, UnstyledButton, useMantineTheme, type MenuItemProps } from "@mantine/core"
-import type { CSSProperties, SyntheticEvent } from "react"
-import { SET_COLORS, SET_FILLING, SET_FORMS, type TForm, type TSetCardColor, type TSetCardFilling, type TSetCardForm } from "../set.types"
+import { Flex, Menu, UnstyledButton, useMantineTheme } from "@mantine/core"
+import { IconCheck } from "@tabler/icons-react"
+import type React from "react"
+import type { CSSProperties } from "react"
+import { SET_FORMS, type TForm } from "../set.types"
 import Diamond from "./Diamond"
 import Oval from "./Oval"
 import Rectangle from "./Rectangle"
-import { IconCheck } from "@tabler/icons-react"
-import type React from "react"
 
 
 // local interfaces

@@ -12,12 +12,12 @@ const SetCard: React.FC<ISetCardProps> = ({ editable = false, card, setCards, in
         if (!setCards) return
 
         setCards(draft => {
-            const cardIndex = draft.findIndex(c => c.id === card.id)
-            const formIndex = draft[cardIndex]?.forms.findIndex(f => f.id === formId)
+            const cardIndex = draft.cards.findIndex(c => c.id === card.id)
+            const formIndex = draft.cards[cardIndex]?.forms.findIndex(f => f.id === formId)
 
             if (cardIndex === undefined || formIndex === undefined) return
 
-            let cardItem = draft[cardIndex]
+            let cardItem = draft.cards[cardIndex]
 
             if (cardItem === undefined) return
 

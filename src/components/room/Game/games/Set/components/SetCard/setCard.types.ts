@@ -1,10 +1,15 @@
 import type { Updater } from "use-immer";
-import { type TCardFormList, type TForm } from "./../../set.types";
+import {
+  type TForm,
+  type TSetCard,
+  type TSetQuestionItem,
+  type TSetQuestionList,
+} from "./../../set.types";
 
 export interface ISetCardProps {
   editable?: boolean;
-  card: TCardFormList;
+  card: TSetCard;
   index: number;
   isFlipped?: boolean;
-  setCards?: Updater<TCardFormList[]>;
+  setCards?: Updater<TSetQuestionItem>;
 }

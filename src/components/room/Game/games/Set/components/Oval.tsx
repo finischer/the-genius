@@ -1,8 +1,8 @@
 import { SET_COLORS_MAP } from "../config"
-import type { TSetCard } from "../set.types"
+import type { TForm, TSetCard } from "../set.types"
 import { DEFAULT_SET_FORM_STYLE } from "./SetForm"
 
-const Oval = ({ color, fill }: { color: TSetCard["color"], fill: TSetCard["filling"] }) => {
+const Oval = ({ color, fill }: { color: TForm["color"], fill: TForm["fill"] }) => {
     const svgColor = SET_COLORS_MAP[color]
     const isFilled = fill === "filled"
     const svgStroke = fill === 'dashed' ? svgColor : undefined

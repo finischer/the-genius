@@ -5,7 +5,7 @@ import type { IListProps } from './list.types';
 import type { IListItem } from './components/ListItem/listItem.types';
 
 const List: React.FC<IListProps> = ({ editable = false, onClickItem = () => null, onDeleteItem = () => null, data, renderValueByKey, setData, selectedItemId }) => {
-    const handleDeleteItem = (itemId: string) => {
+    const handleDeleteItem = (itemId: string | number) => {
         if (!editable) return
 
         setData((oldState: IListItem[]) => {
@@ -23,15 +23,15 @@ const List: React.FC<IListProps> = ({ editable = false, onClickItem = () => null
     return (
         <Reorder.Group values={data} axis='y' onReorder={setData} style={{ gap: "1rem", display: "flex", flexDirection: "column", padding: 0, margin: 0 }} >
             {
-                data.map(item => (
+                data.map((item, index) => (
                     <ListItem
                         key={item.id}
                         item={item}
                         editable={editable}
-                        renderValueByKey={renderValueByKey}
                         selected={item.id === selectedItemId}
                         onClick={() => handleSelectItem(item)}
                         onDelete={() => handleDeleteItem(item.id)}
+                        content={!renderValueByKey ? `Frage ${index + 1}` : item[renderValueByKey]}
                     />
                 ))
             }

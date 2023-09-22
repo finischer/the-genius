@@ -6,7 +6,7 @@ import ActionIcon from '~/components/shared/ActionIcon'
 import { useRaisedShadow } from '~/hooks/useRaisedShadow'
 import type { IListItemProps } from './listItem.types'
 
-const ListItem: React.FC<IListItemProps> = ({ item, editable, renderValueByKey, onDelete, onClick, selected }) => {
+const ListItem: React.FC<IListItemProps> = ({ item, editable, onDelete, onClick, selected, content }) => {
     const y = useMotionValue(0)
     const boxShadow = useRaisedShadow(y)
     const controls = useDragControls()
@@ -26,7 +26,7 @@ const ListItem: React.FC<IListItemProps> = ({ item, editable, renderValueByKey, 
     }
 
     return (
-        <Reorder.Item id={item.id} value={item} dragListener={false} style={{ boxShadow, y, listStyle: "none", cursor: editable ? "pointer" : "auto" }} dragControls={controls} onClick={() => handleClick(item.id)}>
+        <Reorder.Item id={item.id.toString()} value={item} dragListener={false} style={{ boxShadow, y, listStyle: "none", cursor: editable ? "pointer" : "auto" }} dragControls={controls} onClick={() => handleClick(item.id.toString())}>
             <Flex bg={selected && editable ? theme.primaryColor : theme.colors.dark[5]} sx={{ borderRadius: theme.radius.md }} px="md" py="sm" justify="space-between">
                 <Flex gap="md" align="flex-start">
                     {editable &&
@@ -34,7 +34,7 @@ const ListItem: React.FC<IListItemProps> = ({ item, editable, renderValueByKey, 
                             <IconX />
                         </ActionIcon>
                     }
-                    <span>{item[renderValueByKey]}</span>
+                    <span>{content}</span>
                 </Flex>
                 {editable &&
                     <Flex w={40} justify="flex-end" onPointerDown={e => controls.start(e)} style={{ cursor: "grab" }}>

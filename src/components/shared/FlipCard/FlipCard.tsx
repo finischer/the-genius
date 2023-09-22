@@ -15,7 +15,7 @@ const FlipCard: React.FC<IFlipCardProps> = ({ isFlipped = false, setFlipped, cli
         textAlign: "center",
         borderRadius: sizes.borderRadius,
         whiteSpace: "nowrap",
-        textTransform: "uppercase",
+        textTransform: "uppercase"
     }
 
     const handleClick = () => {
@@ -45,7 +45,9 @@ const FlipCard: React.FC<IFlipCardProps> = ({ isFlipped = false, setFlipped, cli
                     backgroundColor: themeColors ? themeColors[7] : theme.primaryColor,
                     ...backStyle
                 }
-            }} >
+            }}
+                containerStyle={{ margin: 0, backgroundColor: "green", padding: 0, zIndex: -999 }}
+            >
                 {/* Front */}
                 <Container>
                     <Title>{front}</Title>
@@ -53,7 +55,7 @@ const FlipCard: React.FC<IFlipCardProps> = ({ isFlipped = false, setFlipped, cli
 
                 {/* Back */}
                 <Container>
-                    <Title>{back}</Title>
+                    {back}
                 </Container>
             </ReactCardFlip>
         </Container>

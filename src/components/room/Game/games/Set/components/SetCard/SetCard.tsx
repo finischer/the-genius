@@ -1,9 +1,9 @@
-import { Flex, useMantineTheme } from '@mantine/core'
+import { Container, Flex, Text, useMantineTheme } from '@mantine/core'
 import SetForm from '../SetForm'
 import type { ISetCardProps } from './setCard.types'
 import type { TForm } from '../../set.types'
 
-const SetCard: React.FC<ISetCardProps> = ({ editable = false, card, setCards }) => {
+const SetCard: React.FC<ISetCardProps> = ({ editable = false, card, setCards, index, isFlipped = false }) => {
     const theme = useMantineTheme()
 
     const formElements = card.forms.map(formItem => <SetForm onChange={onChangeForm} key={formItem.id} editable={editable} formItem={formItem} />)
@@ -26,15 +26,43 @@ const SetCard: React.FC<ISetCardProps> = ({ editable = false, card, setCards }) 
     }
 
     return (
-        <Flex bg="#f7f1f1" p="md" justify="center" align="center" h="10rem" w="15rem" sx={{
+        <Flex bg="#f7f1f1" p="md" justify="center" pos="relative" align="center" h="10rem" w="15rem" sx={{
             borderRadius: theme.radius.md
         }}>
-            {/* <SetForm form='diamond' color='green' fill='none' />
-            <SetForm form='diamond' color='blue' fill='dashed' />
-            <SetForm form='oval' color='red' fill='filled' /> */}
-            {formElements}
+            {!isFlipped ? <Text pos="absolute" weight="bold" size="2rem" color='dark'>{index + 1}</Text> :
+                <>
+                    <Container pos="absolute" top={10} left={10} p={0} >
+                        <Text color='dimmed' weight="bold" size="xl">{index + 1}</Text>
+                    </Container>
+                    {formElements}
+                </>
+            }
         </Flex>
     )
 }
 
 export default SetCard
+
+
+// return (
+//     <FlipCard
+//         isFlipped
+//         front={<Text color="dark">{index + 1}</Text>}
+//         back={
+//             <Flex bg="#f7f1f1" p="md" justify="center" pos="relative" align="center" h="10rem" w="15rem" sx={{
+//                 borderRadius: theme.radius.md
+//             }}>
+//                 <Container pos="absolute" top={0} left={0} p={0} >
+//                     <Text color='dimmed' weight="bold">{index + 1}</Text>
+//                 </Container>
+//                 {formElements}
+//             </Flex>
+//         }
+//         frontStyle={{
+//             ...defaultCardStyle
+//         }}
+//         backStyle={{
+//             ...defaultCardStyle
+//         }}
+//     />
+// )

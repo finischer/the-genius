@@ -50,7 +50,7 @@ const DEFAULT_SET_FORMS = Array(NUM_OF_CARDS).fill(null).map(_ => generateRandom
 const CreateSetContainer = () => {
     const [cards, setCards] = useImmer<TCardFormList[]>(DEFAULT_SET_FORMS)
 
-    const cardElements = cards.map((item, index) => <SetCard key={index} editable card={item} setCards={setCards} />)
+    const cardElements = cards.map((item, index) => <SetCard isFlipped key={index} editable card={item} setCards={setCards} index={index} />)
 
 
     return (

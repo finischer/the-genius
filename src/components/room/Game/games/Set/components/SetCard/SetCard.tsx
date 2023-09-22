@@ -1,7 +1,7 @@
 import { Container, Flex, Text, useMantineTheme } from '@mantine/core'
+import type { TForm } from '../../set.types'
 import SetForm from '../SetForm'
 import type { ISetCardProps } from './setCard.types'
-import type { TForm } from '../../set.types'
 
 const SetCard: React.FC<ISetCardProps> = ({ editable = false, card, setCards, index, isFlipped = false }) => {
     const theme = useMantineTheme()
@@ -25,44 +25,30 @@ const SetCard: React.FC<ISetCardProps> = ({ editable = false, card, setCards, in
         })
     }
 
+    const FrontContent = () => (
+        <Text pos="absolute" weight="bold" size="2rem" color='dark'>{index + 1}</Text>
+    )
+
+    const BackContent = () => (
+        <>
+            <Container pos="absolute" top={10} left={10} p={0} >
+                <Text color='dimmed' weight="bold" size="xl">{index + 1}</Text>
+            </Container>
+            {formElements}
+        </>
+    )
+
     return (
         <Flex bg="#f7f1f1" p="md" justify="center" pos="relative" align="center" h="10rem" w="15rem" sx={{
             borderRadius: theme.radius.md
         }}>
-            {!isFlipped ? <Text pos="absolute" weight="bold" size="2rem" color='dark'>{index + 1}</Text> :
-                <>
-                    <Container pos="absolute" top={10} left={10} p={0} >
-                        <Text color='dimmed' weight="bold" size="xl">{index + 1}</Text>
-                    </Container>
-                    {formElements}
-                </>
+            {!isFlipped ?
+                <FrontContent />
+                :
+                <BackContent />
             }
         </Flex>
     )
 }
 
 export default SetCard
-
-
-// return (
-//     <FlipCard
-//         isFlipped
-//         front={<Text color="dark">{index + 1}</Text>}
-//         back={
-//             <Flex bg="#f7f1f1" p="md" justify="center" pos="relative" align="center" h="10rem" w="15rem" sx={{
-//                 borderRadius: theme.radius.md
-//             }}>
-//                 <Container pos="absolute" top={0} left={0} p={0} >
-//                     <Text color='dimmed' weight="bold">{index + 1}</Text>
-//                 </Container>
-//                 {formElements}
-//             </Flex>
-//         }
-//         frontStyle={{
-//             ...defaultCardStyle
-//         }}
-//         backStyle={{
-//             ...defaultCardStyle
-//         }}
-//     />
-// )

@@ -6,7 +6,7 @@ import { useConfigurator } from '~/hooks/useConfigurator'
 import CreateSetContainer from './components/CreateSetContainer'
 import SetList from './components/SetList'
 import { generateRandomFormList } from './helpers'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const NUM_OF_CARDS = 12
 
@@ -22,12 +22,19 @@ const SetConfigurator = () => {
     })
 
     const addQuestion = (newQuestion: TSetQuestionItem) => {
-
+        console.log("New question: ", newQuestion)
+        setQuestions(oldQuestions => [...oldQuestions, newQuestion])
     }
 
     const updateQuestion = (updatedQuestion: TSetQuestionItem) => {
-
+        console.log("Updated question: ", updatedQuestion)
     }
+
+    useEffect(() => {
+        setSet(draft => {
+            draft.set.questions = questions
+        })
+    }, [questions])
 
     return (
         <Flex>

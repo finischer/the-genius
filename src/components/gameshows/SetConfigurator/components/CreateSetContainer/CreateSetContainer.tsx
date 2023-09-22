@@ -2,14 +2,19 @@ import { Button, Flex, SimpleGrid, Title } from "@mantine/core"
 import SetCard from "~/components/room/Game/games/Set/components/SetCard"
 import type { ICreateSetContainerProps } from "./createSetContainer.types"
 import type { TSetQuestionItem } from "~/components/room/Game/games/Set/set.types"
+import { useEffect } from "react"
 
 const CreateSetContainer: React.FC<ICreateSetContainerProps> = ({ question, setQuestion, onAddQuestion }) => {
 
     const cardElements = question.cards.map((item, index) => <SetCard isFlipped key={index} editable card={item} setCards={setQuestion} index={index} />)
 
-    const handleAddQuestion = (newQuestion: TSetQuestionItem) => {
-
+    const handleAddQuestion = () => {
+        onAddQuestion(question)
     }
+
+    useEffect(() => {
+        console.log("Questions updated: ", question)
+    }, [question])
 
     return (
         <Flex direction="column" gap="lg" w="100%" justify="center" align="center" >
@@ -21,7 +26,7 @@ const CreateSetContainer: React.FC<ICreateSetContainerProps> = ({ question, setQ
 
             <Button.Group>
                 <Button variant='default'>Ausfüllen</Button>
-                <Button onClick={() => handleAddQuestion(question)}>Set Hinzufügen</Button>
+                <Button onClick={handleAddQuestion}>Set Hinzufügen</Button>
             </Button.Group>
         </Flex>
     )

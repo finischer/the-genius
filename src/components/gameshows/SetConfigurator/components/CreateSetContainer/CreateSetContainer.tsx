@@ -16,7 +16,6 @@ const CreateSetContainer: React.FC<ICreateSetContainerProps> = ({ question, setQ
         }
 
         setQuestion(generateNewSetQuestion(NUM_OF_CARDS))
-
     }
 
     return (

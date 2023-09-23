@@ -98,11 +98,6 @@ function isValidAttributeCombination(
   values2: TForm,
   values3: TForm
 ) {
-  console.log("+++++++++++++++++++++");
-  console.log("Values1: ", values1);
-  console.log("Values2: ", values2);
-  console.log("Values3: ", values3);
-  console.log("+++++++++++++++++++++");
   return false;
   // const uniqueValues = new Set([...values1, ...values2, ...values3]);
   // console.log("Unique values: ", uniqueValues);

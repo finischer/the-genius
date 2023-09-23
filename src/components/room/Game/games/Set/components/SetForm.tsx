@@ -13,6 +13,8 @@ interface ISetFormProps {
     formItem: TForm
     editable?: boolean
     onChange?: (formId: string, newForm: TForm) => void
+    onRemove?: (formId: string) => void
+    removeable?: boolean
 }
 
 
@@ -35,7 +37,7 @@ export const DEFAULT_SET_FORM_STYLE: CSSProperties = {
 
 const CHECK_ICON_SIZE = 14
 
-const SetForm: React.FC<ISetFormProps> = ({ editable = false, formItem, onChange }) => {
+const SetForm: React.FC<ISetFormProps> = ({ editable = false, formItem, onChange, onRemove, removeable }) => {
     const { form, color, fill, id } = formItem
 
     const theme = useMantineTheme()
@@ -76,6 +78,12 @@ const SetForm: React.FC<ISetFormProps> = ({ editable = false, formItem, onChange
         onChange(id, newForm)
     }
 
+    const handleRemoveForm = () => {
+        if (!onRemove) return
+
+        onRemove(id)
+    }
+
 
     if (editable) {
         return (
@@ -112,6 +120,13 @@ const SetForm: React.FC<ISetFormProps> = ({ editable = false, formItem, onChange
                         <CustomMenuItem name="fill-filled" selected={fill === "filled"}>Gefüllt</CustomMenuItem>
                         <CustomMenuItem name="fill-dashed" selected={fill === "dashed"}>Gestrichelt</CustomMenuItem>
                         <CustomMenuItem name="fill-none" selected={fill === "none"}>Leer</CustomMenuItem>
+
+                        {removeable &&
+                            <>
+                                <Menu.Divider />
+                                <Menu.Item color="red" onClick={handleRemoveForm}>Form entfernen</Menu.Item>
+                            </>
+                        }
                     </Menu.Dropdown>
                 </Menu>
 

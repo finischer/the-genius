@@ -37,7 +37,7 @@ const SetConfigurator = () => {
         setSet(draft => {
             draft.set.questions = questions
         })
-        console.log("Questions: ", questions)
+
         if (questions.length <= 0) {
             disableFurtherButton()
         } else {

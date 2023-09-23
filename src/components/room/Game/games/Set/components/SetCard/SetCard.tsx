@@ -2,11 +2,14 @@ import { Container, Flex, Text, useMantineTheme } from '@mantine/core'
 import type { TForm } from '../../set.types'
 import SetForm from '../SetForm'
 import type { ISetCardProps } from './setCard.types'
+import ActionIcon from '~/components/shared/ActionIcon'
+import { IconPlus } from '@tabler/icons-react'
+import { generateRandomForm } from '~/components/gameshows/SetConfigurator/helpers'
 
 const SetCard: React.FC<ISetCardProps> = ({ editable = false, card, setCards, index, isFlipped = false }) => {
     const theme = useMantineTheme()
 
-    const formElements = card.forms.map(formItem => <SetForm onChange={onChangeForm} key={formItem.id} editable={editable} formItem={formItem} />)
+    const formElements = card.forms.map(formItem => <SetForm onChange={onChangeForm} onRemove={removeFormFromCard} key={formItem.id} editable={editable} formItem={formItem} removeable={card.forms.length > 1} />)
 
     function onChangeForm(formId: string, newForm: TForm) {
         if (!setCards) return
@@ -25,6 +28,33 @@ const SetCard: React.FC<ISetCardProps> = ({ editable = false, card, setCards, in
         })
     }
 
+    function addFormToCard() {
+        if (!setCards) return
+
+        const randomForm = generateRandomForm()
+
+        setCards(draft => {
+            const c = draft.cards.find(c => c.id === card.id)
+
+            if (!c) return
+
+            c.forms.push(randomForm)
+        })
+
+    }
+
+    function removeFormFromCard(formId: string) {
+        if (!setCards || formElements.length === 1) return
+
+        setCards(draft => {
+            const c = draft.cards.find(c => c.id === card.id)
+
+            if (!c) return
+
+            c.forms = c.forms.filter(f => f.id !== formId)
+        })
+    }
+
     const FrontContent = () => (
         <Text pos="absolute" weight="bold" size="2rem" color='dark'>{index + 1}</Text>
     )
@@ -35,6 +65,11 @@ const SetCard: React.FC<ISetCardProps> = ({ editable = false, card, setCards, in
                 <Text color='dimmed' weight="bold" size="xl">{index + 1}</Text>
             </Container>
             {formElements}
+            {editable && formElements.length < 3 &&
+                <ActionIcon variant='default' ml="md" onClick={addFormToCard}>
+                    <IconPlus />
+                </ActionIcon>
+            }
         </>
     )
 

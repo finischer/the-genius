@@ -29,9 +29,10 @@ export function generateRandomForm(): TForm {
 
 export function generateRandomFormList(): TSetCard {
   const randomTFormList: TForm[] = [];
+  const numberOfElements = Math.floor(Math.random() * 3) + 1; // Zufällige Anzahl von 1 bis 3 Elementen
 
   // Erzeuge maximal 3 zufällige TForm-Objekte
-  for (let i = 0; i < Math.min(3, 27); i++) {
+  for (let i = 0; i < numberOfElements; i++) {
     // 3 * 3 * 3 = 27 mögliche Kombinationen
     const randomTForm = generateRandomForm();
     randomTFormList.push(randomTForm);

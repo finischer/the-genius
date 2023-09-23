@@ -50,7 +50,7 @@ const SetForm: React.FC<ISetFormProps> = ({ editable = false, formItem, onChange
     }
 
     const CustomMenuItem: React.FC<ICustomMenuItem> = ({ selected = false, children, name }) => (
-        <Menu.Item onClick={() => handleChangeFormData(name)} bg={selected ? theme.primaryColor : undefined} rightSection={selected && <IconCheck size={CHECK_ICON_SIZE} />}>{children}</Menu.Item>
+        <Menu.Item closeMenuOnClick={false} onClick={() => handleChangeFormData(name)} bg={selected ? theme.primaryColor : undefined} rightSection={selected && <IconCheck size={CHECK_ICON_SIZE} />}>{children}</Menu.Item>
     )
 
     const handleChangeFormData = (menuItemName: string) => {
@@ -102,6 +102,7 @@ const SetForm: React.FC<ISetFormProps> = ({ editable = false, formItem, onChange
                         <Menu.Divider />
 
                         <Menu.Label>Farbe</Menu.Label>
+                        <Menu.Item closeMenuOnClick={false}>Test Item</Menu.Item>
                         <CustomMenuItem name="color-green" selected={color === "green"}>Grün</CustomMenuItem>
                         <CustomMenuItem name="color-blue" selected={color === "blue"}>Blau</CustomMenuItem>
                         <CustomMenuItem name="color-red" selected={color === "red"}>Rot</CustomMenuItem>

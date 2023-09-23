@@ -3,7 +3,8 @@ import type {
   TSetCardColor,
   TSetCardFilling,
   TSetCardForm,
-  TSetCards,
+  TSetCard,
+  TSetQuestionItem,
 } from "~/components/room/Game/games/Set/set.types";
 import { v4 as uuidv4 } from "uuid";
 
@@ -26,7 +27,7 @@ export function generateRandomForm(): TForm {
   return randomTForm;
 }
 
-export function generateRandomFormList(): TSetCards {
+export function generateRandomFormList(): TSetCard {
   const randomTFormList: TForm[] = [];
 
   // Erzeuge maximal 3 zufällige TForm-Objekte
@@ -39,5 +40,14 @@ export function generateRandomFormList(): TSetCards {
   return {
     id: uuidv4(),
     forms: randomTFormList,
+  };
+}
+
+export function generateNewSetQuestion(numOfCards: number): TSetQuestionItem {
+  return {
+    id: uuidv4(),
+    cards: Array(numOfCards)
+      .fill(null)
+      .map((_) => generateRandomFormList()),
   };
 }

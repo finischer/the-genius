@@ -1,8 +1,7 @@
-import { Button, Flex, Text, TextInput, Title } from '@mantine/core'
-import React, { useEffect, type FormEvent, type FormEventHandler, useRef } from 'react'
-import type { ICreateQuestionContainerProps, IWordItemProps } from './createQuestionForm.types'
+import { Button, Flex, Text, TextInput, Title } from '@mantine/core';
+import React, { useEffect, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { useForm } from '@mantine/form';
+import type { ICreateQuestionContainerProps, IWordItemProps } from './createQuestionForm.types';
 
 const WordItem: React.FC<IWordItemProps> = ({ word, ...props }) => {
     return <Flex gap="md">

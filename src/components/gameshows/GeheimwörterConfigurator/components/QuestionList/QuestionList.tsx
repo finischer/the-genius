@@ -18,7 +18,14 @@ const QuestionList: React.FC<IQuestionListProps> = ({ questions, setQuestions, s
     return (
         <Flex direction="column" gap="lg" w="100%">
             <Title order={3}>Antworten ({questions.length})</Title>
-            <List data={questions} setData={setQuestions} onClickItem={handleItemClick} renderValueByKey={keyForRendering} editable selectedItemId={selectedItemId} />
+            <List
+                data={questions}
+                setData={setQuestions}
+                onClickItem={handleItemClick}
+                renderValueByKey={keyForRendering}
+                editable
+                selectedItemId={selectedItemId}
+            />
         </Flex>
     )
 }

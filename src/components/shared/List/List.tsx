@@ -12,6 +12,8 @@ const List: React.FC<IListProps> = ({ editable = false, onClickItem = () => null
             const newList = oldState.filter(item => item.id !== itemId)
             return newList
         })
+
+        onDeleteItem()
     }
 
     const handleSelectItem = (item: IListItem) => {

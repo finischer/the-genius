@@ -1,4 +1,5 @@
 import type { Updater } from "use-immer";
+import type { TQuestionFormMode } from "~/components/gameshows/types";
 import type { TSetQuestionItem } from "~/components/room/Game/games/Set/set.types";
 
 export interface ICreateSetContainerProps {
@@ -6,4 +7,5 @@ export interface ICreateSetContainerProps {
   setQuestion: Updater<TSetQuestionItem>;
   onAddQuestion: (newQuestion: TSetQuestionItem) => void;
   onUpdateQuestion: (updatedQuestion: TSetQuestionItem) => void;
+  mode: TQuestionFormMode;
 }

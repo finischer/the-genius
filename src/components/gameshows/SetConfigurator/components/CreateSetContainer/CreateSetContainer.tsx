@@ -1,20 +1,23 @@
 import { Button, Flex, SimpleGrid, Title } from "@mantine/core"
 import SetCard from "~/components/room/Game/games/Set/components/SetCard"
+import { NUM_OF_CARDS } from "../../SetConfigurator"
+import { generateNewSetQuestion } from "../../helpers"
 import type { ICreateSetContainerProps } from "./createSetContainer.types"
-import type { TSetQuestionItem } from "~/components/room/Game/games/Set/set.types"
-import { useEffect } from "react"
 
-const CreateSetContainer: React.FC<ICreateSetContainerProps> = ({ question, setQuestion, onAddQuestion }) => {
+const CreateSetContainer: React.FC<ICreateSetContainerProps> = ({ question, setQuestion, onAddQuestion, onUpdateQuestion, mode }) => {
 
     const cardElements = question.cards.map((item, index) => <SetCard isFlipped key={index} editable card={item} setCards={setQuestion} index={index} />)
 
-    const handleAddQuestion = () => {
-        onAddQuestion(question)
-    }
+    const handleSubmitQuestion = () => {
+        if (mode === "ADD") {
+            onAddQuestion(question)
+        } else if (mode === "UPDATE") {
+            onUpdateQuestion(question)
+        }
 
-    useEffect(() => {
-        console.log("Questions updated: ", question)
-    }, [question])
+        setQuestion(generateNewSetQuestion(NUM_OF_CARDS))
+
+    }
 
     return (
         <Flex direction="column" gap="lg" w="100%" justify="center" align="center" >
@@ -24,10 +27,7 @@ const CreateSetContainer: React.FC<ICreateSetContainerProps> = ({ question, setQ
                 {cardElements}
             </SimpleGrid>
 
-            <Button.Group>
-                <Button variant='default'>Ausfüllen</Button>
-                <Button onClick={handleAddQuestion}>Set Hinzufügen</Button>
-            </Button.Group>
+            <Button onClick={handleSubmitQuestion}>Set {mode === "ADD" ? "hinzufügen" : "speichern"}</Button>
         </Flex>
     )
 }

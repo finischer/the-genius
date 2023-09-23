@@ -8,7 +8,7 @@ import CreateQuestionForm from './components/CreateQuestionForm';
 import QuestionList from './components/QuestionList';
 import { useImmer } from 'use-immer';
 import { v4 as uuidv4 } from 'uuid';
-import type { TQuestionFormMode } from './components/CreateQuestionForm/createQuestionForm.types';
+import type { TQuestionFormMode } from '../types';
 
 const ALPHABET = [...'abcdefghijklmnoprstuvwxyz'];
 const DEFAULT_CODE_WORD_LIST = [

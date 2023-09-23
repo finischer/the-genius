@@ -5,21 +5,19 @@ import type { TSetQuestionItem, TSetQuestionList } from '~/components/room/Game/
 import { useConfigurator } from '~/hooks/useConfigurator'
 import CreateSetContainer from './components/CreateSetContainer'
 import SetList from './components/SetList'
-import { generateRandomFormList } from './helpers'
+import { generateNewSetQuestion, generateRandomFormList } from './helpers'
 import { useEffect, useState } from 'react'
+import type { TQuestionFormMode } from '../types'
 
-const NUM_OF_CARDS = 12
-
-const DEFAULT_SET_FORMS = Array(NUM_OF_CARDS).fill(null).map(_ => generateRandomFormList())
+export const NUM_OF_CARDS = 12
 
 const SetConfigurator = () => {
     const [set, setSet, { enableFurtherButton, disableFurtherButton }] = useConfigurator("set")
     // const [cards, setCards] = useImmer<TSetListItem[]>(DEFAULT_SET_FORMS)
     const [questions, setQuestions] = useState<TSetQuestionList>([])
-    const [questionItem, setQuestionItem] = useImmer<TSetQuestionItem>({
-        id: uuidv4(),
-        cards: DEFAULT_SET_FORMS
-    })
+    const [questionItem, setQuestionItem] = useImmer<TSetQuestionItem>(generateNewSetQuestion(NUM_OF_CARDS))
+    const questionFormMode: TQuestionFormMode = questions.map(i => i.id).includes(questionItem.id) ? "UPDATE" : "ADD"
+
 
     const addQuestion = (newQuestion: TSetQuestionItem) => {
         console.log("New question: ", newQuestion)
@@ -28,6 +26,14 @@ const SetConfigurator = () => {
 
     const updateQuestion = (updatedQuestion: TSetQuestionItem) => {
         console.log("Updated question: ", updatedQuestion)
+        setQuestions(oldQuestions => {
+            const index = oldQuestions.findIndex(q => q.id === updatedQuestion.id)
+            let newQuestions = [...oldQuestions]
+
+            newQuestions[index] = updatedQuestion
+
+            return newQuestions
+        })
     }
 
     useEffect(() => {
@@ -43,6 +49,7 @@ const SetConfigurator = () => {
                 onUpdateQuestion={updateQuestion}
                 question={questionItem}
                 setQuestion={setQuestionItem}
+                mode={questionFormMode}
             />
             <SetList
                 questions={questions}

@@ -3,6 +3,8 @@ import List from "~/components/shared/List"
 import type { ISetListProps } from "./setList.typtes"
 import type { IListItem } from "~/components/shared/List/components/ListItem/listItem.types"
 import type { TSetQuestionItem } from "~/components/room/Game/games/Set/set.types"
+import { useEffect } from "react"
+import { findSets } from "../../helpers"
 
 const SetList: React.FC<ISetListProps> = ({ questions, setQuestions, setQuestionItem, questionItem }) => {
     const selectedItemId = questionItem.id
@@ -13,7 +15,7 @@ const SetList: React.FC<ISetListProps> = ({ questions, setQuestions, setQuestion
     }
 
     return (
-        <Flex direction="column" gap="lg" w="50%">
+        <Flex direction="column" gap="lg" w="20rem" >
             <Title order={3}>Alle Sets ({questions.length})</Title>
             <List
                 data={questions}

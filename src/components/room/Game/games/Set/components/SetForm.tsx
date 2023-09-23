@@ -2,7 +2,7 @@ import { Flex, Menu, UnstyledButton, useMantineTheme } from "@mantine/core"
 import { IconCheck } from "@tabler/icons-react"
 import type React from "react"
 import type { CSSProperties } from "react"
-import { SET_FORMS, type TForm } from "../set.types"
+import { SET_FORMS, type TSetCard } from "../set.types"
 import Diamond from "./Diamond"
 import Oval from "./Oval"
 import Rectangle from "./Rectangle"
@@ -10,9 +10,9 @@ import Rectangle from "./Rectangle"
 
 // local interfaces
 interface ISetFormProps {
-    formItem: TForm
+    card: TSetCard
     editable?: boolean
-    onChange?: (formId: string, newForm: TForm) => void
+    onChange?: (newCard: TSetCard) => void
     onRemove?: (formId: string) => void
     removeable?: boolean
 }
@@ -37,8 +37,8 @@ export const DEFAULT_SET_FORM_STYLE: CSSProperties = {
 
 const CHECK_ICON_SIZE = 14
 
-const SetForm: React.FC<ISetFormProps> = ({ editable = false, formItem, onChange, onRemove, removeable }) => {
-    const { form, color, fill, id } = formItem
+const SetForm: React.FC<ISetFormProps> = ({ editable = false, card, onChange, onRemove, removeable }) => {
+    const { form, color, fill, id } = card
 
     const theme = useMantineTheme()
     const isRectangle = form === "rectangle"
@@ -63,19 +63,19 @@ const SetForm: React.FC<ISetFormProps> = ({ editable = false, formItem, onChange
         // must be a length of 2 (format: "key-value")
         if (splitted.length != 2) return
 
-        const [key, value] = splitted as [keyof TForm, SET_FORMS]
+        const [key, value] = splitted as [keyof TSetCard, SET_FORMS]
 
         if (!key || !value) return
 
         // check if key is a key of TForm
-        if (!Object.keys(formItem).includes(key)) return
+        if (!Object.keys(card).includes(key)) return
 
-        const newForm: TForm = {
-            ...formItem,
+        const newCard: TSetCard = {
+            ...card,
             [key]: value
         }
 
-        onChange(id, newForm)
+        onChange(newCard)
     }
 
     const handleRemoveForm = () => {

@@ -1,13 +1,14 @@
-import { Button, Flex, SimpleGrid, Title } from "@mantine/core"
+import { Button, Flex, SimpleGrid, Text, Title } from "@mantine/core"
 import SetCard from "~/components/room/Game/games/Set/components/SetCard"
 import { NUM_OF_CARDS } from "../../SetConfigurator"
 import { findSets, generateNewSetQuestion } from "../../helpers"
 import type { ICreateSetContainerProps } from "./createSetContainer.types"
-import type { TForm, TSetCard, TSetQuestionItem } from "~/components/room/Game/games/Set/set.types"
+import { useEffect } from "react"
 
 const CreateSetContainer: React.FC<ICreateSetContainerProps> = ({ question, setQuestion, onAddQuestion, onUpdateQuestion, mode }) => {
+    const possibleSets = findSets(question.cards)
 
-    const cardElements = question.cards.map((item, index) => <SetCard isFlipped key={index} editable card={item} setCards={setQuestion} index={index} />)
+    const cardElements = question.cards.map((item, index) => <SetCard isFlipped key={item.id} editable card={item} setCards={setQuestion} index={index} />)
 
     const handleSubmitQuestion = () => {
         if (mode === "ADD") {
@@ -20,14 +21,28 @@ const CreateSetContainer: React.FC<ICreateSetContainerProps> = ({ question, setQ
     }
 
     return (
-        <Flex direction="column" gap="lg" w="100%" justify="center" align="center" >
+        <Flex direction="column" gap="lg" align="center">
             <Title order={3}>Set erstellen</Title>
 
             <SimpleGrid cols={3} spacing="md" verticalSpacing="md">
                 {cardElements}
             </SimpleGrid>
 
-            <Button onClick={handleSubmitQuestion}>Set {mode === "ADD" ? "hinzufügen" : "speichern"}</Button>
+            {/* Possible sets */}
+            <Flex direction="column" align="center">
+                <Text color="dimmed">Mögliche Sets</Text>
+                {possibleSets.length === 0 && "Mit diesem Stapel ist kein Set möglich"}
+                {possibleSets.map((s, idx) => {
+                    const cardNumbers = s.map(s => s + 1);
+
+                    return <Flex>
+                        Set {idx + 1}: {cardNumbers.join(",")}
+                    </Flex>
+
+                })}
+            </Flex>
+
+            <Button onClick={handleSubmitQuestion} disabled={possibleSets.length === 0}>Set {mode === "ADD" ? "hinzufügen" : "speichern"}</Button>
         </Flex>
     )
 }

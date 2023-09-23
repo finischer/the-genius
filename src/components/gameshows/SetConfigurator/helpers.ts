@@ -1,5 +1,4 @@
 import type {
-  TForm,
   TSetCardColor,
   TSetCardFilling,
   TSetCardForm,
@@ -8,53 +7,60 @@ import type {
 } from "~/components/room/Game/games/Set/set.types";
 import { v4 as uuidv4 } from "uuid";
 
-export function generateRandomForm(): TForm {
+export function generateRandomFormCard(): TSetCard {
   const forms: TSetCardForm[] = ["rectangle", "oval", "diamond"];
   const colors: TSetCardColor[] = ["red", "green", "blue"];
   const fillings: TSetCardFilling[] = ["filled", "none", "dashed"];
+  const MAX_NUMBER_OF_ELEMENTS = 3;
 
   const randomFormIndex = Math.floor(Math.random() * forms.length);
   const randomColorIndex = Math.floor(Math.random() * colors.length);
   const randomFillingIndex = Math.floor(Math.random() * fillings.length);
+  const numberOfElements =
+    Math.floor(Math.random() * MAX_NUMBER_OF_ELEMENTS) + 1;
 
-  const randomTForm: TForm = {
-    id: uuidv4(),
-    form: forms[randomFormIndex] ?? "diamond",
-    color: colors[randomColorIndex] ?? "blue",
-    fill: fillings[randomFillingIndex] ?? "filled",
+  const form = forms[randomFormIndex] ?? "diamond";
+  const color = colors[randomColorIndex] ?? "blue";
+  const fill = fillings[randomFillingIndex] ?? "filled";
+  const amount = numberOfElements ?? 1;
+  const formId = `${form}-${color}-${fill}-${amount}`;
+
+  const randomTForm: TSetCard = {
+    id: formId,
+    form,
+    color,
+    fill,
+    amount,
   };
 
   return randomTForm;
 }
 
-export function generateRandomFormList(): TSetCard {
-  const randomTFormList: TForm[] = [];
-  const numberOfElements = Math.floor(Math.random() * 3) + 1; // Zufällige Anzahl von 1 bis 3 Elementen
+export function generateNewSetQuestion(numOfCards: number): TSetQuestionItem {
+  const cards: TSetCard[] = [];
 
-  // Erzeuge maximal 3 zufällige TForm-Objekte
-  for (let i = 0; i < numberOfElements; i++) {
-    // 3 * 3 * 3 = 27 mögliche Kombinationen
-    const randomTForm = generateRandomForm();
-    randomTFormList.push(randomTForm);
+  for (let i = 0; i < numOfCards; i++) {
+    let randomForm = generateRandomFormCard();
+
+    // check if form already exists in cards
+    let card = cards.find((c) => c.id === randomForm.id);
+
+    while (card) {
+      randomForm = generateRandomFormCard();
+      card = cards.find((c) => c.id === randomForm.id);
+    }
+
+    cards.push(randomForm);
   }
 
   return {
     id: uuidv4(),
-    forms: randomTFormList,
+    cards,
   };
 }
 
-export function generateNewSetQuestion(numOfCards: number): TSetQuestionItem {
-  return {
-    id: uuidv4(),
-    cards: Array(numOfCards)
-      .fill(null)
-      .map((_) => generateRandomFormList()),
-  };
-}
-
-export function findSets(cards: TSetCard[]) {
-  const sets = [];
+export function findSets(cards: TSetCard[]): Array<Array<number>> {
+  const sets: Array<Array<number>> = [];
 
   for (let i = 0; i < cards.length - 2; i++) {
     for (let j = i + 1; j < cards.length - 1; j++) {
@@ -63,8 +69,7 @@ export function findSets(cards: TSetCard[]) {
         const card2 = cards[j];
         const card3 = cards[k];
 
-        if (!card1 || !card2 || !card3) return;
-
+        if (!card1 || !card2 || !card3) return [];
         if (isValidSet(card1, card2, card3)) {
           sets.push([i, j, k]);
         }
@@ -76,30 +81,42 @@ export function findSets(cards: TSetCard[]) {
 }
 
 function isValidSet(card1: TSetCard, card2: TSetCard, card3: TSetCard) {
-  const attributes: (keyof Omit<TForm, "id">)[] = ["form", "fill", "color"];
+  function allSame(a0: string, a1: string, a2: string) {
+    return a0 === a1 && a1 === a2;
+  }
+
+  function allDifferent(a0: string, a1: string, a2: string) {
+    return a0 !== a1 && a0 !== a2 && a1 !== a2;
+  }
+
+  const attributes: (keyof Omit<TSetCard, "id">)[] = [
+    "form",
+    "fill",
+    "color",
+    "amount",
+  ];
+
+  const results = [];
 
   for (const attribute of attributes) {
-    const values1 = card1.forms.find((f) => f[attribute]);
-    const values2 = card2.forms.find((f) => f[attribute]);
-    const values3 = card3.forms.find((f) => f[attribute]);
+    const isAllSame = allSame(
+      card1[attribute].toString(),
+      card2[attribute].toString(),
+      card3[attribute].toString()
+    );
 
-    if (!values1 || !values2 || !values3) return;
+    const isAllDifferent = allDifferent(
+      card1[attribute].toString(),
+      card2[attribute].toString(),
+      card3[attribute].toString()
+    );
 
-    if (!isValidAttributeCombination(values1, values2, values3)) {
-      return false;
+    if (isAllSame || isAllDifferent) {
+      results.push(true);
+    } else {
+      results.push(false);
     }
   }
 
-  return true;
-}
-
-function isValidAttributeCombination(
-  values1: TForm,
-  values2: TForm,
-  values3: TForm
-) {
-  return false;
-  // const uniqueValues = new Set([...values1, ...values2, ...values3]);
-  // console.log("Unique values: ", uniqueValues);
-  // return uniqueValues.size === 1 || uniqueValues.size === 3;
+  return results.every((i) => i === true);
 }

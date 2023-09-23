@@ -6,7 +6,7 @@ import { useConfigurator } from '~/hooks/useConfigurator'
 import type { TQuestionFormMode } from '../types'
 import CreateSetContainer from './components/CreateSetContainer'
 import SetList from './components/SetList'
-import { generateNewSetQuestion } from './helpers'
+import { findSets, generateNewSetQuestion } from './helpers'
 
 export const NUM_OF_CARDS = 12
 
@@ -16,7 +16,6 @@ const SetConfigurator = () => {
     const [questions, setQuestions] = useState<TSetQuestionList>(set.questions)
     const [questionItem, setQuestionItem] = useImmer<TSetQuestionItem>(questions.at(0) ?? generateNewSetQuestion(NUM_OF_CARDS))
     const questionFormMode: TQuestionFormMode = questions.map(i => i.id).includes(questionItem.id) ? "UPDATE" : "ADD"
-
 
     const addQuestion = (newQuestion: TSetQuestionItem) => {
         setQuestions(oldQuestions => [...oldQuestions, newQuestion])
@@ -38,6 +37,7 @@ const SetConfigurator = () => {
             draft.set.questions = questions
         })
 
+
         if (questions.length <= 0) {
             disableFurtherButton()
         } else {
@@ -47,7 +47,7 @@ const SetConfigurator = () => {
     }, [questions])
 
     return (
-        <Flex>
+        <Flex justify="center" gap="xl">
             <CreateSetContainer
                 onAddQuestion={addQuestion}
                 onUpdateQuestion={updateQuestion}

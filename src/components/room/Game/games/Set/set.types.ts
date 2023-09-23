@@ -39,14 +39,10 @@ export type TSetQuestionItem = {
 
 export type TSetCard = {
   id: string;
-  forms: TForm[];
-};
-
-export type TForm = {
-  id: string;
   form: TSetCardForm;
   color: TSetCardColor;
   fill: TSetCardFilling;
+  amount: number;
 };
 
 export type TSetCardForm = "rectangle" | "oval" | "diamond";

@@ -1,44 +1,33 @@
 import { Container, Flex, Text, useMantineTheme } from '@mantine/core'
-import type { TForm } from '../../set.types'
+import { IconPlus } from '@tabler/icons-react'
+import { v4 as uuidv4 } from "uuid"
+import ActionIcon from '~/components/shared/ActionIcon'
+import type { TSetCard } from '../../set.types'
 import SetForm from '../SetForm'
 import type { ISetCardProps } from './setCard.types'
-import ActionIcon from '~/components/shared/ActionIcon'
-import { IconPlus } from '@tabler/icons-react'
-import { generateRandomForm } from '~/components/gameshows/SetConfigurator/helpers'
 
 const SetCard: React.FC<ISetCardProps> = ({ editable = false, card, setCards, index, isFlipped = false }) => {
     const theme = useMantineTheme()
 
-    const formElements = card.forms.map(formItem => <SetForm onChange={onChangeForm} onRemove={removeFormFromCard} key={formItem.id} editable={editable} formItem={formItem} removeable={card.forms.length > 1} />)
+    // const formElements =  card.forms.map(formItem => <SetForm onChange={onChangeForm} onRemove={removeFormFromCard} key={formItem.id} editable={editable} formItem={formItem} removeable={card.forms.length > 1} />)
+    const formElements = Array(card.amount).fill(null).map((_, idx) => <SetForm key={`${card.id}-${idx}`} onChange={onChangeCard} onRemove={removeFormFromCard} editable={editable} card={card} removeable={card.amount > 1} />)
 
-    function onChangeForm(formId: string, newForm: TForm) {
+    function onChangeCard(newCard: TSetCard) {
         if (!setCards) return
 
         setCards(draft => {
             const cardIndex = draft.cards.findIndex(c => c.id === card.id)
-            const formIndex = draft.cards[cardIndex]?.forms.findIndex(f => f.id === formId)
-
-            if (cardIndex === undefined || formIndex === undefined) return
-
-            let cardItem = draft.cards[cardIndex]
-
-            if (cardItem === undefined) return
-
-            cardItem.forms[formIndex] = newForm
+            draft.cards[cardIndex] = newCard
         })
     }
 
     function addFormToCard() {
         if (!setCards) return
 
-        const randomForm = generateRandomForm()
-
         setCards(draft => {
             const c = draft.cards.find(c => c.id === card.id)
-
             if (!c) return
-
-            c.forms.push(randomForm)
+            c.amount++
         })
 
     }
@@ -48,10 +37,8 @@ const SetCard: React.FC<ISetCardProps> = ({ editable = false, card, setCards, in
 
         setCards(draft => {
             const c = draft.cards.find(c => c.id === card.id)
-
-            if (!c) return
-
-            c.forms = c.forms.filter(f => f.id !== formId)
+            if (!c || c.amount === 0) return
+            c.amount--
         })
     }
 

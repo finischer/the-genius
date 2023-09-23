@@ -54,7 +54,7 @@ const FlipCard: React.FC<IFlipCardProps> = ({ isFlipped = false, setFlipped, cli
 
                 {/* Back */}
                 <Container>
-                    {back}
+                    <Title>{back}</Title>
                 </Container>
             </ReactCardFlip>
         </Container>

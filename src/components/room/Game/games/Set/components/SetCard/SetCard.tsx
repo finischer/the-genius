@@ -1,4 +1,4 @@
-import { Container, Flex, Text, useMantineTheme } from '@mantine/core'
+import { Container, Flex, Text, UnstyledButton, useMantineTheme } from '@mantine/core'
 import { IconPlus } from '@tabler/icons-react'
 import { v4 as uuidv4 } from "uuid"
 import ActionIcon from '~/components/shared/ActionIcon'
@@ -6,7 +6,7 @@ import type { TSetCard } from '../../set.types'
 import SetForm from '../SetForm'
 import type { ISetCardProps } from './setCard.types'
 
-const SetCard: React.FC<ISetCardProps> = ({ editable = false, card, setCards, index, isFlipped = false }) => {
+const SetCard: React.FC<ISetCardProps> = ({ editable = false, card, setCards, index, isFlipped = false, onClick = () => null }) => {
     const theme = useMantineTheme()
 
     // const formElements =  card.forms.map(formItem => <SetForm onChange={onChangeForm} onRemove={removeFormFromCard} key={formItem.id} editable={editable} formItem={formItem} removeable={card.forms.length > 1} />)
@@ -61,9 +61,7 @@ const SetCard: React.FC<ISetCardProps> = ({ editable = false, card, setCards, in
     )
 
     return (
-        <Flex bg="#f7f1f1" p="md" justify="center" pos="relative" align="center" h="10rem" w="15rem" sx={{
-            borderRadius: theme.radius.md
-        }}>
+        <Flex bg="#f7f1f1" p="md" justify="center" pos="relative" align="center" h="10rem" w="15rem" sx={{ borderRadius: theme.radius.md, }}>
             {!isFlipped ?
                 <FrontContent />
                 :

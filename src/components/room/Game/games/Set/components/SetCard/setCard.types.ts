@@ -1,6 +1,5 @@
 import type { Updater } from "use-immer";
 import {
-  type TForm,
   type TSetCard,
   type TSetQuestionItem,
   type TSetQuestionList,
@@ -12,4 +11,5 @@ export interface ISetCardProps {
   index: number;
   isFlipped?: boolean;
   setCards?: Updater<TSetQuestionItem>;
+  onClick?: () => void;
 }

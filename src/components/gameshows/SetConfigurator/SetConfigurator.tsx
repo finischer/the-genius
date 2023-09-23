@@ -6,7 +6,7 @@ import { useConfigurator } from '~/hooks/useConfigurator'
 import type { TQuestionFormMode } from '../types'
 import CreateSetContainer from './components/CreateSetContainer'
 import SetList from './components/SetList'
-import { findSets, generateNewSetQuestion } from './helpers'
+import { generateNewSetQuestion } from './helpers'
 
 export const NUM_OF_CARDS = 12
 

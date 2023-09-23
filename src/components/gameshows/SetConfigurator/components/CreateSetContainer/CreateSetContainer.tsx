@@ -3,7 +3,6 @@ import SetCard from "~/components/room/Game/games/Set/components/SetCard"
 import { NUM_OF_CARDS } from "../../SetConfigurator"
 import { findSets, generateNewSetQuestion } from "../../helpers"
 import type { ICreateSetContainerProps } from "./createSetContainer.types"
-import { useEffect } from "react"
 
 const CreateSetContainer: React.FC<ICreateSetContainerProps> = ({ question, setQuestion, onAddQuestion, onUpdateQuestion, mode }) => {
     const possibleSets = findSets(question.cards)

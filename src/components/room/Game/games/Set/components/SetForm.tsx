@@ -102,10 +102,10 @@ const SetForm: React.FC<ISetFormProps> = ({ editable = false, formItem, onChange
                         <Menu.Divider />
 
                         <Menu.Label>Farbe</Menu.Label>
-                        <Menu.Item closeMenuOnClick={false}>Test Item</Menu.Item>
                         <CustomMenuItem name="color-green" selected={color === "green"}>Grün</CustomMenuItem>
                         <CustomMenuItem name="color-blue" selected={color === "blue"}>Blau</CustomMenuItem>
                         <CustomMenuItem name="color-red" selected={color === "red"}>Rot</CustomMenuItem>
+
                         <Menu.Divider />
 
                         <Menu.Label>Füllung</Menu.Label>

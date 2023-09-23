@@ -46,7 +46,6 @@ const FlipCard: React.FC<IFlipCardProps> = ({ isFlipped = false, setFlipped, cli
                     ...backStyle
                 }
             }}
-                containerStyle={{ margin: 0, backgroundColor: "green", padding: 0, zIndex: -999 }}
             >
                 {/* Front */}
                 <Container>

@@ -10,7 +10,7 @@ export const DEFAULT_SET_STATE: TSetGameState = {
   maxPoints: 7,
   scorebarMode: "circle",
   rules: "",
-  allCards: [],
+  questions: [],
   markedCards: [],
   qIndex: 0,
   display: {

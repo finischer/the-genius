@@ -1,8 +1,9 @@
 import { Button, Flex, SimpleGrid, Title } from "@mantine/core"
 import SetCard from "~/components/room/Game/games/Set/components/SetCard"
 import { NUM_OF_CARDS } from "../../SetConfigurator"
-import { generateNewSetQuestion } from "../../helpers"
+import { findSets, generateNewSetQuestion } from "../../helpers"
 import type { ICreateSetContainerProps } from "./createSetContainer.types"
+import type { TForm, TSetCard, TSetQuestionItem } from "~/components/room/Game/games/Set/set.types"
 
 const CreateSetContainer: React.FC<ICreateSetContainerProps> = ({ question, setQuestion, onAddQuestion, onUpdateQuestion, mode }) => {
 
@@ -17,6 +18,10 @@ const CreateSetContainer: React.FC<ICreateSetContainerProps> = ({ question, setQ
 
         setQuestion(generateNewSetQuestion(NUM_OF_CARDS))
     }
+    const sets = findSets(question.cards);
+
+    console.log(sets); // Das sollte das erwartete Ergebnis [2, 3, 7] liefern
+
 
     return (
         <Flex direction="column" gap="lg" w="100%" justify="center" align="center" >

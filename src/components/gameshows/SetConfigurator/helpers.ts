@@ -51,3 +51,59 @@ export function generateNewSetQuestion(numOfCards: number): TSetQuestionItem {
       .map((_) => generateRandomFormList()),
   };
 }
+
+export function findSets(cards: TSetCard[]) {
+  const sets = [];
+
+  for (let i = 0; i < cards.length - 2; i++) {
+    for (let j = i + 1; j < cards.length - 1; j++) {
+      for (let k = j + 1; k < cards.length; k++) {
+        const card1 = cards[i];
+        const card2 = cards[j];
+        const card3 = cards[k];
+
+        if (!card1 || !card2 || !card3) return;
+
+        if (isValidSet(card1, card2, card3)) {
+          sets.push([i, j, k]);
+        }
+      }
+    }
+  }
+
+  return sets;
+}
+
+function isValidSet(card1: TSetCard, card2: TSetCard, card3: TSetCard) {
+  const attributes: (keyof Omit<TForm, "id">)[] = ["form", "fill", "color"];
+
+  for (const attribute of attributes) {
+    const values1 = card1.forms.find((f) => f[attribute]);
+    const values2 = card2.forms.find((f) => f[attribute]);
+    const values3 = card3.forms.find((f) => f[attribute]);
+
+    if (!values1 || !values2 || !values3) return;
+
+    if (!isValidAttributeCombination(values1, values2, values3)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function isValidAttributeCombination(
+  values1: TForm,
+  values2: TForm,
+  values3: TForm
+) {
+  console.log("+++++++++++++++++++++");
+  console.log("Values1: ", values1);
+  console.log("Values2: ", values2);
+  console.log("Values3: ", values3);
+  console.log("+++++++++++++++++++++");
+  return false;
+  // const uniqueValues = new Set([...values1, ...values2, ...values3]);
+  // console.log("Unique values: ", uniqueValues);
+  // return uniqueValues.size === 1 || uniqueValues.size === 3;
+}

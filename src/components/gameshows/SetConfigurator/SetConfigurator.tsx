@@ -14,7 +14,7 @@ const SetConfigurator = () => {
     const [set, setSet, { enableFurtherButton, disableFurtherButton }] = useConfigurator("set")
 
     const [questions, setQuestions] = useState<TSetQuestionList>(set.questions)
-    const [questionItem, setQuestionItem] = useImmer<TSetQuestionItem>(set.questions[0] ?? generateNewSetQuestion(NUM_OF_CARDS))
+    const [questionItem, setQuestionItem] = useImmer<TSetQuestionItem>(questions.at(0) ?? generateNewSetQuestion(NUM_OF_CARDS))
     const questionFormMode: TQuestionFormMode = questions.map(i => i.id).includes(questionItem.id) ? "UPDATE" : "ADD"
 
 
@@ -37,7 +37,7 @@ const SetConfigurator = () => {
         setSet(draft => {
             draft.set.questions = questions
         })
-
+        console.log("Questions: ", questions)
         if (questions.length <= 0) {
             disableFurtherButton()
         } else {

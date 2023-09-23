@@ -1,31 +1,28 @@
 import { Flex } from '@mantine/core'
+import { useEffect, useState } from 'react'
 import { useImmer } from 'use-immer'
-import { v4 as uuidv4 } from "uuid"
 import type { TSetQuestionItem, TSetQuestionList } from '~/components/room/Game/games/Set/set.types'
 import { useConfigurator } from '~/hooks/useConfigurator'
+import type { TQuestionFormMode } from '../types'
 import CreateSetContainer from './components/CreateSetContainer'
 import SetList from './components/SetList'
-import { generateNewSetQuestion, generateRandomFormList } from './helpers'
-import { useEffect, useState } from 'react'
-import type { TQuestionFormMode } from '../types'
+import { generateNewSetQuestion } from './helpers'
 
 export const NUM_OF_CARDS = 12
 
 const SetConfigurator = () => {
     const [set, setSet, { enableFurtherButton, disableFurtherButton }] = useConfigurator("set")
-    // const [cards, setCards] = useImmer<TSetListItem[]>(DEFAULT_SET_FORMS)
-    const [questions, setQuestions] = useState<TSetQuestionList>([])
-    const [questionItem, setQuestionItem] = useImmer<TSetQuestionItem>(generateNewSetQuestion(NUM_OF_CARDS))
+
+    const [questions, setQuestions] = useState<TSetQuestionList>(set.questions)
+    const [questionItem, setQuestionItem] = useImmer<TSetQuestionItem>(set.questions[0] ?? generateNewSetQuestion(NUM_OF_CARDS))
     const questionFormMode: TQuestionFormMode = questions.map(i => i.id).includes(questionItem.id) ? "UPDATE" : "ADD"
 
 
     const addQuestion = (newQuestion: TSetQuestionItem) => {
-        console.log("New question: ", newQuestion)
         setQuestions(oldQuestions => [...oldQuestions, newQuestion])
     }
 
     const updateQuestion = (updatedQuestion: TSetQuestionItem) => {
-        console.log("Updated question: ", updatedQuestion)
         setQuestions(oldQuestions => {
             const index = oldQuestions.findIndex(q => q.id === updatedQuestion.id)
             let newQuestions = [...oldQuestions]
@@ -40,6 +37,13 @@ const SetConfigurator = () => {
         setSet(draft => {
             draft.set.questions = questions
         })
+
+        if (questions.length <= 0) {
+            disableFurtherButton()
+        } else {
+            enableFurtherButton()
+        }
+
     }, [questions])
 
     return (

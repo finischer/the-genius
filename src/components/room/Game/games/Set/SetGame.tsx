@@ -14,6 +14,7 @@ const SetGame: React.FC<ISetGameProps> = ({ game }) => {
   const [flippedCards, setFlippedCards] = useImmer<string[]>([]);
 
   const handleFlipCard = (id: string) => {
+    // TODO: Handle select card instead of flip (only for moderator)
     setFlippedCards((draft) => {
       if (flippedCards.includes(id)) {
         return draft.filter((cardId) => id !== cardId);

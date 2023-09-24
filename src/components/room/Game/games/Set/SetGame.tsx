@@ -6,6 +6,7 @@ import { useUser } from "~/hooks/useUser";
 import SetCard from "./components/SetCard";
 import type { ISetGameProps } from "./set.types";
 import ContainerBox from "~/components/shared/ContainerBox";
+import ModView from "~/components/shared/ModView";
 
 const SetGame: React.FC<ISetGameProps> = ({ game }) => {
   const { isHost } = useUser();
@@ -112,7 +113,7 @@ const SetGame: React.FC<ISetGameProps> = ({ game }) => {
       </Flex>
 
       {/* Right Content */}
-      {isHost && (
+      <ModView>
         <Flex
           direction="column"
           gap="md"
@@ -157,7 +158,7 @@ const SetGame: React.FC<ISetGameProps> = ({ game }) => {
             </Button>
           </Button.Group>
         </Flex>
-      )}
+      </ModView>
     </Flex>
   );
 };

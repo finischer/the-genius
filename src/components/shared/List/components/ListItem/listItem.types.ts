@@ -1,7 +1,8 @@
-export type IListItem = {
+interface HasId {
   id: string | number;
-  [key: string]: any;
-};
+}
+
+export type IListItem = HasId & { [key: string]: string };
 
 export interface IListItemProps {
   item: IListItem;

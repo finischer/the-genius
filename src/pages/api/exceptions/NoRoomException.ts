@@ -18,7 +18,6 @@ export default class NoRoomException {
       reason: "noRoomException",
       msg: "This room does not exist anymore",
     });
-
-    console.error(`Room '${socket.roomId}' not found`);
+    console.error(`Room '${socket.roomId ?? "NO_ROOM_ID_FOUND"}' not found`);
   }
 }

@@ -11,5 +11,5 @@ export interface ISetCardProps {
   index: number;
   isFlipped?: boolean;
   setCards?: Updater<TSetQuestionItem>;
-  onClick?: () => void;
+  onClick?: (id: string) => void;
 }

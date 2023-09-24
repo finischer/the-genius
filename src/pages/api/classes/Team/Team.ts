@@ -49,7 +49,7 @@ export default class Team implements PrismaTeam {
       players: [],
       scorebarTimer: {
         isActive: false,
-        seconds: 0,
+        seconds: 5, // default seconds
       },
     };
   }

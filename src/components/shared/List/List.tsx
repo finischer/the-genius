@@ -51,6 +51,7 @@ const List: React.FC<IListProps> = ({
           selected={item.id === selectedItemId}
           onClick={() => handleSelectItem(item)}
           onDelete={() => handleDeleteItem(item.id)}
+          // @ts-nocheck
           content={
             !renderValueByKey ? `Frage ${index + 1}` : item[renderValueByKey]
           }

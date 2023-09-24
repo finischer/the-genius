@@ -140,14 +140,18 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
       pos="relative"
     >
       {/* Left Scorbar timer */}
-      {timerPosition === "left" && team.scorebarTimer.isActive && (
-        <Container
-          bg={theme.primaryColor}
-          sx={scorebarTimerStyle}
-        >
-          {team.scorebarTimer.seconds}
-        </Container>
-      )}
+      <AnimatePresence>
+        {timerPosition === "left" && team.scorebarTimer.isActive && (
+          <motion.div {...animations.fadeInOut}>
+            <Container
+              bg={theme.primaryColor}
+              sx={scorebarTimerStyle}
+            >
+              {team.scorebarTimer.seconds}
+            </Container>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Only show notefields to own team players or viewers */}
       {(team.id === userTeam?.id || !isPlayer) && (

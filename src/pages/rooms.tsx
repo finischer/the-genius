@@ -78,7 +78,7 @@ const RoomsPage = () => {
 
     const handleRoomClick = (room: SafedRoom) => {
         setActiveRoom(room)
-        if (room.isPrivate && room.isCreator) {
+        if (room.isPrivate && !room.isCreator) {
             form.reset();
             openPasswordModal()
         } else {

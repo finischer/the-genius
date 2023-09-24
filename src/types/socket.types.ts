@@ -1,3 +1,4 @@
+import { type TExceptionReason } from "./../pages/api/exceptions/exceptions.types";
 import { type RoomViews, type Gameshow, type User } from "@prisma/client";
 import { type NextApiResponse } from "next";
 import { type Server, type Socket } from "socket.io";
@@ -122,6 +123,22 @@ export interface IClientToServerEvents {
   // +++ MERKEN GAME EVENTS +++
   "merken:flipCard": ({ cardIndex }: { cardIndex: number }) => void;
   "merken:startGame": () => void;
+
+  // +++ GEHEIMWOERTER GAME EVENTS +++
+  "geheimwoerter:toggleCodeList": () => void;
+  "geheimwoerter:toggleWords": () => void;
+  "geheimwoerter:showAnswer": () => void;
+  "geheimwoerter:nextQuestion": () => void;
+  "geheimwoerter:prevQuestion": () => void;
+
+  // +++ SET GAME EVENTS +++
+  "set:showCards": () => void;
+  "set:toggleCard": (cardIndex: number) => void;
+  "set:flipAllCards": () => void;
+  "set:showMarkedCards": () => void;
+  "set:nextQuestion": () => void;
+  "set:prevQuestion": () => void;
+  "set:changeMarkerState": (possibleSets: number[][]) => void;
 }
 
 export interface IServerToClientEvents {
@@ -133,10 +150,17 @@ export interface IServerToClientEvents {
   }) => void;
 
   // +++ ROOM EVENTS +++
-  userLeftRoom: ({ user }: { user: TSocketUser | null }) => void;
+  userLeftRoom: ({ user }: { user: TSocketUser | null | undefined }) => void;
   updateRoom: ({ newRoomState }: { newRoomState: Room }) => void;
   // updateAllRooms: ({ newRooms }: { newRooms: Room[] }) => void; // Currently not in use
   roomWasClosed: () => void;
+  raiseException: ({
+    reason,
+    msg,
+  }: {
+    reason: TExceptionReason;
+    msg: string;
+  }) => void;
 }
 
 export interface TNextApiResponse extends NextApiResponse {

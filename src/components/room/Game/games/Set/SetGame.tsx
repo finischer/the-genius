@@ -23,10 +23,6 @@ const SetGame: React.FC<ISetGameProps> = ({ game }) => {
     });
   };
 
-  useEffect(() => {
-    console.log(flippedCards);
-  }, [flippedCards]);
-
   return (
     <Flex
       direction="column"

@@ -280,7 +280,7 @@ export function roomHandler(
           }
 
           socket.to(socket.roomId).emit("userLeftRoom", { user: socket.user });
-          socket.leave(socket.roomId);
+          void socket.leave(socket.roomId);
           socket.disconnect(true);
           socket.roomId = null;
         }

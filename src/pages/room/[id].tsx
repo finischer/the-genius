@@ -32,6 +32,7 @@ import ActionIcon from "~/components/shared/ActionIcon";
 import ContainerBox from "~/components/shared/ContainerBox";
 import GameRulesModal from "~/components/shared/GameRulesModal/GameRulesModal";
 import Loader from "~/components/shared/Loader/Loader";
+import ModView from "~/components/shared/ModView";
 import useBuzzer from "~/hooks/useBuzzer/useBuzzer";
 import useNotification from "~/hooks/useNotification";
 import { useRoom } from "~/hooks/useRoom";
@@ -41,7 +42,6 @@ import { sizes } from "~/styles/constants";
 import { type TUserReduced } from "~/types/socket.types";
 import { animations } from "~/utils/animations";
 import type Room from "../api/classes/Room/Room";
-import ModView from "~/components/shared/ModView";
 
 type TNetworkStatusEffectiveType = "slow-2g" | "2g" | "3g" | "4g";
 

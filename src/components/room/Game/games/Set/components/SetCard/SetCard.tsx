@@ -1,20 +1,11 @@
-import {
-  Container,
-  Flex,
-  Text,
-  UnstyledButton,
-  useMantineTheme,
-  type Sx,
-} from "@mantine/core";
+import { Container, Text, useMantineTheme, type Sx } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
-import { v4 as uuidv4 } from "uuid";
+import { motion } from "framer-motion";
 import ActionIcon from "~/components/shared/ActionIcon";
+import { useUser } from "~/hooks/useUser";
 import type { TSetCard, TSetGameMarkedCardsState } from "../../set.types";
 import SetForm from "../SetForm";
 import type { ISetCardProps } from "./setCard.types";
-import { motion } from "framer-motion";
-import type { CSSProperties } from "react";
-import { useUser } from "~/hooks/useUser";
 
 const cardVariants = {
   selected: {

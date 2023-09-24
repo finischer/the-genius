@@ -1,6 +1,6 @@
 export type IListItem = {
   id: string | number;
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 export interface IListItemProps {

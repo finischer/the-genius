@@ -1,12 +1,11 @@
-import { Button, Container, Flex, SimpleGrid, Text } from "@mantine/core";
+import { Button, Flex, SimpleGrid, Text } from "@mantine/core";
 import React from "react";
 import { findSets } from "~/components/gameshows/SetConfigurator/helpers";
+import ModView from "~/components/shared/ModView";
 import { socket } from "~/hooks/useSocket";
 import { useUser } from "~/hooks/useUser";
 import SetCard from "./components/SetCard";
 import type { ISetGameProps } from "./set.types";
-import ContainerBox from "~/components/shared/ContainerBox";
-import ModView from "~/components/shared/ModView";
 
 const SetGame: React.FC<ISetGameProps> = ({ game }) => {
   const { isHost } = useUser();
@@ -62,7 +61,7 @@ const SetGame: React.FC<ISetGameProps> = ({ game }) => {
         const cardNumbers = s.map((s) => s + 1);
 
         return (
-          <Flex>
+          <Flex key={idx}>
             Set {idx + 1}: {cardNumbers.join(",")}
           </Flex>
         );

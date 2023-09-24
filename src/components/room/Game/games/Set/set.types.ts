@@ -20,6 +20,8 @@ export interface ISetGameProps {
   game: ISetGameState;
 }
 
+export type TSetGameMarkedCardsState = "wrong" | "correct" | "marked";
+
 export interface ISetGameState {
   questions: TSetQuestionList;
   qIndex: number;
@@ -27,7 +29,9 @@ export interface ISetGameState {
     cards: boolean;
     markedCards: boolean;
   };
-  markedCards: string[]; // id of cards
+  openedCards: number[]; // index of cards
+  markedCards: number[]; // index of cards
+  markedCardsState: TSetGameMarkedCardsState;
 }
 
 export type TSetQuestionList = TSetQuestionItem[];

@@ -1,68 +1,161 @@
-import React, { useEffect } from "react";
-import type { ISetGameProps } from "./set.types";
-import { Flex, SimpleGrid, Text } from "@mantine/core";
-import SetCard from "./components/SetCard";
+import { Button, Container, Flex, SimpleGrid, Text } from "@mantine/core";
+import React from "react";
 import { findSets } from "~/components/gameshows/SetConfigurator/helpers";
+import { socket } from "~/hooks/useSocket";
 import { useUser } from "~/hooks/useUser";
-import { useImmer } from "use-immer";
+import SetCard from "./components/SetCard";
+import type { ISetGameProps } from "./set.types";
+import ContainerBox from "~/components/shared/ContainerBox";
 
 const SetGame: React.FC<ISetGameProps> = ({ game }) => {
   const { isHost } = useUser();
   const currQuestion = game.questions[game.qIndex];
   const possibleSets = findSets(currQuestion?.cards ?? []);
 
-  const [flippedCards, setFlippedCards] = useImmer<string[]>([]);
-
-  const handleFlipCard = (id: string) => {
-    // TODO: Handle select card instead of flip (only for moderator)
-    setFlippedCards((draft) => {
-      if (flippedCards.includes(id)) {
-        return draft.filter((cardId) => id !== cardId);
-      } else {
-        draft.push(id);
-      }
-    });
+  const handleSelectCard = (cardIndex: number) => {
+    if (!isHost || game.display.markedCards) return;
+    socket.emit("set:toggleCard", cardIndex);
   };
+
+  const handleFlipAllCards = () => {
+    if (!isHost) return;
+    socket.emit("set:flipAllCards");
+  };
+
+  const handleShowMarkedCards = () => {
+    if (!isHost) return;
+    socket.emit("set:showMarkedCards");
+  };
+
+  const handleNextQuestion = () => {
+    if (!isHost || game.qIndex >= game.questions.length - 1) return;
+    socket.emit("set:nextQuestion");
+  };
+
+  const handlePrevQuestion = () => {
+    if (!isHost || game.qIndex <= 0) return;
+    socket.emit("set:prevQuestion");
+  };
+
+  const handleShowAnswer = () => {
+    if (!isHost) return;
+
+    socket.emit("set:changeMarkerState", possibleSets);
+  };
+
+  const handleMarkedCardClick = () => {
+    if (!isHost) return;
+
+    if (!game.display.markedCards) {
+      handleShowMarkedCards();
+    } else {
+      handleShowAnswer();
+    }
+  };
+
+  const PossibleSets = () => (
+    <>
+      <Text color="dimmed">Mögliche Sets</Text>
+      {possibleSets.length === 0 && "Mit diesem Stapel ist kein Set möglich"}
+      {possibleSets.map((s, idx) => {
+        const cardNumbers = s.map((s) => s + 1);
+
+        return (
+          <Flex>
+            Set {idx + 1}: {cardNumbers.join(",")}
+          </Flex>
+        );
+      })}
+    </>
+  );
 
   return (
     <Flex
-      direction="column"
       gap="xl"
+      pos="relative"
     >
-      <SimpleGrid
-        cols={3}
-        sx={{
-          perspective: "100rem",
-        }}
+      {/* Left content */}
+      <Flex
+        direction="column"
+        gap="sm"
       >
-        {currQuestion?.cards.map((card, idx) => (
-          <SetCard
-            key={card.id}
-            card={card}
-            index={idx}
-            isFlipped={flippedCards.includes(card.id)}
-            onClick={handleFlipCard}
-          />
-        ))}
-      </SimpleGrid>
+        <SimpleGrid
+          cols={3}
+          verticalSpacing="xs"
+          spacing="xs"
+          sx={{
+            perspective: "100rem",
+          }}
+        >
+          {currQuestion?.cards.map((card, idx) => {
+            const isMarked = game.markedCards.includes(idx);
 
+            return (
+              <SetCard
+                key={card.id}
+                card={card}
+                index={idx}
+                isFlipped={game.openedCards.includes(idx)}
+                marked={
+                  (isMarked && game.display.markedCards) || (isMarked && isHost)
+                }
+                markerState={game.markedCardsState}
+                onClick={handleSelectCard}
+              />
+            );
+          })}
+        </SimpleGrid>
+
+        <span style={{ textAlign: "center" }}>
+          Set {game.qIndex + 1} / {game.questions.length}
+        </span>
+      </Flex>
+
+      {/* Right Content */}
       {isHost && (
         <Flex
           direction="column"
-          align="center"
+          gap="md"
+          w="15rem"
         >
-          <Text color="dimmed">Mögliche Sets</Text>
-          {possibleSets.length === 0 &&
-            "Mit diesem Stapel ist kein Set möglich"}
-          {possibleSets.map((s, idx) => {
-            const cardNumbers = s.map((s) => s + 1);
+          <div style={{ height: "10rem" }}>
+            <PossibleSets />
+          </div>
 
-            return (
-              <Flex>
-                Set {idx + 1}: {cardNumbers.join(",")}
-              </Flex>
-            );
-          })}
+          <Button.Group orientation="vertical">
+            <Button
+              onClick={handleFlipAllCards}
+              variant="default"
+            >
+              Karten umdrehen
+            </Button>
+            <Button
+              onClick={handleMarkedCardClick}
+              variant="default"
+              disabled={
+                game.markedCards.length !== 3 ||
+                game.markedCardsState !== "marked"
+              }
+            >
+              {game.display.markedCards
+                ? "Antwort zeigen"
+                : "Markierten Karten zeigen"}
+            </Button>
+            <Button
+              onClick={handlePrevQuestion}
+              variant="default"
+              disabled={game.qIndex <= 0}
+            >
+              Vorherigen Stapel
+            </Button>
+            <Button
+              onClick={handleNextQuestion}
+              variant="default"
+              disabled={game.qIndex >= game.questions.length - 1}
+            >
+              Nächsten Stapel
+            </Button>
+          </Button.Group>
         </Flex>
       )}
     </Flex>

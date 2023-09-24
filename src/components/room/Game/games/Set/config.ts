@@ -11,7 +11,9 @@ export const DEFAULT_SET_STATE: TSetGameState = {
   scorebarMode: "circle",
   rules: "",
   questions: [],
+  openedCards: [],
   markedCards: [],
+  markedCardsState: "marked",
   qIndex: 0,
   display: {
     cards: false,

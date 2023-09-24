@@ -4,15 +4,17 @@ import {
   Text,
   UnstyledButton,
   useMantineTheme,
+  type Sx,
 } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import { v4 as uuidv4 } from "uuid";
 import ActionIcon from "~/components/shared/ActionIcon";
-import type { TSetCard } from "../../set.types";
+import type { TSetCard, TSetGameMarkedCardsState } from "../../set.types";
 import SetForm from "../SetForm";
 import type { ISetCardProps } from "./setCard.types";
 import { motion } from "framer-motion";
 import type { CSSProperties } from "react";
+import { useUser } from "~/hooks/useUser";
 
 const cardVariants = {
   selected: {
@@ -25,17 +27,27 @@ const cardVariants = {
   }),
 };
 
+const BORDER_COLOR_MAP: { [key in TSetGameMarkedCardsState]: string } = {
+  correct: "green",
+  wrong: "red",
+  marked: "orange",
+};
+
 const SetCard: React.FC<ISetCardProps> = ({
   editable = false,
   card,
   setCards,
   index,
   isFlipped = false,
+  marked = false,
+  markerState = "marked",
   onClick = () => null,
 }) => {
+  const { isHost } = useUser();
   const theme = useMantineTheme();
+  const borderColor = BORDER_COLOR_MAP[markerState];
 
-  const cardStyle: CSSProperties = {
+  const cardStyle: Sx = {
     height: "10rem",
     width: "15rem",
     background: "white",
@@ -79,7 +91,7 @@ const SetCard: React.FC<ISetCardProps> = ({
     });
   }
 
-  function removeFormFromCard(formId: string) {
+  function removeFormFromCard() {
     if (!setCards || formElements.length === 1) return;
 
     setCards((draft) => {
@@ -90,7 +102,7 @@ const SetCard: React.FC<ISetCardProps> = ({
   }
 
   const FrontContent = () => (
-    <div style={cardStyle}>
+    <Container sx={cardStyle}>
       <Text
         pos="absolute"
         weight="bold"
@@ -99,14 +111,17 @@ const SetCard: React.FC<ISetCardProps> = ({
       >
         {index + 1}
       </Text>
-    </div>
+    </Container>
   );
 
   const BackContent = () => (
-    <div
-      style={{
+    <Container
+      sx={{
         ...cardStyle,
         transform: "scale(-1, 1)",
+        ":hover": {
+          cursor: isHost && markerState === "marked" ? "pointer" : "auto",
+        },
       }}
     >
       <Container
@@ -133,14 +148,18 @@ const SetCard: React.FC<ISetCardProps> = ({
           <IconPlus />
         </ActionIcon>
       )}
-    </div>
+    </Container>
   );
 
   return (
     <motion.div
       variants={cardVariants}
       animate={isFlipped ? "selected" : "notSelected"}
-      onClick={() => onClick(card.id)}
+      onClick={() => onClick(index)}
+      style={{
+        borderRadius: theme.radius.lg,
+        border: `6px solid ${marked ? borderColor : "transparent"}`,
+      }}
     >
       {!isFlipped ? <FrontContent /> : <BackContent />}
     </motion.div>

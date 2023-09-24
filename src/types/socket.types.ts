@@ -130,6 +130,15 @@ export interface IClientToServerEvents {
   "geheimwoerter:showAnswer": () => void;
   "geheimwoerter:nextQuestion": () => void;
   "geheimwoerter:prevQuestion": () => void;
+
+  // +++ SET GAME EVENTS +++
+  "set:showCards": () => void;
+  "set:toggleCard": (cardIndex: number) => void;
+  "set:flipAllCards": () => void;
+  "set:showMarkedCards": () => void;
+  "set:nextQuestion": () => void;
+  "set:prevQuestion": () => void;
+  "set:changeMarkerState": (possibleSets: number[][]) => void;
 }
 
 export interface IServerToClientEvents {

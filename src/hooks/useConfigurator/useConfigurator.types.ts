@@ -1,4 +1,5 @@
 import { type Updater } from "use-immer";
+import type { TDuSagstGameState } from "~/components/room/Game/games/DuSagst/config";
 import type { TFlaggenGameState } from "~/components/room/Game/games/Flaggen/config";
 import type { TGeheimwörterGameState } from "~/components/room/Game/games/Geheimwörter/config";
 import type { TMemoryGameState } from "~/components/room/Game/games/Memory/config";
@@ -16,6 +17,7 @@ export type TGameSettingsMap = {
   merken: TMerkenGameState;
   geheimwoerter: TGeheimwörterGameState;
   set: TSetGameState;
+  duSagst: TDuSagstGameState;
 };
 
 export type TGameshowConfig = {

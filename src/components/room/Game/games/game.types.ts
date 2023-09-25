@@ -8,6 +8,7 @@ export enum Games {
   MEMORY = "memory",
   GEHEIMWOERTER = "geheimwoerter",
   SET = "set",
+  DUSAGST = "duSagst",
 }
 
 export type TGameNames =
@@ -15,7 +16,8 @@ export type TGameNames =
   | "memory"
   | "merken"
   | "geheimwoerter"
-  | "set";
+  | "set"
+  | "duSagst";
 
 export interface IGameGeneralState {
   name: string;

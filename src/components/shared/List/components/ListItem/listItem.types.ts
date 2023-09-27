@@ -1,5 +1,5 @@
 export type IListItem = {
-  id: string | number;
+  id: string;
   [key: string]: unknown;
 };
 

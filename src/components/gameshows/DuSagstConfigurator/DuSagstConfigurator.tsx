@@ -1,13 +1,19 @@
 import { Button, Container, Flex, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import React, { useRef, type SyntheticEvent, useEffect } from "react";
+import React, { useRef, type SyntheticEvent, useEffect, useState } from "react";
+import QuestionFormLayout from "~/components/Layouts/QuestionFormLayout";
+import type { IListItem } from "~/components/shared/List/components/ListItem/listItem.types";
 import { useConfigurator } from "~/hooks/useConfigurator";
+import { v4 as uuidv4 } from "uuid";
+import type { TDuSagstQuestion } from "~/components/room/Game/games/DuSagst/duSagst.types";
 
 const DuSagstConfigurator = () => {
   const [duSagst, setDuSagst, { disableFurtherButton, enableFurtherButton }] = useConfigurator("duSagst");
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const [questions, setQuestions] = useState<IListItem[]>([]);
   const form = useForm({
     initialValues: {
+      id: uuidv4(),
       question: "",
       answers: ["", "", "", ""],
     },
@@ -25,39 +31,72 @@ const DuSagstConfigurator = () => {
       />
     ));
 
-  const handleSubmit = form.onSubmit((values) => {
-    console.log("Values: ", values);
+  const handleSubmit = form.onSubmit((newQuestion) => {
+    const questionIds = questions.map((q) => q.id);
+
+    if (questionIds.includes(newQuestion.id)) {
+      // update existing question
+      setQuestions((oldQuestions) =>
+        oldQuestions.map((q) => {
+          if (q.id === newQuestion.id) {
+            return newQuestion;
+          }
+
+          return q;
+        })
+      );
+    } else {
+      setQuestions((oldQuestions) => [...oldQuestions, newQuestion]);
+    }
+
+    form.reset();
+    form.setFieldValue("id", uuidv4());
+    inputRef.current?.focus();
   });
 
-  return (
-    <Flex
-      direction="column"
-      gap="md"
-    >
-      {/* Create question container */}
-      <form onSubmit={handleSubmit}>
-        <Flex
-          direction="column"
-          gap="xl"
-        >
-          <TextInput
-            ref={inputRef}
-            required
-            w="100%"
-            label="Frage"
-            placeholder="Welches ist mein Lieblingsgetränk?"
-            {...form.getInputProps("question")}
-          />
-          {answerInputElements}
-          <Button type="submit">Frage hinzufügen</Button>
-        </Flex>
-      </form>
+  const handleClickQuestion = (question: IListItem) => {
+    form.setValues(question);
+  };
 
-      {/* All questions container */}
-      <Flex>
-        <p>All Questions</p>
+  useEffect(() => {
+    if (questions.length > 0) {
+      enableFurtherButton();
+    } else {
+      disableFurtherButton();
+    }
+
+    setDuSagst((draft) => {
+      draft.duSagst.questions = questions as unknown as TDuSagstQuestion[];
+    });
+  }, [questions]);
+
+  useEffect(() => {
+    console.log(duSagst);
+  }, [duSagst]);
+
+  return (
+    <QuestionFormLayout
+      questions={questions}
+      setQuestions={setQuestions}
+      onSelectQuestion={handleClickQuestion}
+      onFormSubmit={handleSubmit}
+      selectedQuestionId={form.getInputProps("id").value}
+    >
+      <Flex
+        direction="column"
+        gap="xl"
+      >
+        <TextInput
+          ref={inputRef}
+          required
+          w="100%"
+          label="Frage"
+          placeholder="Welches ist mein Lieblingsgetränk?"
+          {...form.getInputProps("question")}
+        />
+        {answerInputElements}
       </Flex>
-    </Flex>
+    </QuestionFormLayout>
   );
 };
 

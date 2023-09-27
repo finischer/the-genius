@@ -16,8 +16,13 @@ export type TDuSagstTeamState = {
   p2: TDuSagstPlayerState;
 };
 
+export type TDuSagstQuestion = {
+  id: string;
+  answers: string[];
+};
+
 export interface IDuSagstState {
-  questions: string[];
+  questions: TDuSagstQuestion[];
   qIndex: number;
   answers: [string, string, string, string];
   teamStates: {

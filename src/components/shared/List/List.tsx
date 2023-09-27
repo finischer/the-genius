@@ -3,6 +3,7 @@ import React from "react";
 import ListItem from "./components/ListItem";
 import type { IListItem } from "./components/ListItem/listItem.types";
 import type { IListProps } from "./list.types";
+import { Flex, ScrollArea, Text } from "@mantine/core";
 
 const List: React.FC<IListProps> = ({
   editable = false,
@@ -30,6 +31,18 @@ const List: React.FC<IListProps> = ({
     }
   };
 
+  if (data.length === 0) {
+    return (
+      <Flex
+        h="100%"
+        justify="center"
+        align="center"
+      >
+        <Text size="xl">Füge deine erste Frage hinzu!</Text>
+      </Flex>
+    );
+  }
+
   return (
     <Reorder.Group
       values={data}
@@ -52,9 +65,7 @@ const List: React.FC<IListProps> = ({
           onClick={() => handleSelectItem(item)}
           onDelete={() => handleDeleteItem(item.id)}
           // @ts-ignore
-          content={
-            !renderValueByKey ? `Frage ${index + 1}` : item[renderValueByKey]
-          }
+          content={!renderValueByKey ? `Frage ${index + 1}` : item[renderValueByKey]}
         />
       ))}
     </Reorder.Group>

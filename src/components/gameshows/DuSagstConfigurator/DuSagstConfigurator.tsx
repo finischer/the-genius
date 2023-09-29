@@ -15,8 +15,19 @@ const DuSagstConfigurator = () => {
     initialValues: {
       id: uuidv4(),
       question: "",
-      answers: ["", "", "", ""],
+      answer_1: "",
+      answer_2: "",
+      answer_3: "",
+      answer_4: "",
     },
+
+    transformValues: (values) => ({
+      id: values.id,
+      question: values.question,
+      answers: Object.keys(values)
+        .filter((v) => v.startsWith("answer_"))
+        .map((a) => ({ id: uuidv4(), text: values[a] })),
+    }),
   });
 
   const answerInputElements = Array(4)
@@ -27,7 +38,7 @@ const DuSagstConfigurator = () => {
         required
         label={`Antwort ${index + 1}`}
         placeholder="Cola"
-        {...form.getInputProps(`answers.${index}`)}
+        {...form.getInputProps(`answer_${index + 1}`)}
       />
     ));
 
@@ -55,7 +66,18 @@ const DuSagstConfigurator = () => {
   });
 
   const handleClickQuestion = (question: IListItem) => {
-    form.setValues(question);
+    const keys = question.answers.map((_, idx) => `answer_${idx + 1}`);
+
+    const formQuestion = {
+      id: question.id,
+      question: question.question,
+    };
+
+    keys.forEach((key, idx) => {
+      formQuestion[key] = question.answers[idx].text;
+    });
+
+    form.setValues(formQuestion);
   };
 
   useEffect(() => {

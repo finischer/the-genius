@@ -5,7 +5,7 @@ import AnswerBox from "./components/AnswerBox";
 import QuestionContainer from "./components/QuestionContainer";
 
 const DuSagstGame: React.FC<IDuSagstGameProps> = ({ game }) => {
-  const currQuestion = game.questions[game.qIndex];
+  const currQuestion = game.questions[game.qIndex + 1];
 
   return (
     <Flex

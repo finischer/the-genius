@@ -35,6 +35,7 @@ const AnswerRow: React.FC<AnswerRowProps> = ({ index, answer }) => {
 
 const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerOptions }) => {
   const theme = useMantineTheme();
+  const q = question.endsWith("?") ? question : question + "?";
 
   return (
     <Flex
@@ -44,10 +45,11 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerO
       <ContainerBox
         bg={theme.primaryColor}
         contentCentered
-        px="3rem"
-        py="sm"
+        w="20rem"
+        py="1rem"
+        px="2rem"
       >
-        <Text>{question}</Text>
+        <Text align="center">{q}</Text>
       </ContainerBox>
 
       <Flex

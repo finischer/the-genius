@@ -1,4 +1,5 @@
 import type { TDuSagstGameState } from "./config";
+import type { IListItem } from "~/components/shared/List/components/ListItem/listItem.types";
 
 export interface IDuSagstGameProps {
   game: TDuSagstGameState;
@@ -16,9 +17,11 @@ export type TDuSagstTeamState = {
   p2: TDuSagstPlayerState;
 };
 
-export type TDuSagstQuestion = {
+export type TDuSagstQuestion = IListItem<{ question: string; answers: TDuSagstAnswer[] }>;
+
+export type TDuSagstAnswer = {
   id: string;
-  answers: string[];
+  text: string;
 };
 
 export interface IDuSagstState {

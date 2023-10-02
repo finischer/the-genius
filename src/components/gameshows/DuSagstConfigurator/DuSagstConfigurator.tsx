@@ -4,24 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import QuestionFormLayout from "~/components/Layouts/QuestionFormLayout";
 import type { TDuSagstQuestion } from "~/components/room/Game/games/DuSagst/duSagst.types";
-import type { IListItem } from "~/components/shared/List/components/ListItem/listItem.types";
 import { useConfigurator } from "~/hooks/useConfigurator";
-
-type TAnswer = {
-  id: string;
-  text: string;
-};
-
-type TQuestion = IListItem<{ question: string; answers: TAnswer[] }>;
-
-type TFormValues = {
-  id: string;
-  question: string;
-  answer_1: string;
-  answer_2: string;
-  answer_3: string;
-  answer_4: string;
-};
+import type { TDuSagstFormValues } from "./duSagstConfigurator.types";
 
 const PLACEHOLDER_MAP: { [index: number]: string } = {
   0: "Cola",
@@ -33,9 +17,9 @@ const PLACEHOLDER_MAP: { [index: number]: string } = {
 const DuSagstConfigurator = () => {
   const [_, setDuSagst, { disableFurtherButton, enableFurtherButton }] = useConfigurator("duSagst");
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [questions, setQuestions] = useState<TQuestion[]>([]);
+  const [questions, setQuestions] = useState<TDuSagstQuestion[]>([]);
 
-  const form = useForm<TFormValues>({
+  const form = useForm<TDuSagstFormValues>({
     initialValues: {
       id: uuidv4(),
       question: "",
@@ -58,7 +42,7 @@ const DuSagstConfigurator = () => {
       />
     ));
 
-  const buildQuestion = (formValues: TFormValues): TQuestion => {
+  const buildQuestion = (formValues: TDuSagstFormValues): TDuSagstQuestion => {
     return {
       id: formValues.id,
       question: formValues.question,
@@ -68,12 +52,12 @@ const DuSagstConfigurator = () => {
     };
   };
 
-  const buildFormValues = (question: TQuestion): TFormValues => {
+  const buildFormValues = (question: TDuSagstQuestion): TDuSagstFormValues => {
     const answerKeys = question.answers.map(
       (_, idx) => `answer_${idx + 1}`
-    ) as unknown as (keyof TFormValues)[];
+    ) as unknown as (keyof TDuSagstFormValues)[];
 
-    const formValues: TFormValues = {
+    const formValues: TDuSagstFormValues = {
       id: question.id,
       question: question.question,
       answer_1: "",
@@ -116,7 +100,7 @@ const DuSagstConfigurator = () => {
     inputRef.current?.focus();
   });
 
-  const handleClickQuestion = (question: TQuestion) => {
+  const handleClickQuestion = (question: TDuSagstQuestion) => {
     const formValues = buildFormValues(question);
     form.setValues(formValues);
   };

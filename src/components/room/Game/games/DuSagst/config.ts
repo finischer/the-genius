@@ -1,11 +1,5 @@
 import { type IGameGeneralState } from "../game.types";
-import type {
-  IDuSagstState,
-  TDuSagstAnswerColors,
-  TDuSagstAnswerSelectMapValue,
-  TDuSagstPlayerState,
-  TDuSagstTeamState,
-} from "./duSagst.types";
+import type { IDuSagstState, TDuSagstPlayerState, TDuSagstTeamState } from "./duSagst.types";
 
 export type TDuSagstGameState = IDuSagstState & IGameGeneralState;
 

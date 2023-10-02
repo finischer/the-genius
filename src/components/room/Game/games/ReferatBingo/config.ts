@@ -3,7 +3,7 @@ import type { IReferatBingoState } from "./referatBingo.types";
 
 export type TReferatBingoGameState = IReferatBingoState & IGameGeneralState;
 
-export const DEFAULT_MEMORY_STATE: TReferatBingoGameState = {
+export const DEFAULT_REFERAT_BINGO_STATE: TReferatBingoGameState = {
   identifier: "referatBingo",
   name: "Referat Bingo",
   modes: ["TEAM"],

@@ -3,23 +3,23 @@ import React, { useState } from "react";
 import List from "../shared/List";
 import type { IListItem } from "../shared/List/components/ListItem/listItem.types";
 
-interface IQuestionFormLayoutProps {
-  setQuestions: React.Dispatch<IListItem[]>;
-  questions: IListItem[];
+interface IQuestionFormLayoutProps<T> {
+  setQuestions: React.Dispatch<React.SetStateAction<T[]>>;
+  questions: T[];
   children: React.ReactNode;
-  onSelectQuestion: (question: IListItem) => void;
+  onSelectQuestion: (question: IListItem<T>) => void;
   selectedQuestionId: string;
   onFormSubmit: () => void;
 }
 
-const QuestionFormLayout: React.FC<IQuestionFormLayoutProps> = ({
+const QuestionFormLayout = <T extends { id: string }>({
   children,
   questions,
   setQuestions,
   onSelectQuestion,
   onFormSubmit,
   selectedQuestionId,
-}) => {
+}: IQuestionFormLayoutProps<T>) => {
   const questionIds = questions.map((q) => q.id);
   const questionExists = questionIds.includes(selectedQuestionId);
 

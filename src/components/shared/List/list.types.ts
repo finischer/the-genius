@@ -1,12 +1,12 @@
 import type { Dispatch, SetStateAction } from "react";
 import type { IListItem } from "./components/ListItem/listItem.types";
 
-export interface IListProps {
+export interface IListProps<T> {
   editable?: boolean;
-  onClickItem?: (item: IListItem) => void;
+  onClickItem?: (item: IListItem<T>) => void;
   onDeleteItem?: () => void;
-  data: IListItem[];
+  data: IListItem<T>[];
   selectedItemId?: string;
-  setData: Dispatch<SetStateAction<any>>;
+  setData: Dispatch<SetStateAction<IListItem<T>[]>>;
   renderValueByKey?: string;
 }

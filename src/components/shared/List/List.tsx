@@ -1,11 +1,11 @@
+import { Flex, Text } from "@mantine/core";
 import { Reorder } from "framer-motion";
 import React from "react";
 import ListItem from "./components/ListItem";
 import type { IListItem } from "./components/ListItem/listItem.types";
 import type { IListProps } from "./list.types";
-import { Flex, ScrollArea, Text } from "@mantine/core";
 
-const List: React.FC<IListProps> = ({
+const List = <T,>({
   editable = false,
   onClickItem = () => null,
   onDeleteItem = () => null,
@@ -13,11 +13,11 @@ const List: React.FC<IListProps> = ({
   renderValueByKey,
   setData,
   selectedItemId,
-}) => {
+}: IListProps<T>) => {
   const handleDeleteItem = (itemId: string | number) => {
     if (!editable) return;
 
-    setData((oldState: IListItem[]) => {
+    setData((oldState: IListItem<T>[]) => {
       const newList = oldState.filter((item) => item.id !== itemId);
       return newList;
     });
@@ -25,7 +25,7 @@ const List: React.FC<IListProps> = ({
     onDeleteItem();
   };
 
-  const handleSelectItem = (item: IListItem) => {
+  const handleSelectItem = (item: IListItem<T>) => {
     if (onClickItem && editable) {
       onClickItem(item);
     }

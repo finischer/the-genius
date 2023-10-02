@@ -1,24 +1,17 @@
-import { Button, Container, Flex, TextInput } from "@mantine/core";
+import { Flex, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import React, {
-  useRef,
-  type SyntheticEvent,
-  useEffect,
-  useState,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
+import { useEffect, useRef, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import QuestionFormLayout from "~/components/Layouts/QuestionFormLayout";
+import type { TDuSagstQuestion } from "~/components/room/Game/games/DuSagst/duSagst.types";
 import type { IListItem } from "~/components/shared/List/components/ListItem/listItem.types";
 import { useConfigurator } from "~/hooks/useConfigurator";
-import { v4 as uuidv4 } from "uuid";
-import type { TDuSagstQuestion } from "~/components/room/Game/games/DuSagst/duSagst.types";
-import { string } from "zod";
 
 type TAnswer = {
   id: string;
   text: string;
 };
+
 type TQuestion = IListItem<{ question: string; answers: TAnswer[] }>;
 
 type TFormValues = {
@@ -31,7 +24,7 @@ type TFormValues = {
 };
 
 const DuSagstConfigurator = () => {
-  const [duSagst, setDuSagst, { disableFurtherButton, enableFurtherButton }] = useConfigurator("duSagst");
+  const [_, setDuSagst, { disableFurtherButton, enableFurtherButton }] = useConfigurator("duSagst");
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [questions, setQuestions] = useState<TQuestion[]>([]);
 
@@ -44,14 +37,6 @@ const DuSagstConfigurator = () => {
       answer_3: "",
       answer_4: "",
     },
-
-    // transformValues: (values) => ({
-    //   id: values.id,
-    //   question: values.question,
-    //   answers: Object.entries(values)
-    //     .filter(([key, value]) => key.startsWith("answer_"))
-    //     .map(([_, value]) => ({ id: uuidv4(), text: value })),
-    // }),
   });
 
   const answerInputElements = Array(4)
@@ -140,10 +125,6 @@ const DuSagstConfigurator = () => {
       draft.duSagst.questions = questions as unknown as TDuSagstQuestion[];
     });
   }, [questions]);
-
-  useEffect(() => {
-    console.log(duSagst);
-  }, [duSagst]);
 
   return (
     <QuestionFormLayout

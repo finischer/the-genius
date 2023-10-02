@@ -1,9 +1,9 @@
-export type IListItem = {
+export type IListItem<T = Record<string, unknown>> = {
   id: string;
-};
+} & T;
 
-export interface IListItemProps {
-  item: IListItem;
+export interface IListItemProps<T> {
+  item: IListItem<T>;
   editable: boolean;
   selected?: boolean;
   onDelete?: () => void;

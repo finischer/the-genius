@@ -2,15 +2,42 @@ import React from "react";
 import type { IDuSagstGameProps } from "./duSagst.types";
 import { Flex } from "@mantine/core";
 import AnswerBox from "./components/AnswerBox";
+import QuestionContainer from "./components/QuestionContainer";
 
 const DuSagstGame: React.FC<IDuSagstGameProps> = ({ game }) => {
+  const currQuestion = game.questions[game.qIndex];
+
   return (
-    <Flex gap="xl">
-      <AnswerBox selectedAnswer={0} />
-      <AnswerBox selectedAnswer={1} />
-      <AnswerBox selectedAnswer={2} />
-      <AnswerBox selectedAnswer={3} />
-      <AnswerBox selectedAnswer={-1} />
+    <Flex
+      gap="xl"
+      align="flex-end"
+    >
+      <AnswerBox
+        selectedAnswer={0}
+        playerName="Niklas"
+      />
+      <AnswerBox
+        selectedAnswer={1}
+        playerName="Tim"
+      />
+      {currQuestion && (
+        <QuestionContainer
+          question={currQuestion.question}
+          answerOptions={currQuestion.answers}
+        />
+      )}
+      <AnswerBox
+        selectedAnswer={2}
+        playerName="FrischerFischer"
+      />
+      <AnswerBox
+        selectedAnswer={3}
+        playerName="Oliver"
+      />
+      {/* <AnswerBox
+        selectedAnswer={-1}
+        playerName="Antonia"
+      /> */}
     </Flex>
   );
 };

@@ -1,22 +1,18 @@
 import { Box, Flex, Text, useMantineTheme } from "@mantine/core";
 import React from "react";
-import { ANSWER_BACKGROUND_COLORS, ANSWER_SELECT_MAP } from "../../config";
-import type { TDuSagstAnswerSelectMapValue } from "../../duSagst.types";
+import { ANSWER_BACKGROUND_COLORS, ANSWER_SELECT_MAP } from "../../duSagst.constants";
+import { DEFAULT_ANSWER_OPTION } from "../../duSagst.constants";
 
 interface AnswerBoxProps {
+  playerName: string;
   selectedAnswer: number; // index of selected answer
 }
 
-const defaultAnswerOption: TDuSagstAnswerSelectMapValue = {
-  label: "Keine Antwort",
-  color: "transparent",
-};
-
-const AnswerBox: React.FC<AnswerBoxProps> = ({ selectedAnswer }) => {
+const AnswerBox: React.FC<AnswerBoxProps> = ({ selectedAnswer, playerName }) => {
   const isAnswerEmpty = selectedAnswer < 0 || selectedAnswer > 3;
 
   const theme = useMantineTheme();
-  const { color, label } = ANSWER_SELECT_MAP[selectedAnswer] ?? defaultAnswerOption;
+  const { color, label } = ANSWER_SELECT_MAP[selectedAnswer] ?? DEFAULT_ANSWER_OPTION;
   const backgroundColor = ANSWER_BACKGROUND_COLORS[color];
   const labelSize = isAnswerEmpty ? "2rem" : "7rem";
 
@@ -43,7 +39,7 @@ const AnswerBox: React.FC<AnswerBoxProps> = ({ selectedAnswer }) => {
             textOverflow: "ellipsis",
           }}
         >
-          Niklas
+          {playerName}
         </Text>
       </Box>
       <Flex

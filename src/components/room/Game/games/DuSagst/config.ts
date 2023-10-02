@@ -1,11 +1,10 @@
 import { type IGameGeneralState } from "../game.types";
 import type {
-  TDuSagstAnswerColors,
   IDuSagstState,
+  TDuSagstAnswerColors,
+  TDuSagstAnswerSelectMapValue,
   TDuSagstPlayerState,
   TDuSagstTeamState,
-  TDuSagstAnswerOptions,
-  TDuSagstAnswerSelectMapValue,
 } from "./duSagst.types";
 
 export type TDuSagstGameState = IDuSagstState & IGameGeneralState;
@@ -20,33 +19,6 @@ const DEFAULT_PLAYER_STATE: TDuSagstPlayerState = {
 const DEFAULT_TEAM_STATE: TDuSagstTeamState = {
   p1: DEFAULT_PLAYER_STATE,
   p2: DEFAULT_PLAYER_STATE,
-};
-
-export const ANSWER_BACKGROUND_COLORS: { [index in TDuSagstAnswerColors]: string } = {
-  pink: "#C100FF",
-  blue: "#0065FF",
-  green: "#28B141",
-  yellow: "#FF9900",
-  transparent: "transparent",
-};
-
-export const ANSWER_SELECT_MAP: { [index: number]: TDuSagstAnswerSelectMapValue } = {
-  0: {
-    label: "A",
-    color: "blue",
-  },
-  1: {
-    label: "B",
-    color: "green",
-  },
-  2: {
-    label: "C",
-    color: "pink",
-  },
-  3: {
-    label: "D",
-    color: "yellow",
-  },
 };
 
 export const DEFAULT_DUSAGST_STATE: TDuSagstGameState = {

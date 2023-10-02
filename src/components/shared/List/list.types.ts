@@ -8,5 +8,5 @@ export interface IListProps<T> {
   data: IListItem<T>[];
   selectedItemId?: string;
   setData: Dispatch<SetStateAction<IListItem<T>[]>>;
-  renderValueByKey?: string;
+  renderValueByKey?: keyof T;
 }

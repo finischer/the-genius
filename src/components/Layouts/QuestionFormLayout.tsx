@@ -10,6 +10,7 @@ interface IQuestionFormLayoutProps<T> {
   onSelectQuestion: (question: IListItem<T>) => void;
   selectedQuestionId: string;
   onFormSubmit: () => void;
+  renderValueByKey?: keyof T;
 }
 
 const QuestionFormLayout = <T extends { id: string }>({
@@ -19,6 +20,7 @@ const QuestionFormLayout = <T extends { id: string }>({
   onSelectQuestion,
   onFormSubmit,
   selectedQuestionId,
+  renderValueByKey,
 }: IQuestionFormLayoutProps<T>) => {
   const questionIds = questions.map((q) => q.id);
   const questionExists = questionIds.includes(selectedQuestionId);
@@ -57,6 +59,7 @@ const QuestionFormLayout = <T extends { id: string }>({
             onClickItem={onSelectQuestion}
             editable
             selectedItemId={selectedQuestionId}
+            renderValueByKey={renderValueByKey}
           />
         </ScrollArea>
       </Flex>

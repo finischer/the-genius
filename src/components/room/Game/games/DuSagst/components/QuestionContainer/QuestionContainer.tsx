@@ -21,18 +21,13 @@ const AnswerRow: React.FC<AnswerRowProps> = ({ index, answer }) => {
 
   return (
     <Flex
-      bg={color}
+      bg={backgroundColor}
       p="0.5rem 2rem"
       sx={{ borderRadius: theme.radius.sm }}
       align="center"
       gap="md"
     >
-      <Text
-        size="1.5rem"
-        opacity={0.7}
-      >
-        {label}
-      </Text>
+      <Text size="1.5rem">{label}</Text>
       {answer}
     </Flex>
   );

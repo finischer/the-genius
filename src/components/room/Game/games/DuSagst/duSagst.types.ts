@@ -5,6 +5,15 @@ export interface IDuSagstGameProps {
   game: TDuSagstGameState;
 }
 
+export type TDuSagstAnswerOptions = "A" | "B" | "C" | "D" | "Keine Antwort";
+
+export type TDuSagstAnswerColors = "green" | "blue" | "yellow" | "pink" | "transparent";
+
+export type TDuSagstAnswerSelectMapValue = {
+  label: TDuSagstAnswerOptions;
+  color: TDuSagstAnswerColors;
+};
+
 export type TDuSagstPlayerState = {
   answerIndex: number;
   answerTheQuestion: boolean;

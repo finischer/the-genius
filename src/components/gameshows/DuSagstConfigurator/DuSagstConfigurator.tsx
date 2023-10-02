@@ -23,6 +23,13 @@ type TFormValues = {
   answer_4: string;
 };
 
+const PLACEHOLDER_MAP: { [index: number]: string } = {
+  0: "Cola",
+  1: "Wasser",
+  2: "Apfelschorle",
+  3: "Eistee",
+};
+
 const DuSagstConfigurator = () => {
   const [_, setDuSagst, { disableFurtherButton, enableFurtherButton }] = useConfigurator("duSagst");
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -46,7 +53,7 @@ const DuSagstConfigurator = () => {
         key={index}
         required
         label={`Antwort ${index + 1}`}
-        placeholder="Cola"
+        placeholder={PLACEHOLDER_MAP[index]}
         {...form.getInputProps(`answer_${index + 1}`)}
       />
     ));

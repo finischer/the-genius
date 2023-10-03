@@ -36,6 +36,7 @@ export type TDuSagstAnswer = {
 export interface IDuSagstState {
   questions: TDuSagstQuestion[];
   qIndex: number;
+  timeToThinkSeconds: number;
   answers: [string, string, string, string];
   teamStates: {
     t1: TDuSagstTeamState;

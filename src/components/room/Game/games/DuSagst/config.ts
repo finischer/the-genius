@@ -15,6 +15,8 @@ const DEFAULT_TEAM_STATE: TDuSagstTeamState = {
   p2: DEFAULT_PLAYER_STATE,
 };
 
+export const DUSAGST_TIME_TO_THINK_SECONDS = 30;
+
 export const DEFAULT_DUSAGST_STATE: TDuSagstGameState = {
   identifier: "duSagst",
   name: "Du Sagst...",
@@ -24,6 +26,7 @@ export const DEFAULT_DUSAGST_STATE: TDuSagstGameState = {
   qIndex: 0,
   questions: [],
   answers: ["", "", "", ""],
+  timeToThinkSeconds: DUSAGST_TIME_TO_THINK_SECONDS,
   teamStates: {
     t1: DEFAULT_TEAM_STATE,
     t2: DEFAULT_TEAM_STATE,

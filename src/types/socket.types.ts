@@ -11,10 +11,7 @@ type TSocketUser = {
   name: string;
 };
 
-export type TUserReduced = Omit<
-  User,
-  "emailVerified" | "password" | "gameshows" | "createdAt" | "updatedAt"
->;
+export type TUserReduced = Omit<User, "emailVerified" | "password" | "gameshows" | "createdAt" | "updatedAt">;
 
 export interface IServerSocketData extends Socket {
   user?: TSocketUser;
@@ -40,15 +37,9 @@ export interface IClientToServerEvents {
     { roomId }: { roomId: string },
     cb?: ({ closeSuccessful }: { closeSuccessful: boolean }) => void
   ) => void;
-  joinRoom: (
-    { user, roomId }: { user: TUserReduced; roomId: string },
-    cb: (room: Room) => void
-  ) => void;
+  joinRoom: ({ user, roomId }: { user: TUserReduced; roomId: string }, cb: (room: Room) => void) => void;
   leaveRoom: ({ roomId }: { roomId: string }) => void;
-  joinTeam: (
-    { user, teamId }: { user: TUserReduced; teamId: string },
-    cb: () => void
-  ) => void;
+  joinTeam: ({ user, teamId }: { user: TUserReduced; teamId: string }, cb: () => void) => void;
   listAllRooms: (cb: (rooms: Room[]) => void) => void;
   startGame: ({ gameIdentifier }: { gameIdentifier: TGameNames }) => void;
   showAnswerBanner: ({
@@ -61,45 +52,16 @@ export interface IClientToServerEvents {
     autoClose?: boolean;
   }) => void;
   hideAnswerBanner: () => void;
-  buzzer: ({
-    teamId,
-    withTimer,
-  }: {
-    teamId: string;
-    withTimer?: boolean;
-  }) => void;
+  buzzer: ({ teamId, withTimer }: { teamId: string; withTimer?: boolean }) => void;
   changeView: ({ newView }: { newView: RoomViews }) => void;
+  startTimer: (seconds: number, cb: () => void) => void;
 
   // +++ TEAM EVENTS +++
-  increaseGameScore: ({
-    teamId,
-    step,
-  }: {
-    teamId: string;
-    step: number;
-  }) => void;
-  decreaseGameScore: ({
-    teamId,
-    step,
-  }: {
-    teamId: string;
-    step: number;
-  }) => void;
+  increaseGameScore: ({ teamId, step }: { teamId: string; step: number }) => void;
+  decreaseGameScore: ({ teamId, step }: { teamId: string; step: number }) => void;
   resetGameScore: ({ teamId }: { teamId: string }) => void;
-  increaseTotalScore: ({
-    teamId,
-    step,
-  }: {
-    teamId: string;
-    step: number;
-  }) => void;
-  decreaseTotalScore: ({
-    teamId,
-    step,
-  }: {
-    teamId: string;
-    step: number;
-  }) => void;
+  increaseTotalScore: ({ teamId, step }: { teamId: string; step: number }) => void;
+  decreaseTotalScore: ({ teamId, step }: { teamId: string; step: number }) => void;
   resetTotalScore: ({ teamId }: { teamId: string }) => void;
   toggleTeamActive: ({ teamId }: { teamId: string }) => void;
   releaseBuzzer: () => void;
@@ -143,24 +105,14 @@ export interface IClientToServerEvents {
 
 export interface IServerToClientEvents {
   // +++ GENERAL EVENTS +++
-  getOnlinePlayers: ({
-    numOfOnlinePlayers,
-  }: {
-    numOfOnlinePlayers: number;
-  }) => void;
+  getOnlinePlayers: ({ numOfOnlinePlayers }: { numOfOnlinePlayers: number }) => void;
 
   // +++ ROOM EVENTS +++
   userLeftRoom: ({ user }: { user: TSocketUser | null | undefined }) => void;
   updateRoom: ({ newRoomState }: { newRoomState: Room }) => void;
   // updateAllRooms: ({ newRooms }: { newRooms: Room[] }) => void; // Currently not in use
   roomWasClosed: () => void;
-  raiseException: ({
-    reason,
-    msg,
-  }: {
-    reason: TExceptionReason;
-    msg: string;
-  }) => void;
+  raiseException: ({ reason, msg }: { reason: TExceptionReason; msg: string }) => void;
 }
 
 export interface TNextApiResponse extends NextApiResponse {

@@ -24,6 +24,7 @@ const DuSagstGame: React.FC<IDuSagstGameProps> = ({ game }) => {
         <QuestionContainer
           question={currQuestion.question}
           answerOptions={currQuestion.answers}
+          game={game}
         />
       )}
       <AnswerBox

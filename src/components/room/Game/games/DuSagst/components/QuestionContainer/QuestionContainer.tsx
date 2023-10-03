@@ -65,7 +65,7 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerO
   };
 
   const handleStartTimer = () => {
-    socket.emit("startTimer", DUSAGST_TIME_TO_THINK_SECONDS, () => {
+    socket.emit("startTimer", game.timeToThinkSeconds, () => {
       console.log("Submit all answers automatically!");
     });
   };

@@ -18,14 +18,9 @@ type GetRoomAndTeamReturnType =
   | undefined;
 
 export function getRoomAndTeam(
-  socket: Socket<
-    IClientToServerEvents,
-    IServerToClientEvents,
-    IServerSocketData
-  > &
-    IServerSocketData,
+  socket: Socket<IClientToServerEvents, IServerToClientEvents, IServerSocketData> & IServerSocketData,
   roomId: string | null | undefined,
-  teamId: string
+  teamId: string | null | undefined
 ): GetRoomAndTeamReturnType {
   const room = roomManager.getRoom(roomId);
   if (!room) {

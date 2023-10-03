@@ -1,4 +1,4 @@
-import type { PlayerStates, Player as PrismaPlayer } from "@prisma/client";
+import type { PlayerSharedState, PlayerStates, Player as PrismaPlayer } from "@prisma/client";
 import { ObjectId } from "bson";
 import type { TPlayer } from "./player.types";
 
@@ -8,6 +8,7 @@ export default class Player implements PrismaPlayer {
   userId: string;
   teamId: string;
   states: PlayerStates;
+  shared: PlayerSharedState;
 
   public constructor(player: TPlayer) {
     this.id = new ObjectId().toString();
@@ -18,6 +19,11 @@ export default class Player implements PrismaPlayer {
       notefield: {
         isActive: false,
         value: "",
+      },
+    };
+    this.shared = {
+      duSagst: {
+        answer: -1,
       },
     };
   }

@@ -8,12 +8,7 @@ import { getRoomAndTeam } from "../helpers";
 
 export function teamHandler(
   io: Server,
-  socket: Socket<
-    IClientToServerEvents,
-    IServerToClientEvents,
-    IServerSocketData
-  > &
-    IServerSocketData
+  socket: Socket<IClientToServerEvents, IServerToClientEvents, IServerSocketData> & IServerSocketData
 ) {
   socket.on("joinTeam", ({ user, teamId }, cb) => {
     const res = getRoomAndTeam(socket, socket.roomId, teamId);
@@ -21,9 +16,10 @@ export function teamHandler(
 
     const { room, team } = res;
 
-    team.join(user);
+    const { playerId } = team.join(user);
 
     socket.teamId = teamId;
+    socket.playerId = playerId;
     room.update();
     cb();
   });

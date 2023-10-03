@@ -54,7 +54,9 @@ export default class Team implements PrismaTeam {
     };
   }
 
-  getPlayer(playerId: string) {
+  getPlayer(playerId: string | undefined | null) {
+    if (!playerId) return null;
+
     for (const [playerKey, player] of Object.entries(this.players)) {
       if (player.id === playerId) {
         return {
@@ -84,6 +86,8 @@ export default class Team implements PrismaTeam {
     }
 
     this.players.push(newPlayer);
+
+    return { teamId: this.id, playerId: newPlayer.id };
   }
 
   removePlayer(userId: string) {

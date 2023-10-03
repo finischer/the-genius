@@ -2,6 +2,7 @@ import { type TExceptionReason } from "./../pages/api/exceptions/exceptions.type
 import { type RoomViews, type Gameshow, type User } from "@prisma/client";
 import { type NextApiResponse } from "next";
 import { type Server, type Socket } from "socket.io";
+import { string } from "zod";
 import type { TGameNames } from "~/components/room/Game/games/game.types";
 import type { ICreateRoomConfig } from "~/components/shared/CreateRoomModal/createRoomModal.types";
 import type Room from "~/pages/api/classes/Room/Room";
@@ -17,6 +18,7 @@ export interface IServerSocketData extends Socket {
   user?: TSocketUser;
   roomId?: string | null;
   teamId?: string | null;
+  playerId?: string | null;
 }
 
 export interface IClientToServerEvents {
@@ -39,7 +41,10 @@ export interface IClientToServerEvents {
   ) => void;
   joinRoom: ({ user, roomId }: { user: TUserReduced; roomId: string }, cb: (room: Room) => void) => void;
   leaveRoom: ({ roomId }: { roomId: string }) => void;
-  joinTeam: ({ user, teamId }: { user: TUserReduced; teamId: string }, cb: () => void) => void;
+  joinTeam: (
+    { user, teamId }: { user: TUserReduced; teamId: string },
+    cb: () => void
+  ) => { teamId: string; playerId: string };
   listAllRooms: (cb: (rooms: Room[]) => void) => void;
   startGame: ({ gameIdentifier }: { gameIdentifier: TGameNames }) => void;
   showAnswerBanner: ({
@@ -105,7 +110,8 @@ export interface IClientToServerEvents {
   // +++ DU SAGST EVENTS +++
   "duSagst:showAnswer": (answerIndex: number) => void;
   "duSagst:submitAnswers": () => void;
-  "duSagst:clickAnswer": ({ teamId }: { teamId: string }) => void;
+  "duSagst:clickAnswer": ({ answerIndex }: { answerIndex: number }) => void;
+  "duSagst:startTimer": (timerSeconds: number, cb: () => void) => void;
 }
 
 export interface IServerToClientEvents {

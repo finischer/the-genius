@@ -2,13 +2,13 @@ import { Button, Flex, Text, useMantineTheme } from "@mantine/core";
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 import ContainerBox from "~/components/shared/ContainerBox";
-import { useUser } from "~/hooks/useUser";
-import { DUSAGST_TIME_TO_THINK_SECONDS, type TDuSagstGameState } from "../../config";
-import { ANSWER_BACKGROUND_COLORS, ANSWER_SELECT_MAP, DEFAULT_ANSWER_OPTION } from "../../duSagst.constants";
-import type { TDuSagstAnswer } from "../../duSagst.types";
+import ModView from "~/components/shared/ModView";
 import { useRoom } from "~/hooks/useRoom";
 import { socket } from "~/hooks/useSocket";
-import ModView from "~/components/shared/ModView";
+import { useUser } from "~/hooks/useUser";
+import { type TDuSagstGameState } from "../../config";
+import { ANSWER_BACKGROUND_COLORS, ANSWER_SELECT_MAP, DEFAULT_ANSWER_OPTION } from "../../duSagst.constants";
+import type { TDuSagstAnswer } from "../../duSagst.types";
 
 interface QuestionContainerProps {
   question: string;
@@ -68,7 +68,7 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerO
   };
 
   const handleStartTimer = () => {
-    socket.emit("startTimer", game.timeToThinkSeconds, () => {
+    socket.emit("duSagst:startTimer", game.timeToThinkSeconds, () => {
       socket.emit("duSagst:submitAnswers");
     });
   };
@@ -79,8 +79,7 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerO
 
   const handleClickAnswer = (answerIndex: number) => {
     if (!isPlayer || allAnswersSubmitted) return;
-
-    console.log("Click answer: ", answerIndex);
+    socket.emit("duSagst:clickAnswer", { answerIndex });
   };
 
   return (

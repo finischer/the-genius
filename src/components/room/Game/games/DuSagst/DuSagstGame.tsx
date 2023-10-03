@@ -1,25 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
 import type { IDuSagstGameProps } from "./duSagst.types";
 import { Flex } from "@mantine/core";
 import AnswerBox from "./components/AnswerBox";
 import QuestionContainer from "./components/QuestionContainer";
+import { useRoom } from "~/hooks/useRoom";
 
 const DuSagstGame: React.FC<IDuSagstGameProps> = ({ game }) => {
+  const { room } = useRoom();
   const currQuestion = game.questions[game.qIndex + 1];
+
+  const { teamOne, teamTwo } = room.teams;
 
   return (
     <Flex
       gap="xl"
       align="flex-end"
     >
-      <AnswerBox
-        selectedAnswer={0}
-        playerName="Niklas"
-      />
-      <AnswerBox
-        selectedAnswer={1}
-        playerName="Tim"
-      />
+      {/* Team One answer boxes */}
+      {teamOne.players.map((p) => (
+        <AnswerBox
+          key={p.id}
+          selectedAnswer={p.shared.duSagst.answer ?? -1}
+          playerName={p.name ?? "-"}
+        />
+      ))}
+
       {currQuestion && (
         <QuestionContainer
           question={currQuestion.question}
@@ -27,14 +32,15 @@ const DuSagstGame: React.FC<IDuSagstGameProps> = ({ game }) => {
           game={game}
         />
       )}
-      <AnswerBox
-        selectedAnswer={2}
-        playerName="FrischerFischer"
-      />
-      <AnswerBox
-        selectedAnswer={3}
-        playerName="Oliver"
-      />
+
+      {/* Team Two answer boxes */}
+      {teamTwo.players.map((p) => (
+        <AnswerBox
+          key={p.id}
+          selectedAnswer={p.shared.duSagst.answer ?? -1}
+          playerName={p.name ?? "-"}
+        />
+      ))}
     </Flex>
   );
 };

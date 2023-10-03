@@ -7,7 +7,7 @@ const DEFAULT_PLAYER_STATE: TDuSagstPlayerState = {
   answerIndex: -1,
   answerTheQuestion: false,
   showAnswer: false,
-  submitted: false,
+  submitted: true,
 };
 
 const DEFAULT_TEAM_STATE: TDuSagstTeamState = {

@@ -110,6 +110,7 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerO
             if (isHost && !showAnswer) {
               return (
                 <Flex
+                  key={a.id}
                   p="0.5rem 2rem"
                   justify="center"
                   onClick={() => handleShowAnswer(index)}

@@ -25,7 +25,6 @@ export const DEFAULT_DUSAGST_STATE: TDuSagstGameState = {
   scorebarMode: "circle",
   qIndex: 0,
   questions: [],
-  answers: ["", "", "", ""],
   timeToThinkSeconds: DUSAGST_TIME_TO_THINK_SECONDS,
   teamStates: {
     t1: DEFAULT_TEAM_STATE,

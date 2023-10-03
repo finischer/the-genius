@@ -43,7 +43,9 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerO
   const { room } = useRoom();
   const theme = useMantineTheme();
   const q = question.endsWith("?") ? question : question + "?";
-  const isAnswerClickable = isPlayer && !allPlayersHasSubmitted(game.teamStates);
+  const allAnswersSubmitted = allPlayersHasSubmitted(game.teamStates);
+  const isAnswerClickable = isPlayer && !allAnswersSubmitted;
+  const allAnswersShown = answerOptions.length === game.display.answers.length;
 
   const AnswerRow: React.FC<AnswerRowProps> = ({ index, answer }) => {
     const theme = useMantineTheme();
@@ -57,6 +59,7 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerO
         sx={{ borderRadius: theme.radius.sm }}
         align="center"
         gap="md"
+        onClick={() => handleClickAnswer(index)}
       >
         <Text size="1.5rem">{label}</Text>
         {answer}
@@ -66,8 +69,18 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerO
 
   const handleStartTimer = () => {
     socket.emit("startTimer", game.timeToThinkSeconds, () => {
-      console.log("Submit all answers automatically!");
+      socket.emit("duSagst:submitAnswers");
     });
+  };
+
+  const handleShowAnswer = (answerIndex: number) => {
+    socket.emit("duSagst:showAnswer", answerIndex);
+  };
+
+  const handleClickAnswer = (answerIndex: number) => {
+    if (!isPlayer || allAnswersSubmitted) return;
+
+    console.log("Click answer: ", answerIndex);
   };
 
   return (
@@ -92,7 +105,7 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerO
           sx={{ fontWeight: "bold" }}
         >
           {answerOptions.map((a, index) => {
-            const showAnswer = !game.display.answers.includes(index);
+            const showAnswer = game.display.answers.includes(index);
             const rotateValue = showAnswer ? 0 : 90;
 
             if (isHost && !showAnswer) {
@@ -100,6 +113,7 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerO
                 <Flex
                   p="0.5rem 2rem"
                   justify="center"
+                  onClick={() => handleShowAnswer(index)}
                 >
                   <Button variant="default">Antwort {index + 1} aufdecken</Button>
                 </Flex>
@@ -126,7 +140,7 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerO
           <ModView>
             <Button
               mt="xl"
-              disabled={room.state.display.clock.isActive}
+              disabled={room.state.display.clock.isActive || !allAnswersShown}
               onClick={handleStartTimer}
             >
               Timer starten

@@ -101,6 +101,11 @@ export interface IClientToServerEvents {
   "set:nextQuestion": () => void;
   "set:prevQuestion": () => void;
   "set:changeMarkerState": (possibleSets: number[][]) => void;
+
+  // +++ DU SAGST EVENTS +++
+  "duSagst:showAnswer": (answerIndex: number) => void;
+  "duSagst:submitAnswers": () => void;
+  "duSagst:clickAnswer": ({ teamId }: { teamId: string }) => void;
 }
 
 export interface IServerToClientEvents {

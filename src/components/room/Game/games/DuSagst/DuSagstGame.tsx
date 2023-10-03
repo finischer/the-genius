@@ -35,10 +35,6 @@ const DuSagstGame: React.FC<IDuSagstGameProps> = ({ game }) => {
         selectedAnswer={3}
         playerName="Oliver"
       />
-      {/* <AnswerBox
-        selectedAnswer={-1}
-        playerName="Antonia"
-      /> */}
     </Flex>
   );
 };

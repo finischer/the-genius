@@ -17,19 +17,13 @@ import { roomHandler } from "./handlers/roomHandlers";
 import { teamHandler } from "./handlers/teamHandlers";
 import { geheimwoerterHandler } from "./handlers/games/geheimwoerterHandlers";
 import { setHandler } from "./handlers/games/setHandlers";
+import { duSagstHandler } from "./handlers/games/duSagstHandlers";
 
 const prisma = new PrismaClient();
 
-export let io: Server<
-  IClientToServerEvents,
-  IServerToClientEvents,
-  IServerSocketData
->;
+export let io: Server<IClientToServerEvents, IServerToClientEvents, IServerSocketData>;
 
-export default async function SocketHandler(
-  req: NextApiRequest,
-  res: TNextApiResponse
-) {
+export default async function SocketHandler(req: NextApiRequest, res: TNextApiResponse) {
   // means that socket server was already initialized
   if (res.socket.server.io) {
     console.log("Socket handler already initialized");
@@ -74,13 +68,7 @@ export default async function SocketHandler(
     roomManager.addRoom(newRoom);
   });
 
-  const onConnection = (
-    socket: Socket<
-      IClientToServerEvents,
-      IServerToClientEvents,
-      IServerSocketData
-    >
-  ) => {
+  const onConnection = (socket: Socket<IClientToServerEvents, IServerToClientEvents, IServerSocketData>) => {
     // initialize all handlers
     roomHandler(io, socket);
     teamHandler(io, socket);
@@ -90,6 +78,7 @@ export default async function SocketHandler(
     merkenHandler(io, socket);
     geheimwoerterHandler(io, socket);
     setHandler(io, socket);
+    duSagstHandler(io, socket);
   };
 
   io.on("connection", onConnection);

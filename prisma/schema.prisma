@@ -235,14 +235,20 @@ type RoomTeams {
   teamTwo Team
 }
 
+type TeamAvatarImage {
+  img    String
+  userId String
+}
+
 type Team {
-  id            String             @db.ObjectId
-  name          String
-  totalScore    Int                @default(0)
-  gameScore     Int                @default(0)
-  avatarImage   String             @default("")
-  players       Player[]
-  buzzer        BuzzerState
-  scorebarTimer ScorebarTimerState
-  isActiveTurn  Boolean            @default(false)
+  id              String             @db.ObjectId
+  name            String
+  totalScore      Int                @default(0)
+  gameScore       Int                @default(0)
+  avatarImage     String             @default("")
+  avatarImageList TeamAvatarImage[]
+  players         Player[]
+  buzzer          BuzzerState
+  scorebarTimer   ScorebarTimerState
+  isActiveTurn    Boolean            @default(false)
 }

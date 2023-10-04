@@ -1,15 +1,16 @@
-import React, { useEffect } from "react";
-import type { IDuSagstGameProps } from "./duSagst.types";
 import { Flex } from "@mantine/core";
+import React from "react";
+import { useRoom } from "~/hooks/useRoom";
 import AnswerBox from "./components/AnswerBox";
 import QuestionContainer from "./components/QuestionContainer";
-import { useRoom } from "~/hooks/useRoom";
+import type { IDuSagstGameProps } from "./duSagst.types";
 
 const DuSagstGame: React.FC<IDuSagstGameProps> = ({ game }) => {
   const { room } = useRoom();
-  const currQuestion = game.questions[game.qIndex + 1];
+  const currQuestion = game.questions[game.qIndex];
 
-  const { teamOne, teamTwo } = room.teams;
+  const t1BoxStates = game.teamStates.t1.boxStates;
+  const t2BoxStates = game.teamStates.t2.boxStates;
 
   return (
     <Flex
@@ -17,13 +18,18 @@ const DuSagstGame: React.FC<IDuSagstGameProps> = ({ game }) => {
       align="flex-end"
     >
       {/* Team One answer boxes */}
-      {teamOne.players.map((p) => (
-        <AnswerBox
-          key={p.id}
-          selectedAnswer={p.shared.duSagst.answer ?? -1}
-          playerName={p.name ?? "-"}
-        />
-      ))}
+      {t1BoxStates.map((box, index) => {
+        const player = room.teams.teamOne.players.at(index);
+        return (
+          <AnswerBox
+            key={box.id}
+            playerId={player?.userId ?? ""}
+            selectedAnswer={player?.shared.duSagst.answer ?? -1}
+            playerName={player?.name ?? "-"}
+            boxState={box}
+          />
+        );
+      })}
 
       {currQuestion && (
         <QuestionContainer
@@ -34,13 +40,18 @@ const DuSagstGame: React.FC<IDuSagstGameProps> = ({ game }) => {
       )}
 
       {/* Team Two answer boxes */}
-      {teamTwo.players.map((p) => (
-        <AnswerBox
-          key={p.id}
-          selectedAnswer={p.shared.duSagst.answer ?? -1}
-          playerName={p.name ?? "-"}
-        />
-      ))}
+      {t2BoxStates.map((box, index) => {
+        const player = room.teams.teamTwo.players.at(index);
+        return (
+          <AnswerBox
+            key={box.id}
+            playerId={player?.userId ?? ""}
+            selectedAnswer={player?.shared.duSagst.answer ?? -1}
+            playerName={player?.name ?? "-"}
+            boxState={box}
+          />
+        );
+      })}
     </Flex>
   );
 };

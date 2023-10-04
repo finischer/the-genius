@@ -1,5 +1,8 @@
 import { type Server, type Socket } from "socket.io";
-import type { IDuSagstState } from "~/components/room/Game/games/DuSagst/duSagst.types";
+import type {
+  IDuSagstState,
+  TDuSagstAnswerBoxState,
+} from "~/components/room/Game/games/DuSagst/duSagst.types";
 import {
   type IClientToServerEvents,
   type IServerSocketData,
@@ -8,15 +11,16 @@ import {
 import { roomManager } from "../../controllers/RoomManager";
 import NoRoomException from "../../exceptions/NoRoomException";
 import { getRoomAndTeam } from "../helpers";
+import type { TDuSagstGameState } from "~/components/room/Game/games/DuSagst/config";
 
 const GAME_IDENTIFIER = "duSagst";
 
-function setSubmitState(teamStates: IDuSagstState["teamStates"], newValue: boolean) {
-  for (const teamValue of Object.values(teamStates)) {
-    for (const playerValue of Object.values(teamValue)) {
-      playerValue.submitted = newValue;
-    }
-  }
+function getAllBoxes(game: TDuSagstGameState): TDuSagstAnswerBoxState[] {
+  return Object.values(game.teamStates).flatMap((i) => i.boxStates);
+}
+
+function getBoxStateById(game: TDuSagstGameState, boxId: string): TDuSagstAnswerBoxState | undefined {
+  return getAllBoxes(game).find((box) => box.id === boxId);
 }
 
 export function duSagstHandler(
@@ -33,13 +37,31 @@ export function duSagstHandler(
     room.update();
   });
 
+  // Answer of player
+  socket.on("duSagst:showAnswerBox", ({ boxId }) => {
+    const room = roomManager.getRoom(socket.roomId);
+    if (!room) return new NoRoomException(socket);
+
+    const game = room.getGame(GAME_IDENTIFIER);
+
+    const boxStates = getAllBoxes(game);
+
+    const box = boxStates.find((box) => box.id === boxId);
+
+    if (!box) return;
+
+    box.showAnswer = true;
+
+    room.update();
+  });
+
   socket.on("duSagst:submitAnswers", () => {
     const room = roomManager.getRoom(socket.roomId);
     if (!room) return new NoRoomException(socket);
 
     const game = room.getGame(GAME_IDENTIFIER);
 
-    setSubmitState(game.teamStates, true);
+    getAllBoxes(game).forEach((box) => (box.submitted = true));
 
     room.update();
   });
@@ -51,6 +73,7 @@ export function duSagstHandler(
     const { room, team } = res;
 
     const p = team.getPlayer(socket.playerId);
+    console.log(p);
 
     if (!p) return;
     p.shared.duSagst.answer = answerIndex;
@@ -64,7 +87,7 @@ export function duSagstHandler(
 
     const game = room.getGame(GAME_IDENTIFIER);
 
-    setSubmitState(game.teamStates, false);
+    getAllBoxes(game).forEach((box) => (box.submitted = false));
 
     room.startTimer(timerSeconds, cb);
   });

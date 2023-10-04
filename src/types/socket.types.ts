@@ -112,6 +112,7 @@ export interface IClientToServerEvents {
   "duSagst:submitAnswers": () => void;
   "duSagst:clickAnswer": ({ answerIndex }: { answerIndex: number }) => void;
   "duSagst:startTimer": (timerSeconds: number, cb: () => void) => void;
+  "duSagst:showAnswerBox": ({ boxId }: { boxId: string }) => void;
 }
 
 export interface IServerToClientEvents {

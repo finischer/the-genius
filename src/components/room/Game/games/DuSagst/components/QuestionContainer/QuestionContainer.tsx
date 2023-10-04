@@ -1,4 +1,4 @@
-import { Button, Flex, Text, useMantineTheme } from "@mantine/core";
+import { Box, Button, Flex, Text, useMantineTheme } from "@mantine/core";
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 import ContainerBox from "~/components/shared/ContainerBox";
@@ -22,20 +22,8 @@ interface AnswerRowProps {
 }
 
 const allPlayersHasSubmitted = (teams: TDuSagstGameState["teamStates"]): boolean => {
-  let allSubmitted = true;
-
-  for (const teamValue of Object.values(teams)) {
-    for (const playerValue of Object.values(teamValue)) {
-      if (!playerValue.submitted) {
-        allSubmitted = false;
-        break;
-      }
-    }
-
-    if (!allSubmitted) break;
-  }
-
-  return allSubmitted;
+  const boxes = Object.values(teams).flatMap((team) => team.boxStates);
+  return boxes.every((box) => box.submitted);
 };
 
 const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerOptions, game }) => {
@@ -78,6 +66,8 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerO
   };
 
   const handleClickAnswer = (answerIndex: number) => {
+    console.log("isPlayer: ", isPlayer);
+    console.log("allAnswersSubmitted: ", allAnswersSubmitted);
     if (!isPlayer || allAnswersSubmitted) return;
     socket.emit("duSagst:clickAnswer", { answerIndex });
   };

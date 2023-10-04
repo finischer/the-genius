@@ -1,27 +1,44 @@
 import { Box, Button, Flex, Text, useMantineTheme } from "@mantine/core";
 import React from "react";
-import { ANSWER_BACKGROUND_COLORS, ANSWER_SELECT_MAP } from "../../duSagst.constants";
-import { DEFAULT_ANSWER_OPTION } from "../../duSagst.constants";
 import ModView from "~/components/shared/ModView";
+import { socket } from "~/hooks/useSocket";
+import { useUser } from "~/hooks/useUser";
+import { ANSWER_BACKGROUND_COLORS, ANSWER_SELECT_MAP, DEFAULT_ANSWER_OPTION } from "../../duSagst.constants";
+import type { TDuSagstAnswerBoxState } from "../../duSagst.types";
 
 interface AnswerBoxProps {
+  playerId: string;
   playerName: string;
   selectedAnswer: number; // index of selected answer
+  boxState: TDuSagstAnswerBoxState;
 }
 
-const AnswerBox: React.FC<AnswerBoxProps> = ({ selectedAnswer, playerName }) => {
+const AnswerBox: React.FC<AnswerBoxProps> = ({ selectedAnswer, playerName, playerId, boxState }) => {
   const isAnswerEmpty = selectedAnswer < 0 || selectedAnswer > 3;
 
   const theme = useMantineTheme();
+  const { user, isPlayer, isHost } = useUser();
+
   const { color, label } = ANSWER_SELECT_MAP[selectedAnswer] ?? DEFAULT_ANSWER_OPTION;
   const backgroundColor = ANSWER_BACKGROUND_COLORS[color];
   const labelSize = isAnswerEmpty ? "2rem" : "7rem";
+
+  const showAnswerBox = playerId === user.id || !isPlayer || boxState.showAnswer;
+  const defaultOpacity = !boxState.showAnswer && isHost ? 0.7 : 1;
+
+  const handleShowAnswerBox = () => {
+    socket.emit("duSagst:showAnswerBox", { boxId: boxState.id });
+  };
 
   return (
     <Flex
       direction="column"
       pos="relative"
       w="14rem"
+      opacity={showAnswerBox ? defaultOpacity : 0}
+      sx={{
+        transition: "opacity 300ms",
+      }}
     >
       <Box
         bg={theme.colors.dark[4]}
@@ -76,7 +93,13 @@ const AnswerBox: React.FC<AnswerBoxProps> = ({ selectedAnswer, playerName }) => 
 
       <ModView>
         <Button.Group sx={{ alignSelf: "center" }}>
-          <Button variant="default">Antwort aufdecken</Button>
+          <Button
+            variant="default"
+            onClick={handleShowAnswerBox}
+            disabled={boxState.showAnswer}
+          >
+            Antwort aufdecken
+          </Button>
         </Button.Group>
       </ModView>
     </Flex>

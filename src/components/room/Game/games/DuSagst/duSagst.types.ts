@@ -14,7 +14,8 @@ export type TDuSagstAnswerSelectMapValue = {
   color: TDuSagstAnswerColors;
 };
 
-export type TDuSagstPlayerState = {
+export type TDuSagstAnswerBoxState = {
+  id: string;
   answerIndex: number;
   answerTheQuestion: boolean;
   submitted: boolean;
@@ -22,8 +23,8 @@ export type TDuSagstPlayerState = {
 };
 
 export type TDuSagstTeamState = {
-  p1: TDuSagstPlayerState;
-  p2: TDuSagstPlayerState;
+  id: string;
+  boxStates: TDuSagstAnswerBoxState[];
 };
 
 export type TDuSagstQuestion = IListItem<{ question: string; answers: TDuSagstAnswer[] }>;

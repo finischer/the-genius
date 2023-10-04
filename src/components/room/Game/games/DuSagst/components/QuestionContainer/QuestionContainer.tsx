@@ -27,13 +27,14 @@ const allPlayersHasSubmitted = (teams: TDuSagstGameState["teamStates"]): boolean
 };
 
 const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerOptions, game }) => {
-  const { isPlayer, isHost } = useUser();
+  const { isPlayer, isHost, hostFunction } = useUser();
   const { room } = useRoom();
   const theme = useMantineTheme();
   const q = question.endsWith("?") ? question : question + "?";
   const allAnswersSubmitted = allPlayersHasSubmitted(game.teamStates);
   const isAnswerClickable = isPlayer && !allAnswersSubmitted;
   const allAnswersShown = answerOptions.length === game.display.answers.length;
+  const isTimerActive = room.state.display.clock.isActive;
 
   const AnswerRow: React.FC<AnswerRowProps> = ({ index, answer }) => {
     const theme = useMantineTheme();
@@ -55,22 +56,28 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerO
     );
   };
 
-  const handleStartTimer = () => {
+  const handleStartTimer = hostFunction(() => {
     socket.emit("duSagst:startTimer", game.timeToThinkSeconds, () => {
       socket.emit("duSagst:submitAnswers");
     });
-  };
+  });
 
-  const handleShowAnswer = (answerIndex: number) => {
+  const handleShowAnswer = hostFunction((answerIndex: number) => {
     socket.emit("duSagst:showAnswer", answerIndex);
-  };
+  });
 
   const handleClickAnswer = (answerIndex: number) => {
-    console.log("isPlayer: ", isPlayer);
-    console.log("allAnswersSubmitted: ", allAnswersSubmitted);
     if (!isPlayer || allAnswersSubmitted) return;
     socket.emit("duSagst:clickAnswer", { answerIndex });
   };
+
+  const handleNextQuestion = hostFunction(() => {
+    socket.emit("duSagst:nextQuestion");
+  });
+
+  const handlePrevQuestion = hostFunction(() => {
+    socket.emit("duSagst:prevQuestion");
+  });
 
   return (
     <Flex
@@ -128,13 +135,37 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerO
           })}
 
           <ModView>
-            <Button
-              mt="xl"
-              disabled={room.state.display.clock.isActive || !allAnswersShown}
-              onClick={handleStartTimer}
+            <Flex
+              direction="column"
+              gap="md"
+              w="100%"
+              align="center"
             >
-              Timer starten
-            </Button>
+              <Button
+                mt="xl"
+                disabled={isTimerActive || !allAnswersShown}
+                onClick={handleStartTimer}
+              >
+                Timer starten
+              </Button>
+
+              <Button.Group>
+                <Button
+                  variant="default"
+                  onClick={handlePrevQuestion}
+                  disabled={isTimerActive}
+                >
+                  Vorheriger Frage
+                </Button>
+                <Button
+                  variant="default"
+                  onClick={handleNextQuestion}
+                  disabled={isTimerActive}
+                >
+                  Nächste Frage
+                </Button>
+              </Button.Group>
+            </Flex>
           </ModView>
         </Flex>
       </AnimatePresence>

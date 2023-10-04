@@ -1,6 +1,6 @@
 import React from "react";
 import { type IContainerBoxProps } from "./containerBox.types";
-import { Box } from "@mantine/core";
+import { Box, Container } from "@mantine/core";
 import { sizes } from "~/styles/constants";
 
 const ContainerBox: React.FC<IContainerBoxProps> = ({

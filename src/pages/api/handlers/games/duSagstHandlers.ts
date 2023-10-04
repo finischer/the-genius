@@ -23,6 +23,17 @@ function getBoxStateById(game: TDuSagstGameState, boxId: string): TDuSagstAnswer
   return getAllBoxes(game).find((box) => box.id === boxId);
 }
 
+function prepareStateForNewQuestion(game: TDuSagstGameState) {
+  game.display.answers = [];
+  game.display.question = false;
+
+  getAllBoxes(game).forEach((box) => {
+    box.answerIndex = -1;
+    box.showAnswer = false;
+    box.submitted = true;
+  });
+}
+
 export function duSagstHandler(
   io: Server,
   socket: Socket<IClientToServerEvents, IServerToClientEvents, IServerSocketData> & IServerSocketData
@@ -73,7 +84,6 @@ export function duSagstHandler(
     const { room, team } = res;
 
     const p = team.getPlayer(socket.playerId);
-    console.log(p);
 
     if (!p) return;
     p.shared.duSagst.answer = answerIndex;
@@ -90,5 +100,35 @@ export function duSagstHandler(
     getAllBoxes(game).forEach((box) => (box.submitted = false));
 
     room.startTimer(timerSeconds, cb);
+  });
+
+  socket.on("duSagst:nextQuestion", () => {
+    const room = roomManager.getRoom(socket.roomId);
+    if (!room) return new NoRoomException(socket);
+
+    const game = room.getGame(GAME_IDENTIFIER);
+
+    if (game.qIndex >= game.questions.length - 1) return;
+
+    prepareStateForNewQuestion(game);
+    room.update();
+
+    game.qIndex++;
+    room.update();
+  });
+
+  socket.on("duSagst:prevQuestion", () => {
+    const room = roomManager.getRoom(socket.roomId);
+    if (!room) return new NoRoomException(socket);
+
+    const game = room.getGame(GAME_IDENTIFIER);
+
+    if (game.qIndex <= 0) return;
+
+    prepareStateForNewQuestion(game);
+    room.update();
+
+    game.qIndex--;
+    room.update();
   });
 }

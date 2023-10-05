@@ -1,3 +1,4 @@
+import { type TDuSagstAnswerBoxState } from "./../components/room/Game/games/DuSagst/duSagst.types";
 import { type TExceptionReason } from "./../pages/api/exceptions/exceptions.types";
 import { type RoomViews, type Gameshow, type User } from "@prisma/client";
 import { type NextApiResponse } from "next";
@@ -110,6 +111,7 @@ export interface IClientToServerEvents {
   // +++ DU SAGST EVENTS +++
   "duSagst:showAnswer": (answerIndex: number) => void;
   "duSagst:submitAnswers": () => void;
+  "duSagst:switchRoles": ({ boxes }: { boxes: TDuSagstAnswerBoxState[] }) => void;
   "duSagst:clickAnswer": ({ answerIndex }: { answerIndex: number }) => void;
   "duSagst:startTimer": (timerSeconds: number, cb: () => void) => void;
   "duSagst:showAnswerBox": ({ boxId }: { boxId: string }) => void;

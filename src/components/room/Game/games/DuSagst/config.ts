@@ -4,19 +4,17 @@ import { v4 as uuidv4 } from "uuid";
 
 export type TDuSagstGameState = IDuSagstState & IGameGeneralState;
 
-const createDefaultBoxState = (): TDuSagstAnswerBoxState => ({
+const createDefaultBoxState = (answerTheQuestion: boolean): TDuSagstAnswerBoxState => ({
   id: uuidv4(),
   answerIndex: -1,
-  answerTheQuestion: false,
+  answerTheQuestion,
   showAnswer: false,
   submitted: true,
 });
 
 const createDefaultTeamState = (): TDuSagstTeamState => ({
   id: uuidv4(),
-  boxStates: Array(2)
-    .fill(null)
-    .map((_) => createDefaultBoxState()),
+  boxStates: [createDefaultBoxState(true), createDefaultBoxState(false)],
 });
 
 export const DUSAGST_TIME_TO_THINK_SECONDS = 30;

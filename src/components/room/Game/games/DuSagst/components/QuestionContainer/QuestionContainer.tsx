@@ -9,6 +9,8 @@ import { useUser } from "~/hooks/useUser";
 import { type TDuSagstGameState } from "../../config";
 import { ANSWER_BACKGROUND_COLORS, ANSWER_SELECT_MAP, DEFAULT_ANSWER_OPTION } from "../../duSagst.constants";
 import type { TDuSagstAnswer } from "../../duSagst.types";
+import ActionIcon from "~/components/shared/ActionIcon";
+import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
 
 interface QuestionContainerProps {
   question: string;
@@ -35,6 +37,8 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerO
   const isAnswerClickable = isPlayer && !allAnswersSubmitted;
   const allAnswersShown = answerOptions.length === game.display.answers.length;
   const isTimerActive = room.state.display.clock.isActive;
+  const isPrevBtnDisabled = isTimerActive || game.qIndex <= 0;
+  const isNxtBtnDisabled = isTimerActive || game.qIndex >= game.questions.length - 1;
   const showQuestion = game.display.question;
 
   const questionOpacity = isHost && !showQuestion ? 0.7 : 0;
@@ -176,22 +180,28 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerO
                 Timer starten
               </Button>
 
-              <Button.Group>
-                <Button
+              <Flex gap="lg">
+                <ActionIcon
+                  toolTip="Vorherige Frage"
                   variant="default"
                   onClick={handlePrevQuestion}
-                  disabled={isTimerActive}
+                  disabled={isPrevBtnDisabled}
                 >
-                  Vorheriger Frage
-                </Button>
-                <Button
+                  <IconArrowLeft />
+                </ActionIcon>
+                <ActionIcon
+                  toolTip="Nächste Frage"
                   variant="default"
                   onClick={handleNextQuestion}
-                  disabled={isTimerActive}
+                  disabled={isNxtBtnDisabled}
                 >
-                  Nächste Frage
-                </Button>
-              </Button.Group>
+                  <IconArrowRight />
+                </ActionIcon>
+              </Flex>
+
+              <p>
+                Frage {game.qIndex + 1} / {game.questions.length}
+              </p>
             </Flex>
           </ModView>
         </Flex>

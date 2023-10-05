@@ -102,6 +102,21 @@ export function duSagstHandler(
     room.startTimer(timerSeconds, cb);
   });
 
+  socket.on("duSagst:switchRoles", ({ boxes }) => {
+    const room = roomManager.getRoom(socket.roomId);
+    if (!room) return new NoRoomException(socket);
+
+    const game = room.getGame(GAME_IDENTIFIER);
+
+    boxes.forEach((box) => {
+      const acutallyBox = getBoxStateById(game, box.id);
+      if (!acutallyBox) return;
+      acutallyBox.answerTheQuestion = !acutallyBox.answerTheQuestion;
+    });
+
+    room.update();
+  });
+
   socket.on("duSagst:showQuestion", () => {
     const room = roomManager.getRoom(socket.roomId);
     if (!room) return new NoRoomException(socket);
@@ -120,13 +135,15 @@ export function duSagstHandler(
 
     if (game.qIndex >= game.questions.length - 1) return;
 
+    let delayMs = game.display.question ? 700 : 400;
+
     prepareStateForNewQuestion(game);
     room.update();
 
     setTimeout(() => {
       game.qIndex++;
       room.update();
-    }, 1000);
+    }, delayMs);
   });
 
   socket.on("duSagst:prevQuestion", () => {
@@ -137,11 +154,14 @@ export function duSagstHandler(
 
     if (game.qIndex <= 0) return;
 
+    let delayMs = game.display.question ? 700 : 400;
+
     prepareStateForNewQuestion(game);
     room.update();
+
     setTimeout(() => {
       game.qIndex--;
       room.update();
-    }, 1000);
+    }, delayMs);
   });
 }

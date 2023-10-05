@@ -26,6 +26,8 @@ const AnswerBox: React.FC<AnswerBoxProps> = ({ selectedAnswer, playerName, playe
   const showAnswerBox = playerId === user.id || !isPlayer || boxState.showAnswer;
   const defaultOpacity = !boxState.showAnswer && isHost ? 0.7 : 1;
 
+  const description = boxState.answerTheQuestion ? "Beantwortet die Frage" : "Schätzt Teampartner ein"; // TODO: Replace 'Teampartner' with actually playername
+
   const handleShowAnswerBox = () => {
     socket.emit("duSagst:showAnswerBox", { boxId: boxState.id });
   };
@@ -35,61 +37,65 @@ const AnswerBox: React.FC<AnswerBoxProps> = ({ selectedAnswer, playerName, playe
       direction="column"
       pos="relative"
       w="14rem"
-      opacity={showAnswerBox ? defaultOpacity : 0}
-      sx={{
-        transition: "opacity 300ms",
-      }}
     >
-      <Box
-        bg={theme.colors.dark[4]}
-        pl="xs"
-        pr="lg"
-        maw="7rem"
+      <Flex
+        direction="column"
+        opacity={showAnswerBox ? defaultOpacity : 0}
         sx={{
-          borderRadius: theme.radius.sm,
-          borderBottomLeftRadius: 0,
-          borderBottomRightRadius: 0,
-          whiteSpace: "nowrap",
+          transition: "opacity 300ms",
         }}
       >
-        <Text
+        <Box
+          bg={theme.colors.dark[4]}
+          pl="xs"
+          pr="lg"
+          maw="7rem"
           sx={{
-            overflow: "hidden",
-            textOverflow: "ellipsis",
+            borderRadius: theme.radius.sm,
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0,
+            whiteSpace: "nowrap",
           }}
         >
-          {playerName}
-        </Text>
-      </Box>
-      <Flex
-        h="14rem"
-        w="inherit"
-        justify="center"
-        align="center"
-        bg={backgroundColor}
-        sx={{
-          borderRadius: theme.radius.md,
-          borderColor: isAnswerEmpty ? theme.colors.dark[4] : "transparent",
-          borderStyle: "solid",
-          borderTopLeftRadius: 0,
-          transition: "background 300ms",
-        }}
-      >
-        <Text
-          size={labelSize}
+          <Text
+            sx={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {playerName}
+          </Text>
+        </Box>
+        <Flex
+          h="14rem"
+          w="inherit"
+          justify="center"
           align="center"
+          bg={backgroundColor}
+          sx={{
+            borderRadius: theme.radius.md,
+            borderColor: isAnswerEmpty ? theme.colors.dark[4] : "transparent",
+            borderStyle: "solid",
+            borderTopLeftRadius: 0,
+            transition: "background 300ms",
+          }}
         >
-          {label}
+          <Text
+            size={labelSize}
+            align="center"
+          >
+            {label}
+          </Text>
+        </Flex>
+
+        <Text
+          align="center"
+          my="md"
+          w="100%"
+        >
+          {description}
         </Text>
       </Flex>
-
-      <Text
-        align="center"
-        my="md"
-        w="100%"
-      >
-        Beantwortet die Frage
-      </Text>
 
       <ModView>
         <Button.Group sx={{ alignSelf: "center" }}>

@@ -39,7 +39,19 @@ export const DEFAULT_DUSAGST_STATE: TDuSagstGameState = {
   rules: "",
   getRules() {
     return `
-        
+        Die Spieler bekommen eine Frage gestellt, bei der es 4 Antwortmöglichkeiten gibt. 
+        Anschließend habt ihr ${
+          this.timeToThinkSeconds === 1
+            ? "eine Sekunde"
+            : `${
+                this.timeToThinkSeconds
+              } Sekunden Zeit und in dieser Zeit muss ein Teammitglied die Frage beantworten,
+        während das andere Teammitglied einschätzen muss, welche Antwort der Teampartner geben wird. Stimmen die beiden Antworten überein, gibt es einen Punkt. Stimmen die Antworten nicht überein, gibt es keinen Punkt.
+        Welches Team zuerst ${
+          this.maxPoints === 1 ? "einen Punkt" : `${this.maxPoints} Punkte`
+        } hat , gewinnt das Spiel.
+        `
+        }
     `;
   },
 };

@@ -9,7 +9,7 @@ const availableGames: TTransferListData = [
     { value: "geheimwoerter", label: "Geheimwörter" },
     { value: "set", label: "Set" },
     { value: "duSagst", label: "Du sagst ..." },
-    { value: "referatBingo", label: "Referat-Bingo" },
+    // { value: "referatBingo", label: "Referat-Bingo" },
     // { value: 'zehnSetzen', label: 'Zehn setzen' },
     // { value: 'fragenhagel', label: 'Fragenhagel' },
     // { value: 'buchstabensalat', label: 'Buchstabensalat' },

@@ -113,6 +113,7 @@ export interface IClientToServerEvents {
   "duSagst:clickAnswer": ({ answerIndex }: { answerIndex: number }) => void;
   "duSagst:startTimer": (timerSeconds: number, cb: () => void) => void;
   "duSagst:showAnswerBox": ({ boxId }: { boxId: string }) => void;
+  "duSagst:showQuestion": () => void;
   "duSagst:nextQuestion": () => void;
   "duSagst:prevQuestion": () => void;
 }

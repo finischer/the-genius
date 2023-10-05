@@ -102,6 +102,16 @@ export function duSagstHandler(
     room.startTimer(timerSeconds, cb);
   });
 
+  socket.on("duSagst:showQuestion", () => {
+    const room = roomManager.getRoom(socket.roomId);
+    if (!room) return new NoRoomException(socket);
+
+    const game = room.getGame(GAME_IDENTIFIER);
+
+    game.display.question = true;
+    room.update();
+  });
+
   socket.on("duSagst:nextQuestion", () => {
     const room = roomManager.getRoom(socket.roomId);
     if (!room) return new NoRoomException(socket);
@@ -113,8 +123,10 @@ export function duSagstHandler(
     prepareStateForNewQuestion(game);
     room.update();
 
-    game.qIndex++;
-    room.update();
+    setTimeout(() => {
+      game.qIndex++;
+      room.update();
+    }, 1000);
   });
 
   socket.on("duSagst:prevQuestion", () => {
@@ -127,8 +139,9 @@ export function duSagstHandler(
 
     prepareStateForNewQuestion(game);
     room.update();
-
-    game.qIndex--;
-    room.update();
+    setTimeout(() => {
+      game.qIndex--;
+      room.update();
+    }, 1000);
   });
 }

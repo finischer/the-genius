@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Text, useMantineTheme } from "@mantine/core";
+import { Button, Flex, Text, useMantineTheme } from "@mantine/core";
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 import ContainerBox from "~/components/shared/ContainerBox";
@@ -35,6 +35,9 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerO
   const isAnswerClickable = isPlayer && !allAnswersSubmitted;
   const allAnswersShown = answerOptions.length === game.display.answers.length;
   const isTimerActive = room.state.display.clock.isActive;
+  const showQuestion = game.display.question;
+
+  const questionOpacity = isHost && !showQuestion ? 0.7 : 0;
 
   const AnswerRow: React.FC<AnswerRowProps> = ({ index, answer }) => {
     const theme = useMantineTheme();
@@ -71,6 +74,10 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerO
     socket.emit("duSagst:clickAnswer", { answerIndex });
   };
 
+  const handleShowQuestion = hostFunction(() => {
+    socket.emit("duSagst:showQuestion");
+  });
+
   const handleNextQuestion = hostFunction(() => {
     socket.emit("duSagst:nextQuestion");
   });
@@ -84,15 +91,35 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerO
       direction="column"
       gap="xl"
     >
-      <ContainerBox
-        bg={theme.primaryColor}
-        contentCentered
-        w="25rem"
-        py="1rem"
-        px="2rem"
+      <Flex
+        direction="column"
+        pos="relative"
+        align="center"
+        gap="md"
       >
-        <Text align="center">{q}</Text>
-      </ContainerBox>
+        <ModView>
+          <Button
+            variant="default"
+            onClick={handleShowQuestion}
+            disabled={showQuestion}
+          >
+            Frage anzeigen
+          </Button>
+        </ModView>
+        <ContainerBox
+          bg={theme.primaryColor}
+          contentCentered
+          w="25rem"
+          py="1rem"
+          px="2rem"
+          opacity={game.display.question ? 1 : questionOpacity}
+          sx={{
+            transition: "opacity 300ms",
+          }}
+        >
+          <Text align="center">{q}</Text>
+        </ContainerBox>
+      </Flex>
 
       <AnimatePresence>
         <Flex

@@ -60,7 +60,7 @@ const ReferatBingoConfigurator = () => {
       onFormSubmit={handleSubmit}
       renderValueByKey="topic"
       onSelectQuestion={handleSelectTopic}
-      selectedQuestionId={form.getInputProps("id").value}
+      selectedQuestionId={form.getInputProps("id").value as string}
       buttonText="Thema"
       listTitle="Themen"
     >

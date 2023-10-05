@@ -123,7 +123,7 @@ const DuSagstConfigurator = () => {
       setQuestions={setQuestions}
       onSelectQuestion={handleClickQuestion}
       onFormSubmit={handleSubmit}
-      selectedQuestionId={form.getInputProps("id").value}
+      selectedQuestionId={form.getInputProps("id").value as string}
       renderValueByKey="question"
     >
       <Flex

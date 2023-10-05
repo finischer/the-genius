@@ -8,13 +8,11 @@ import {
 import { DEFAULT_FLAGGEN_STATE } from "~/components/room/Game/games/Flaggen/config";
 import { DEFAULT_MEMORY_STATE } from "~/components/room/Game/games/Memory/config";
 import { DEFAULT_MERKEN_STATE } from "~/components/room/Game/games/Merken/config";
-import type {
-  TGame,
-  TGameNames,
-} from "~/components/room/Game/games/game.types";
+import type { TGame, TGameNames } from "~/components/room/Game/games/game.types";
 import { DEFAULT_GEHEIMWOERTER_STATE } from "~/components/room/Game/games/Geheimwörter/config";
 import { DEFAULT_SET_STATE } from "~/components/room/Game/games/Set/config";
 import { DEFAULT_DUSAGST_STATE } from "~/components/room/Game/games/DuSagst/config";
+import { DEFAULT_REFERAT_BINGO_STATE } from "~/components/room/Game/games/ReferatBingo/config";
 
 export const GAME_STATE_MAP: TGameSettingsMap = {
   flaggen: DEFAULT_FLAGGEN_STATE,
@@ -23,13 +21,12 @@ export const GAME_STATE_MAP: TGameSettingsMap = {
   geheimwoerter: DEFAULT_GEHEIMWOERTER_STATE,
   set: DEFAULT_SET_STATE,
   duSagst: DEFAULT_DUSAGST_STATE,
+  referatBingo: DEFAULT_REFERAT_BINGO_STATE,
 };
 
 export type TSelectedGameSettingsArray = TGame[];
 
-const ConfiguratorContext = createContext<TConfiguratorContext | undefined>(
-  undefined
-);
+const ConfiguratorContext = createContext<TConfiguratorContext | undefined>(undefined);
 
 const ConfiguratorProvider: React.FC<IConfiguratorProvider> = ({
   updateGameshowConfig,
@@ -54,11 +51,7 @@ const ConfiguratorProvider: React.FC<IConfiguratorProvider> = ({
 
   return (
     <ConfiguratorContext.Provider
-      value={[
-        settings,
-        setSettings,
-        { enableFurtherButton, disableFurtherButton },
-      ]}
+      value={[settings, setSettings, { enableFurtherButton, disableFurtherButton }]}
     >
       {children}
     </ConfiguratorContext.Provider>

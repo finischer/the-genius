@@ -5,7 +5,17 @@ export interface IDuSagstGameProps {
   game: TDuSagstGameState;
 }
 
-export type TDuSagstPlayerState = {
+export type TDuSagstAnswerOptions = "A" | "B" | "C" | "D" | "Keine Antwort";
+
+export type TDuSagstAnswerColors = "green" | "blue" | "yellow" | "pink" | "transparent";
+
+export type TDuSagstAnswerSelectMapValue = {
+  label: TDuSagstAnswerOptions;
+  color: TDuSagstAnswerColors;
+};
+
+export type TDuSagstAnswerBoxState = {
+  id: string;
   answerIndex: number;
   answerTheQuestion: boolean;
   submitted: boolean;
@@ -13,8 +23,8 @@ export type TDuSagstPlayerState = {
 };
 
 export type TDuSagstTeamState = {
-  p1: TDuSagstPlayerState;
-  p2: TDuSagstPlayerState;
+  id: string;
+  boxStates: TDuSagstAnswerBoxState[];
 };
 
 export type TDuSagstQuestion = IListItem<{ question: string; answers: TDuSagstAnswer[] }>;
@@ -27,7 +37,7 @@ export type TDuSagstAnswer = {
 export interface IDuSagstState {
   questions: TDuSagstQuestion[];
   qIndex: number;
-  answers: [string, string, string, string];
+  timeToThinkSeconds: number;
   teamStates: {
     t1: TDuSagstTeamState;
     t2: TDuSagstTeamState;

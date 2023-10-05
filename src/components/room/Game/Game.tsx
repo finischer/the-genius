@@ -1,18 +1,10 @@
 import { Flex, keyframes } from "@mantine/core";
 import React, { useEffect, useState } from "react";
 import { useRoom } from "~/hooks/useRoom";
-import {
-  animations,
-  zoomInAnimation,
-  zoomOutAnimation,
-} from "~/utils/animations";
+import { animations, zoomInAnimation, zoomOutAnimation } from "~/utils/animations";
 import FlaggenGame from "./games/Flaggen/FlaggenGame";
 import { type TFlaggenGameState } from "./games/Flaggen/config";
-import {
-  type IGameProps,
-  type TGameMap,
-  type TGameNames,
-} from "./games/game.types";
+import { type IGameProps, type TGameMap, type TGameNames } from "./games/game.types";
 import MemoryGame from "./games/Memory/MemoryGame";
 import { type TMemoryGameState } from "./games/Memory/config";
 import MerkenGame from "./games/Merken/MerkenGame";
@@ -25,6 +17,8 @@ import SetGame from "./games/Set/SetGame";
 import type { TSetGameState } from "./games/Set/config";
 import DuSagstGame from "./games/DuSagst/DuSagstGame";
 import type { TDuSagstGameState } from "./games/DuSagst/config";
+import ReferatBingoGame from "./games/ReferatBingo/ReferatBingoGame";
+import type { TReferatBingoGameState } from "./games/ReferatBingo/config";
 
 const scaleAnimation = keyframes({
   "0%": { transform: "scale(1,1)" },
@@ -38,8 +32,7 @@ const Game: React.FC<IGameProps> = ({ game }) => {
 
   const introState = room.state.display.gameIntro;
   const showGame = room.state.display.game;
-  const gameNumber =
-    room.games.findIndex((g) => g.identifier === game.identifier) + 1;
+  const gameNumber = room.games.findIndex((g) => g.identifier === game.identifier) + 1;
 
   const [mountIntroContainer, setMountIntroContainer] = useState(true);
 
@@ -51,6 +44,7 @@ const Game: React.FC<IGameProps> = ({ game }) => {
       geheimwoerter: <GeheimwörterGame game={game as TGeheimwörterGameState} />,
       set: <SetGame game={game as TSetGameState} />,
       duSagst: <DuSagstGame game={game as TDuSagstGameState} />,
+      referatBingo: <ReferatBingoGame game={game as TReferatBingoGameState} />,
     };
 
     return GAME_MAP[identifier];
@@ -71,11 +65,7 @@ const Game: React.FC<IGameProps> = ({ game }) => {
   return (
     <>
       <AnimatePresence>
-        {showGame && (
-          <motion.div {...animations.fadeInOut}>
-            {getGame(game.identifier)}
-          </motion.div>
-        )}
+        {showGame && <motion.div {...animations.fadeInOut}>{getGame(game.identifier)}</motion.div>}
       </AnimatePresence>
 
       {mountIntroContainer && (

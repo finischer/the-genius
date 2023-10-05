@@ -15,30 +15,26 @@ const DIVIDER_COLOR = "#f7f1f1";
 const Scoreboard: React.FC<IScoreboardProps> = ({ team, color }) => {
   const theme = useMantineTheme();
   const { room } = useRoom();
-  const { isHost } = useUser();
+  const avatarImages =
+    team.avatarImageList.length === 0 ? Array(1).fill(team.avatarImage) : team.avatarImageList;
 
   const minNumOfGamesToWin = Math.round((room.games.length + 1) / 2) + 2;
 
   const GREEN_GRADIENT = theme.fn.linearGradient(90, "#00C9FF", "#92FE9D");
   const RED_GRADIENT = theme.fn.linearGradient(90, "#D53369", "#DAAE51");
 
-  const lineElements = new Array(minNumOfGamesToWin)
-    .fill(null)
-    .map((_, index) => (
-      <Container
-        p={0}
-        key={index}
-        m="1.2rem 0"
-        w="12rem"
-        opacity={0.8}
-        sx={{
-          borderRight:
-            index + 1 < minNumOfGamesToWin
-              ? `1px solid ${DIVIDER_COLOR}`
-              : "none",
-        }}
-      />
-    ));
+  const lineElements = new Array(minNumOfGamesToWin).fill(null).map((_, index) => (
+    <Container
+      p={0}
+      key={index}
+      m="1.2rem 0"
+      w="12rem"
+      opacity={0.8}
+      sx={{
+        borderRight: index + 1 < minNumOfGamesToWin ? `1px solid ${DIVIDER_COLOR}` : "none",
+      }}
+    />
+  ));
 
   const scoreColor = color === "green" ? GREEN_GRADIENT : RED_GRADIENT;
 
@@ -61,19 +57,35 @@ const Scoreboard: React.FC<IScoreboardProps> = ({ team, color }) => {
         align="center"
         gap="xl"
       >
-        <Text
-          color="white"
-          p="0 1rem"
-          weight="bold"
+        <Flex
+          direction="column"
+          gap="md"
+          align="center"
+          justify="center"
+          w="10rem"
+          pos="relative"
         >
-          {team.name}
-        </Text>
-        <Avatar
-          src={team.avatarImage}
-          radius="100px"
-          size="xl"
-          variant="filled"
-        />
+          <Text
+            color="white"
+            p="0 1rem"
+            weight="bold"
+            pos="absolute"
+            top={-35}
+          >
+            {team.name}
+          </Text>
+          <Avatar.Group spacing="xl">
+            {avatarImages.map((avatar, index) => (
+              <Avatar
+                key={avatar.userId ?? index}
+                src={avatar.img}
+                radius="100px"
+                size="xl"
+                variant="filled"
+              />
+            ))}
+          </Avatar.Group>
+        </Flex>
 
         <Flex
           bg={SCOREBOARD_BACKGROUND_COLOR}

@@ -10,11 +10,7 @@ import {
   useMantineTheme,
   type Sx,
 } from "@mantine/core";
-import {
-  IconExposureMinus1,
-  IconExposurePlus1,
-  IconTargetArrow,
-} from "@tabler/icons-react";
+import { IconExposureMinus1, IconExposurePlus1, IconTargetArrow } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 import ActionIcon from "~/components/shared/ActionIcon/ActionIcon";
@@ -71,16 +67,32 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
           />
         ))
     : undefined;
+
+  const scorePoints = (
+    <Flex
+      px="0.5rem"
+      miw="2rem"
+      h="2rem"
+      sx={{
+        borderRadius: theme.radius.md,
+        border: "1px solid white",
+      }}
+      justify="center"
+      align="center"
+    >
+      {team.gameScore}
+    </Flex>
+  );
+
+  const scorebarPoints = currentGame?.scorebarMode === "circle" ? scoreCircles : scorePoints;
+
   const isTeamFull = team.players.length >= room.maxPlayersPerTeam;
   const highlightBoxShadow =
-    team.isActiveTurn || team.buzzer.isPressed
-      ? `0px 0px 50px 50px ${HIGHLIGHT_CONTAINER_COLOR}`
-      : "";
+    team.isActiveTurn || team.buzzer.isPressed ? `0px 0px 50px 50px ${HIGHLIGHT_CONTAINER_COLOR}` : "";
   const scorebarBorderRadius = theme.radius.sm;
 
   const disableModBtns = !room.state.display.game;
-  const disableIncreaseScoreBtn =
-    disableModBtns || (currentGame && team.gameScore >= currentGame.maxPoints);
+  const disableIncreaseScoreBtn = disableModBtns || (currentGame && team.gameScore >= currentGame.maxPoints);
   const disableDecreaseScoreBtn = disableModBtns || team.gameScore <= 0;
 
   const playerNamesWhoBuzzered = team.players
@@ -125,11 +137,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
     socket.emit("toggleTeamActive", { teamId: team.id });
   };
 
-  const handleNotefieldChange = (
-    playerId: string,
-    teamId: string,
-    newValue: string
-  ) => {
+  const handleNotefieldChange = (playerId: string, teamId: string, newValue: string) => {
     socket.emit("updateNotefield", { playerId, teamId, newValue });
   };
 
@@ -167,9 +175,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
                 <Notefield
                   disabled={p.userId !== user.id} // only this player can edit the notefield
                   value={p.states.notefield.value}
-                  onChange={(e) =>
-                    handleNotefieldChange(p.id, p.teamId, e.target.value)
-                  }
+                  onChange={(e) => handleNotefieldChange(p.id, p.teamId, e.target.value)}
                   player={p}
                   onFocus={deactivateBuzzer}
                   onBlur={activateBuzzer}
@@ -244,11 +250,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
               <ActionIcon
                 variant="outline"
                 disabled={team.scorebarTimer.isActive}
-                toolTip={
-                  highlightBoxShadow
-                    ? "Buzzer freigeben"
-                    : `${team.name} an der Reihe sein lassen`
-                }
+                toolTip={highlightBoxShadow ? "Buzzer freigeben" : `${team.name} an der Reihe sein lassen`}
                 onClick={toggleTeamActiveState}
               >
                 <IconTargetArrow size={sizes.icon.s} />
@@ -333,8 +335,9 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
               w="100%"
               h="100%"
               justify="center"
+              align="center"
             >
-              {scoreCircles}
+              {scorebarPoints}
             </Flex>
           )}
         </Flex>

@@ -1,19 +1,25 @@
 import { type IGameGeneralState } from "../game.types";
-import type { IDuSagstState, TDuSagstPlayerState, TDuSagstTeamState } from "./duSagst.types";
+import type { IDuSagstState, TDuSagstAnswerBoxState, TDuSagstTeamState } from "./duSagst.types";
+import { v4 as uuidv4 } from "uuid";
 
 export type TDuSagstGameState = IDuSagstState & IGameGeneralState;
 
-const DEFAULT_PLAYER_STATE: TDuSagstPlayerState = {
+const createDefaultBoxState = (): TDuSagstAnswerBoxState => ({
+  id: uuidv4(),
   answerIndex: -1,
   answerTheQuestion: false,
   showAnswer: false,
-  submitted: false,
-};
+  submitted: true,
+});
 
-const DEFAULT_TEAM_STATE: TDuSagstTeamState = {
-  p1: DEFAULT_PLAYER_STATE,
-  p2: DEFAULT_PLAYER_STATE,
-};
+const createDefaultTeamState = (): TDuSagstTeamState => ({
+  id: uuidv4(),
+  boxStates: Array(2)
+    .fill(null)
+    .map((_) => createDefaultBoxState()),
+});
+
+export const DUSAGST_TIME_TO_THINK_SECONDS = 30;
 
 export const DEFAULT_DUSAGST_STATE: TDuSagstGameState = {
   identifier: "duSagst",
@@ -23,10 +29,10 @@ export const DEFAULT_DUSAGST_STATE: TDuSagstGameState = {
   scorebarMode: "circle",
   qIndex: 0,
   questions: [],
-  answers: ["", "", "", ""],
+  timeToThinkSeconds: DUSAGST_TIME_TO_THINK_SECONDS,
   teamStates: {
-    t1: DEFAULT_TEAM_STATE,
-    t2: DEFAULT_TEAM_STATE,
+    t1: createDefaultTeamState(),
+    t2: createDefaultTeamState(),
   },
   display: {
     answers: [],

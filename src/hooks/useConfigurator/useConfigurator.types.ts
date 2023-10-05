@@ -4,11 +4,9 @@ import type { TFlaggenGameState } from "~/components/room/Game/games/Flaggen/con
 import type { TGeheimwörterGameState } from "~/components/room/Game/games/Geheimwörter/config";
 import type { TMemoryGameState } from "~/components/room/Game/games/Memory/config";
 import type { TMerkenGameState } from "~/components/room/Game/games/Merken/config";
+import type { TReferatBingoGameState } from "~/components/room/Game/games/ReferatBingo/config";
 import type { TSetGameState } from "~/components/room/Game/games/Set/config";
-import type {
-  TGame,
-  TGameNames,
-} from "~/components/room/Game/games/game.types";
+import type { TGame, TGameNames } from "~/components/room/Game/games/game.types";
 
 export type TGameSettingsMap = {
   // [key in TGameNames]: TFlaggenGameState | TMemoryGameState | TMerkenGameState;
@@ -18,6 +16,7 @@ export type TGameSettingsMap = {
   geheimwoerter: TGeheimwörterGameState;
   set: TSetGameState;
   duSagst: TDuSagstGameState;
+  referatBingo: TReferatBingoGameState;
 };
 
 export type TGameshowConfig = {

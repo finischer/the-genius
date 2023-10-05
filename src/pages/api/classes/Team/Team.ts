@@ -3,6 +3,7 @@ import type {
   Player as PrismaPlayer,
   Team as PrismaTeam,
   ScorebarTimerState,
+  TeamAvatarImage,
 } from "@prisma/client";
 import { ObjectId } from "bson";
 import { type TUserReduced } from "~/types/socket.types";
@@ -17,6 +18,7 @@ export default class Team implements PrismaTeam {
   totalScore: number;
   gameScore: number;
   avatarImage: string;
+  avatarImageList: TeamAvatarImage[];
   players: PrismaPlayer[];
   buzzer: BuzzerState;
   scorebarTimer: ScorebarTimerState;
@@ -28,6 +30,7 @@ export default class Team implements PrismaTeam {
     this.totalScore = team.totalScore;
     this.gameScore = team.gameScore;
     this.avatarImage = team.avatarImage;
+    this.avatarImageList = team.avatarImageList;
     this.players = team.players.map((player) => new Player(player));
     this.buzzer = team.buzzer;
     this.scorebarTimer = team.scorebarTimer;
@@ -39,6 +42,7 @@ export default class Team implements PrismaTeam {
       id: new ObjectId().toString(),
       name,
       avatarImage: "",
+      avatarImageList: [],
       buzzer: {
         isPressed: false,
         playersBuzzered: [],
@@ -54,7 +58,9 @@ export default class Team implements PrismaTeam {
     };
   }
 
-  getPlayer(playerId: string) {
+  getPlayer(playerId: string | undefined | null) {
+    if (!playerId) return null;
+
     for (const [playerKey, player] of Object.entries(this.players)) {
       if (player.id === playerId) {
         return {
@@ -83,11 +89,23 @@ export default class Team implements PrismaTeam {
       this.avatarImage = user.image ?? "";
     }
 
+    const img: TeamAvatarImage = {
+      img: user.image ?? "",
+      userId: user.id,
+    };
+
+    this.avatarImageList.push(img);
+
     this.players.push(newPlayer);
+
+    return { teamId: this.id, playerId: newPlayer.id };
   }
 
   removePlayer(userId: string) {
+    const player = this.players.find((p) => p.userId === userId);
     this.players = this.players.filter((p) => p.userId !== userId);
+
+    this.avatarImageList = this.avatarImageList.filter((avatar) => avatar.userId !== player?.userId);
   }
 
   increaseGameScore(step = 1) {

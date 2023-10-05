@@ -11,6 +11,8 @@ interface IQuestionFormLayoutProps<T> {
   selectedQuestionId: string;
   onFormSubmit: () => void;
   renderValueByKey?: keyof T;
+  buttonText?: string;
+  listTitle?: string;
 }
 
 const QuestionFormLayout = <T extends { id: string }>({
@@ -21,6 +23,8 @@ const QuestionFormLayout = <T extends { id: string }>({
   onFormSubmit,
   selectedQuestionId,
   renderValueByKey,
+  buttonText = "Frage",
+  listTitle = "Fragen",
 }: IQuestionFormLayoutProps<T>) => {
   const questionIds = questions.map((q) => q.id);
   const questionExists = questionIds.includes(selectedQuestionId);
@@ -40,7 +44,9 @@ const QuestionFormLayout = <T extends { id: string }>({
             gap="xl"
           >
             {children}
-            <Button type="submit">Frage {questionExists ? "speichern" : "hinzufügen"}</Button>
+            <Button type="submit">
+              {buttonText} {questionExists ? "speichern" : "hinzufügen"}
+            </Button>
           </Flex>
         </form>
       </Container>
@@ -48,7 +54,9 @@ const QuestionFormLayout = <T extends { id: string }>({
       <Flex
         w="100%"
         direction="column"
+        gap="md"
       >
+        <Title order={3}>{listTitle}</Title>
         <ScrollArea
           mih="100%"
           h="calc(100vh - 30rem)"

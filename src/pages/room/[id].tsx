@@ -1,11 +1,4 @@
-import {
-  Box,
-  Center,
-  Container,
-  Flex,
-  Text,
-  useMantineTheme,
-} from "@mantine/core";
+import { Box, Center, Container, Flex, Text, useMantineTheme } from "@mantine/core";
 import { useDisclosure, useNetwork } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import {
@@ -59,21 +52,16 @@ const RoomPage = () => {
   const { showInfoNotification } = useNotification();
   const router = useRouter();
   const { data: session } = useSession();
-  const [
-    openedRoomDetails,
-    { open: openRoomDetails, close: closeRoomDetails },
-  ] = useDisclosure(false);
+  const [openedRoomDetails, { open: openRoomDetails, close: closeRoomDetails }] = useDisclosure(false);
   const [openedGameRules, { close: closeGameRules }] = useDisclosure();
 
   const { room, currentGame, setRoom } = useRoom();
-  const { isHost } = useUser();
   const { buzzer } = useBuzzer();
   const modPanelDisclosure = useDisclosure(false);
   const networkStatus = useNetwork();
 
   const showGame = room?.state.display.game;
-  const showCurrentGameCornerBanner =
-    currentGame && room.state.view === "GAME" && showGame;
+  const showCurrentGameCornerBanner = currentGame && room.state.view === "GAME" && showGame;
   const roomId = router.query.id as string;
 
   // useEffect(() => {
@@ -249,9 +237,7 @@ const RoomPage = () => {
           justify="center"
           direction="column"
         >
-          {currentGame && room.state.view === "GAME" && (
-            <Game game={currentGame} />
-          )}
+          {currentGame && room.state.view === "GAME" && <Game game={currentGame} />}
           <AnimatePresence>
             {room.state.view === "SCOREBOARD" && (
               <motion.div {...animations.fadeInOut}>

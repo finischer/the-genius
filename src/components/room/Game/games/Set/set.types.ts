@@ -1,3 +1,5 @@
+import type { IListItem } from "~/components/shared/List/components/ListItem/listItem.types";
+
 export enum SET_COLORS {
   RED = "#F94900",
   GREEN = "#70A041",
@@ -36,10 +38,10 @@ export interface ISetGameState {
 
 export type TSetQuestionList = TSetQuestionItem[];
 
-export type TSetQuestionItem = {
+export type TSetQuestionItem = IListItem<{
   id: string;
   cards: TSetCard[];
-};
+}>;
 
 export type TSetCard = {
   id: string;

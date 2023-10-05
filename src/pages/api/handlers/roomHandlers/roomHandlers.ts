@@ -17,12 +17,7 @@ const DISCONNECTING_TIMEOUT_MS = 5000;
 
 export function roomHandler(
   io: Server,
-  socket: Socket<
-    IClientToServerEvents,
-    IServerToClientEvents,
-    IServerSocketData
-  > &
-    IServerSocketData
+  socket: Socket<IClientToServerEvents, IServerToClientEvents, IServerSocketData> & IServerSocketData
 ) {
   socket.on("listAllRooms", (cb) => {
     const rooms = roomManager.getRoomsAsArray();
@@ -120,9 +115,7 @@ export function roomHandler(
       const room = roomManager.getRoom(roomId);
       if (!room) return new NoRoomException(socket);
 
-      room.participants = room.participants.filter(
-        (p) => p !== socket.user?.name
-      );
+      room.participants = room.participants.filter((p) => p !== socket.user?.name);
       room.update();
 
       if (socket.teamId && socket.user) {
@@ -178,9 +171,7 @@ export function roomHandler(
     const allPlayers = Object.values(room.teams)
       .map((t) => t.players)
       .flat();
-    allPlayers.forEach(
-      (p) => (p.states.notefield.isActive = !p.states.notefield.isActive)
-    );
+    allPlayers.forEach((p) => (p.states.notefield.isActive = !p.states.notefield.isActive));
     room.update();
   });
 
@@ -249,21 +240,22 @@ export function roomHandler(
     room.update();
   });
 
+  socket.on("startTimer", (seconds, cb) => {
+    const room = roomManager.getRoom(socket.roomId);
+    if (!room) return new NoRoomException(socket);
+
+    room.startTimer(seconds, cb);
+  });
+
   socket.on("disconnecting", (reason) => {
     const room = roomManager.getRoom(socket.roomId);
     if (!room) return new NoRoomException(socket);
 
     const timeout = setTimeout(async () => {
       // clearTimeout(timeout);
-      const allSockets = (await io
-        .in(room.id)
-        .fetchSockets()) as unknown as IServerSocketData[];
+      const allSockets = (await io.in(room.id).fetchSockets()) as unknown as IServerSocketData[];
 
-      const isClientReconnected = allSockets.find(
-        (s) => s.user?.id === socket.user?.id
-      )
-        ? true
-        : false;
+      const isClientReconnected = allSockets.find((s) => s.user?.id === socket.user?.id) ? true : false;
 
       if (isClientReconnected) return;
 

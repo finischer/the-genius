@@ -1,22 +1,9 @@
-import type {
-  GameshowMode,
-  Prisma,
-  Room as PrismaRoom,
-  RoomState,
-  RoomViews,
-} from "@prisma/client";
-import type {
-  TGame,
-  TGameNames,
-} from "~/components/room/Game/games/game.types";
+import type { GameshowMode, Prisma, Room as PrismaRoom, RoomState, RoomViews } from "@prisma/client";
+import type { TGame, TGameNames } from "~/components/room/Game/games/game.types";
 import { type TGameSettingsMap } from "~/hooks/useConfigurator/useConfigurator.types";
 import { io } from "../../socket";
 import Team from "../Team/Team";
-import {
-  type IRoomMaxPlayersTeamMap,
-  type PrismaRoomFixed,
-  type TRoomTeams,
-} from "./room.types";
+import { type IRoomMaxPlayersTeamMap, type PrismaRoomFixed, type TRoomTeams } from "./room.types";
 import { prisma } from "~/server/db";
 
 const SECONDS_TO_ROTATE_TITLE_BANNER = 4;
@@ -129,15 +116,14 @@ export default class Room implements PrismaRoomFixed {
     return false;
   }
 
-  getTeamById(teamId: string) {
+  getTeamById(teamId: string | undefined | null) {
+    if (!teamId) return null;
     return Object.values(this.teams).find((t) => t.id === teamId);
   }
 
   getGame<T extends TGameNames>(gameIdentifier: T): TGameSettingsMap[T] {
     const games = this.games as unknown as TGame[];
-    const game = games.find(
-      (g) => g.identifier === gameIdentifier
-    ) as unknown as TGameSettingsMap[T];
+    const game = games.find((g) => g.identifier === gameIdentifier) as unknown as TGameSettingsMap[T];
     return game;
   }
 

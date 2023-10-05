@@ -15,5 +15,6 @@ export interface IUseUserContext {
   isHost: boolean;
   updateUsername: (newUsername: string) => Promise<boolean>;
   isLoading: boolean;
+  // @ts-ignore
   hostFunction: (func: (...args: any[]) => void) => (...args: any[]) => any;
 }

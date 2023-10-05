@@ -10,3 +10,5 @@ export type FixedSizeArray<N extends number, T> = N extends 0
       0: T;
       length: N;
     } & ReadonlyArray<T>;
+
+export type FunctionToWrap<T extends any[]> = (...args: T) => void;

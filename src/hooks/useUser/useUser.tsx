@@ -6,6 +6,7 @@ import { api } from "~/utils/api";
 import useNotification from "../useNotification";
 import { useRoom } from "../useRoom";
 import { type IUseUserContext, type IUseUserProvider } from "./useUser.types";
+import type { FunctionToWrap } from "~/types/types";
 
 const UserContext = createContext<IUseUserContext | undefined>(undefined);
 
@@ -63,12 +64,9 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
     return true;
   }
 
-  function hostFunction(func: (...args: unknown[]) => void) {
+  function hostFunction<T extends any[]>(func: FunctionToWrap<T>): FunctionToWrap<T> {
     if (!isHost) return () => null;
-
-    return (...args: unknown[]) => {
-      return func(...args);
-    };
+    return (...args: T) => func(...args);
   }
 
   useEffect(() => {

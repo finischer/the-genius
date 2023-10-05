@@ -5,6 +5,7 @@ import { socket } from "~/hooks/useSocket";
 import { useUser } from "~/hooks/useUser";
 import { ANSWER_BACKGROUND_COLORS, ANSWER_SELECT_MAP, DEFAULT_ANSWER_OPTION } from "../../duSagst.constants";
 import type { TDuSagstAnswerBoxState } from "../../duSagst.types";
+import Tooltip from "~/components/shared/Tooltip";
 
 interface AnswerBoxProps {
   playerId: string;
@@ -57,14 +58,16 @@ const AnswerBox: React.FC<AnswerBoxProps> = ({ selectedAnswer, playerName, playe
             whiteSpace: "nowrap",
           }}
         >
-          <Text
-            sx={{
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
-            {playerName}
-          </Text>
+          <Tooltip label={playerName}>
+            <Text
+              sx={{
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {playerName}
+            </Text>
+          </Tooltip>
         </Box>
         <Flex
           h="14rem"

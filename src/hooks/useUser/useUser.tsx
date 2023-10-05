@@ -63,7 +63,7 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
     return true;
   }
 
-  function hostFunction(func: Function) {
+  function hostFunction(func: (...args: any[]) => void) {
     if (!isHost) return () => null;
 
     return (...args: any[]) => {

@@ -6,7 +6,7 @@ export type TReferatBingoGameState = IReferatBingoState & IGameGeneralState;
 const NUM_BINGO_FIELDS = 9;
 
 const DEFAULT_NOTEFIELD_STATE: TReferatBingoNotefieldState = {
-  answers: new Array(NUM_BINGO_FIELDS).fill(""),
+  answers: new Array<string>(NUM_BINGO_FIELDS).fill(""),
   selectedAnswers: [],
   submitted: false,
 };

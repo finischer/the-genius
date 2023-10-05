@@ -38,7 +38,6 @@ const config = {
     "@typescript-eslint/ban-ts-ignore": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/restrict-template-expressions": "off",
-    "@typescript-eslint/no-unsafe-return": "warn",
   },
 };
 

@@ -1,6 +1,7 @@
 import type { Team } from "@prisma/client";
 import { type Dispatch } from "react";
 import { type TUserReduced } from "~/types/socket.types";
+import type { FunctionToWrap } from "~/types/types";
 
 export interface IUseUserProvider {
   children: React.ReactNode;
@@ -15,5 +16,5 @@ export interface IUseUserContext {
   isHost: boolean;
   updateUsername: (newUsername: string) => Promise<boolean>;
   isLoading: boolean;
-  hostFunction: (func: (...args: any[]) => void) => (...args: any[]) => any;
+  hostFunction: <T extends any[]>(func: FunctionToWrap<T>) => FunctionToWrap<T>;
 }

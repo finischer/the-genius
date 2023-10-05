@@ -135,7 +135,7 @@ export function duSagstHandler(
 
     if (game.qIndex >= game.questions.length - 1) return;
 
-    let delayMs = game.display.question ? 700 : 400;
+    const delayMs = game.display.question ? 700 : 400;
 
     prepareStateForNewQuestion(game);
     room.update();
@@ -154,7 +154,7 @@ export function duSagstHandler(
 
     if (game.qIndex <= 0) return;
 
-    let delayMs = game.display.question ? 700 : 400;
+    const delayMs = game.display.question ? 700 : 400;
 
     prepareStateForNewQuestion(game);
     room.update();

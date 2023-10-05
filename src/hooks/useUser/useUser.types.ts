@@ -15,5 +15,5 @@ export interface IUseUserContext {
   isHost: boolean;
   updateUsername: (newUsername: string) => Promise<boolean>;
   isLoading: boolean;
-  hostFunction: (func: Function) => (...args: any[]) => any;
+  hostFunction: (func: (...args: any[]) => void) => (...args: any[]) => any;
 }

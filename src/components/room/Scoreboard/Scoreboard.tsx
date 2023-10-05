@@ -7,6 +7,7 @@ import { IconMinus, IconPlus } from "@tabler/icons-react";
 import { socket } from "~/hooks/useSocket";
 import { useUser } from "~/hooks/useUser";
 import ModView from "~/components/shared/ModView";
+import type { TeamAvatarImage } from "@prisma/client";
 
 const SCOREBOARD_BORDER_BACKGROUND_COLOR = "#7b68ee";
 const SCOREBOARD_BACKGROUND_COLOR = "#D8BFD8";
@@ -15,7 +16,7 @@ const DIVIDER_COLOR = "#f7f1f1";
 const Scoreboard: React.FC<IScoreboardProps> = ({ team, color }) => {
   const theme = useMantineTheme();
   const { room } = useRoom();
-  const avatarImages =
+  const avatarImages: TeamAvatarImage[] | string[] =
     team.avatarImageList.length === 0 ? Array(1).fill(team.avatarImage) : team.avatarImageList;
 
   const minNumOfGamesToWin = Math.round((room.games.length + 1) / 2) + 2;
@@ -75,15 +76,20 @@ const Scoreboard: React.FC<IScoreboardProps> = ({ team, color }) => {
             {team.name}
           </Text>
           <Avatar.Group spacing="xl">
-            {avatarImages.map((avatar, index) => (
-              <Avatar
-                key={avatar.userId ?? index}
-                src={avatar.img}
-                radius="100px"
-                size="xl"
-                variant="filled"
-              />
-            ))}
+            {avatarImages.map((avatar, index) => {
+              const key = typeof avatar === "object" ? avatar.userId : index;
+              const img = typeof avatar === "object" ? avatar.img : avatar;
+
+              return (
+                <Avatar
+                  key={key}
+                  src={img}
+                  radius="100px"
+                  size="xl"
+                  variant="filled"
+                />
+              );
+            })}
           </Avatar.Group>
         </Flex>
 

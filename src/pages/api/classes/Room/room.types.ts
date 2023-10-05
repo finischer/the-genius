@@ -1,11 +1,9 @@
-import {
-  type GameshowMode,
-  type RoomTeams,
-  type Room as PrismaRoom,
-  Prisma,
-} from "@prisma/client";
+import { type GameshowMode, type RoomTeams, type Room as PrismaRoom, Prisma } from "@prisma/client";
 import type Team from "../Team/Team";
 import type { TGame } from "~/components/room/Game/games/game.types";
+import type Room from ".";
+
+export type TeamOptions = keyof Room["teams"];
 
 export type TRoomTeams = Omit<RoomTeams, "teamOne" | "teamTwo"> & {
   teamOne: Team;

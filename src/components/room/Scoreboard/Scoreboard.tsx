@@ -19,7 +19,7 @@ const Scoreboard: React.FC<IScoreboardProps> = ({ team, color }) => {
   const avatarImages: TeamAvatarImage[] | string[] =
     team.avatarImageList.length === 0 ? Array(1).fill(team.avatarImage) : team.avatarImageList;
 
-  const minNumOfGamesToWin = Math.round((room.games.length + 1) / 2) + 2;
+  const minNumOfGamesToWin = Math.round((room.games.length + 1) / 2);
 
   const GREEN_GRADIENT = theme.fn.linearGradient(90, "#00C9FF", "#92FE9D");
   const RED_GRADIENT = theme.fn.linearGradient(90, "#D53369", "#DAAE51");

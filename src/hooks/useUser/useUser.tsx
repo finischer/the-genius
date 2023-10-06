@@ -1,4 +1,4 @@
-import type { Team } from "@prisma/client";
+import type { Team, UserSettings } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { createContext, useContext, useEffect, useState } from "react";
 import { type TUserReduced } from "~/types/socket.types";
@@ -9,6 +9,10 @@ import { type IUseUserContext, type IUseUserProvider } from "./useUser.types";
 import type { FunctionToWrap } from "~/types/types";
 
 const UserContext = createContext<IUseUserContext | undefined>(undefined);
+
+const DEFAULT_USER_SETTINGS: UserSettings = {
+  publishProfileImage: true,
+};
 
 const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
   const { data: session, update: updateSession } = useSession();
@@ -28,6 +32,7 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
       image: session?.user.image || null,
       role: session?.user.role || "USER",
       username: session?.user.username || "NOT_FOUND",
+      settings: session?.user.settings ?? DEFAULT_USER_SETTINGS,
     };
 
     return user;

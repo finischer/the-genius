@@ -2,7 +2,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { type GetServerSidePropsContext } from "next";
 import { getServerSession, type DefaultSession, type NextAuthOptions } from "next-auth";
 
-import { type UserRole, type UserSettings } from "@prisma/client";
+import { type UserRole } from "@prisma/client";
 import { prisma } from "~/server/db";
 import { sessionCallback, signInCallback } from "./auth/callbacks";
 import DiscordProvider from "./auth/providers/DiscordProvider";
@@ -23,7 +23,6 @@ declare module "next-auth" {
       id: string;
       role: UserRole;
       username: string | undefined;
-      settings: UserSettings;
     } & DefaultSession["user"];
   }
 

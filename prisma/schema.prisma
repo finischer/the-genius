@@ -22,7 +22,6 @@ model User {
   roomsOpen     Room[]       @relation(name: "roomCreator")
   accounts      Account[]
   sessions      Session[]
-  settings      UserSettings
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
 
@@ -141,10 +140,6 @@ enum RoomClockVariants {
 }
 
 // composite types
-type UserSettings {
-  publishProfileImage Boolean @default(true)
-}
-
 type RoomState {
   currentView     String          @default("")
   answerState     RoomAnswerState

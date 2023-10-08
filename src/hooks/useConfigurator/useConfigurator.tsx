@@ -1,18 +1,18 @@
 import { createContext, useContext, useEffect } from "react";
 import { useImmer } from "use-immer";
+import { DEFAULT_DUSAGST_STATE } from "~/components/room/Game/games/DuSagst/config";
+import { DEFAULT_FLAGGEN_STATE } from "~/components/room/Game/games/Flaggen/config";
+import { DEFAULT_GEHEIMWOERTER_STATE } from "~/components/room/Game/games/Geheimwörter/config";
+import { DEFAULT_MEMORY_STATE } from "~/components/room/Game/games/Memory/config";
+import { DEFAULT_MERKEN_STATE } from "~/components/room/Game/games/Merken/config";
+import { DEFAULT_REFERAT_BINGO_STATE } from "~/components/room/Game/games/ReferatBingo/config";
+import { DEFAULT_SET_STATE } from "~/components/room/Game/games/Set/config";
+import type { TGame, TGameNames } from "~/components/room/Game/games/game.types";
 import {
   type IConfiguratorProvider,
   type TConfiguratorContext,
   type TGameSettingsMap,
 } from "./useConfigurator.types";
-import { DEFAULT_FLAGGEN_STATE } from "~/components/room/Game/games/Flaggen/config";
-import { DEFAULT_MEMORY_STATE } from "~/components/room/Game/games/Memory/config";
-import { DEFAULT_MERKEN_STATE } from "~/components/room/Game/games/Merken/config";
-import type { TGame, TGameNames } from "~/components/room/Game/games/game.types";
-import { DEFAULT_GEHEIMWOERTER_STATE } from "~/components/room/Game/games/Geheimwörter/config";
-import { DEFAULT_SET_STATE } from "~/components/room/Game/games/Set/config";
-import { DEFAULT_DUSAGST_STATE } from "~/components/room/Game/games/DuSagst/config";
-import { DEFAULT_REFERAT_BINGO_STATE } from "~/components/room/Game/games/ReferatBingo/config";
 
 export const GAME_STATE_MAP: TGameSettingsMap = {
   flaggen: DEFAULT_FLAGGEN_STATE,

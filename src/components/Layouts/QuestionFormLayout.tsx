@@ -1,7 +1,8 @@
 import { Button, Container, Flex, ScrollArea, Title } from "@mantine/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import List from "../shared/List";
 import type { IListItem } from "../shared/List/components/ListItem/listItem.types";
+import { useConfigurator } from "~/hooks/useConfigurator";
 
 interface IQuestionFormLayoutProps<T> {
   setQuestions: React.Dispatch<React.SetStateAction<T[]>>;
@@ -26,8 +27,17 @@ const QuestionFormLayout = <T extends { id: string }>({
   buttonText = "Frage",
   listTitle = "Fragen",
 }: IQuestionFormLayoutProps<T>) => {
+  const [_, __, { enableFurtherButton, disableFurtherButton }] = useConfigurator("duSagst"); // TODO: Move button functions to an independent component
   const questionIds = questions.map((q) => q.id);
   const questionExists = questionIds.includes(selectedQuestionId);
+
+  useEffect(() => {
+    if (questions.length > 0) {
+      enableFurtherButton();
+    } else {
+      disableFurtherButton();
+    }
+  }, [questions]);
 
   return (
     <Flex

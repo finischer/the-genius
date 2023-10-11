@@ -6,9 +6,11 @@ import { api } from "~/utils/api";
 // TODO: Create Home page
 
 const Home: NextPage = () => {
-  const { data: rooms, isLoading } = api.rooms.getAll.useQuery();
+  const { data: rooms } = api.rooms.getAll.useQuery();
 
-  const txt = rooms?.length === 0 ? "Keine" : rooms?.length === 1 ? "Ein Raum" : `${rooms?.length} Räume`;
+  const numOfRooms = rooms?.length ?? 0;
+
+  const txt = numOfRooms === 0 ? "Keine" : numOfRooms === 1 ? "Ein Raum" : `${numOfRooms ?? 0} Räume`;
 
   return (
     <PageLayout>

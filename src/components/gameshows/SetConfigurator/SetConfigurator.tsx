@@ -1,11 +1,9 @@
-import { Flex } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useImmer } from "use-immer";
+import QuestionFormLayout from "~/components/Layouts/QuestionFormLayout";
 import type { TSetQuestionItem, TSetQuestionList } from "~/components/room/Game/games/Set/set.types";
 import { useConfigurator } from "~/hooks/useConfigurator";
-import type { TQuestionFormMode } from "../types";
 import CreateSetContainer from "./components/CreateSetContainer";
-import SetList from "./components/SetList";
 import { generateNewSetQuestion } from "./helpers";
 
 export const NUM_OF_CARDS = 12;
@@ -17,12 +15,16 @@ const SetConfigurator = () => {
   const [questionItem, setQuestionItem] = useImmer<TSetQuestionItem>(
     questions.at(0) ?? generateNewSetQuestion(NUM_OF_CARDS)
   );
-  const questionFormMode: TQuestionFormMode = questions.map((i) => i.id).includes(questionItem.id)
-    ? "UPDATE"
-    : "ADD";
 
   const addQuestion = (newQuestion: TSetQuestionItem) => {
-    setQuestions((oldQuestions) => [...oldQuestions, newQuestion]);
+    const setIds = questions.map((q) => q.id);
+    if (setIds.includes(newQuestion.id)) {
+      updateQuestion(newQuestion);
+    } else {
+      setQuestions((oldQuestions) => [...oldQuestions, newQuestion]);
+    }
+
+    setQuestionItem(generateNewSetQuestion(NUM_OF_CARDS));
   };
 
   const updateQuestion = (updatedQuestion: TSetQuestionItem) => {
@@ -34,6 +36,10 @@ const SetConfigurator = () => {
 
       return newQuestions;
     });
+  };
+
+  const handleSelectSet = (set: TSetQuestionItem) => {
+    setQuestionItem(set);
   };
 
   useEffect(() => {
@@ -49,24 +55,22 @@ const SetConfigurator = () => {
   }, [questions]);
 
   return (
-    <Flex
-      justify="center"
-      gap="xl"
+    <QuestionFormLayout
+      questions={questions}
+      selectedQuestionId={questionItem.id}
+      setQuestions={setQuestions}
+      onFormSubmit={() => addQuestion(questionItem)}
+      onSelectQuestion={handleSelectSet}
+      buttonText="Set"
+      listTitle="Sets"
+      noQuestionsText="Füge dein erstes Set hinzu!"
+      itemName="Set"
     >
       <CreateSetContainer
-        onAddQuestion={addQuestion}
-        onUpdateQuestion={updateQuestion}
         question={questionItem}
         setQuestion={setQuestionItem}
-        mode={questionFormMode}
       />
-      <SetList
-        questions={questions}
-        setQuestions={setQuestions}
-        questionItem={questionItem}
-        setQuestionItem={setQuestionItem}
-      />
-    </Flex>
+    </QuestionFormLayout>
   );
 };
 

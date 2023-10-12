@@ -13,6 +13,8 @@ const List = <T,>({
   renderValueByKey,
   setData,
   selectedItemId,
+  emptyListText = "Füge deine erste Frage hinzu!",
+  itemName = "Frage",
 }: IListProps<T>) => {
   const handleDeleteItem = (itemId: string | number) => {
     if (!editable) return;
@@ -38,7 +40,7 @@ const List = <T,>({
         justify="center"
         align="center"
       >
-        <Text size="xl">Füge deine erste Frage hinzu!</Text>
+        <Text size="xl">{emptyListText}</Text>
       </Flex>
     );
   }
@@ -65,7 +67,7 @@ const List = <T,>({
           onClick={() => handleSelectItem(item)}
           onDelete={() => handleDeleteItem(item.id)}
           // @ts-ignore
-          content={!renderValueByKey ? `Frage ${index + 1}` : item[renderValueByKey]}
+          content={!renderValueByKey ? `${itemName} ${index + 1}` : item[renderValueByKey]}
         />
       ))}
     </Reorder.Group>

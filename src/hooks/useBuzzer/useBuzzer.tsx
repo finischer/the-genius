@@ -38,7 +38,6 @@ const useBuzzer = () => {
   };
 
   const handleBuzzerClick = () => {
-    console.log("isActive: ", isActive);
     if (!isPlayer || room.state.teamWithTurn || !team || !isActive) return;
     socket.emit("buzzer", { teamId: team.id, withTimer: true });
   };

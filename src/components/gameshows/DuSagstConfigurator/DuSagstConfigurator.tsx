@@ -15,9 +15,9 @@ const PLACEHOLDER_MAP: { [index: number]: string } = {
 };
 
 const DuSagstConfigurator = () => {
-  const [_, setDuSagst, { disableFurtherButton, enableFurtherButton }] = useConfigurator("duSagst");
+  const [duSagst, setDuSagst, { disableFurtherButton, enableFurtherButton }] = useConfigurator("duSagst");
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [questions, setQuestions] = useState<TDuSagstQuestion[]>([]);
+  const [questions, setQuestions] = useState<TDuSagstQuestion[]>(duSagst.questions);
 
   const form = useForm<TDuSagstFormValues>({
     initialValues: {

@@ -11,7 +11,7 @@ const ReferatBingoConfigurator = () => {
   const [referatBingo, setReferatBingo, { enableFurtherButton, disableFurtherButton }] =
     useConfigurator("referatBingo");
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [presentationTopics, setPresentationTopics] = useState<TPresentationTopic[]>([]);
+  const [presentationTopics, setPresentationTopics] = useState<TPresentationTopic[]>(referatBingo.topics);
 
   const form = useForm<TPresentationTopic>({
     initialValues: {

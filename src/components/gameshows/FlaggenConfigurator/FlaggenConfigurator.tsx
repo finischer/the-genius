@@ -79,9 +79,9 @@ const FlaggenConfigurator = () => {
       value={countries}
       onChange={setCountries}
       itemComponent={CountryItem}
-      searchPlaceholder="Land suchen ..."
-      nothingFound="Kein Land gefunden"
-      titles={[`Verfügbare Länder (${countries[0].length})`, `Ausgewählte Länder (${countries[1].length})`]}
+      searchPlaceholder="Flagge suchen ..."
+      nothingFound="Keine Flagge gefunden"
+      titles={[`Verfügbare Flaggen (${countries[0].length})`, `Ausgewählte Flaggen (${countries[1].length})`]}
       breakpoint="sm"
       listHeight={600}
     />

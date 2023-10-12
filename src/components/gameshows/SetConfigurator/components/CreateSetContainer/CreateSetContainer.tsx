@@ -1,16 +1,9 @@
-import { Button, Flex, SimpleGrid, Text, Title } from "@mantine/core";
+import { Flex, SimpleGrid, Text, Title } from "@mantine/core";
 import SetCard from "~/components/room/Game/games/Set/components/SetCard";
-import { NUM_OF_CARDS } from "../../SetConfigurator";
-import { findSets, generateNewSetQuestion } from "../../helpers";
+import { findSets } from "../../helpers";
 import type { ICreateSetContainerProps } from "./createSetContainer.types";
 
-const CreateSetContainer: React.FC<ICreateSetContainerProps> = ({
-  question,
-  setQuestion,
-  onAddQuestion,
-  onUpdateQuestion,
-  mode,
-}) => {
+const CreateSetContainer: React.FC<ICreateSetContainerProps> = ({ question, setQuestion }) => {
   const possibleSets = findSets(question.cards);
 
   const cardElements = question.cards.map((item, index) => (
@@ -23,16 +16,6 @@ const CreateSetContainer: React.FC<ICreateSetContainerProps> = ({
       index={index}
     />
   ));
-
-  const handleSubmitQuestion = () => {
-    if (mode === "ADD") {
-      onAddQuestion(question);
-    } else if (mode === "UPDATE") {
-      onUpdateQuestion(question);
-    }
-
-    setQuestion(generateNewSetQuestion(NUM_OF_CARDS));
-  };
 
   return (
     <Flex
@@ -67,13 +50,6 @@ const CreateSetContainer: React.FC<ICreateSetContainerProps> = ({
           );
         })}
       </Flex>
-
-      <Button
-        onClick={handleSubmitQuestion}
-        disabled={possibleSets.length === 0}
-      >
-        Set {mode === "ADD" ? "hinzufügen" : "speichern"}
-      </Button>
     </Flex>
   );
 };

@@ -22,7 +22,7 @@ const NUM_OF_DEFAULT_STEPS = 2;
 
 type TGameshowConfigKeys = Omit<TGameshowConfig, "games">; // config of gameshow that can be adjust by the user at details screen
 
-const DEFAULT_GAMESHOW_CONFIG = {
+export const DEFAULT_GAMESHOW_CONFIG = {
   name: "",
   games: [],
 };

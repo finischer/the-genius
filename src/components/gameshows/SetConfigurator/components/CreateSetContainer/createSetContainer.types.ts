@@ -5,7 +5,4 @@ import type { TSetQuestionItem } from "~/components/room/Game/games/Set/set.type
 export interface ICreateSetContainerProps {
   question: TSetQuestionItem;
   setQuestion: Updater<TSetQuestionItem>;
-  onAddQuestion: (newQuestion: TSetQuestionItem) => void;
-  onUpdateQuestion: (updatedQuestion: TSetQuestionItem) => void;
-  mode: TQuestionFormMode;
 }

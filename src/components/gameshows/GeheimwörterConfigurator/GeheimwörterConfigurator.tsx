@@ -3,10 +3,7 @@ import { useEffect, useState } from "react";
 import type { TGeheimwoerterQuestionItem } from "~/components/room/Game/games/Geheimwörter/geheimwörter.types";
 import { useConfigurator } from "~/hooks/useConfigurator";
 import CodeList from "./components/CodeList";
-import type {
-  TCodeList,
-  TCodeListItem,
-} from "./components/CodeList/codeList.types";
+import type { TCodeList, TCodeListItem } from "./components/CodeList/codeList.types";
 import CreateQuestionForm from "./components/CreateQuestionForm";
 import QuestionList from "./components/QuestionList";
 import { useImmer } from "use-immer";
@@ -45,9 +42,7 @@ const generateCodeList = (alphabetList: string[], codeWords: string[]) => {
   const codeList: TCodeList = [];
 
   for (const letter of alphabetList) {
-    const codeWord = codeWords.find(
-      (word) => word[0]?.toUpperCase() === letter.toUpperCase()
-    );
+    const codeWord = codeWords.find((word) => word[0]?.toUpperCase() === letter.toUpperCase());
     if (codeWord) {
       const codeListItem: TCodeListItem = {
         letter,
@@ -62,23 +57,16 @@ const generateCodeList = (alphabetList: string[], codeWords: string[]) => {
 };
 
 const GeheimwörterConfigurator = () => {
-  const [
-    geheimwoerter,
-    setGeheimwoerter,
-    { enableFurtherButton, disableFurtherButton },
-  ] = useConfigurator("geheimwoerter");
+  const [geheimwoerter, setGeheimwoerter, { enableFurtherButton, disableFurtherButton }] =
+    useConfigurator("geheimwoerter");
   const [codeListEditable, setCodeListEditable] = useState(false);
-  const [questionList, setQuestionList] = useState<
-    TGeheimwoerterQuestionItem[]
-  >([]);
+  const [questionList, setQuestionList] = useState<TGeheimwoerterQuestionItem[]>(geheimwoerter.questions);
   const [questionItem, setQuestionItem] = useImmer<TGeheimwoerterQuestionItem>({
     id: uuidv4(),
     answer: "",
     words: [],
   });
-  const questionFormMode: TQuestionFormMode = questionList
-    .map((i) => i.id)
-    .includes(questionItem.id)
+  const questionFormMode: TQuestionFormMode = questionList.map((i) => i.id).includes(questionItem.id)
     ? "UPDATE"
     : "ADD";
 
@@ -86,10 +74,7 @@ const GeheimwörterConfigurator = () => {
     // set default code list
     if (geheimwoerter.codeList.length === 0) {
       setGeheimwoerter((draft) => {
-        draft.geheimwoerter.codeList = generateCodeList(
-          ALPHABET,
-          DEFAULT_CODE_WORD_LIST
-        );
+        draft.geheimwoerter.codeList = generateCodeList(ALPHABET, DEFAULT_CODE_WORD_LIST);
       });
     }
   }, []);
@@ -118,10 +103,7 @@ const GeheimwörterConfigurator = () => {
   useEffect(() => {
     const codes = geheimwoerter.codeList.map((item) => item.category);
 
-    if (
-      codes.some((item) => item.length === 1) ||
-      geheimwoerter.questions.length === 0
-    ) {
+    if (codes.some((item) => item.length === 1) || geheimwoerter.questions.length === 0) {
       disableFurtherButton();
     } else {
       enableFurtherButton();

@@ -9,4 +9,6 @@ export interface IListProps<T> {
   selectedItemId?: string;
   setData: Dispatch<SetStateAction<IListItem<T>[]>>;
   renderValueByKey?: keyof T;
+  emptyListText?: string;
+  itemName?: string; // how the item should be called in the list
 }

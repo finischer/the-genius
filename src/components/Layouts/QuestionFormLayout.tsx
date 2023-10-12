@@ -1,5 +1,6 @@
 import { Button, Container, Flex, ScrollArea, Title } from "@mantine/core";
-import React, { useState } from "react";
+import React, { useEffect, type SyntheticEvent } from "react";
+import { useConfigurator } from "~/hooks/useConfigurator";
 import List from "../shared/List";
 import type { IListItem } from "../shared/List/components/ListItem/listItem.types";
 
@@ -13,6 +14,8 @@ interface IQuestionFormLayoutProps<T> {
   renderValueByKey?: keyof T;
   buttonText?: string;
   listTitle?: string;
+  noQuestionsText?: string;
+  itemName?: string;
 }
 
 const QuestionFormLayout = <T extends { id: string }>({
@@ -25,9 +28,25 @@ const QuestionFormLayout = <T extends { id: string }>({
   renderValueByKey,
   buttonText = "Frage",
   listTitle = "Fragen",
+  noQuestionsText,
+  itemName,
 }: IQuestionFormLayoutProps<T>) => {
+  const [_, __, { enableFurtherButton, disableFurtherButton }] = useConfigurator("duSagst"); // TODO: Move button functions to an independent component
   const questionIds = questions.map((q) => q.id);
   const questionExists = questionIds.includes(selectedQuestionId);
+
+  useEffect(() => {
+    if (questions.length > 0) {
+      enableFurtherButton();
+    } else {
+      disableFurtherButton();
+    }
+  }, [questions]);
+
+  const handleSubmit = (e: SyntheticEvent) => {
+    e.preventDefault();
+    onFormSubmit();
+  };
 
   return (
     <Flex
@@ -36,7 +55,7 @@ const QuestionFormLayout = <T extends { id: string }>({
     >
       <Container w="100%">
         <form
-          onSubmit={onFormSubmit}
+          onSubmit={handleSubmit}
           style={{ width: "100%" }}
         >
           <Flex
@@ -68,6 +87,8 @@ const QuestionFormLayout = <T extends { id: string }>({
             editable
             selectedItemId={selectedQuestionId}
             renderValueByKey={renderValueByKey}
+            emptyListText={noQuestionsText}
+            itemName={itemName}
           />
         </ScrollArea>
       </Flex>

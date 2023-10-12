@@ -1,5 +1,6 @@
-import { Badge, Button, Card, Group, Image, Skeleton, Text, Title } from "@mantine/core";
+import { Button, Card, Group, Text } from "@mantine/core";
 import { type NextPage } from "next";
+import { useRouter } from "next/router";
 import PageLayout from "~/components/layout";
 import { api } from "~/utils/api";
 
@@ -7,6 +8,7 @@ import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
   const { data: rooms } = api.rooms.getAll.useQuery();
+  const router = useRouter();
 
   const numOfRooms = rooms?.length ?? 0;
 
@@ -19,13 +21,10 @@ const Home: NextPage = () => {
         padding="lg"
         radius="md"
         withBorder
-        w="40rem"
+        w="20rem"
       >
-        <Group
-          mt="md"
-          mb="xs"
-        >
-          <Text fw={500}>Räume beitreten</Text>
+        <Group mb="xs">
+          <Text fw={500}>Raum beitreten</Text>
         </Group>
 
         {rooms && (
@@ -39,12 +38,12 @@ const Home: NextPage = () => {
 
         <Button
           variant="light"
-          color="blue"
           fullWidth
           mt="md"
           radius="md"
+          onClick={() => void router.push("/rooms")}
         >
-          Verfügbare Räume anschauen
+          Zu den Räumen
         </Button>
       </Card>
     </PageLayout>

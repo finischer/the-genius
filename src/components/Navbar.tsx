@@ -59,7 +59,6 @@ const User = () => {
     >
       <Menu.Target>
         <Box
-          // onClick={() => void handleLogout()}
           sx={{
             paddingTop: theme.spacing.sm,
             borderTop: `${rem(1)} solid ${

@@ -161,7 +161,7 @@ const RoomPage = () => {
           >
             <ActionIcon
               variant="filled"
-              toolTip="Spiele anzeigen"
+              toolTip="Mod-Panel öffnen"
             >
               <IconArrowRight onClick={modPanelDisclosure[1].open} />
             </ActionIcon>

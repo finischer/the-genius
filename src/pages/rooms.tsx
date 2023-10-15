@@ -140,7 +140,7 @@ const RoomsPage = () => {
             >
               <PasswordInput
                 label="Passwort"
-                placeholder="Super secret passwort"
+                placeholder="Super geheimes passwort"
                 required
                 {...form.getInputProps("password")}
               />

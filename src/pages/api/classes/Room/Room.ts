@@ -138,6 +138,9 @@ export default class Room implements PrismaRoomFixed {
     this.currentGame = gameIdentifier;
     this.state.display.game = false;
 
+    // reset gamescores
+    Object.values(this.teams).forEach((team) => team.resetGameScore());
+
     // tbd: stop current music
     // tbd: start intro music
     this.update();

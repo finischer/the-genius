@@ -25,7 +25,8 @@ export const DEFAULT_SET_STATE: TSetGameState = {
     Vor euch seht ihr 12 Spielkarten. Auf diesen Karten seht ihr drei verschiedene Symbole: Raute, Rechteck und Oval. Diese Symbole sind entweder gefüllt, leer oder gestreift. 
     Auf jeder Karte ist eines dieser Symbole bis zu 3 mal vertreten und das in einer von drei Farben: Rot, Grün und Blau.
     Eure Aufgabe ist es nun unter diesen 12 Karten ein Set zu finden. Ein Set besteht immer aus exakt 3 Karten. 
-    Diese Karten müssen so gewählt sein, dass die Ausprägungen in den eben genannten Eigenschaften Form, Füllung, Farbe und Anzahl jeweils entweder auf allen Karten exakt gleich oder auf allen Karten komplett unterschiedlich sind. 
+    Diese Karten müssen so gewählt sein, dass die Ausprägungen in den eben genannten Eigenschaften Form, Füllung, Farbe und Anzahl jeweils entweder auf allen Karten exakt gleich oder auf allen Karten komplett unterschiedlich sind.
+    Meint ihr ein Set gefunden zu haben, buzzert ihr und habt anschließend 5 Sekunden Zeit eine Antwort zu nennen. Ist die Antwort korrekt, bekommt derjenige einen Punkt. Sollte die Antwort falsch sein, bekommt der Gegner einen Punkt und es geht mit dem nächsten Kartenstapel weiter.
     `;
   },
 };

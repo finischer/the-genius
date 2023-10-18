@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-thegenius-dev-133314-authRole",
+      "UnauthRoleArn": "arn:aws:iam::876103647319:role/amplify-thegenius-dev-133314-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::876103647319:role/amplify-thegenius-dev-133314-authRole",
+      "Region": "eu-central-1",
+      "DeploymentBucketName": "amplify-thegenius-dev-133314-deployment",
+      "UnauthRoleName": "amplify-thegenius-dev-133314-unauthRole",
+      "StackName": "amplify-thegenius-dev-133314",
+      "StackId": "arn:aws:cloudformation:eu-central-1:876103647319:stack/amplify-thegenius-dev-133314/1ff40de0-6daa-11ee-ab86-02c741ce1041",
+      "AmplifyAppId": "d2e15kk0t5lvjg"
+    }
+  }
+}

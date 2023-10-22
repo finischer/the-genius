@@ -1,11 +1,5 @@
 import { keyframes } from "@mantine/core";
-import {
-  fadeIn,
-  zoomIn,
-  zoomOut,
-  slideInDown,
-  fadeOut,
-} from "react-animations";
+import { fadeIn, zoomIn, zoomOut, slideInDown, fadeOut } from "react-animations";
 
 export const fadeInAnimation = keyframes(fadeIn);
 export const fadeOutAnimation = keyframes(fadeOut);

@@ -1,22 +1,22 @@
-import React from 'react'
-import { Tooltip as MantineTooltip, type TooltipProps, useMantineTheme } from '@mantine/core'
-import { colors } from '~/styles/constants'
-
+import React from "react";
+import { Tooltip as MantineTooltip, type TooltipProps, useMantineTheme } from "@mantine/core";
+import { colors } from "~/styles/constants";
 
 const Tooltip: React.FC<TooltipProps> = ({ children, ...props }) => {
-    const theme = useMantineTheme()
+  const theme = useMantineTheme();
 
-    return (
-        <MantineTooltip
-            withArrow
-            bg={theme.colors.dark[6]}
-            color={colors.lightText}
-            transitionProps={{ transition: 'fade', duration: 300 }}
-            {...props}
-        >
-            {children}
-        </MantineTooltip>
-    )
-}
+  return (
+    <MantineTooltip
+      withArrow
+      bg={theme.colors.dark[6]}
+      color={colors.lightText}
+      transitionProps={{ transition: "fade", duration: 300 }}
+      disabled={!props.label}
+      {...props}
+    >
+      {children}
+    </MantineTooltip>
+  );
+};
 
-export default Tooltip
+export default Tooltip;

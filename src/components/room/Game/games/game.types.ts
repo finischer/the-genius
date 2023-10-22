@@ -6,9 +6,20 @@ export type TScorebarMode = "number" | "circle";
 export enum Games {
   FLAGGEN = "flaggen",
   MEMORY = "memory",
+  GEHEIMWOERTER = "geheimwoerter",
+  SET = "set",
+  DUSAGST = "duSagst",
+  REFERATBINTO = "referatBingo",
 }
 
-export type TGameNames = "flaggen" | "memory" | "merken";
+export type TGameNames =
+  | "flaggen"
+  | "memory"
+  | "merken"
+  | "geheimwoerter"
+  | "set"
+  | "duSagst"
+  | "referatBingo";
 
 export interface IGameGeneralState {
   name: string;

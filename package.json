@@ -8,9 +8,10 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
-    "postinstall": "tsc && prisma generate",
+    "postinstall": "prisma generate",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "tsc": "tsc"
   },
   "dependencies": {
     "@emotion/react": "^11.10.8",
@@ -71,9 +72,11 @@
     "@types/prettier": "^2.7.2",
     "@types/react": "^18.0.28",
     "@types/react-animations": "^1.0.0",
+    "@types/react-beautiful-dnd": "^13.1.4",
     "@types/react-dom": "^18.0.11",
+    "@types/uuid": "^9.0.3",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
-    "@typescript-eslint/parser": "^5.56.0",
+    "@typescript-eslint/parser": "^5.62.0",
     "eslint": "^8.36.0",
     "eslint-config-next": "^13.2.4",
     "prettier": "^2.8.8",

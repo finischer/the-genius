@@ -38,8 +38,8 @@ export default async function SocketHandler(req: NextApiRequest, res: TNextApiRe
     res.socket.server,
     {
       path: "/api/socket/",
-      transports: ["websocket"],
       addTrailingSlash: false,
+      transports: ["websocket", "polling"],
       cors: {
         origin: ["https://admin.socket.io"],
         credentials: true,

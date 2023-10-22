@@ -7,16 +7,12 @@ const SocketContext = createContext<IUseSocketContext | undefined>(undefined);
 
 const socket: Socket<IServerToClientEvents, IClientToServerEvents> = io({
   path: "/api/socket/",
-  closeOnBeforeunload: false
-})
+  closeOnBeforeunload: false,
+  withCredentials: true,
+});
 
 const SocketProvider: React.FC<IUseSocketProvider> = ({ children }) => {
-
-  return (
-    <SocketContext.Provider value={{ socket }}>
-      {children}
-    </SocketContext.Provider>
-  );
+  return <SocketContext.Provider value={{ socket }}>{children}</SocketContext.Provider>;
 };
 
 const useSocket = () => {
@@ -29,4 +25,3 @@ const useSocket = () => {
 };
 
 export { SocketProvider, useSocket, socket };
-

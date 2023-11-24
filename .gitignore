@@ -23,6 +23,7 @@ next-env.d.ts
 # misc
 .DS_Store
 *.pem
+.ssh
 
 # debug
 npm-debug.log*
@@ -35,6 +36,7 @@ yarn-error.log*
 .env
 .env*.local
 .env.development
+.env.production
 
 # vercel
 .vercel

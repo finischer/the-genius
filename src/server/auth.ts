@@ -50,6 +50,9 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     signIn: signInCallback,
     session: sessionCallback,
+    redirect: async ({ baseUrl }) => {
+      return baseUrl;
+    },
   },
   adapter: PrismaAdapter(prisma),
   providers: [GoogleProvider, DiscordProvider],

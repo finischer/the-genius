@@ -1,4 +1,5 @@
 import {
+  Anchor,
   AppShell,
   Burger,
   Button,
@@ -18,6 +19,9 @@ import Navbar from "./Navbar";
 import Loader from "./shared/Loader";
 import AuthenticationModal from "./shared/modals/AuthenticationModal";
 import Footer from "./Footer";
+import ImpressumContent from "./shared/ImpressumContent";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 interface IPageLayout {
   showLoader?: boolean;
@@ -32,6 +36,7 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
   const [isNavbarOpened, setIsNavbarOpened] = useState(false);
   const [usernameInput, setUsernameInput] = useState("");
   const { updateUsername, isLoading } = useUser();
+  const router = useRouter();
 
   const handleSaveUsername = async () => {
     await updateUsername(usernameInput);
@@ -39,13 +44,23 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
 
   if (status === "unauthenticated") {
     return (
-      <Flex
-        h="100vh"
-        justify="center"
-        align="center"
-      >
-        <AuthenticationModal />
-      </Flex>
+      <>
+        <Flex
+          direction="column"
+          justify="center"
+          align="center"
+          h="100vh"
+          pos="relative"
+        >
+          <AuthenticationModal />
+          <Flex
+            pos="absolute"
+            bottom={0}
+          >
+            <Footer />
+          </Flex>
+        </Flex>
+      </>
     );
   }
 

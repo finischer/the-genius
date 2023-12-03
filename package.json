@@ -8,7 +8,7 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
-    "postinstall": "tsc && prisma generate",
+    "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start",
     "tsc": "tsc"
@@ -49,8 +49,8 @@
     "immer": "^10.0.2",
     "moment": "^2.29.4",
     "mongodb": "^5.7.0",
-    "next": "^13.2.4",
-    "next-auth": "^4.22.1",
+    "next": "^13.5.6",
+    "next-auth": "^4.24.5",
     "nodemailer": "^6.9.1",
     "react": "18.2.0",
     "react-animations": "^1.0.0",
@@ -76,7 +76,7 @@
     "@types/react-dom": "^18.0.11",
     "@types/uuid": "^9.0.3",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
-    "@typescript-eslint/parser": "^5.56.0",
+    "@typescript-eslint/parser": "^5.62.0",
     "eslint": "^8.36.0",
     "eslint-config-next": "^13.2.4",
     "prettier": "^2.8.8",

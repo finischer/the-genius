@@ -9,16 +9,14 @@ export const env = createEnv({
   server: {
     MONGODB_URI: z.string().url(),
     NODE_ENV: z.enum(["development", "test", "production"]),
-    NEXTAUTH_SECRET:
-      process.env.NODE_ENV === "production"
-        ? z.string().min(1)
-        : z.string().min(1).optional(),
+    NEXTAUTH_SECRET: process.env.NODE_ENV === "production" ? z.string().min(1) : z.string().min(1).optional(),
     GOOGLE_CLIENT_ID: z.string(),
     GOOGLE_CLIENT_SECRET: z.string(),
     DISCORD_CLIENT_ID: z.string(),
     DISCORD_CLIENT_SECRET: z.string(),
     SOCKET_IO_ADMIN_USERNAME: z.string().min(1),
     SOCKET_IO_ADMIN_PASSWORD: z.string().min(1),
+    WEBSITE_URL: z.string().min(1),
   },
 
   /**
@@ -44,5 +42,6 @@ export const env = createEnv({
     DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
     SOCKET_IO_ADMIN_PASSWORD: process.env.SOCKET_IO_ADMIN_PASSWORD,
     SOCKET_IO_ADMIN_USERNAME: process.env.SOCKET_IO_ADMIN_USERNAME,
+    WEBSITE_URL: process.env.WEBSITE_URL,
   },
 });

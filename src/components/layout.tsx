@@ -1,5 +1,4 @@
 import {
-  Anchor,
   AppShell,
   Burger,
   Button,
@@ -15,13 +14,11 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import useLoadingState from "~/hooks/useLoadingState/useLoadingState";
 import { useUser } from "~/hooks/useUser";
+import Footer from "./Footer";
 import Navbar from "./Navbar";
 import Loader from "./shared/Loader";
 import AuthenticationModal from "./shared/modals/AuthenticationModal";
-import Footer from "./Footer";
-import ImpressumContent from "./shared/ImpressumContent";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import GoogleAnalytics from "./analytics/GoogleAnalytics";
 
 interface IPageLayout {
   showLoader?: boolean;
@@ -36,7 +33,6 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
   const [isNavbarOpened, setIsNavbarOpened] = useState(false);
   const [usernameInput, setUsernameInput] = useState("");
   const { updateUsername, isLoading } = useUser();
-  const router = useRouter();
 
   const handleSaveUsername = async () => {
     await updateUsername(usernameInput);
@@ -45,6 +41,7 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
   if (status === "unauthenticated") {
     return (
       <>
+        <GoogleAnalytics />
         <Flex
           direction="column"
           justify="center"
@@ -67,6 +64,7 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
   if (status === "authenticated") {
     return (
       <>
+        <GoogleAnalytics />
         <Modal
           opened={!session.user.username}
           title="Zeig den Leuten, wer du bist"

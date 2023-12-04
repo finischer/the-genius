@@ -1,23 +1,9 @@
 import { Flex, Text, Title } from "@mantine/core";
 import Link from "next/link";
 import React from "react";
+import Section from "./Section";
 
 const ImpressumContent = () => {
-  const Section = ({ children }: { children: React.ReactNode }) => (
-    <Flex
-      direction="column"
-      gap="xs"
-      mt="xl"
-      sx={{
-        ":first-of-type": {
-          marginTop: 0,
-        },
-      }}
-    >
-      {children}
-    </Flex>
-  );
-
   return (
     <>
       {/* Owner Section */}

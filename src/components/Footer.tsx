@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 const links = [
   { link: "/impressum", label: "Impressum" },
-  { link: "#", label: "Datenschutzerklärung" },
+  { link: "/datenschutz", label: "Datenschutzerklärung" },
 ];
 
 const Footer = () => {

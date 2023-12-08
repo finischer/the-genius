@@ -1,6 +1,5 @@
-import { useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
-import { api } from "~/utils/api";
+import React from "react";
+import FeedbackHandler from "./shared/FeedbackHandler";
 import IntroductionBanner from "./shared/IntroductionBanner";
 
 interface IAuthenticatedLayout {

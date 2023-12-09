@@ -1,9 +1,7 @@
-import { getServerSideProps } from "next/dist/build/templates/pages";
 import { z } from "zod";
 import { MAX_TEXTAREA_LENGTH } from "~/config/forms";
 
 import { adminProcedure, createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { getServerAuthSession } from "~/server/auth";
 
 export const safedFeebackSchema = z.object({
   id: z.string(),

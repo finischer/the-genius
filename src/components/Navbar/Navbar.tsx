@@ -11,23 +11,14 @@ import {
   rem,
   useMantineTheme,
 } from "@mantine/core";
-import {
-  IconChevronLeft,
-  IconChevronRight,
-  IconDoor,
-  IconHome,
-  IconLogout,
-  IconMessageReport,
-  IconSettings,
-  IconTools,
-} from "@tabler/icons-react";
+import { IconChevronLeft, IconChevronRight, IconLogout, IconSettings } from "@tabler/icons-react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import useNotification from "~/hooks/useNotification";
+import { useUser } from "~/hooks/useUser";
 import { api } from "~/utils/api";
 import { AdminBadge, PremimumBadge } from "../shared/Badge/Badge";
-import { useUser } from "~/hooks/useUser";
-import { navbartabs } from "./navbar.tabs";
+import { navbartabs } from "./navbarTabs";
 
 const User = () => {
   const { showSuccessNotification } = useNotification();

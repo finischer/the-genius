@@ -15,7 +15,7 @@ import { useState } from "react";
 import useLoadingState from "~/hooks/useLoadingState/useLoadingState";
 import { useUser } from "~/hooks/useUser";
 import Footer from "./Footer";
-import Navbar from "./Navbar";
+import Navbar from "./navbar";
 import GoogleAnalytics from "./analytics/GoogleAnalytics";
 import AuthenticatedLayout from "./auth.layout";
 import Loader from "./shared/Loader";

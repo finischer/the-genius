@@ -33,27 +33,30 @@ const IntroductionBanner = () => {
       >
         <Text>Herzlich Willkommen zur Beta-Version von TheGenius!</Text>
         <Text>
-          Du bist einer der Ersten, der unsere Plattform testet, und wir schätzen deine Teilnahme an diesem
+          Du bist einer der Ersten, der unsere Anwendung testet und wir schätzen deine Teilnahme an diesem
           Programm. Vielen Dank, dass du dazu beiträgst, TheGenius noch besser zu machen!
         </Text>
         <Text>
-          Dein Feedback ist uns besonders wichtig. Als Beta-Tester spielst du eine entscheidende Rolle dabei,
-          uns dabei zu helfen, Bugs zu finden, Funktionen zu verbessern und die Benutzererfahrung zu
-          optimieren. Wir sind gespannt auf deine Meinung!
+          Dein Feedback ist uns besonders wichtig. Als Beta-Tester spielst du eine entscheidende Rolle, uns
+          dabei zu helfen, Bugs zu finden, Funktionen zu verbessern und die Benutzererfahrung zu optimieren.
+          Wir sind gespannt auf deine Meinung!
         </Text>
 
         <Text>
-          Erstelle Spielshows und spiel sie mit deinen Freunden. In Zukunft werden weitere Features kommen,
-          jedoch ist es erstmal entscheidend, dass eine von dir erstellte Spielshow mit deinen Freunden
-          gespielt werden kann.
+          Erstelle Spielshows und spiel' sie mit deinen Freunden!. In Zukunft werden weitere Features und
+          Spiele kommen, jedoch ist es erstmal entscheidend, dass eine von dir erstellte Spielshow mit deinen
+          Freunden gespielt werden kann.
         </Text>
 
         <Text>
           Solltest du Anmerkungen, Verbesserungsvorschläge oder Bugs gefunden haben, kannst du jederzeit den
-          Feedbackbutton unten rechts benutzen. Alternativ kannst du auch eine Mail an{" "}
+          Feedback-Button unten rechts benutzen. Alternativ kannst du auch eine Mail an{" "}
           <Text italic>support@the-genius.de</Text>
           schreiben
         </Text>
+
+        <br />
+        <Text>Und jetzt Viel Spaß beim Spielen!</Text>
         <br />
         <Text>Herzliche Grüße,</Text>
         <Text>das TheGenius-Team</Text>

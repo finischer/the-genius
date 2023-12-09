@@ -41,7 +41,9 @@ const FeedbackCard: React.FC<IFeedbackCardProps> = ({ feedback }) => {
           fw={700}
         />
         <MetadataLine
-          content={`Eingereicht von: ${feedback.creator.username} • ${feedback.creator.email}`}
+          content={`Eingereicht von: ${feedback.creator.username ?? "USER_NOT_FOUND"} • ${
+            feedback.creator.email
+          }`}
           fz="sm"
         />
         <MetadataLine content={`Erstellt am: ${formatTimestamp(feedback.createdAt.toString())}`} />

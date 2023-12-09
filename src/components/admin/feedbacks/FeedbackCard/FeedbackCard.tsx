@@ -1,4 +1,14 @@
-import { Card, Container, Divider, Flex, Group, Rating, Text } from "@mantine/core";
+import {
+  Card,
+  Container,
+  Divider,
+  Flex,
+  Group,
+  Rating,
+  Text,
+  type MantineStyleSystemProps,
+  type TextProps,
+} from "@mantine/core";
 import React from "react";
 import { formatTimestamp } from "~/utils/dates";
 import type { IFeedbackCardProps } from "./feedbackCard.types";
@@ -15,6 +25,18 @@ const FeedbackRatingSection = ({ title, rating }: { title: string; rating: numbe
   );
 };
 
+const MetadataLine = ({ content, ...props }: { content: string } & TextProps) => (
+  <Group>
+    <Text
+      fz="xs"
+      c="dimmed"
+      {...props}
+    >
+      {content}
+    </Text>
+  </Group>
+);
+
 const FeedbackCard: React.FC<IFeedbackCardProps> = ({ feedback }) => {
   return (
     <Card withBorder>
@@ -23,32 +45,18 @@ const FeedbackCard: React.FC<IFeedbackCardProps> = ({ feedback }) => {
         direction="column"
         gap="0.25rem"
       >
-        <Group>
-          <Text
-            fz="md"
-            fw={700}
-          >
-            Feedback-ID: {feedback.id}
-          </Text>
-        </Group>
-
-        <Group>
-          <Text
-            fz="sm"
-            c="dimmed"
-          >
-            Eingereicht von: {feedback.creator.username} • {feedback.creator.email}
-          </Text>
-        </Group>
-
-        <Group>
-          <Text
-            fz="xs"
-            c="dimmed"
-          >
-            Erstellt am: {formatTimestamp(feedback.createdAt.toString())}
-          </Text>
-        </Group>
+        <MetadataLine
+          content={`Feedback-ID: ${feedback.id}`}
+          fz="md"
+          fw={700}
+        />
+        <MetadataLine
+          content={`Eingereicht von: ${feedback.creator.username} • ${feedback.creator.email}`}
+          fz="sm"
+        />
+        <MetadataLine content={`Erstellt am: ${formatTimestamp(feedback.createdAt.toString())}`} />
+        <MetadataLine content={`Betriebssystem: ${feedback.os}`} />
+        <MetadataLine content={`Browser: ${feedback.browser}`} />
       </Flex>
 
       {/* Feedback Content */}

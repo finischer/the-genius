@@ -2,9 +2,10 @@ import { IconMessageReport, IconThumbUp } from "@tabler/icons-react";
 import ActionIcon from "../ActionIcon";
 import type { IFeedbackButtonProps } from "./feedbackButton.types";
 
-const FeedbackButton: React.FC<IFeedbackButtonProps> = ({ onClick }) => {
+const FeedbackButton: React.FC<IFeedbackButtonProps> = ({ onClick, ...props }) => {
   return (
     <ActionIcon
+      {...props}
       pos="absolute"
       right={20}
       bottom={100}

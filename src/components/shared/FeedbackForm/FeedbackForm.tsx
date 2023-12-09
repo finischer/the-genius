@@ -1,14 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import type { IFeedbackFormProps } from "./feedbackForm.types";
 import { Button, Flex, Modal, Rating, Text, Textarea, Title } from "@mantine/core";
 import { MAX_TEXTAREA_LENGTH } from "~/config/forms";
+import { useForm } from "@mantine/form";
 
 const FeedbackForm: React.FC<IFeedbackFormProps> = ({ opened, closeForm }) => {
-  const handleCloseForm = () => {
-    closeForm();
-  };
+  const form = useForm({
+    initialValues: {
+      ratingGeneralExperience: 0,
+      ratingControlModerator: 0,
+      comment: "",
+    },
+  });
 
-  const sendFeedback = () => {};
+  useEffect(() => {
+    form.reset();
+  }, [opened]);
+
+  const sendFeedback = () => {
+    console.log("Send Feedback!");
+
+    // closeForm()
+  };
 
   const FormSection = ({ children, title }: { children: React.ReactNode; title?: string }) => {
     return (
@@ -25,7 +38,7 @@ const FeedbackForm: React.FC<IFeedbackFormProps> = ({ opened, closeForm }) => {
   return (
     <Modal
       opened={opened}
-      onClose={handleCloseForm}
+      onClose={closeForm}
       title="Gib uns dein Feedback!"
     >
       <Flex
@@ -39,7 +52,10 @@ const FeedbackForm: React.FC<IFeedbackFormProps> = ({ opened, closeForm }) => {
             align="center"
           >
             <Text>Sehr schlecht</Text>
-            <Rating size="xl" />
+            <Rating
+              size="xl"
+              {...form.getInputProps("ratingGeneralExperience")}
+            />
             <Text>Sehr gut</Text>
           </Flex>
         </FormSection>
@@ -51,19 +67,24 @@ const FeedbackForm: React.FC<IFeedbackFormProps> = ({ opened, closeForm }) => {
             align="center"
           >
             <Text>Sehr schlecht</Text>
-            <Rating size="xl" />
+            <Rating
+              size="xl"
+              {...form.getInputProps("ratingControlModerator")}
+            />
             <Text>Sehr gut</Text>
           </Flex>
         </FormSection>
 
         <FormSection title="Welche Anmerkungen hast du zu TheGenius?">
           <Textarea
+            required
             minRows={10}
             maxLength={MAX_TEXTAREA_LENGTH}
+            {...form.getInputProps("comment")}
           />
         </FormSection>
 
-        <Button>Feedback senden</Button>
+        <Button onClick={sendFeedback}>Feedback senden</Button>
       </Flex>
     </Modal>
   );

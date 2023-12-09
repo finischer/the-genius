@@ -88,7 +88,7 @@ model Feedback {
   ratingGeneralExperience Int
   ratingControlModerator  Int
 
-  @@map("feedback")
+  @@map("feedbacks")
 }
 
 model Account {

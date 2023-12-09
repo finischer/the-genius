@@ -1,9 +1,12 @@
 import { MantineProvider } from "@mantine/core";
+import { useLocalStorage } from "@mantine/hooks";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
+import CookieBanner from "~/components/CookieBanner";
+import { CookieBannerAction } from "~/components/analytics/GoogleAnalytics";
 import FeedbackHandler from "~/components/shared/FeedbackHandler";
 import { RoomProvider } from "~/hooks/useRoom";
 import useSettings from "~/hooks/useSettings/useSettings";

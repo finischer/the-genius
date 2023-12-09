@@ -1,8 +1,9 @@
-import { useSessionStorage } from "@mantine/hooks";
+import { useLocalStorage } from "@mantine/hooks";
 import Script from "next/script";
 import { isProduction } from "~/utils/environment";
 import CookieBanner from "../CookieBanner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { env } from "~/env.mjs";
 
 export enum CookieBannerAction {
   ACCEPT = "ACCEPT",
@@ -10,12 +11,23 @@ export enum CookieBannerAction {
 }
 
 const GoogleAnalytics = () => {
-  const [analytics, setAnalytics] = useSessionStorage<boolean | undefined>({
+  const [rendered, setRendered] = useState(false);
+  const [analytics, setAnalytics] = useLocalStorage<boolean | undefined>({
     key: "analytics",
     defaultValue: undefined,
   });
 
-  const [showCookieBanner, setShowCookieBanner] = useState(true);
+  const [showCookieBanner, setShowCookieBanner] = useLocalStorage<boolean | undefined>({
+    key: "cookie-banner",
+    defaultValue: true,
+  });
+
+  const gTagId = env.NEXT_PUBLIC_GTAG_ID;
+
+  useEffect(() => {
+    setRendered(true);
+    return () => setRendered(false);
+  }, []);
 
   const handleCookieBannerButtonClick = (action: CookieBannerAction) => {
     if (action === CookieBannerAction.ACCEPT) {
@@ -35,21 +47,21 @@ const GoogleAnalytics = () => {
     setShowCookieBanner(false);
   };
 
-  if (!isProduction) return <></>; // dont use Analytics in other environment than production
+  if (!isProduction || !rendered) return <></>; // dont use Analytics in other environment than production
 
   return (
     <>
-      {!analytics && showCookieBanner && <CookieBanner onButtonClick={handleCookieBannerButtonClick} />}
-      {analytics && (
+      {showCookieBanner && <CookieBanner onButtonClick={handleCookieBannerButtonClick} />}
+      {analytics && gTagId && (
         <>
-          <Script src="https://www.googletagmanager.com/gtag/js?id=G-76C2HLVDTN" />
+          <Script src={`https://www.googletagmanager.com/gtag/js?id=${gTagId}`} />
           <Script id="google-analytics">
             {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             
-            gtag('config', 'G-76C2HLVDTN');
+            gtag('config', ${gTagId} );
             `}
           </Script>
         </>

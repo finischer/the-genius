@@ -1,7 +1,9 @@
+import { getServerSideProps } from "next/dist/build/templates/pages";
 import { z } from "zod";
 import { MAX_TEXTAREA_LENGTH } from "~/config/forms";
 
 import { adminProcedure, createTRPCRouter } from "~/server/api/trpc";
+import { getServerAuthSession } from "~/server/auth";
 
 export const safedFeebackSchema = z.object({
   id: z.string(),
@@ -9,6 +11,8 @@ export const safedFeebackSchema = z.object({
   ratingGeneralExperience: z.number(),
   ratingControlModerator: z.number(),
   ratingDesign: z.number(),
+  browser: z.string(),
+  os: z.string(),
   creator: z.object({
     username: z.string().nullish(),
     email: z.string(),
@@ -39,6 +43,8 @@ export const feedbacksRouter = createTRPCRouter({
           .number()
           .min(1, "Das Rating muss mindestens 1 sein")
           .max(5, "Das Rating darf maximal 5 sein"),
+        browser: z.string(),
+        os: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {

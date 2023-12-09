@@ -20,6 +20,8 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
   const { showErrorNotification } = useNotification();
   const { mutateAsync: checkUsername, isLoading } = api.users.isUsernameInUse.useMutation();
 
+  const isAdmin = user.role === "ADMIN";
+
   function initUser() {
     const user: TUserReduced = {
       id: session?.user.id || "",
@@ -100,6 +102,7 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
         setUserAsPlayer,
         isPlayer,
         isHost,
+        isAdmin,
         updateUsername,
         isLoading,
         hostFunction,

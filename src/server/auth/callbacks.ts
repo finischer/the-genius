@@ -24,7 +24,7 @@ const isOtherProviderAlreadyInUse = async (userEmail: string | null | undefined,
 };
 
 // ONLY DURING TEST PHASE
-const MAX_USERS = 60;
+const MAX_USERS = 150;
 const maxUsersReached = async (userEmail: string) => {
   const user = await prisma.user.findUnique({
     where: {

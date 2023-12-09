@@ -11,6 +11,7 @@ export const safedUserSchema = z.object({
   image: z.string().nullable(),
   email: z.string(),
   role: z.nativeEnum(UserRole).nullable(),
+  isFirstVisit: z.boolean(),
 });
 
 export type SafedUser = z.infer<typeof safedUserSchema>;
@@ -87,6 +88,25 @@ export const usersRouter = createTRPCRouter({
     const user = await ctx.prisma.user.findUnique({
       where: {
         id: ctx.session.user.id,
+      },
+    });
+
+    if (!user) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "User not found",
+      });
+    }
+
+    return user;
+  }),
+  updateFirstVisit: protectedProcedure.output(safedUserSchema).mutation(async ({ ctx }) => {
+    const user = await ctx.prisma.user.update({
+      where: {
+        id: ctx.session.user.id,
+      },
+      data: {
+        isFirstVisit: false,
       },
     });
 

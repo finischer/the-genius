@@ -15,10 +15,11 @@ import { useState } from "react";
 import useLoadingState from "~/hooks/useLoadingState/useLoadingState";
 import { useUser } from "~/hooks/useUser";
 import Footer from "./Footer";
-import Navbar from "./Navbar";
+import Navbar from "./navbar";
+import GoogleAnalytics from "./analytics/GoogleAnalytics";
+import AuthenticatedLayout from "./auth.layout";
 import Loader from "./shared/Loader";
 import AuthenticationModal from "./shared/modals/AuthenticationModal";
-import GoogleAnalytics from "./analytics/GoogleAnalytics";
 
 interface IPageLayout {
   showLoader?: boolean;
@@ -63,7 +64,7 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
 
   if (status === "authenticated") {
     return (
-      <>
+      <AuthenticatedLayout>
         <GoogleAnalytics />
         <Modal
           opened={!session.user.username}
@@ -134,7 +135,7 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
           {pageIsLoading && <Loader message="Lädt" />}
           {!showLoader && !pageIsLoading && <Text>{children}</Text>}
         </AppShell>
-      </>
+      </AuthenticatedLayout>
     );
   }
 

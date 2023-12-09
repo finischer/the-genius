@@ -11,7 +11,7 @@ const GoogleAnalytics = () => {
 
   const acceptCookies = () => setAnalytics(true);
 
-  if (!isProduction) return <></>;
+  if (!isProduction) return <></>; // dont use Analytics in production environment
 
   return (
     <>

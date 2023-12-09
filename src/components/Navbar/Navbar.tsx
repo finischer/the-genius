@@ -1,6 +1,5 @@
 import {
   Avatar,
-  Badge,
   Box,
   Flex,
   Group,
@@ -9,27 +8,17 @@ import {
   NavLink,
   Text,
   UnstyledButton,
-  useMantineTheme,
   rem,
-  Skeleton,
+  useMantineTheme,
 } from "@mantine/core";
-import {
-  IconAt,
-  IconChevronLeft,
-  IconChevronRight,
-  IconCrown,
-  IconDoor,
-  IconHome,
-  IconLogout,
-  IconSettings,
-  IconTools,
-} from "@tabler/icons-react";
+import { IconChevronLeft, IconChevronRight, IconLogout, IconSettings } from "@tabler/icons-react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import useNotification from "~/hooks/useNotification";
-import Tooltip from "./shared/Tooltip";
+import { useUser } from "~/hooks/useUser";
 import { api } from "~/utils/api";
-import { AdminBadge, PremimumBadge } from "./shared/Badge/Badge";
+import { AdminBadge, PremimumBadge } from "../shared/Badge/Badge";
+import { navbartabs } from "./navbarTabs";
 
 const User = () => {
   const { showSuccessNotification } = useNotification();
@@ -133,6 +122,7 @@ const User = () => {
 
 const Navbar = ({ opened }: { opened: boolean }) => {
   const router = useRouter();
+  const { isAdmin } = useUser();
 
   const isActive = (href: string) => {
     if (href === "/") return router.pathname.length === 1;
@@ -143,6 +133,24 @@ const Navbar = ({ opened }: { opened: boolean }) => {
   const goTo = (href: string) => {
     void router.push(href, undefined, { shallow: true });
   };
+
+  const normalTabsElements = navbartabs.normal.map((tab) => (
+    <NavLink
+      key={tab.href}
+      {...tab}
+      active={isActive(tab.href)}
+      onClick={() => goTo(tab.href)}
+    />
+  ));
+
+  const adminTabsElements = navbartabs.admin.map((tab) => (
+    <NavLink
+      key={tab.href}
+      {...tab}
+      active={isActive(tab.href)}
+      onClick={() => goTo(tab.href)}
+    />
+  ));
 
   return (
     <MantineNavbar
@@ -155,30 +163,11 @@ const Navbar = ({ opened }: { opened: boolean }) => {
         grow
         style={{ display: "flex", gap: "1rem", flexDirection: "column" }}
       >
-        <NavLink
-          onClick={() => goTo("/")}
-          active={isActive("/")}
-          label="Home"
-          description=""
-          rightSection=""
-          icon={<IconHome size="1.3rem" />}
-        />
-        <NavLink
-          onClick={() => goTo("/rooms")}
-          active={isActive("/rooms")}
-          label="Raum beitreten"
-          description=""
-          rightSection=""
-          icon={<IconDoor size="1.3rem" />}
-        />
-        <NavLink
-          onClick={() => goTo("/gameshows")}
-          active={isActive("/gameshows")}
-          label="Meine Spielshows"
-          description="Starte oder erstelle deine eigene Spielshow"
-          rightSection=""
-          icon={<IconTools size="1.3rem" />}
-        />
+        {/* General Navbar Links */}
+        {normalTabsElements}
+
+        {/* Admin Navbar Links */}
+        {isAdmin && adminTabsElements}
       </MantineNavbar.Section>
 
       <MantineNavbar.Section>

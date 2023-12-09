@@ -20,8 +20,10 @@ model User {
   friends       Friendship[] @relation(name: "users")
   friendOf      Friendship[] @relation(name: "friendUsers")
   roomsOpen     Room[]       @relation(name: "roomCreator")
+  feedback      Feedback[]   @relation(name: "feedbackCreator")
   accounts      Account[]
   sessions      Session[]
+  isFirstVisit  Boolean      @default(true)
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
 
@@ -74,6 +76,22 @@ model Room {
   state             RoomState
 
   @@map("rooms")
+}
+
+model Feedback {
+  id                      String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+  creator                 User     @relation("feedbackCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId               String   @db.ObjectId
+  comment                 String
+  ratingGeneralExperience Int
+  ratingControlModerator  Int
+  ratingDesign            Int
+  browser                 String
+  os                      String
+
+  @@map("feedbacks")
 }
 
 model Account {

@@ -120,11 +120,7 @@ const DatenschutzerklaerungContent = () => {
         <br />
         65812 Bad Soden
       </p>
-      <p>
-        Telefon: &#91;Telefonnummer der verantwortlichen Stelle&#93;
-        <br />
-        E-Mail: support@the-genius.de
-      </p>
+      <p>E-Mail: support@the-genius.de</p>
       <p>
         Verantwortliche Stelle ist die nat&uuml;rliche oder juristische Person, die allein oder gemeinsam mit
         anderen &uuml;ber die Zwecke und Mittel der Verarbeitung von personenbezogenen Daten (z.&nbsp;B.

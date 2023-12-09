@@ -13,7 +13,10 @@ type TSocketUser = {
   name: string;
 };
 
-export type TUserReduced = Omit<User, "emailVerified" | "password" | "gameshows" | "createdAt" | "updatedAt">;
+export type TUserReduced = Omit<
+  User,
+  "emailVerified" | "password" | "gameshows" | "createdAt" | "updatedAt" | "isFirstVisit" | "feedback"
+>;
 
 export interface IServerSocketData extends Socket {
   user?: TSocketUser;

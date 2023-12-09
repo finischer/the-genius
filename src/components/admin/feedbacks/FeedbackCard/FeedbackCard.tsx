@@ -1,6 +1,8 @@
 import React from "react";
 import type { IFeedbackCardProps } from "./feedbackCard.types";
-import { Card, Divider, Flex, Group, Rating, RingProgress, SimpleGrid, Text } from "@mantine/core";
+import { Card, Container, Divider, Flex, Group, Rating, RingProgress, SimpleGrid, Text } from "@mantine/core";
+import Markdown from "react-markdown";
+import { formatTimestamp } from "~/utils/dates";
 
 const FeedbackRatingSection = ({ title, rating }: { title: string; rating: number }) => {
   return (
@@ -15,56 +17,75 @@ const FeedbackRatingSection = ({ title, rating }: { title: string; rating: numbe
 };
 
 const FeedbackCard: React.FC<IFeedbackCardProps> = ({ feedback }) => {
-  console.log(feedback.comment.replace(/\\n/g, "\n"));
   return (
     <Card withBorder>
-      <Group>
-        <Text
-          fz="sm"
-          fw={700}
-        >
-          Feedback-ID: {feedback.id}
-        </Text>
-      </Group>
+      {/* Feedback Metadata */}
+      <Flex
+        direction="column"
+        gap="0.25rem"
+      >
+        <Group>
+          <Text
+            fz="md"
+            fw={700}
+          >
+            Feedback-ID: {feedback.id}
+          </Text>
+        </Group>
 
-      <Group>
-        <Text
-          fz="xs"
-          c="dimmed"
-        >
-          User: {feedback.creator.username} • {feedback.creator.email}
-        </Text>
-      </Group>
+        <Group>
+          <Text
+            fz="sm"
+            c="dimmed"
+          >
+            Eingereicht von: {feedback.creator.username} • {feedback.creator.email}
+          </Text>
+        </Group>
 
-      <FeedbackRatingSection
-        title="Allgemein"
-        rating={feedback.ratingGeneralExperience}
-      />
-      <Divider my="xs" />
+        <Group>
+          <Text
+            fz="xs"
+            c="dimmed"
+          >
+            Erstellt am: {formatTimestamp(feedback.createdAt.toString())}
+          </Text>
+        </Group>
+      </Flex>
 
-      <FeedbackRatingSection
-        title="Steuerung als Moderator"
-        rating={feedback.ratingControlModerator}
-      />
+      {/* Feedback Content */}
+      <Container
+        p={0}
+        mt="md"
+      >
+        <FeedbackRatingSection
+          title="Allgemein"
+          rating={feedback.ratingGeneralExperience}
+        />
+        <Divider my="xs" />
 
-      <Divider my="xs" />
+        <FeedbackRatingSection
+          title="Steuerung als Moderator"
+          rating={feedback.ratingControlModerator}
+        />
 
-      <FeedbackRatingSection
-        title="Design"
-        rating={feedback.ratingDesign}
-      />
+        <Divider my="xs" />
 
-      <Divider my="xs" />
+        <FeedbackRatingSection
+          title="Design"
+          rating={feedback.ratingDesign}
+        />
 
-      <Group>
-        <Text>Kommentar: </Text>
-        <Text
-          c="dimmed"
-          fz="md"
-        >
-          {feedback.comment}
-        </Text>
-      </Group>
+        <Divider my="xs" />
+
+        <Group align="flex-start">
+          <Text>Kommentar: </Text>
+          <Text
+            c="dimmed"
+            fz="md"
+            dangerouslySetInnerHTML={{ __html: feedback.comment.replace(/\n/g, "<br />") }} // show line breaks
+          />
+        </Group>
+      </Container>
     </Card>
   );
 };

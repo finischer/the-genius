@@ -1,8 +1,7 @@
+import { Flex } from "@mantine/core";
 import React from "react";
-import { api } from "~/utils/api";
 import FeedbackCard from "../FeedbackCard";
 import type { IFeedbackListProps } from "./feedbackList.types";
-import { Flex } from "@mantine/core";
 
 const FeedbackList: React.FC<IFeedbackListProps> = ({ feedbacks }) => {
   const feedbackCardsElements = feedbacks.map((feedback) => (

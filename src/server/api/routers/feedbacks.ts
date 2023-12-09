@@ -13,6 +13,7 @@ export const safedFeebackSchema = z.object({
     username: z.string().nullish(),
     email: z.string(),
   }),
+  createdAt: z.date(),
 });
 
 export type SafedFeedback = z.infer<typeof safedFeebackSchema>;

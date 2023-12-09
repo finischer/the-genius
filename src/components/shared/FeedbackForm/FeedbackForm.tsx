@@ -5,7 +5,6 @@ import { MAX_TEXTAREA_LENGTH } from "~/config/forms";
 import { useForm } from "@mantine/form";
 import { api } from "~/utils/api";
 import useNotification from "~/hooks/useNotification";
-import { getHTTPStatusCodeFromError } from "@trpc/server/http";
 
 const FormSection = ({ children, title }: { children: React.ReactNode; title?: string }) => {
   return (
@@ -28,7 +27,7 @@ const FeedbackForm: React.FC<IFeedbackFormProps> = ({ opened, closeForm }) => {
     },
   });
 
-  const { showSuccessNotification, showErrorNotification } = useNotification();
+  const { showSuccessNotification, showErrorNotification, handleZodError } = useNotification();
 
   const { mutate: pushFeedbackToDatabase, isLoading } = api.feedbacks.create.useMutation({
     onSuccess: () => {
@@ -38,9 +37,7 @@ const FeedbackForm: React.FC<IFeedbackFormProps> = ({ opened, closeForm }) => {
       closeForm();
     },
     onError: (error) => {
-      showErrorNotification({
-        message: "Dein Feedback konnte nicht erfolgreich ermittelt werden",
-      });
+      handleZodError(error.data?.zodError, "Dein Feedback konnte nicht erfolgreich ermittelt werden");
     },
   });
 
@@ -49,8 +46,6 @@ const FeedbackForm: React.FC<IFeedbackFormProps> = ({ opened, closeForm }) => {
   }, [opened]);
 
   const sendFeedback = async () => {
-    console.log("Send Feedback!", form.values);
-
     pushFeedbackToDatabase(form.values);
   };
 
@@ -102,6 +97,9 @@ const FeedbackForm: React.FC<IFeedbackFormProps> = ({ opened, closeForm }) => {
               maxLength={MAX_TEXTAREA_LENGTH}
               {...form.getInputProps("comment")}
             />
+            <span>
+              {form.getInputProps("comment").value.length} / {MAX_TEXTAREA_LENGTH} Zeichen
+            </span>
           </FormSection>
 
           <Button

@@ -1,4 +1,4 @@
-import { Divider, Flex } from "@mantine/core";
+import { Divider, Flex, useMantineTheme } from "@mantine/core";
 import { IconRefresh } from "@tabler/icons-react";
 import React from "react";
 import FeedbackCard from "~/components/admin/feedbacks/FeedbackCard";
@@ -8,8 +8,8 @@ import ActionIcon from "~/components/shared/ActionIcon";
 import { api } from "~/utils/api";
 
 const FeedbackPage = () => {
+  const theme = useMantineTheme();
   const { data: feedbacks, isLoading, refetch: refreshFeedback } = api.feedbacks.getAll.useQuery();
-
   return (
     <PageLayout
       showLoader={isLoading}
@@ -18,7 +18,7 @@ const FeedbackPage = () => {
       <ActionIcon
         toolTip="Aktualisieren"
         variant="filled"
-        color="brand"
+        color={theme.primaryColor}
         onClick={() => {
           refreshFeedback();
         }}

@@ -108,7 +108,10 @@ export const publicProcedure = t.procedure;
 /** Reusable middleware that enforces users are logged in before running the procedure. */
 const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
   if (!ctx.session || !ctx.session.user) {
-    throw new TRPCError({ code: "UNAUTHORIZED" });
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "Du musst angemeldet sein, um die Aktion auszuführen",
+    });
   }
   return next({
     ctx: {
@@ -120,7 +123,7 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
 
 const enforceUserIsAdmin = enforceUserIsAuthed.unstable_pipe(({ ctx, next }) => {
   if (ctx.session.user.role !== "ADMIN") {
-    throw new TRPCError({ code: "UNAUTHORIZED", message: "You are not an admin" });
+    throw new TRPCError({ code: "UNAUTHORIZED", message: "Nur ein Admin kann diese Aktion ausführen" });
   }
 
   return next({

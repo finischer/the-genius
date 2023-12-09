@@ -43,7 +43,7 @@ const IntroductionBanner = () => {
         </Text>
 
         <Text>
-          Erstelle Spielshows und spiel' sie mit deinen Freunden!. In Zukunft werden weitere Features und
+          Erstelle Spielshows und spiel&apos; sie mit deinen Freunden!. In Zukunft werden weitere Features und
           Spiele kommen, jedoch ist es erstmal entscheidend, dass eine von dir erstellte Spielshow mit deinen
           Freunden gespielt werden kann.
         </Text>

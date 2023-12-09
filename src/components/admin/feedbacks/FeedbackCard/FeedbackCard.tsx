@@ -1,7 +1,6 @@
 import React from "react";
 import type { IFeedbackCardProps } from "./feedbackCard.types";
 import { Card, Container, Divider, Flex, Group, Rating, RingProgress, SimpleGrid, Text } from "@mantine/core";
-import Markdown from "react-markdown";
 import { formatTimestamp } from "~/utils/dates";
 
 const FeedbackRatingSection = ({ title, rating }: { title: string; rating: number }) => {

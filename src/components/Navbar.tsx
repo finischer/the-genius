@@ -1,6 +1,5 @@
 import {
   Avatar,
-  Badge,
   Box,
   Flex,
   Group,
@@ -9,27 +8,25 @@ import {
   NavLink,
   Text,
   UnstyledButton,
-  useMantineTheme,
   rem,
-  Skeleton,
+  useMantineTheme,
 } from "@mantine/core";
 import {
-  IconAt,
   IconChevronLeft,
   IconChevronRight,
-  IconCrown,
   IconDoor,
   IconHome,
   IconLogout,
+  IconMessageReport,
   IconSettings,
   IconTools,
 } from "@tabler/icons-react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import useNotification from "~/hooks/useNotification";
-import Tooltip from "./shared/Tooltip";
 import { api } from "~/utils/api";
 import { AdminBadge, PremimumBadge } from "./shared/Badge/Badge";
+import { useUser } from "~/hooks/useUser";
 
 const User = () => {
   const { showSuccessNotification } = useNotification();
@@ -133,6 +130,7 @@ const User = () => {
 
 const Navbar = ({ opened }: { opened: boolean }) => {
   const router = useRouter();
+  const { isAdmin } = useUser();
 
   const isActive = (href: string) => {
     if (href === "/") return router.pathname.length === 1;
@@ -179,6 +177,15 @@ const Navbar = ({ opened }: { opened: boolean }) => {
           rightSection=""
           icon={<IconTools size="1.3rem" />}
         />
+        {isAdmin && (
+          <NavLink
+            onClick={() => goTo("/admin/feedbacks")}
+            active={isActive("/admin/feedbacks")}
+            label="User Feedback"
+            description="Feedback der User, während der Beta Phase"
+            icon={<IconMessageReport size="1.3rem" />}
+          />
+        )}
       </MantineNavbar.Section>
 
       <MantineNavbar.Section>

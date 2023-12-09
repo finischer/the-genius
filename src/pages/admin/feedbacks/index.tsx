@@ -20,7 +20,7 @@ const FeedbackPage = () => {
         variant="filled"
         color={theme.primaryColor}
         onClick={() => {
-          refreshFeedback();
+          void refreshFeedback();
         }}
       >
         <IconRefresh size="1.25rem" />

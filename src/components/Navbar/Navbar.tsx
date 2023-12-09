@@ -136,6 +136,7 @@ const Navbar = ({ opened }: { opened: boolean }) => {
 
   const normalTabsElements = navbartabs.normal.map((tab) => (
     <NavLink
+      key={tab.href}
       {...tab}
       active={isActive(tab.href)}
       onClick={() => goTo(tab.href)}
@@ -144,6 +145,7 @@ const Navbar = ({ opened }: { opened: boolean }) => {
 
   const adminTabsElements = navbartabs.admin.map((tab) => (
     <NavLink
+      key={tab.href}
       {...tab}
       active={isActive(tab.href)}
       onClick={() => goTo(tab.href)}

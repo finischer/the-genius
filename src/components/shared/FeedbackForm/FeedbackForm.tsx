@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import type { IFeedbackFormProps } from "./feedbackForm.types";
+import type { IFeedbackFormProps, IFeedbackFormValues } from "./feedbackForm.types";
 import { Button, Divider, Flex, Modal, Rating, Text, Textarea, Title } from "@mantine/core";
 import { MAX_TEXTAREA_LENGTH } from "~/config/forms";
 import { useForm } from "@mantine/form";
@@ -22,7 +22,7 @@ const FormSection = ({ children, title }: { children: React.ReactNode; title?: s
 };
 
 const FeedbackForm: React.FC<IFeedbackFormProps> = ({ opened, closeForm }) => {
-  const form = useForm({
+  const form = useForm<IFeedbackFormValues>({
     initialValues: {
       ratingGeneralExperience: 0,
       ratingControlModerator: 0,
@@ -125,7 +125,7 @@ const FeedbackForm: React.FC<IFeedbackFormProps> = ({ opened, closeForm }) => {
               {...form.getInputProps("comment")}
             />
             <span>
-              {form.getInputProps("comment").value.length} / {MAX_TEXTAREA_LENGTH} Zeichen
+              {form.values.comment.length} / {MAX_TEXTAREA_LENGTH} Zeichen
             </span>
           </FormSection>
 

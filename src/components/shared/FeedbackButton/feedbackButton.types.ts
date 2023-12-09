@@ -1,5 +1,5 @@
-import type { ButtonProps } from "@mantine/core";
+import type { ActionIconProps, ButtonProps } from "@mantine/core";
 
-export interface IFeedbackButtonProps extends ButtonProps {
+export interface IFeedbackButtonProps extends ActionIconProps {
   onClick: () => void;
 }

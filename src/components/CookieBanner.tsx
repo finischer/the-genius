@@ -1,10 +1,11 @@
 import { Button, Group, Paper, Text } from "@mantine/core";
+import { CookieBannerAction } from "./analytics/GoogleAnalytics";
 
 interface ICookieBannerProps {
-  onAcceptCookies: () => void;
+  onButtonClick: (action: CookieBannerAction) => void;
 }
 
-const CookieBanner: React.FC<ICookieBannerProps> = ({ onAcceptCookies }) => {
+const CookieBanner: React.FC<ICookieBannerProps> = ({ onButtonClick }) => {
   return (
     <Paper
       withBorder
@@ -48,13 +49,14 @@ const CookieBanner: React.FC<ICookieBannerProps> = ({ onAcceptCookies }) => {
         <Button
           variant="default"
           size="xs"
+          onClick={() => onButtonClick(CookieBannerAction.DECLINE)}
         >
           Nur notwendige Cookies
         </Button>
         <Button
           variant="filled"
           size="xs"
-          onClick={onAcceptCookies}
+          onClick={() => onButtonClick(CookieBannerAction.ACCEPT)}
         >
           Alle akzeptieren
         </Button>

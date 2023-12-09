@@ -89,6 +89,7 @@ model Feedback {
   ratingControlModerator  Int
   ratingDesign            Int
   browser                 String
+  os                      String
 
   @@map("feedbacks")
 }

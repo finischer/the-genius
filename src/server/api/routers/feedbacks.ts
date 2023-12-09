@@ -1,13 +1,14 @@
 import { z } from "zod";
 import { MAX_TEXTAREA_LENGTH } from "~/config/forms";
 
-import { adminProcedure, createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { adminProcedure, createTRPCRouter } from "~/server/api/trpc";
 
 export const safedFeebackSchema = z.object({
   id: z.string(),
   comment: z.string(),
   ratingGeneralExperience: z.number(),
   ratingControlModerator: z.number(),
+  ratingDesign: z.number(),
   creator: z.object({
     username: z.string().nullish(),
     email: z.string(),
@@ -30,6 +31,10 @@ export const feedbacksRouter = createTRPCRouter({
           .min(1, "Das Rating muss mindestens 1 sein")
           .max(5, "Das Rating darf maximal 5 sein"),
         ratingControlModerator: z
+          .number()
+          .min(1, "Das Rating muss mindestens 1 sein")
+          .max(5, "Das Rating darf maximal 5 sein"),
+        ratingDesign: z
           .number()
           .min(1, "Das Rating muss mindestens 1 sein")
           .max(5, "Das Rating darf maximal 5 sein"),

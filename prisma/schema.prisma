@@ -87,6 +87,7 @@ model Feedback {
   comment                 String
   ratingGeneralExperience Int
   ratingControlModerator  Int
+  ratingDesign            Int
 
   @@map("feedbacks")
 }

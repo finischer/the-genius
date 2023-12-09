@@ -23,6 +23,7 @@ const FeedbackForm: React.FC<IFeedbackFormProps> = ({ opened, closeForm }) => {
     initialValues: {
       ratingGeneralExperience: 0,
       ratingControlModerator: 0,
+      ratingDesign: 0,
       comment: "",
     },
   });
@@ -45,9 +46,9 @@ const FeedbackForm: React.FC<IFeedbackFormProps> = ({ opened, closeForm }) => {
     form.reset();
   }, [opened]);
 
-  const sendFeedback = async () => {
+  const sendFeedback = form.onSubmit(() => {
     pushFeedbackToDatabase(form.values);
-  };
+  });
 
   return (
     <Modal
@@ -55,7 +56,7 @@ const FeedbackForm: React.FC<IFeedbackFormProps> = ({ opened, closeForm }) => {
       onClose={closeForm}
       title="Gib uns dein Feedback!"
     >
-      <form>
+      <form onSubmit={sendFeedback}>
         <Flex
           direction="column"
           gap="xl"
@@ -90,6 +91,21 @@ const FeedbackForm: React.FC<IFeedbackFormProps> = ({ opened, closeForm }) => {
             </Flex>
           </FormSection>
 
+          <FormSection title="Wie findest du das Design von TheGenius?">
+            <Flex
+              gap="md"
+              justify="space-between"
+              align="center"
+            >
+              <Text>Sehr schlecht</Text>
+              <Rating
+                size="xl"
+                {...form.getInputProps("ratingDesign")}
+              />
+              <Text>Sehr gut</Text>
+            </Flex>
+          </FormSection>
+
           <FormSection title="Welche Anmerkungen hast du zu TheGenius?">
             <Textarea
               required
@@ -103,7 +119,7 @@ const FeedbackForm: React.FC<IFeedbackFormProps> = ({ opened, closeForm }) => {
           </FormSection>
 
           <Button
-            onClick={sendFeedback}
+            type="submit"
             loading={isLoading}
           >
             Feedback senden

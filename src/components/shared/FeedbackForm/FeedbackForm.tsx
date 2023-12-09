@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import type { IFeedbackFormProps } from "./feedbackForm.types";
-import { Button, Flex, Modal, Rating, Text, Textarea, Title } from "@mantine/core";
+import { Button, Divider, Flex, Modal, Rating, Text, Textarea, Title } from "@mantine/core";
 import { MAX_TEXTAREA_LENGTH } from "~/config/forms";
 import { useForm } from "@mantine/form";
 import { api } from "~/utils/api";
@@ -16,6 +16,7 @@ const FormSection = ({ children, title }: { children: React.ReactNode; title?: s
     >
       {title && <Title order={6}>{title}</Title>}
       {children}
+      <Divider />
     </Flex>
   );
 };

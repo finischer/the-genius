@@ -1,14 +1,4 @@
-import {
-  Card,
-  Container,
-  Divider,
-  Flex,
-  Group,
-  Rating,
-  Text,
-  type MantineStyleSystemProps,
-  type TextProps,
-} from "@mantine/core";
+import { Card, Container, Divider, Flex, Group, Rating, Text, type TextProps } from "@mantine/core";
 import React from "react";
 import { formatTimestamp } from "~/utils/dates";
 import type { IFeedbackCardProps } from "./feedbackCard.types";
@@ -61,6 +51,7 @@ const FeedbackCard: React.FC<IFeedbackCardProps> = ({ feedback }) => {
 
       {/* Feedback Content */}
       <Container
+        m={0}
         p={0}
         mt="md"
       >

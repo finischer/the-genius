@@ -1,7 +1,7 @@
+import { Card, Container, Divider, Flex, Group, Rating, Text } from "@mantine/core";
 import React from "react";
-import type { IFeedbackCardProps } from "./feedbackCard.types";
-import { Card, Container, Divider, Flex, Group, Rating, RingProgress, SimpleGrid, Text } from "@mantine/core";
 import { formatTimestamp } from "~/utils/dates";
+import type { IFeedbackCardProps } from "./feedbackCard.types";
 
 const FeedbackRatingSection = ({ title, rating }: { title: string; rating: number }) => {
   return (

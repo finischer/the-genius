@@ -19,7 +19,10 @@ const FeedbackHandler = () => {
         opened={showFeedbackForm}
         closeForm={closeFeedbackForm}
       />
-      <FeedbackButton onClick={openFeedbackForm} />
+      <FeedbackButton
+        onClick={openFeedbackForm}
+        disabled={showFeedbackForm}
+      />
     </>
   );
 };

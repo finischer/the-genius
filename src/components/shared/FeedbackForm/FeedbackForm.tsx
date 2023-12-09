@@ -3,6 +3,9 @@ import type { IFeedbackFormProps } from "./feedbackForm.types";
 import { Button, Flex, Modal, Rating, Text, Textarea, Title } from "@mantine/core";
 import { MAX_TEXTAREA_LENGTH } from "~/config/forms";
 import { useForm } from "@mantine/form";
+import { api } from "~/utils/api";
+import useNotification from "~/hooks/useNotification";
+import { getHTTPStatusCodeFromError } from "@trpc/server/http";
 
 const FormSection = ({ children, title }: { children: React.ReactNode; title?: string }) => {
   return (
@@ -25,14 +28,30 @@ const FeedbackForm: React.FC<IFeedbackFormProps> = ({ opened, closeForm }) => {
     },
   });
 
+  const { showSuccessNotification, showErrorNotification } = useNotification();
+
+  const { mutate: pushFeedbackToDatabase, isLoading } = api.feedbacks.create.useMutation({
+    onSuccess: () => {
+      showSuccessNotification({
+        message: "Dein Feedback wurde erfolgreich gesendet",
+      });
+      closeForm();
+    },
+    onError: (error) => {
+      showErrorNotification({
+        message: "Dein Feedback konnte nicht erfolgreich ermittelt werden",
+      });
+    },
+  });
+
   useEffect(() => {
     form.reset();
   }, [opened]);
 
-  const sendFeedback = () => {
+  const sendFeedback = async () => {
     console.log("Send Feedback!", form.values);
 
-    // closeForm()
+    pushFeedbackToDatabase(form.values);
   };
 
   return (
@@ -85,7 +104,12 @@ const FeedbackForm: React.FC<IFeedbackFormProps> = ({ opened, closeForm }) => {
             />
           </FormSection>
 
-          <Button onClick={sendFeedback}>Feedback senden</Button>
+          <Button
+            onClick={sendFeedback}
+            loading={isLoading}
+          >
+            Feedback senden
+          </Button>
         </Flex>
       </form>
     </Modal>

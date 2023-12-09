@@ -15,7 +15,7 @@ type TSocketUser = {
 
 export type TUserReduced = Omit<
   User,
-  "emailVerified" | "password" | "gameshows" | "createdAt" | "updatedAt" | "isFirstVisit"
+  "emailVerified" | "password" | "gameshows" | "createdAt" | "updatedAt" | "isFirstVisit" | "feedback"
 >;
 
 export interface IServerSocketData extends Socket {

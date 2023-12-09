@@ -2,7 +2,7 @@ import { getServerSideProps } from "next/dist/build/templates/pages";
 import { z } from "zod";
 import { MAX_TEXTAREA_LENGTH } from "~/config/forms";
 
-import { adminProcedure, createTRPCRouter } from "~/server/api/trpc";
+import { adminProcedure, createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { getServerAuthSession } from "~/server/auth";
 
 export const safedFeebackSchema = z.object({
@@ -23,7 +23,7 @@ export const safedFeebackSchema = z.object({
 export type SafedFeedback = z.infer<typeof safedFeebackSchema>;
 
 export const feedbacksRouter = createTRPCRouter({
-  create: adminProcedure
+  create: protectedProcedure
     .output(safedFeebackSchema)
     .input(
       z.object({

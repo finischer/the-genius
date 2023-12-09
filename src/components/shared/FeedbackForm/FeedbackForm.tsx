@@ -5,6 +5,8 @@ import { MAX_TEXTAREA_LENGTH } from "~/config/forms";
 import { useForm } from "@mantine/form";
 import { api } from "~/utils/api";
 import useNotification from "~/hooks/useNotification";
+import { browserName } from "react-device-detect";
+import { useOs } from "@mantine/hooks";
 
 const FormSection = ({ children, title }: { children: React.ReactNode; title?: string }) => {
   return (
@@ -29,6 +31,7 @@ const FeedbackForm: React.FC<IFeedbackFormProps> = ({ opened, closeForm }) => {
   });
 
   const { showSuccessNotification, showErrorNotification, handleZodError } = useNotification();
+  const os = useOs();
 
   const { mutate: pushFeedbackToDatabase, isLoading } = api.feedbacks.create.useMutation({
     onSuccess: () => {
@@ -47,7 +50,11 @@ const FeedbackForm: React.FC<IFeedbackFormProps> = ({ opened, closeForm }) => {
   }, [opened]);
 
   const sendFeedback = form.onSubmit(() => {
-    pushFeedbackToDatabase(form.values);
+    pushFeedbackToDatabase({
+      ...form.values,
+      browser: browserName,
+      os,
+    });
   });
 
   return (

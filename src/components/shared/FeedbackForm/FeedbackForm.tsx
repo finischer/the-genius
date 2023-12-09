@@ -41,7 +41,10 @@ const FeedbackForm: React.FC<IFeedbackFormProps> = ({ opened, closeForm }) => {
       closeForm();
     },
     onError: (error) => {
-      handleZodError(error.data?.zodError, "Dein Feedback konnte nicht erfolgreich ermittelt werden");
+      handleZodError(
+        error.data?.zodError,
+        error.message ?? "Dein Feedback konnte nicht erfolgreich ermittelt werden"
+      );
     },
   });
 

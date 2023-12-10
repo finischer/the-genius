@@ -1,8 +1,7 @@
-import { Divider, Flex, useMantineTheme } from "@mantine/core";
+import { Divider, useMantineTheme } from "@mantine/core";
 import { IconRefresh } from "@tabler/icons-react";
-import React from "react";
-import FeedbackCard from "~/components/admin/feedbacks/FeedbackCard";
 import FeedbackList from "~/components/admin/feedbacks/FeedbackList";
+import withAdminAuth from "~/components/admin/withAdminAuth";
 import PageLayout from "~/components/layout";
 import ActionIcon from "~/components/shared/ActionIcon";
 import { api } from "~/utils/api";
@@ -33,4 +32,4 @@ const FeedbackPage = () => {
   );
 };
 
-export default FeedbackPage;
+export default withAdminAuth(FeedbackPage);

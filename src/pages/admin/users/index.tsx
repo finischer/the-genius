@@ -1,5 +1,6 @@
 import React from "react";
-import UserList from "~/components/admin/feedbacks/users/UserList";
+import UserList from "~/components/admin/UserList";
+import withAdminAuth from "~/components/admin/withAdminAuth";
 import PageLayout from "~/components/layout";
 import { api } from "~/utils/api";
 
@@ -16,4 +17,4 @@ const UsersPage = () => {
   );
 };
 
-export default UsersPage;
+export default withAdminAuth(UsersPage);

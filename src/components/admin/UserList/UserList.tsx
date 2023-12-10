@@ -16,13 +16,11 @@ import { formatTimestamp } from "~/utils/dates";
 import type { IUserListProps } from "./userList.types";
 import ActionIcon from "~/components/shared/ActionIcon";
 import { RoleBadge } from "~/components/shared/Badge/Badge";
+import type { User } from "@prisma/client";
 
-const ActionMenu = () => {
+const ActionMenu = ({ user }: { user: User }) => {
   return (
-    <Menu
-      width={200}
-      opened
-    >
+    <Menu width={200}>
       <ActionIcon toolTip="Aktionen anzeigen">
         <Menu.Target>
           <IconDots />
@@ -30,6 +28,12 @@ const ActionMenu = () => {
       </ActionIcon>
 
       <Menu.Dropdown>
+        <Text
+          align="center"
+          my="sm"
+        >
+          {user.username}
+        </Text>
         <Menu.Label>Allgemein</Menu.Label>
         <Menu.Item icon={<IconInfoCircle size={14} />}>Details anzeigen</Menu.Item>
         <Menu.Item icon={<IconUserCheck size={14} />}>Rolle wechseln</Menu.Item>
@@ -81,7 +85,7 @@ const UserList: React.FC<IUserListProps> = ({ users }) => {
               size="sm"
               fw={500}
             >
-              {user.name}
+              {user.username}
             </Text>
           </Group>
         </td>
@@ -94,7 +98,7 @@ const UserList: React.FC<IUserListProps> = ({ users }) => {
         </td>
         <td>{formatTimestamp(user.createdAt.toString())}</td>
         <td>
-          <ActionMenu />
+          <ActionMenu user={user} />
         </td>
       </tr>
     );

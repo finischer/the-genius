@@ -1,4 +1,4 @@
-import { IconDoor, IconHome, IconMessageReport, IconTools } from "@tabler/icons-react";
+import { IconDoor, IconHome, IconMessageReport, IconTools, IconUser } from "@tabler/icons-react";
 import type { INavbarTabs } from "./navbar.types";
 
 const DEFAULT_ICON_SIZE = "1.3rem";
@@ -28,6 +28,12 @@ export const navbartabs: INavbarTabs = {
       href: "/admin/feedbacks",
       description: "Feedback der User, während der Beta Phase",
       icon: <IconMessageReport size={DEFAULT_ICON_SIZE} />,
+    },
+    {
+      label: "Users",
+      href: "/admin/users",
+      description: "Verwalte die User von TheGenius",
+      icon: <IconUser size={DEFAULT_ICON_SIZE} />,
     },
   ],
 };

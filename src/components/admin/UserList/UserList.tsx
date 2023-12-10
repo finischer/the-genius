@@ -1,22 +1,18 @@
-import { Avatar, Checkbox, Group, Menu, ScrollArea, Table, Text, rem } from "@mantine/core";
+import { Avatar, Checkbox, Group, Menu, Table, Text, rem } from "@mantine/core";
+import type { User } from "@prisma/client";
 import {
-  IconArrowsLeftRight,
   IconBan,
   IconDots,
   IconInfoCircle,
-  IconMessageCircle,
-  IconPhoto,
-  IconSearch,
   IconSettings,
   IconTrash,
   IconUserCheck,
 } from "@tabler/icons-react";
 import React, { useState } from "react";
-import { formatTimestamp } from "~/utils/dates";
-import type { IUserListProps } from "./userList.types";
 import ActionIcon from "~/components/shared/ActionIcon";
 import { RoleBadge } from "~/components/shared/Badge/Badge";
-import type { User } from "@prisma/client";
+import { formatTimestamp } from "~/utils/dates";
+import type { IUserListProps } from "./userList.types";
 
 const ActionMenu = ({ user }: { user: User }) => {
   return (

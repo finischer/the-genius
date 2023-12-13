@@ -73,15 +73,26 @@ const ActionMenu = ({ user }: { user: User }) => {
         >
           Rolle wechseln
         </Menu.Item>
-        <Menu.Item icon={<IconSettings size={14} />}>Bearbeiten</Menu.Item>
+        <Menu.Item
+          icon={<IconSettings size={14} />}
+          disabled
+        >
+          Bearbeiten
+        </Menu.Item>
 
         <Menu.Divider />
 
         <Menu.Label>Danger zone</Menu.Label>
-        <Menu.Item icon={<IconBan size={14} />}>User bannen</Menu.Item>
+        <Menu.Item
+          icon={<IconBan size={14} />}
+          disabled
+        >
+          User bannen
+        </Menu.Item>
         <Menu.Item
           color="red"
           icon={<IconTrash size={14} />}
+          disabled
         >
           User löschen
         </Menu.Item>

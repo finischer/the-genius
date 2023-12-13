@@ -14,8 +14,12 @@ import { RoleBadge } from "~/components/shared/Badge/Badge";
 import { formatTimestamp } from "~/utils/dates";
 import type { IUserListProps } from "./userList.types";
 import { modals } from "@mantine/modals";
+import { useUser } from "~/hooks/useUser";
 
 const ActionMenu = ({ user }: { user: User }) => {
+  const { user: myself } = useUser();
+  const disableAction = user.id === myself.id;
+
   const openUserDetails = () =>
     modals.openContextModal({
       modal: "userDetails",
@@ -27,6 +31,18 @@ const ActionMenu = ({ user }: { user: User }) => {
         user,
       },
     });
+
+  const openChangeRoleModal = () => {
+    modals.openContextModal({
+      modal: "changeRole",
+
+      title: `Rolle von "${user.username}" ändern`,
+      innerProps: {
+        userId: user.id,
+        role: user.role,
+      },
+    });
+  };
 
   return (
     <Menu width={200}>
@@ -50,7 +66,13 @@ const ActionMenu = ({ user }: { user: User }) => {
         >
           Details anzeigen
         </Menu.Item>
-        <Menu.Item icon={<IconArrowsExchange2 size={14} />}>Rolle wechseln</Menu.Item>
+        <Menu.Item
+          disabled={disableAction}
+          icon={<IconArrowsExchange2 size={14} />}
+          onClick={openChangeRoleModal}
+        >
+          Rolle wechseln
+        </Menu.Item>
         <Menu.Item icon={<IconSettings size={14} />}>Bearbeiten</Menu.Item>
 
         <Menu.Divider />

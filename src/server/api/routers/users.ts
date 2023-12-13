@@ -124,4 +124,31 @@ export const usersRouter = createTRPCRouter({
 
     return user;
   }),
+  updateUserRole: protectedProcedure
+    .output(safedUserSchema)
+    .input(
+      z.object({
+        userId: z.string(),
+        newRole: z.nativeEnum(UserRole),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.update({
+        where: {
+          id: input.userId,
+        },
+        data: {
+          role: input.newRole,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      return user;
+    }),
 });

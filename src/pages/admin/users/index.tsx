@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import UserList from "~/components/admin/UserList";
 import withAdminAuth from "~/components/admin/withAdminAuth";
 import PageLayout from "~/components/layout";

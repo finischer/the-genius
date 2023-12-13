@@ -1,10 +1,14 @@
 import { Avatar, Flex, Text } from "@mantine/core";
 import type { ContextModalProps } from "@mantine/modals";
+import type { User } from "@prisma/client";
 import React from "react";
 import { formatTimestamp } from "~/utils/dates";
-import type { IUserDetailsModalProps } from "./userDetailsModal.types";
 
-const UserDetailsModal: React.FC<ContextModalProps<IUserDetailsModalProps>> = ({ innerProps, ...props }) => {
+interface IUserDetailsModalProps extends ContextModalProps<any> {
+  user: User;
+}
+
+const UserDetailsModal: React.FC<ContextModalProps<IUserDetailsModalProps>> = ({ innerProps }) => {
   const { user } = innerProps;
 
   return (

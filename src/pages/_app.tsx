@@ -8,7 +8,7 @@ import { type AppType } from "next/app";
 import CookieBanner from "~/components/CookieBanner";
 import { CookieBannerAction } from "~/components/analytics/GoogleAnalytics";
 import FeedbackHandler from "~/components/shared/FeedbackHandler";
-import UserDetailsModal from "~/components/shared/modals/UserDetails/UserDetailsModal";
+import UserDetailsModal from "~/components/shared/modals/UserDetailsModal";
 import { modals } from "~/components/shared/modals/modalComponents";
 import { RoomProvider } from "~/hooks/useRoom";
 import useSettings from "~/hooks/useSettings/useSettings";

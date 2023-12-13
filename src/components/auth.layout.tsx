@@ -1,5 +1,4 @@
 import React from "react";
-import FeedbackHandler from "./shared/FeedbackHandler";
 import IntroductionBanner from "./shared/IntroductionBanner";
 
 interface IAuthenticatedLayout {

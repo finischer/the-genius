@@ -1,20 +1,33 @@
 import { Avatar, Checkbox, Group, Menu, Table, Text, rem } from "@mantine/core";
 import type { User } from "@prisma/client";
 import {
+  IconArrowsExchange2,
   IconBan,
   IconDots,
   IconInfoCircle,
   IconSettings,
   IconTrash,
-  IconUserCheck,
 } from "@tabler/icons-react";
 import React, { useState } from "react";
 import ActionIcon from "~/components/shared/ActionIcon";
 import { RoleBadge } from "~/components/shared/Badge/Badge";
 import { formatTimestamp } from "~/utils/dates";
 import type { IUserListProps } from "./userList.types";
+import { modals } from "@mantine/modals";
 
 const ActionMenu = ({ user }: { user: User }) => {
+  const openUserDetails = () =>
+    modals.openContextModal({
+      modal: "userDetails",
+      title: `Details zu: ${user.username}`,
+      w: "100%",
+      h: "100%",
+      bg: "blue",
+      innerProps: {
+        user,
+      },
+    });
+
   return (
     <Menu width={200}>
       <ActionIcon toolTip="Aktionen anzeigen">
@@ -31,8 +44,13 @@ const ActionMenu = ({ user }: { user: User }) => {
           {user.username}
         </Text>
         <Menu.Label>Allgemein</Menu.Label>
-        <Menu.Item icon={<IconInfoCircle size={14} />}>Details anzeigen</Menu.Item>
-        <Menu.Item icon={<IconUserCheck size={14} />}>Rolle wechseln</Menu.Item>
+        <Menu.Item
+          icon={<IconInfoCircle size={14} />}
+          onClick={openUserDetails}
+        >
+          Details anzeigen
+        </Menu.Item>
+        <Menu.Item icon={<IconArrowsExchange2 size={14} />}>Rolle wechseln</Menu.Item>
         <Menu.Item icon={<IconSettings size={14} />}>Bearbeiten</Menu.Item>
 
         <Menu.Divider />

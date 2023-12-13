@@ -15,6 +15,7 @@ import { formatTimestamp } from "~/utils/dates";
 import type { IUserListProps } from "./userList.types";
 import { modals } from "@mantine/modals";
 import { useUser } from "~/hooks/useUser";
+import { NOT_FOUND_LITERAL } from "~/config/placeholder";
 
 const ActionMenu = ({ user }: { user: User }) => {
   const { user: myself } = useUser();
@@ -23,7 +24,7 @@ const ActionMenu = ({ user }: { user: User }) => {
   const openUserDetails = () =>
     modals.openContextModal({
       modal: "userDetails",
-      title: `Details zu: ${user.username}`,
+      title: `Details zu: ${user.username ?? NOT_FOUND_LITERAL}`,
       w: "100%",
       h: "100%",
       bg: "blue",
@@ -36,7 +37,7 @@ const ActionMenu = ({ user }: { user: User }) => {
     modals.openContextModal({
       modal: "changeRole",
 
-      title: `Rolle von "${user.username}" ändern`,
+      title: `Rolle von "${user.username ?? NOT_FOUND_LITERAL}" ändern`,
       innerProps: {
         userId: user.id,
         role: user.role,

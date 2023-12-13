@@ -8,6 +8,8 @@ import { type AppType } from "next/app";
 import CookieBanner from "~/components/CookieBanner";
 import { CookieBannerAction } from "~/components/analytics/GoogleAnalytics";
 import FeedbackHandler from "~/components/shared/FeedbackHandler";
+import UserDetailsModal from "~/components/shared/modals/UserDetailsModal";
+import { modals } from "~/components/shared/modals/modalComponents";
 import { RoomProvider } from "~/hooks/useRoom";
 import useSettings from "~/hooks/useSettings/useSettings";
 import { SocketProvider } from "~/hooks/useSocket";
@@ -42,7 +44,7 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
       withGlobalStyles
       withNormalizeCSS
     >
-      <ModalsProvider>
+      <ModalsProvider modals={modals}>
         <Notifications position="top-center" />
 
         <SessionProvider session={session}>

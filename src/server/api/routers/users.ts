@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { UserRole } from "@prisma/client";
 import bcrypt from "bcrypt";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
+import { adminProcedure, createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
 
 export const safedUserSchema = z.object({
   id: z.string(),
@@ -17,6 +17,11 @@ export const safedUserSchema = z.object({
 export type SafedUser = z.infer<typeof safedUserSchema>;
 
 export const usersRouter = createTRPCRouter({
+  getAll: adminProcedure.query(async ({ ctx }) => {
+    const userList = await ctx.prisma.user.findMany();
+
+    return userList;
+  }),
   create: publicProcedure
     .output(safedUserSchema)
     .input(
@@ -119,4 +124,31 @@ export const usersRouter = createTRPCRouter({
 
     return user;
   }),
+  updateUserRole: protectedProcedure
+    .output(safedUserSchema)
+    .input(
+      z.object({
+        userId: z.string(),
+        newRole: z.nativeEnum(UserRole),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.update({
+        where: {
+          id: input.userId,
+        },
+        data: {
+          role: input.newRole,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      return user;
+    }),
 });

@@ -26,6 +26,7 @@ const withAdminAuth = <P extends object>(Component: NextPage) => {
 
   // Copy getInitial props so it will run as well
   if (void Component.getInitialProps) {
+    // @ts-ignore
     Auth.getInitialProps = Component.getInitialProps;
   }
 

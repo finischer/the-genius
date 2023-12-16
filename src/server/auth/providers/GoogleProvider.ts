@@ -8,7 +8,7 @@ export default NextAuthGoogleProvider({
     return {
       id: profile.sub,
       role: DEFAULT_ROLE,
-      emailVerified: profile.email_verified,
+      isEmailVerified: profile.email_verified,
       name: profile.name,
       email: profile.email,
       image: profile.picture,

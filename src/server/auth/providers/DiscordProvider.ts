@@ -26,11 +26,12 @@ export default NextAuthDiscordProvider({
   clientId: process.env.DISCORD_CLIENT_ID ?? "",
   clientSecret: process.env.DISCORD_CLIENT_SECRET ?? "",
   profile(profile: DiscordProfile) {
+    console.log("Discord Profile: ", profile);
     profile.image_url = buildImageUrl(profile.id, profile.avatar, profile.discriminator);
     return {
       id: profile.id,
       role: DEFAULT_ROLE,
-      emailVerified: profile.verified,
+      isEmailVerified: profile.verified,
       name: profile.username,
       email: profile.email,
       image: profile.image_url,

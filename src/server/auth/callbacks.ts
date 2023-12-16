@@ -2,6 +2,8 @@ import type { CallbacksOptions, Session } from "next-auth";
 import type { DiscordProfile } from "next-auth/providers/discord";
 import type { GoogleProfile } from "next-auth/providers/google";
 import { prisma } from "../db";
+import { capitalize } from "~/utils/strings";
+import { NextResponse } from "next/server";
 
 const isOtherProviderAlreadyInUse = async (userEmail: string | null | undefined, provider: string) => {
   if (!userEmail) throw new Error("Email is null or undefined");
@@ -52,6 +54,11 @@ const maxUsersReached = async (userEmail: string) => {
 
 export const signInCallback: CallbacksOptions["signIn"] = async ({ user, account, profile }) => {
   if (!user.email) throw new Error("Es wurde keine Email in der Anfrage angegeben");
+
+  if (user.isEmailVerified)
+    throw new Error(
+      `Deine Email bei ${capitalize(account?.provider ?? "PROVIDER_NOT_FOUND")} wurde noch nicht verifiziert`
+    );
 
   if (account && (await isOtherProviderAlreadyInUse(user.email, account.provider))) {
     // other provider already in use

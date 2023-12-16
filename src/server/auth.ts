@@ -29,6 +29,7 @@ declare module "next-auth" {
   interface User {
     role: UserRole;
     username?: string;
+    isEmailVerified: boolean;
   }
 }
 

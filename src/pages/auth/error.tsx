@@ -1,11 +1,14 @@
 import { Button, Flex } from "@mantine/core";
+import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
+import { decode, encode } from "querystring";
 import useLoadingState from "~/hooks/useLoadingState/useLoadingState";
 
 const AuthErrorPage = () => {
-  const router = useRouter();
+  const { push } = useRouter();
   const { pageIsLoading } = useLoadingState();
-  const errorMessage = router.query.error ?? "Anmeldung fehlgeschlagen";
+  const searchParams = useSearchParams();
+  const errorMessage: string = searchParams.get("error") ?? "Anmeldung fehlgeschlagen";
 
   return (
     <Flex
@@ -21,7 +24,7 @@ const AuthErrorPage = () => {
         <div>Fehler: {errorMessage}</div>
         <Button.Group>
           <Button
-            onClick={() => void router.push("/")}
+            onClick={() => void push("/")}
             loading={pageIsLoading}
           >
             Zum Login zurück

@@ -10,8 +10,6 @@ const IntroductionBanner = () => {
   const [showIntroductionBanner, setShowIntroductionBanner] = useState(false);
 
   useEffect(() => {
-    console.log(session?.user.username);
-    console.log(user?.isFirstVisit);
     if (status === "authenticated" && session.user.username && user && user.isFirstVisit) {
       setShowIntroductionBanner(true);
     }
@@ -19,7 +17,7 @@ const IntroductionBanner = () => {
 
   const handleCloseModalClick = async () => {
     await updateFirstVisit();
-    refetch();
+    await refetch();
     setShowIntroductionBanner(false);
   };
 

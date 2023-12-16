@@ -5,18 +5,21 @@ import { api } from "~/utils/api";
 
 const IntroductionBanner = () => {
   const { data: session, status } = useSession();
-  const { data: user } = api.users.me.useQuery();
-  const { mutate: updateFirstVisit } = api.users.updateFirstVisit.useMutation();
+  const { data: user, refetch } = api.users.me.useQuery();
+  const { mutateAsync: updateFirstVisit } = api.users.updateFirstVisit.useMutation();
   const [showIntroductionBanner, setShowIntroductionBanner] = useState(false);
 
   useEffect(() => {
+    console.log(session?.user.username);
+    console.log(user?.isFirstVisit);
     if (status === "authenticated" && session.user.username && user && user.isFirstVisit) {
       setShowIntroductionBanner(true);
     }
   }, [user?.isFirstVisit]);
 
-  const handleCloseModalClick = () => {
-    updateFirstVisit();
+  const handleCloseModalClick = async () => {
+    await updateFirstVisit();
+    refetch();
     setShowIntroductionBanner(false);
   };
 
@@ -43,7 +46,7 @@ const IntroductionBanner = () => {
         </Text>
 
         <Text>
-          Erstelle Spielshows und spiel&apos; sie mit deinen Freunden!. In Zukunft werden weitere Features und
+          Erstelle Spielshows und spiel&apos; sie mit deinen Freunden! In Zukunft werden weitere Features und
           Spiele kommen, jedoch ist es erstmal entscheidend, dass eine von dir erstellte Spielshow mit deinen
           Freunden gespielt werden kann.
         </Text>

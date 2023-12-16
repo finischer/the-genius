@@ -55,7 +55,7 @@ const maxUsersReached = async (userEmail: string) => {
 export const signInCallback: CallbacksOptions["signIn"] = async ({ user, account, profile }) => {
   if (!user.email) throw new Error("Es wurde keine Email in der Anfrage angegeben");
 
-  if (user.isEmailVerified)
+  if (!user.isEmailVerified)
     throw new Error(
       `Deine Email bei ${capitalize(account?.provider ?? "PROVIDER_NOT_FOUND")} wurde noch nicht verifiziert`
     );

@@ -8,6 +8,7 @@ import { adminProcedure, createTRPCRouter, protectedProcedure, publicProcedure }
 export const safedUserSchema = z.object({
   id: z.string(),
   name: z.string(),
+  username: z.string().nullable(),
   image: z.string().nullable(),
   email: z.string(),
   role: z.nativeEnum(UserRole).nullable(),
@@ -22,56 +23,57 @@ export const usersRouter = createTRPCRouter({
 
     return userList;
   }),
-  create: publicProcedure
-    .output(safedUserSchema)
-    .input(
-      z.object({
-        name: z
-          .string()
-          .trim()
-          .min(3, "Dein Username muss mindestens 3 Zeichen enthalten")
-          .max(20, "Dein Username darf maximal 20 Zeichen enthalten"),
-        email: z.string().trim().min(1, "Du musst eine Email eingeben").email("Invalide email"),
-        password: z.string().min(6, "Dein Passwort muss mindestens 6 Zeichen enthalten"),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const isEmailAlreadyRegisterd = await ctx.prisma.user.findUnique({
-        where: {
-          email: input.email,
-        },
-      });
+  // create: publicProcedure
+  //   .output(safedUserSchema)
+  //   .input(
+  //     z.object({
+  //       name: z
+  //         .string()
+  //         .trim()
+  //         .min(3, "Dein Username muss mindestens 3 Zeichen enthalten")
+  //         .max(20, "Dein Username darf maximal 20 Zeichen enthalten"),
+  //       email: z.string().trim().min(1, "Du musst eine Email eingeben").email("Invalide email"),
+  //       password: z.string().min(6, "Dein Passwort muss mindestens 6 Zeichen enthalten"),
+  //     })
+  //   )
+  //   .mutation(async ({ ctx, input }) => {
+  //     const isEmailAlreadyRegisterd = await ctx.prisma.user.findUnique({
+  //       where: {
+  //         email: input.email,
+  //       },
+  //     });
 
-      if (isEmailAlreadyRegisterd)
-        throw new TRPCError({
-          code: "CONFLICT",
-          message: "Die E-Mail Adresse existiert bereits",
-        });
+  //     if (isEmailAlreadyRegisterd)
+  //       throw new TRPCError({
+  //         code: "CONFLICT",
+  //         message: "Die E-Mail Adresse existiert bereits",
+  //       });
 
-      const isUsernameAlreadyRegisterd = await ctx.prisma.user.findFirst({
-        where: {
-          name: input.name,
-        },
-      });
+  //     const isUsernameAlreadyRegisterd = await ctx.prisma.user.findFirst({
+  //       where: {
+  //         name: input.name,
+  //       },
+  //     });
 
-      if (isUsernameAlreadyRegisterd)
-        throw new TRPCError({
-          code: "CONFLICT",
-          message: `Der Username ${input.name} existiert bereits`,
-        });
+  //     if (isUsernameAlreadyRegisterd)
+  //       throw new TRPCError({
+  //         code: "CONFLICT",
+  //         message: `Der Username ${input.name} existiert bereits`,
+  //       });
 
-      const user = await ctx.prisma.user.create({
-        data: {
-          ...input,
-          password: await bcrypt.hash(input.password, 10),
-        },
-        include: {
-          gameshows: true,
-        },
-      });
+  //     const user = await ctx.prisma.user.create({
+  //       data: {
+  //         ...input,
+  //         isEmailVerified: false,
+  //         password: await bcrypt.hash(input.password, 10),
+  //       },
+  //       include: {
+  //         gameshows: true,
+  //       },
+  //     });
 
-      return user;
-    }),
+  //     return user;
+  //   }),
 
   isUsernameInUse: protectedProcedure
     .input(z.object({ username: z.string() }))

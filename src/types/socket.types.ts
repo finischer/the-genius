@@ -7,16 +7,14 @@ import { string } from "zod";
 import type { TGameNames } from "~/components/room/Game/games/game.types";
 import type { ICreateRoomConfig } from "~/components/shared/CreateRoomModal/createRoomModal.types";
 import type Room from "~/pages/api/classes/Room/Room";
+import type { SafedUser } from "~/server/api/routers/users";
 
 type TSocketUser = {
   id: string;
   name: string;
 };
 
-export type TUserReduced = Omit<
-  User,
-  "emailVerified" | "password" | "gameshows" | "createdAt" | "updatedAt" | "isFirstVisit" | "feedback"
->;
+export type TUserReduced = Pick<SafedUser, "id" | "name" | "email" | "image" | "role" | "username">;
 
 export interface IServerSocketData extends Socket {
   user?: TSocketUser;

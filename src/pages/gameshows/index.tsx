@@ -41,7 +41,7 @@ const GameshowsPage = () => {
         <tr key={gameshow.id}>
           <td>{gameshow.name}</td>
           <td>{gameshow.numOfGames}</td>
-          <td>{formatTimestamp(gameshow.createdAt.toString())}</td>
+          <td>{formatTimestamp(gameshow.createdAt)}</td>
           <td>
             <Flex gap="xl">
               <ActionIcon

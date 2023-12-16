@@ -77,7 +77,7 @@ const RoomsPage = () => {
           </td>
           {/* <td>{nameOfCurrentGame || "Kein Spiel gestartet"}</td> */}
           <td>{room.creator.username}</td>
-          <td>{formatTimestamp(room.createdAt.toString())}</td>
+          <td>{formatTimestamp(room.createdAt)}</td>
         </tr>
       );
     }) ?? [];

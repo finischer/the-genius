@@ -1,9 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { UserRole } from "@prisma/client";
-import bcrypt from "bcrypt";
-import { adminProcedure, createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
+import { UserRole, type User } from "@prisma/client";
+import { adminProcedure, createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const safedUserSchema = z.object({
   id: z.string(),
@@ -17,12 +16,46 @@ export const safedUserSchema = z.object({
 
 export type SafedUser = z.infer<typeof safedUserSchema>;
 
+type UserPropertiesUpdatebaleByAdmin = Pick<
+  User,
+  "email" | "image" | "name" | "password" | "role" | "username"
+>; // only these properties can be updated by admins
+type UserPropertiesUpdatebaleByUser = Pick<User, "email" | "image" | "password" | "lastLoginAt">; // only these properties can be updated by admins
+
 export const usersRouter = createTRPCRouter({
   getAll: adminProcedure.query(async ({ ctx }) => {
     const userList = await ctx.prisma.user.findMany();
 
     return userList;
   }),
+  updateUserByAdmin: adminProcedure
+    .input(z.object({ id: z.string(), data: z.custom<UserPropertiesUpdatebaleByAdmin>() }))
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          ...input.data,
+        },
+      });
+
+      return user;
+    }),
+  updateUser: protectedProcedure
+    .input(z.object({ id: z.string(), data: z.custom<UserPropertiesUpdatebaleByUser>() }))
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          ...input.data,
+        },
+      });
+
+      return user;
+    }),
   // create: publicProcedure
   //   .output(safedUserSchema)
   //   .input(

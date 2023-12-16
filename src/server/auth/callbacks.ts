@@ -1,9 +1,11 @@
+import { ObjectId } from "bson";
 import type { CallbacksOptions, Session } from "next-auth";
 import type { DiscordProfile } from "next-auth/providers/discord";
 import type { GoogleProfile } from "next-auth/providers/google";
-import { prisma } from "../db";
 import { capitalize } from "~/utils/strings";
-import { NextResponse } from "next/server";
+import { prisma } from "../db";
+import { updateLoginTimestamp } from "../db/users";
+import { getOrCreateObjectId } from "~/utils/database";
 
 const isOtherProviderAlreadyInUse = async (userEmail: string | null | undefined, provider: string) => {
   if (!userEmail) throw new Error("Email is null or undefined");
@@ -69,21 +71,27 @@ export const signInCallback: CallbacksOptions["signIn"] = async ({ user, account
     throw new Error("Die maximale Anzahl an Usern ist leider schon erreicht wurden");
   }
 
+  let canSignIn = false;
   if (account?.provider === "google") {
     const googleProfile: GoogleProfile = profile as GoogleProfile;
-    const canSignIn = googleProfile.email_verified && googleProfile.email.endsWith("@gmail.com");
-
-    return canSignIn;
+    canSignIn = googleProfile.email_verified && googleProfile.email.endsWith("@gmail.com");
   } else if (account?.provider === "discord") {
     const discordProfile = profile as DiscordProfile;
-    return discordProfile.verified;
+    canSignIn = discordProfile.verified;
   }
 
-  if (user) {
+  if (canSignIn) {
+    const userId = getOrCreateObjectId(user.id);
+
+    // update last login timestamp in database
+    await updateLoginTimestamp(userId);
+
     return true;
   }
 
-  throw new Error("User konnte nicht gefunden werden");
+  throw new Error(
+    `Anmeldung mit ${capitalize(account?.provider.toUpperCase() ?? "PROVIDER_NOT_FOUND")} ist fehlgeschlagen`
+  );
 };
 
 export const sessionCallback: CallbacksOptions["session"] = async ({

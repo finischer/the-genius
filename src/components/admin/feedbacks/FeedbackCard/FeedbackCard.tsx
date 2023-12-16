@@ -46,7 +46,7 @@ const FeedbackCard: React.FC<IFeedbackCardProps> = ({ feedback }) => {
           }`}
           fz="sm"
         />
-        <MetadataLine content={`Erstellt am: ${formatTimestamp(feedback.createdAt.toString())}`} />
+        <MetadataLine content={`Erstellt am: ${formatTimestamp(feedback.createdAt)}`} />
         <MetadataLine content={`Betriebssystem: ${feedback.os}`} />
         <MetadataLine content={`Browser: ${feedback.browser}`} />
       </Flex>

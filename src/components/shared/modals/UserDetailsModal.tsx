@@ -27,7 +27,7 @@ const UserDetailsModal: React.FC<ContextModalProps<IUserDetailsModalProps>> = ({
       <Text>Email: {user.email}</Text>
       <Text>Email verifiziert: {user.emailVerified ? "Ja" : "Nein"}</Text>
       <Text>Rolle: {user.role}</Text>
-      <Text>Zuletzt geändert am: {formatTimestamp(user.updatedAt.toString())}</Text>
+      <Text>Zuletzt geändert am: {formatTimestamp(user.updatedAt)}</Text>
     </Flex>
   );
 };

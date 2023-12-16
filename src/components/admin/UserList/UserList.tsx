@@ -144,7 +144,8 @@ const UserList: React.FC<IUserListProps> = ({ users }) => {
             {user.role}
           </Group>
         </td>
-        <td>{formatTimestamp(user.createdAt.toString())}</td>
+        <td>{formatTimestamp(user.lastLoginAt)}</td>
+        <td>{formatTimestamp(user.createdAt)}</td>
         <td>
           <ActionMenu user={user} />
         </td>
@@ -166,6 +167,7 @@ const UserList: React.FC<IUserListProps> = ({ users }) => {
           <th>User</th>
           <th>Email</th>
           <th>Rolle</th>
+          <th>Letzter login</th>
           <th>Dabei seit</th>
           <th>Aktionen</th>
         </tr>

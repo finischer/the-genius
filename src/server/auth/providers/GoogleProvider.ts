@@ -1,6 +1,4 @@
-import NextAuthGoogleProvider, {
-  type GoogleProfile,
-} from "next-auth/providers/google";
+import NextAuthGoogleProvider, { type GoogleProfile } from "next-auth/providers/google";
 import { DEFAULT_ROLE } from "../../auth";
 
 export default NextAuthGoogleProvider({

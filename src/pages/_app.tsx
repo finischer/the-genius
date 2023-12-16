@@ -1,14 +1,11 @@
 import { MantineProvider } from "@mantine/core";
-import { useLocalStorage } from "@mantine/hooks";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
-import CookieBanner from "~/components/CookieBanner";
-import { CookieBannerAction } from "~/components/analytics/GoogleAnalytics";
+import GoogleAnalytics from "~/components/analytics/GoogleAnalytics";
 import FeedbackHandler from "~/components/shared/FeedbackHandler";
-import UserDetailsModal from "~/components/shared/modals/UserDetailsModal";
 import { modals } from "~/components/shared/modals/modalComponents";
 import { RoomProvider } from "~/hooks/useRoom";
 import useSettings from "~/hooks/useSettings/useSettings";
@@ -53,6 +50,7 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
               <UserProvider>
                 {/* FeedbackHandler only during beta phase */}
                 <FeedbackHandler />
+                <GoogleAnalytics />
 
                 <Component {...pageProps} />
               </UserProvider>

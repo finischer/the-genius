@@ -11,7 +11,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useLoadingState from "~/hooks/useLoadingState/useLoadingState";
 import { useUser } from "~/hooks/useUser";
 import Footer from "./Footer";
@@ -20,6 +20,7 @@ import GoogleAnalytics from "./analytics/GoogleAnalytics";
 import AuthenticatedLayout from "./auth.layout";
 import Loader from "./shared/Loader";
 import AuthenticationModal from "./shared/modals/AuthenticationModal";
+import { useRouter } from "next/router";
 
 interface IPageLayout {
   showLoader?: boolean;
@@ -34,38 +35,21 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
   const [isNavbarOpened, setIsNavbarOpened] = useState(false);
   const [usernameInput, setUsernameInput] = useState("");
   const { updateUsername, isLoading } = useUser();
+  const router = useRouter();
 
   const handleSaveUsername = async () => {
     await updateUsername(usernameInput);
   };
 
-  if (status === "unauthenticated") {
-    return (
-      <>
-        <GoogleAnalytics />
-        <Flex
-          direction="column"
-          justify="center"
-          align="center"
-          h="100vh"
-          pos="relative"
-        >
-          <AuthenticationModal />
-          <Flex
-            pos="absolute"
-            bottom={0}
-          >
-            <Footer />
-          </Flex>
-        </Flex>
-      </>
-    );
-  }
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      void router.push("/auth/signin");
+    }
+  }, [status]);
 
   if (status === "authenticated") {
     return (
       <AuthenticatedLayout>
-        <GoogleAnalytics />
         <Modal
           opened={!session.user.username}
           title="Zeig den Leuten, wer du bist"

@@ -12,14 +12,18 @@ export async function updateLoginTimestamp(userId: string) {
 
   if (!userExists) return false;
 
-  const res = await prisma.user.update({
-    where: {
-      id: userId,
-    },
-    data: {
-      lastLoginAt: new Date(),
-    },
-  });
+  try {
+    const res = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        lastLoginAt: new Date(),
+      },
+    });
 
-  return res;
+    return res;
+  } catch {
+    console.info(`Login timestamp will not be updated. It is the first login for User ${userId}`);
+  }
 }

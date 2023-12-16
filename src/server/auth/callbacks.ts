@@ -75,7 +75,8 @@ export const signInCallback: CallbacksOptions["signIn"] = async ({ user, account
   if (user) {
     return true;
   }
-  return false;
+
+  throw new Error("User konnte nicht gefunden werden");
 };
 
 export const sessionCallback: CallbacksOptions["session"] = async ({

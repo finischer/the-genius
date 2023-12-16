@@ -50,7 +50,8 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     signIn: signInCallback,
     session: sessionCallback,
-    redirect: ({ baseUrl }) => {
+    redirect: ({ baseUrl, url }) => {
+      console.log("URL: ", url);
       return baseUrl;
     },
   },
@@ -58,7 +59,7 @@ export const authOptions: NextAuthOptions = {
   providers: [GoogleProvider, DiscordProvider],
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: "/",
+    signIn: "/auth/signin",
     error: "/auth/error",
   },
   session: {

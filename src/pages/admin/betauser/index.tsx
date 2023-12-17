@@ -24,7 +24,7 @@ const BetaUsersPage = () => {
   const { mutate: addBetaUser } = api.betaTesters.create.useMutation({
     onSuccess: () => {
       showSuccessNotification({ message: "Betatester erfolgreich hinzugefügt" });
-      refreshBetaUsers();
+      void refreshBetaUsers();
       form.reset();
     },
     onError: (error) =>
@@ -34,7 +34,7 @@ const BetaUsersPage = () => {
   const { mutate: deleteBetaUser } = api.betaTesters.deleteById.useMutation({
     onSuccess: () => {
       showSuccessNotification({ message: "Betatester erfolgreich gelöscht" });
-      refreshBetaUsers();
+      void refreshBetaUsers();
     },
     onError: (error) =>
       handleZodError(error.data?.zodError, error.message ?? "User konnte nicht gelöscht werden"),

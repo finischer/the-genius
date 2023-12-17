@@ -33,11 +33,11 @@ model User {
 }
 
 model BetaTester {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  email         String   @unique
-  invitationKey String
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  accessKey String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Gameshow {

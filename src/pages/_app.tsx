@@ -48,8 +48,6 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
           <SocketProvider>
             <RoomProvider>
               <UserProvider>
-                {/* FeedbackHandler only during beta phase */}
-                <FeedbackHandler />
                 <GoogleAnalytics />
 
                 <Component {...pageProps} />

@@ -148,6 +148,9 @@ const RoomPage = () => {
         />
       )}
 
+      {/* FeedbackHandler only during beta phase */}
+      <FeedbackHandler />
+
       <Flex
         h="100vh"
         p={sizes.padding}

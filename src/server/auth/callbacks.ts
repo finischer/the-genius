@@ -54,8 +54,26 @@ const maxUsersReached = async (userEmail: string) => {
   return false;
 };
 
+const checkIfBetaUser = async (userEmail: string) => {
+  const user = await prisma.betaTester.findUnique({
+    where: {
+      email: userEmail,
+    },
+  });
+
+  if (user) {
+    return true;
+  }
+
+  return false;
+};
+
 export const signInCallback: CallbacksOptions["signIn"] = async ({ user, account, profile }) => {
   if (!user.email) throw new Error("Es wurde keine Email in der Anfrage angegeben");
+
+  if (!(await checkIfBetaUser(user.email))) {
+    throw new Error("Du hast keinen Zugang zur Beta");
+  }
 
   if (!user.isEmailVerified)
     throw new Error(

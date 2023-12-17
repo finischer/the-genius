@@ -14,12 +14,6 @@ const SignInPage = () => {
       pos="relative"
     >
       <AuthenticationModal />
-      <Flex
-        pos="absolute"
-        bottom={0}
-      >
-        <Footer />
-      </Flex>
     </Flex>
   );
 };

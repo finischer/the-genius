@@ -52,14 +52,14 @@ const GoogleAnalytics = () => {
       {showCookieBanner && rendered && <CookieBanner onButtonClick={handleCookieBannerButtonClick} />}
       {analytics && (
         <>
-          <Script src={`https://www.googletagmanager.com/gtag/js?id=${gTagId}`} />
+          <Script src={`https://www.googletagmanager.com/gtag/js?id=G-76C2HLVDTN`} />
           <Script id="google-analytics">
             {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             
-            gtag('config', ${gTagId} );
+            gtag('config', G-76C2HLVDTN);
             `}
           </Script>
         </>

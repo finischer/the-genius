@@ -1,7 +1,4 @@
 import { Flex } from "@mantine/core";
-import React from "react";
-import Footer from "~/components/Footer";
-import GoogleAnalytics from "~/components/analytics/GoogleAnalytics";
 import AuthenticationModal from "~/components/shared/modals/AuthenticationModal";
 
 const SignInPage = () => {

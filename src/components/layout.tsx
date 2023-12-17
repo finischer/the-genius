@@ -11,16 +11,14 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useLoadingState from "~/hooks/useLoadingState/useLoadingState";
 import { useUser } from "~/hooks/useUser";
 import Footer from "./Footer";
-import Navbar from "./navbar";
-import GoogleAnalytics from "./analytics/GoogleAnalytics";
 import AuthenticatedLayout from "./auth.layout";
+import Navbar from "./navbar";
 import Loader from "./shared/Loader";
-import AuthenticationModal from "./shared/modals/AuthenticationModal";
-import { useRouter } from "next/router";
 
 interface IPageLayout {
   showLoader?: boolean;

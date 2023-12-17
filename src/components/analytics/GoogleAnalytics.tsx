@@ -23,9 +23,6 @@ const GoogleAnalytics = () => {
 
   const gTagId = process.env.NEXT_PUBLIC_GTAG_ID;
 
-  console.log("gtag: ", gTagId);
-  console.log("isProduction: ", isProduction);
-
   useEffect(() => {
     setRendered(true);
   }, []);

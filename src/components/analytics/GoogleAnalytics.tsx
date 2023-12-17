@@ -26,7 +26,6 @@ const GoogleAnalytics = () => {
 
   useEffect(() => {
     setRendered(true);
-    return () => setRendered(false);
   }, []);
 
   const handleCookieBannerButtonClick = (action: CookieBannerAction) => {
@@ -47,12 +46,12 @@ const GoogleAnalytics = () => {
     setShowCookieBanner(false);
   };
 
-  if (!isProduction || !rendered) return <></>; // dont use Analytics in other environment than production
+  if (!isProduction || !gTagId) return <></>; // dont use Analytics in other environment than production
 
   return (
     <>
-      {showCookieBanner && <CookieBanner onButtonClick={handleCookieBannerButtonClick} />}
-      {analytics && gTagId && (
+      {showCookieBanner && rendered && <CookieBanner onButtonClick={handleCookieBannerButtonClick} />}
+      {analytics && (
         <>
           <Script src={`https://www.googletagmanager.com/gtag/js?id=${gTagId}`} />
           <Script id="google-analytics">

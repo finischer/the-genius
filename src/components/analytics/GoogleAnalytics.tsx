@@ -25,7 +25,7 @@ const GoogleAnalytics = () => {
   const gTagId = env.NEXT_PUBLIC_GTAG_ID;
 
   console.log("GTAG-ID: ", gTagId);
-  console.log("NODE_ENV: ", env.NODE_ENV);
+  console.log("NODE_ENV: ", process.env.NODE_ENV);
 
   useEffect(() => {
     setRendered(true);

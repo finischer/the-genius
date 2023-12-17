@@ -3,7 +3,6 @@ import Script from "next/script";
 import { isProduction } from "~/utils/environment";
 import CookieBanner from "../CookieBanner";
 import { useEffect, useState } from "react";
-import { env } from "~/env.mjs";
 
 export enum CookieBannerAction {
   ACCEPT = "ACCEPT",
@@ -24,8 +23,8 @@ const GoogleAnalytics = () => {
 
   const gTagId = process.env.NEXT_PUBLIC_GTAG_ID;
 
-  console.log("GTAG-ID: ", gTagId);
-  console.log("NODE_ENV: ", process.env.NODE_ENV);
+  console.log("gtag: ", gTagId);
+  console.log("isProduction: ", isProduction);
 
   useEffect(() => {
     setRendered(true);

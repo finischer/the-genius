@@ -236,6 +236,7 @@ const CreateGameshowPage = () => {
               </Box>
             </Stepper.Step>
             <Stepper.Completed>
+              <></>
               {/* TODO: Add summary component before gameshow will be saved */}
             </Stepper.Completed>
           </Stepper>

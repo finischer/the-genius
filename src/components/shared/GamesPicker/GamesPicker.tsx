@@ -1,6 +1,7 @@
-import { TransferList, type TransferListData } from "@mantine/core";
+import { Flex, TransferList, type TransferListData } from "@mantine/core";
 import React, { type Dispatch, type SetStateAction, useEffect, useState } from "react";
 import { type TTransferListData, type IGamesPickerProps } from "./gamesPicker.types";
+import List from "../List";
 
 const availableGames: TTransferListData = [
   [
@@ -18,6 +19,7 @@ const availableGames: TTransferListData = [
 ];
 
 const GamesPicker: React.FC<IGamesPickerProps> = ({ setSelectedGames }) => {
+  // const [games, setGames] = useState(availableGames[0].map((g) => ({ ...g, id: g.value })));
   const [games, setGames] = useState<TTransferListData>(availableGames);
 
   useEffect(() => {
@@ -25,6 +27,19 @@ const GamesPicker: React.FC<IGamesPickerProps> = ({ setSelectedGames }) => {
   }, [games]);
 
   return (
+    // <Flex gap="xl">
+    //   <List
+    //     data={games}
+    //     setData={setGames}
+    //     renderValueByKey="label"
+    //   />
+    //   <List
+    //     data={games}
+    //     setData={setGames}
+    //     renderValueByKey="label"
+    //     editable
+    //   />
+    // </Flex>
     <TransferList
       value={games}
       onChange={setGames as Dispatch<SetStateAction<TransferListData>>}

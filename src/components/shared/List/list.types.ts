@@ -3,6 +3,7 @@ import type { IListItem } from "./components/ListItem/listItem.types";
 
 export interface IListProps<T> {
   editable?: boolean;
+  deletableItems?: boolean;
   onClickItem?: (item: IListItem<T>) => void;
   onDeleteItem?: () => void;
   data: IListItem<T>[];

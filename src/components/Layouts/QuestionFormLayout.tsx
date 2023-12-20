@@ -85,6 +85,7 @@ const QuestionFormLayout = <T extends { id: string }>({
             setData={setQuestions}
             onClickItem={onSelectQuestion}
             editable
+            deletableItems
             selectedItemId={selectedQuestionId}
             renderValueByKey={renderValueByKey}
             emptyListText={noQuestionsText}

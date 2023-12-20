@@ -36,6 +36,7 @@ import { type TUserReduced } from "~/types/socket.types";
 import { animations } from "~/utils/animations";
 import type Room from "../api/classes/Room/Room";
 import FeedbackHandler from "~/components/shared/FeedbackHandler";
+import NextHead from "~/components/shared/NextHead";
 
 type TNetworkStatusEffectiveType = "slow-2g" | "2g" | "3g" | "4g";
 
@@ -133,6 +134,7 @@ const RoomPage = () => {
 
   return (
     <>
+      <NextHead title={`Raum ${room.name}`} />
       {/* Modals */}
       <RoomDetailsModal
         room={room}

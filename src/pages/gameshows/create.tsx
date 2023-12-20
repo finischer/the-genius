@@ -17,6 +17,7 @@ import useNotification from "~/hooks/useNotification";
 import { api } from "~/utils/api";
 import type { TGameNames } from "~/components/room/Game/games/game.types";
 import { GAME_CONFIGURATORS } from "~/components/gameshows/_game_configurator_map";
+import NextHead from "~/components/shared/NextHead";
 
 const NUM_OF_DEFAULT_STEPS = 2;
 
@@ -151,123 +152,126 @@ const CreateGameshowPage = () => {
   }, [activeStep, selectedGames.length]);
 
   return (
-    <PageLayout
-      showLoader={isSuccess}
-      loadingMessage="Spielshows werden geladen ..."
-    >
-      {activeGame && (
-        <GameRulesModal
-          centered
-          rules={activeGame.getRules()}
-          gameName={activeGame.name}
-          onClose={closeGameRules}
-          opened={openedGameRules}
-        />
-      )}
-      <ConfiguratorProvider
-        enableFurtherButton={enableFurtherButton}
-        disableFurtherButton={disableFurtherButton}
-        updateGameshowConfig={setGameshow}
-        gameshowConfig={gameshow}
-        selectedGames={selectedGamesReduced}
+    <>
+      <NextHead title="Spielshow erstellen" />
+      <PageLayout
+        showLoader={isSuccess}
+        loadingMessage="Spielshows werden geladen ..."
       >
-        <Flex
-          gap="xl"
-          direction="column"
+        {activeGame && (
+          <GameRulesModal
+            centered
+            rules={activeGame.getRules()}
+            gameName={activeGame.name}
+            onClose={closeGameRules}
+            opened={openedGameRules}
+          />
+        )}
+        <ConfiguratorProvider
+          enableFurtherButton={enableFurtherButton}
+          disableFurtherButton={disableFurtherButton}
+          updateGameshowConfig={setGameshow}
+          gameshowConfig={gameshow}
+          selectedGames={selectedGamesReduced}
         >
-          <Title>Erstelle deine Spielshow</Title>
-          <Stepper
-            active={activeStep}
-            onStepClick={setActiveStep}
-            breakpoint="sm"
-            size="sm"
-            allowNextStepsSelect={false}
+          <Flex
+            gap="xl"
+            direction="column"
           >
-            <Stepper.Step
-              label="Spiele"
-              description="Wähle deine Spiele aus"
-              {...allowSelectStepProps}
+            <Title>Erstelle deine Spielshow</Title>
+            <Stepper
+              active={activeStep}
+              onStepClick={setActiveStep}
+              breakpoint="sm"
+              size="sm"
+              allowNextStepsSelect={false}
             >
-              <GamesPicker setSelectedGames={setSelectedGames} />
-            </Stepper.Step>
-            {selectedGames.map((g) => {
-              const game = GAME_STATE_MAP[g.value];
-              const gameRules = game.getRules().trim();
+              <Stepper.Step
+                label="Spiele"
+                description="Wähle deine Spiele aus"
+                {...allowSelectStepProps}
+              >
+                <GamesPicker setSelectedGames={setSelectedGames} />
+              </Stepper.Step>
+              {selectedGames.map((g) => {
+                const game = GAME_STATE_MAP[g.value];
+                const gameRules = game.getRules().trim();
 
-              return (
-                <Stepper.Step
-                  key={g.value}
-                  label={g.label}
-                  {...allowSelectStepProps}
-                >
-                  <Flex
-                    align="center"
-                    gap="xs"
+                return (
+                  <Stepper.Step
+                    key={g.value}
+                    label={g.label}
+                    {...allowSelectStepProps}
                   >
-                    <Title order={2}>Einstellungen - {g.label}</Title>
-                    {gameRules && (
-                      <ActionIcon
-                        color="dimmed"
-                        toolTip="Regeln anzeigen"
-                        onClick={openGameRules}
-                      >
-                        <IconQuestionMark />
-                      </ActionIcon>
-                    )}
-                  </Flex>
-                  <Box mt="xl">{GAME_CONFIGURATORS[g.value]}</Box>
-                </Stepper.Step>
-              );
-            })}
-            <Stepper.Step
-              label="Details Spielshow"
-              description=""
-              {...allowSelectStepProps}
-            >
-              <Title order={2}>Details Spielshow</Title>
-              <Box mt="xl">
-                <TextInput
-                  label="Name der Spielshow"
-                  withAsterisk
-                  onChange={updateGameshowConfig}
-                  id="name"
-                  value={gameshow.name}
-                />
-              </Box>
-            </Stepper.Step>
-            <Stepper.Completed>
-              <></>
-              {/* TODO: Add summary component before gameshow will be saved */}
-            </Stepper.Completed>
-          </Stepper>
+                    <Flex
+                      align="center"
+                      gap="xs"
+                    >
+                      <Title order={2}>Einstellungen - {g.label}</Title>
+                      {gameRules && (
+                        <ActionIcon
+                          color="dimmed"
+                          toolTip="Regeln anzeigen"
+                          onClick={openGameRules}
+                        >
+                          <IconQuestionMark />
+                        </ActionIcon>
+                      )}
+                    </Flex>
+                    <Box mt="xl">{GAME_CONFIGURATORS[g.value]}</Box>
+                  </Stepper.Step>
+                );
+              })}
+              <Stepper.Step
+                label="Details Spielshow"
+                description=""
+                {...allowSelectStepProps}
+              >
+                <Title order={2}>Details Spielshow</Title>
+                <Box mt="xl">
+                  <TextInput
+                    label="Name der Spielshow"
+                    withAsterisk
+                    onChange={updateGameshowConfig}
+                    id="name"
+                    value={gameshow.name}
+                  />
+                </Box>
+              </Stepper.Step>
+              <Stepper.Completed>
+                <></>
+                {/* TODO: Add summary component before gameshow will be saved */}
+              </Stepper.Completed>
+            </Stepper>
 
-          <Group
-            position="center"
-            mt="xl"
-          >
-            {isLoading ? (
-              <Loader message="Spielshow wird erstellt ..." />
-            ) : (
-              <>
-                <Button
-                  variant="default"
-                  onClick={() => !isLoading && prevStep()}
-                >
-                  Zurück
-                </Button>
-                <Button
-                  onClick={() => (isLastStep && !isLoading ? saveGameshow() : nextStep())}
-                  loading={isLoading}
-                  disabled={furtherButtonDisabled}
-                >
-                  {isLastStep ? "Spielshow speichern" : "Weiter"}
-                </Button>
-              </>
-            )}
-          </Group>
-        </Flex>
-      </ConfiguratorProvider>
-    </PageLayout>
+            <Group
+              position="center"
+              mt="xl"
+            >
+              {isLoading ? (
+                <Loader message="Spielshow wird erstellt ..." />
+              ) : (
+                <>
+                  <Button
+                    variant="default"
+                    onClick={() => !isLoading && prevStep()}
+                  >
+                    Zurück
+                  </Button>
+                  <Button
+                    onClick={() => (isLastStep && !isLoading ? saveGameshow() : nextStep())}
+                    loading={isLoading}
+                    disabled={furtherButtonDisabled}
+                  >
+                    {isLastStep ? "Spielshow speichern" : "Weiter"}
+                  </Button>
+                </>
+              )}
+            </Group>
+          </Flex>
+        </ConfiguratorProvider>
+      </PageLayout>
+    </>
   );
 };
 

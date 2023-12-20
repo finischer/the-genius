@@ -83,6 +83,7 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
           styles={{
             main: {
               background: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[0],
+              overflowX: "auto",
             },
           }}
           navbarOffsetBreakpoint="sm"

@@ -5,7 +5,6 @@ import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
 import GoogleAnalytics from "~/components/analytics/GoogleAnalytics";
-import FeedbackHandler from "~/components/shared/FeedbackHandler";
 import { modals } from "~/components/shared/modals/modalComponents";
 import { RoomProvider } from "~/hooks/useRoom";
 import useSettings from "~/hooks/useSettings/useSettings";
@@ -37,6 +36,13 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
         },
         primaryColor,
         fontFamily: "Montserrat, sans-serif",
+        breakpoints: {
+          xs: "30em",
+          sm: "48em",
+          md: "64em",
+          lg: "74em",
+          xl: "90em",
+        },
       }}
       withGlobalStyles
       withNormalizeCSS

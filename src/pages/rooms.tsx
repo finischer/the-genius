@@ -165,6 +165,9 @@ const RoomsPage = () => {
           verticalSpacing="md"
           striped
           highlightOnHover
+          sx={{
+            overflowX: "auto",
+          }}
         >
           <thead>
             <tr>

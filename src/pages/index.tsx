@@ -2,7 +2,6 @@ import { Button, Card, Group, Text } from "@mantine/core";
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
 import PageLayout from "~/components/layout";
-import { api } from "~/utils/api";
 
 // TODO: Create Home page
 

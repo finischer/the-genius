@@ -1,6 +1,7 @@
 import {
   Avatar,
   Box,
+  Button,
   Flex,
   Group,
   Navbar as MantineNavbar,
@@ -17,10 +18,13 @@ import { useRouter } from "next/router";
 import useNotification from "~/hooks/useNotification";
 import { useUser } from "~/hooks/useUser";
 import { api } from "~/utils/api";
-import { AdminBadge, PremimumBadge } from "../shared/Badge/Badge";
+import { AdminBadge, PremimumBadge, RoleBadge } from "../shared/Badge/Badge";
+import { openPricingModal } from "../shared/modals/modalComponents";
 import { navbartabs } from "./navbarTabs";
+import { useScreen } from "~/hooks/useScreen";
 
 const User = () => {
+  const { isMediumScreen } = useScreen();
   const { showSuccessNotification } = useNotification();
   const { data: session } = useSession();
   const theme = useMantineTheme();
@@ -58,17 +62,20 @@ const User = () => {
           <UnstyledButton
             sx={{
               display: "block",
+              overflow: "hidden",
               width: "100%",
               padding: theme.spacing.xs,
               borderRadius: theme.radius.sm,
               color: theme.colorScheme === "dark" ? theme.colors.dark[0] : theme.black,
-
               "&:hover": {
                 backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.colors.gray[0],
               },
             }}
           >
-            <Group>
+            <Flex
+              gap="md"
+              align="center"
+            >
               <Avatar
                 src={session?.user.image}
                 radius="xl"
@@ -78,8 +85,7 @@ const User = () => {
                   align="flex-start"
                   gap="md"
                 >
-                  {user?.role === "ADMIN" && <AdminBadge />}
-                  {user?.role === "PREMIUM" && <PremimumBadge />}
+                  <RoleBadge role={user?.role ?? "USER"} />
                   <Text
                     size="sm"
                     weight={500}
@@ -96,7 +102,7 @@ const User = () => {
               </Box>
 
               {theme.dir === "ltr" ? <IconChevronRight size={rem(18)} /> : <IconChevronLeft size={rem(18)} />}
-            </Group>
+            </Flex>
           </UnstyledButton>
         </Box>
       </Menu.Target>
@@ -159,15 +165,33 @@ const Navbar = ({ opened }: { opened: boolean }) => {
       hidden={!opened}
       width={{ sm: 200, lg: 300 }}
     >
-      <MantineNavbar.Section
-        grow
-        style={{ display: "flex", gap: "1rem", flexDirection: "column" }}
-      >
+      <MantineNavbar.Section grow>
         {/* General Navbar Links */}
-        {normalTabsElements}
+        <Flex
+          direction="column"
+          justify="space-between"
+          h="100%"
+          pb="md"
+        >
+          <Flex
+            gap="1rem"
+            direction="column"
+          >
+            {normalTabsElements}
 
-        {/* Admin Navbar Links */}
-        {isAdmin && adminTabsElements}
+            {/* Admin Navbar Links */}
+            {isAdmin && adminTabsElements}
+          </Flex>
+
+          <Button
+            mt="md"
+            variant="subtle"
+            onClick={() => openPricingModal()}
+            disabled
+          >
+            Premium kaufen 👑
+          </Button>
+        </Flex>
       </MantineNavbar.Section>
 
       <MantineNavbar.Section>

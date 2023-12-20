@@ -1,8 +1,12 @@
 import React from "react";
 import { Box, Button, Divider, Flex, Group, Modal, Stack, Text, Title, useMantineTheme } from "@mantine/core";
 import type { ContextModalProps } from "@mantine/modals";
-interface IPricingModalProps extends ContextModalProps<any> {}
-const PricingModal: React.FC<ContextModalProps<IPricingModalProps>> = ({}) => {
+
+// interface IPricingModalProps extends ContextModalProps<any> {
+
+// }
+
+const PricingModal: React.FC<ContextModalProps<ContextModalProps<any>>> = () => {
   const theme = useMantineTheme();
 
   return (

@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   Flex,
-  Group,
   Navbar as MantineNavbar,
   Menu,
   NavLink,
@@ -16,12 +15,12 @@ import { IconChevronLeft, IconChevronRight, IconLogout, IconSettings } from "@ta
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import useNotification from "~/hooks/useNotification";
+import { useScreen } from "~/hooks/useScreen";
 import { useUser } from "~/hooks/useUser";
 import { api } from "~/utils/api";
-import { AdminBadge, PremimumBadge, RoleBadge } from "../shared/Badge/Badge";
+import { AdminBadge, RoleBadge } from "../shared/Badge/Badge";
 import { openPricingModal } from "../shared/modals/modalComponents";
 import { navbartabs } from "./navbarTabs";
-import { useScreen } from "~/hooks/useScreen";
 
 const User = () => {
   const { isMediumScreen } = useScreen();
@@ -150,12 +149,24 @@ const Navbar = ({ opened }: { opened: boolean }) => {
   ));
 
   const adminTabsElements = navbartabs.admin.map((tab) => (
-    <NavLink
-      key={tab.href}
-      {...tab}
-      active={isActive(tab.href)}
-      onClick={() => goTo(tab.href)}
-    />
+    <Box pos="relative">
+      <Box
+        pos="absolute"
+        right={-10}
+        top={-10}
+        sx={{
+          rotate: "20deg",
+        }}
+      >
+        <AdminBadge disableTooltip />
+      </Box>
+      <NavLink
+        key={tab.href}
+        {...tab}
+        active={isActive(tab.href)}
+        onClick={() => goTo(tab.href)}
+      />
+    </Box>
   ));
 
   return (

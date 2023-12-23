@@ -6,6 +6,7 @@ import { IconCheck } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import PageLayout from "~/components/layout";
+import NextHead from "~/components/shared/NextHead";
 import useNotification from "~/hooks/useNotification";
 import type { SafedRoom } from "~/server/api/routers/rooms";
 import { api } from "~/utils/api";
@@ -122,6 +123,7 @@ const RoomsPage = () => {
 
   return (
     <>
+      <NextHead title="Räume" />
       {activeRoom && (
         <Modal
           onClose={closePasswordModal}

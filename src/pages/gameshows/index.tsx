@@ -6,6 +6,7 @@ import { useState } from "react";
 import PageLayout from "~/components/layout";
 import ActionIcon from "~/components/shared/ActionIcon";
 import CreateRoomModal from "~/components/shared/CreateRoomModal";
+import NextHead from "~/components/shared/NextHead";
 import useLoadingState from "~/hooks/useLoadingState/useLoadingState";
 import type { SafedGameshow } from "~/server/api/routers/gameshows";
 import { api } from "~/utils/api";
@@ -71,48 +72,51 @@ const GameshowsPage = () => {
     }) ?? [];
 
   return (
-    <PageLayout
-      showLoader={isLoading}
-      loadingMessage="Spielshows werden geladen ..."
-    >
-      {activeGameshow && (
-        <CreateRoomModal
-          openedModal={openedCreateRoomModal}
-          onClose={closeCreateRoomModal}
-          gameshow={activeGameshow}
-        />
-      )}
-      <Flex
-        gap="md"
-        align="center"
+    <>
+      <NextHead title="Meine Spielshows" />
+      <PageLayout
+        showLoader={isLoading}
+        loadingMessage="Spielshows werden geladen ..."
       >
-        <Title order={2}>Meine Spielshows</Title>
-        <ActionIcon
-          toolTip="Spielshow erstellen"
-          color={theme.primaryColor}
-          variant="filled"
-          onClick={handleCreateGameshow}
-          loading={pageIsLoading}
+        {activeGameshow && (
+          <CreateRoomModal
+            openedModal={openedCreateRoomModal}
+            onClose={closeCreateRoomModal}
+            gameshow={activeGameshow}
+          />
+        )}
+        <Flex
+          gap="md"
+          align="center"
         >
-          <IconPlus />
-        </ActionIcon>
-      </Flex>
-      <Text c="dimmed">{subtitleText}</Text>
-      <Table
-        verticalSpacing="md"
-        striped
-      >
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Anzahl Spiele</th>
-            <th>Erstellt am</th>
-            <th>Aktion</th>
-          </tr>
-        </thead>
-        <tbody>{rows}</tbody>
-      </Table>
-    </PageLayout>
+          <Title order={2}>Meine Spielshows</Title>
+          <ActionIcon
+            toolTip="Spielshow erstellen"
+            color={theme.primaryColor}
+            variant="filled"
+            onClick={handleCreateGameshow}
+            loading={pageIsLoading}
+          >
+            <IconPlus />
+          </ActionIcon>
+        </Flex>
+        <Text c="dimmed">{subtitleText}</Text>
+        <Table
+          verticalSpacing="md"
+          striped
+        >
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Anzahl Spiele</th>
+              <th>Erstellt am</th>
+              <th>Aktion</th>
+            </tr>
+          </thead>
+          <tbody>{rows}</tbody>
+        </Table>
+      </PageLayout>
+    </>
   );
 };
 

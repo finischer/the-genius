@@ -8,10 +8,14 @@ interface IBadgeProps extends BadgeProps {
   tooltip?: string;
 }
 
-const AdminBadge = () => (
+interface IAdminBadgeProps {
+  disableTooltip?: boolean;
+}
+
+const AdminBadge: React.FC<IAdminBadgeProps> = ({ disableTooltip }) => (
   <Badge
     color="yellow"
-    tooltip="Admin"
+    tooltip={disableTooltip ? undefined : "Admin"}
   >
     <IconCrown style={{ width: rem(18), height: rem(18) }} />
   </Badge>

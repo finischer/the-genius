@@ -149,7 +149,10 @@ const Navbar = ({ opened }: { opened: boolean }) => {
   ));
 
   const adminTabsElements = navbartabs.admin.map((tab) => (
-    <Box pos="relative">
+    <Box
+      pos="relative"
+      key={tab.href}
+    >
       <Box
         pos="absolute"
         right={-10}
@@ -161,7 +164,6 @@ const Navbar = ({ opened }: { opened: boolean }) => {
         <AdminBadge disableTooltip />
       </Box>
       <NavLink
-        key={tab.href}
         {...tab}
         active={isActive(tab.href)}
         onClick={() => goTo(tab.href)}

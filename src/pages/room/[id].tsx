@@ -37,6 +37,8 @@ import { animations } from "~/utils/animations";
 import type Room from "../api/classes/Room/Room";
 import FeedbackHandler from "~/components/shared/FeedbackHandler";
 import NextHead from "~/components/shared/NextHead";
+import useMusic from "~/hooks/useMusic";
+import type { TSongId } from "~/components/room/MediaPlayer/mediaPlayer.types";
 
 type TNetworkStatusEffectiveType = "slow-2g" | "2g" | "3g" | "4g";
 
@@ -66,16 +68,7 @@ const RoomPage = () => {
   const showCurrentGameCornerBanner = currentGame && room.state.view === "GAME" && showGame;
   const roomId = router.query.id as string;
 
-  // useEffect(() => {
-  //     // show info banner that no sounds/music are available until we have a license to use it
-  //     notifications.show({
-  //         title: "Info",
-  //         message: "Aus Lizenzgründen stehen Sounds/Musik aktuell nicht zur Verfügung",
-  //         color: "orange",
-  //         icon: <IconAlertCircle size="1rem" />,
-  //         autoClose: false,
-  //     })
-  // }, [])
+  const { playMusic } = useMusic({ socketMode: false });
 
   useEffect(() => {
     if (session?.user) {
@@ -123,6 +116,13 @@ const RoomPage = () => {
       socket.removeAllListeners();
     };
   }, [session]);
+
+  useEffect(() => {
+    if (room?.state.music.isActive) {
+      console.log("I will play '", room.state.music.title, "' now");
+      playMusic(room.state.music.title as TSongId);
+    }
+  }, [room?.state.music]);
 
   if (room === undefined) {
     return (

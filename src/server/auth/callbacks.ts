@@ -6,6 +6,7 @@ import { capitalize } from "~/utils/strings";
 import { prisma } from "../db";
 import { updateLoginTimestamp } from "../db/users";
 import { getOrCreateObjectId } from "~/utils/database";
+import { GOOGLE_MAIL_SUFFIXES } from "./providers/GoogleProvider";
 
 const isOtherProviderAlreadyInUse = async (userEmail: string | null | undefined, provider: string) => {
   if (!userEmail) throw new Error("Email is null or undefined");
@@ -92,7 +93,15 @@ export const signInCallback: CallbacksOptions["signIn"] = async ({ user, account
   let canSignIn = false;
   if (account?.provider === "google") {
     const googleProfile: GoogleProfile = profile as GoogleProfile;
-    canSignIn = googleProfile.email_verified && googleProfile.email.endsWith("@gmail.com");
+
+    const gmailAdress = googleProfile.email;
+    const gmailSuffix = gmailAdress.split("@").at(1);
+
+    if (!gmailSuffix) throw new Error("Email endet nicht mit 'gmail.com' oder 'googlemail.com'");
+
+    if (GOOGLE_MAIL_SUFFIXES.includes(gmailSuffix) && googleProfile.email_verified) {
+      canSignIn = true;
+    }
   } else if (account?.provider === "discord") {
     const discordProfile = profile as DiscordProfile;
     canSignIn = discordProfile.verified;

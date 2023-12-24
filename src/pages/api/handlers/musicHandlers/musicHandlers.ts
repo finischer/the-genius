@@ -24,4 +24,13 @@ export function musicHandler(
 
     room.update();
   });
+
+  socket.on("pauseMusic", () => {
+    const room = roomManager.getRoom(socket.roomId);
+
+    if (!room) return new NoRoomException(socket);
+
+    room.state.music.isActive = false;
+    room.update();
+  });
 }

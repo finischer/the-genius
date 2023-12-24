@@ -2,6 +2,7 @@ import React, { useState, type FC } from "react";
 import useSound from "use-sound";
 import type { TMusicSpriteMap, TSongId, TSongMap } from "~/components/room/MediaPlayer/mediaPlayer.types";
 import { socket } from "./useSocket";
+import { useRoom } from "./useRoom";
 
 const songInformationMap: TSongMap = {
   violation: {
@@ -35,8 +36,15 @@ const useMusic = (
     socketMode: true,
   }
 ) => {
-  const [songInfo, setSongInfo] = useState(songInformationMap.lightsDisappear);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const { room } = useRoom();
+
+  const musicState = room?.state.music ?? {
+    isActive: false,
+    title: "lightsDisappear",
+  };
+
+  const [songInfo, setSongInfo] = useState(songInformationMap[musicState.title as TSongId]);
+  const [isPlaying, setIsPlaying] = useState(musicState.isActive);
   const [play, { pause, stop: stopMusic }] = useSound("/static/audio/music_sprites.mp3", {
     sprite: musicSprite,
     loop: true,
@@ -47,7 +55,7 @@ const useMusic = (
     setSongInfo(songInformationMap[songId]);
 
     if (!socketMode) {
-      // trigger music dirctly on client side
+      // trigger music dircetly on client side
       play({ id: songId });
     }
     setIsPlaying(true);
@@ -59,8 +67,15 @@ const useMusic = (
   };
 
   const pauseMusic = () => {
+    if (!socketMode) {
+      pause();
+    }
+
     setIsPlaying(false);
-    pause();
+
+    if (!socketMode) return;
+
+    socket.emit("pauseMusic");
   };
 
   const playNextSong = () => {

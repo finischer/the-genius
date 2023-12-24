@@ -16,6 +16,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import AnswerBanner from "~/components/room/AnswerBanner/AnswerBanner";
 import Game from "~/components/room/Game";
+import type { TSongId } from "~/components/room/MediaPlayer/mediaPlayer.types";
 import ModPanel from "~/components/room/ModPanel/ModPanel";
 import RoomDetailsModal from "~/components/room/RoomDetailsModal/RoomDetailsModal";
 import Scorebar from "~/components/room/Scorebar/Scorebar";
@@ -23,22 +24,20 @@ import Scoreboard from "~/components/room/Scoreboard/Scoreboard";
 import Timer from "~/components/room/Timer/Timer";
 import ActionIcon from "~/components/shared/ActionIcon";
 import ContainerBox from "~/components/shared/ContainerBox";
+import FeedbackHandler from "~/components/shared/FeedbackHandler";
 import GameRulesModal from "~/components/shared/GameRulesModal/GameRulesModal";
 import Loader from "~/components/shared/Loader/Loader";
 import ModView from "~/components/shared/ModView";
+import NextHead from "~/components/shared/NextHead";
 import useBuzzer from "~/hooks/useBuzzer/useBuzzer";
+import useMusic from "~/hooks/useMusic";
 import useNotification from "~/hooks/useNotification";
 import { useRoom } from "~/hooks/useRoom";
 import { socket } from "~/hooks/useSocket";
-import { useUser } from "~/hooks/useUser";
 import { sizes } from "~/styles/constants";
 import { type TUserReduced } from "~/types/socket.types";
 import { animations } from "~/utils/animations";
 import type Room from "../api/classes/Room/Room";
-import FeedbackHandler from "~/components/shared/FeedbackHandler";
-import NextHead from "~/components/shared/NextHead";
-import useMusic from "~/hooks/useMusic";
-import type { TSongId } from "~/components/room/MediaPlayer/mediaPlayer.types";
 
 type TNetworkStatusEffectiveType = "slow-2g" | "2g" | "3g" | "4g";
 
@@ -68,7 +67,7 @@ const RoomPage = () => {
   const showCurrentGameCornerBanner = currentGame && room.state.view === "GAME" && showGame;
   const roomId = router.query.id as string;
 
-  const { playMusic } = useMusic({ socketMode: false });
+  const { playMusic, pauseMusic } = useMusic({ socketMode: false });
 
   useEffect(() => {
     if (session?.user) {
@@ -119,8 +118,9 @@ const RoomPage = () => {
 
   useEffect(() => {
     if (room?.state.music.isActive) {
-      console.log("I will play '", room.state.music.title, "' now");
       playMusic(room.state.music.title as TSongId);
+    } else {
+      pauseMusic();
     }
   }, [room?.state.music]);
 

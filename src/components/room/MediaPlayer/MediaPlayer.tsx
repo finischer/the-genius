@@ -6,6 +6,7 @@ import {
   IconPlayerSkipForward,
 } from "@tabler/icons-react";
 import useMusic from "~/hooks/useMusic";
+import { useRoom } from "~/hooks/useRoom";
 
 const MediaPlayer = () => {
   const { playMusic, songInfo, pauseMusic, isPlaying, playNextSong, playPreviousSong } = useMusic();

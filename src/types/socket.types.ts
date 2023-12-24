@@ -123,6 +123,7 @@ export interface IClientToServerEvents {
 
   // +++ MUSIC EVENTS +++
   playMusic: ({ songId }: { songId: TSongId }) => void;
+  pauseMusic: () => void;
 }
 
 export interface IServerToClientEvents {
@@ -138,6 +139,7 @@ export interface IServerToClientEvents {
 
   // +++ MUSIC EVENTS +++
   playMusic: (songId: TSongId) => void;
+  pauseMusic: () => void;
 }
 
 export interface TNextApiResponse extends NextApiResponse {

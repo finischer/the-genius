@@ -252,12 +252,6 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                     >
                       Konfetti regnen lassen
                     </Button>
-                    <Button
-                      {...btnVariantDefault}
-                      disabled
-                    >
-                      Musik starten
-                    </Button>
                   </Button.Group>
                 </Accordion.Panel>
               </Accordion.Item>

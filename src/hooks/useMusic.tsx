@@ -45,7 +45,7 @@ const useMusic = (
 
   const [songInfo, setSongInfo] = useState(songInformationMap[musicState.title as TSongId]);
   const [isPlaying, setIsPlaying] = useState(musicState.isActive);
-  const [play, { pause, stop: stopMusic }] = useSound("/static/audio/music_sprites.mp3", {
+  const [play, { pause }] = useSound("/static/audio/music_sprites.mp3", {
     sprite: musicSprite,
     loop: true,
     interrupt: true,

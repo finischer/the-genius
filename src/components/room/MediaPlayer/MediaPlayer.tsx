@@ -5,8 +5,8 @@ import {
   IconPlayerSkipBack,
   IconPlayerSkipForward,
 } from "@tabler/icons-react";
+import ActionIcon from "~/components/shared/ActionIcon";
 import useMusic from "~/hooks/useMusic";
-import { useRoom } from "~/hooks/useRoom";
 
 const MediaPlayer = () => {
   const { playMusic, songInfo, pauseMusic, isPlaying, playNextSong, playPreviousSong } = useMusic();
@@ -52,9 +52,15 @@ const MediaPlayer = () => {
         })}
         justify="center"
       >
-        <IconPlayerSkipBack onClick={playPreviousSong} />
-        <PlayIcon onClick={toggleMusic} />
-        <IconPlayerSkipForward onClick={playNextSong} />
+        <ActionIcon toolTip="Vorheriger Titel">
+          <IconPlayerSkipBack onClick={playPreviousSong} />
+        </ActionIcon>
+        <ActionIcon>
+          <PlayIcon onClick={toggleMusic} />
+        </ActionIcon>
+        <ActionIcon toolTip="Nächster Titel">
+          <IconPlayerSkipForward onClick={playNextSong} />
+        </ActionIcon>
       </Flex>
     </Flex>
   );

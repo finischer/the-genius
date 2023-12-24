@@ -5,6 +5,7 @@ import { type NextApiResponse } from "next";
 import { type Server, type Socket } from "socket.io";
 import { string } from "zod";
 import type { TGameNames } from "~/components/room/Game/games/game.types";
+import type { TSongId } from "~/components/room/MediaPlayer/mediaPlayer.types";
 import type { ICreateRoomConfig } from "~/components/shared/CreateRoomModal/createRoomModal.types";
 import type Room from "~/pages/api/classes/Room/Room";
 import type { SafedUser } from "~/server/api/routers/users";
@@ -119,6 +120,10 @@ export interface IClientToServerEvents {
   "duSagst:showQuestion": () => void;
   "duSagst:nextQuestion": () => void;
   "duSagst:prevQuestion": () => void;
+
+  // +++ MUSIC EVENTS +++
+  playMusic: ({ songId }: { songId: TSongId }) => void;
+  pauseMusic: () => void;
 }
 
 export interface IServerToClientEvents {
@@ -131,6 +136,10 @@ export interface IServerToClientEvents {
   // updateAllRooms: ({ newRooms }: { newRooms: Room[] }) => void; // Currently not in use
   roomWasClosed: () => void;
   raiseException: ({ reason, msg }: { reason: TExceptionReason; msg: string }) => void;
+
+  // +++ MUSIC EVENTS +++
+  playMusic: (songId: TSongId) => void;
+  pauseMusic: () => void;
 }
 
 export interface TNextApiResponse extends NextApiResponse {

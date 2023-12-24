@@ -18,6 +18,7 @@ import { teamHandler } from "./handlers/teamHandlers";
 import { geheimwoerterHandler } from "./handlers/games/geheimwoerterHandlers";
 import { setHandler } from "./handlers/games/setHandlers";
 import { duSagstHandler } from "./handlers/games/duSagstHandlers";
+import { musicHandler } from "./handlers/musicHandlers";
 
 const prisma = new PrismaClient();
 
@@ -74,6 +75,9 @@ export default async function SocketHandler(req: NextApiRequest, res: TNextApiRe
     // initialize all handlers
     roomHandler(io, socket);
     teamHandler(io, socket);
+
+    // music and sound effects
+    musicHandler(io, socket);
 
     // handler for all games
     flaggenHandler(io, socket);

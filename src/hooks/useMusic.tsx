@@ -38,12 +38,13 @@ const useMusic = (
 ) => {
   const { room } = useRoom();
 
-  const musicState = room?.state.music ?? {
-    isActive: false,
-    title: "lightsDisappear",
-  };
+  const musicState = {
+      isActive: room?.state.music.isActive || false,
+      title: room?.state.music.title || "lightsDisappear",
+  }
 
   const [songInfo, setSongInfo] = useState(songInformationMap[musicState.title as TSongId]);
+
   const [isPlaying, setIsPlaying] = useState(musicState.isActive);
   const [play, { pause }] = useSound("/static/audio/music_sprites.mp3", {
     sprite: musicSprite,

@@ -62,7 +62,7 @@ export interface IClientToServerEvents {
   hideAnswerBanner: () => void;
   buzzer: ({ teamId, withTimer }: { teamId: string; withTimer?: boolean }) => void;
   changeView: ({ newView }: { newView: RoomViews }) => void;
-  startTimer: (seconds: number, cb: () => void) => void;
+  startTimer: (seconds: number, cb?: (() => void) | undefined) => void;
 
   // +++ TEAM EVENTS +++
   increaseGameScore: ({ teamId, step }: { teamId: string; step: number }) => void;

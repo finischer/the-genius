@@ -16,6 +16,8 @@ import type { TGame, TGameNames } from "../Game/games/game.types";
 import { type IModPanelProps } from "./modPanel.types";
 import MediaPlayer from "../MediaPlayer";
 
+const TIMER_SECONDS = 10;
+
 const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
   const { showErrorNotification } = useNotification();
   const router = useRouter();
@@ -61,7 +63,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
   };
 
   const handleStartTimer = () => {
-    socket.emit("startTimer", 10, () => {});
+    socket.emit("startTimer", TIMER_SECONDS);
   };
 
   const gameBtns = room.games.map((g) => {
@@ -231,7 +233,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                       onClick={handleStartTimer}
                       disabled={room.state.display.clock.isActive}
                     >
-                      10s Timer starten
+                      {TIMER_SECONDS}s Timer starten
                     </Button>
                     <Button
                       {...btnVariantDefault}

@@ -60,6 +60,10 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
     socket.emit("toggleNotefields");
   };
 
+  const handleStartTimer = () => {
+    socket.emit("startTimer", 10, () => {});
+  };
+
   const gameBtns = room.games.map((g) => {
     const btnDisabled = g.identifier === currentGame?.identifier && room.state.view === "GAME";
 
@@ -91,10 +95,12 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
   });
 
   const startGame = (gameIdentifier: TGameNames) => {
+    hideAnswer();
     socket.emit("startGame", { gameIdentifier });
   };
 
   const changeView = (newView: RoomViews) => {
+    hideAnswer();
     socket.emit("changeView", { newView });
   };
 
@@ -222,7 +228,8 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                   <Button.Group orientation="vertical">
                     <Button
                       {...btnVariantDefault}
-                      disabled
+                      onClick={handleStartTimer}
+                      disabled={room.state.display.clock.isActive}
                     >
                       10s Timer starten
                     </Button>

@@ -1,11 +1,10 @@
 import { Avatar, Container, Flex, Text, useMantineTheme } from "@mantine/core";
-import React from "react";
+import React, { useEffect } from "react";
 import { useRoom } from "~/hooks/useRoom";
 import type { IScoreboardProps } from "./scoreboard.types";
 import ActionIcon from "~/components/shared/ActionIcon/ActionIcon";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
 import { socket } from "~/hooks/useSocket";
-import { useUser } from "~/hooks/useUser";
 import ModView from "~/components/shared/ModView";
 import type { TeamAvatarImage } from "@prisma/client";
 

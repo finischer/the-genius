@@ -3,7 +3,9 @@ import React from "react";
 import type { INextHeadProps } from "./nextHead.types";
 
 const NextHead: React.FC<INextHeadProps> = ({ title }) => {
-  const titleStr = `${title} ${title && "|"} TheGenius`;
+  const t = title ?? "";
+
+  const titleStr = `${t} ${t && "|"} TheGenius`;
 
   return (
     <Head>

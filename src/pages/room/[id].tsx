@@ -121,10 +121,8 @@ const RoomPage = () => {
 
     const musicState = room.state.music;
     if (musicState.isActive) {
-      console.log("Music is active");
       play({ id: room.state.music.title });
     } else {
-      console.log("Music is not active");
       pause();
     }
 

@@ -16,7 +16,6 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import AnswerBanner from "~/components/room/AnswerBanner/AnswerBanner";
 import Game from "~/components/room/Game";
-import type { TSongId } from "~/components/room/MediaPlayer/mediaPlayer.types";
 import ModPanel from "~/components/room/ModPanel/ModPanel";
 import RoomDetailsModal from "~/components/room/RoomDetailsModal/RoomDetailsModal";
 import Scorebar from "~/components/room/Scorebar/Scorebar";
@@ -67,7 +66,7 @@ const RoomPage = () => {
   const showCurrentGameCornerBanner = currentGame && room.state.view === "GAME" && showGame;
   const roomId = router.query.id as string;
 
-  const { playMusic, pauseMusic } = useMusic({ socketMode: false });
+  const { play, pause, stop } = useMusic();
 
   useEffect(() => {
     if (session?.user) {
@@ -113,16 +112,24 @@ const RoomPage = () => {
 
     return () => {
       socket.removeAllListeners();
+      stop();
     };
   }, [session]);
 
   useEffect(() => {
-    if (room?.state.music.isActive) {
-      playMusic(room.state.music.title as TSongId);
+    if (!room) return;
+
+    const musicState = room.state.music;
+    if (musicState.isActive) {
+      console.log("Music is active");
+      play({ id: room.state.music.title });
     } else {
-      pauseMusic();
+      console.log("Music is not active");
+      pause();
     }
-  }, [room?.state.music]);
+
+    return () => stop();
+  }, [room?.state.music.isActive]);
 
   if (room === undefined) {
     return (

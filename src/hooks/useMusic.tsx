@@ -1,8 +1,9 @@
-import React, { useState, type FC } from "react";
+import React, { useState, type FC, useEffect } from "react";
 import useSound from "use-sound";
 import type { TMusicSpriteMap, TSongId, TSongMap } from "~/components/room/MediaPlayer/mediaPlayer.types";
 import { socket } from "./useSocket";
 import { useRoom } from "./useRoom";
+import { useImmer } from "use-immer";
 
 const songInformationMap: TSongMap = {
   violation: {
@@ -31,51 +32,26 @@ const musicSprite: TMusicSpriteMap = {
   waitingRoom: songInformationMap.waitingRoom.sprite,
 };
 
-const useMusic = (
-  { socketMode }: { socketMode?: boolean } = {
-    socketMode: true,
-  }
-) => {
+const useMusic = () => {
   const { room } = useRoom();
 
-  const musicState = {
-      isActive: room?.state.music.isActive || false,
-      title: room?.state.music.title || "lightsDisappear",
-  }
+  const musicState = room?.state.music;
+  const musicTitle: TSongId = (musicState?.title as TSongId) || "lightsDisappear";
 
-  const [songInfo, setSongInfo] = useState(songInformationMap[musicState.title as TSongId]);
+  const songInfo = songInformationMap[musicTitle];
+  const isPlaying = musicState?.isActive === undefined ? false : musicState.isActive;
 
-  const [isPlaying, setIsPlaying] = useState(musicState.isActive);
-  const [play, { pause }] = useSound("/static/audio/music_sprites.mp3", {
+  const [play, { pause, stop }] = useSound("/static/audio/music_sprites.mp3", {
     sprite: musicSprite,
     loop: true,
     interrupt: true,
   });
 
-  const playMusic = (songId: TSongId) => {
-    setSongInfo(songInformationMap[songId]);
-
-    if (!socketMode) {
-      // trigger music dircetly on client side
-      play({ id: songId });
-    }
-    setIsPlaying(true);
-
-    if (!socketMode) return;
-
-    // trigger music via sockets
+  const emitPlayMusic = ({ songId }: { songId: TSongId }) => {
     socket.emit("playMusic", { songId });
   };
 
-  const pauseMusic = () => {
-    if (!socketMode) {
-      pause();
-    }
-
-    setIsPlaying(false);
-
-    if (!socketMode) return;
-
+  const emitPauseMusic = () => {
     socket.emit("pauseMusic");
   };
 
@@ -90,7 +66,7 @@ const useMusic = (
 
     const newSong = allSongIds[newIndex] as TSongId;
 
-    playMusic(newSong);
+    emitPlayMusic({ songId: newSong });
   };
 
   const playPreviousSong = () => {
@@ -104,10 +80,20 @@ const useMusic = (
 
     const newSong = allSongIds[newIndex] as TSongId;
 
-    playMusic(newSong);
+    emitPlayMusic({ songId: newSong });
   };
 
-  return { playMusic, pauseMusic, isPlaying, songInfo, playNextSong, playPreviousSong };
+  return {
+    emitPlayMusic,
+    emitPauseMusic,
+    play,
+    pause,
+    stop,
+    isPlaying,
+    songInfo,
+    playNextSong,
+    playPreviousSong,
+  };
 };
 
 export default useMusic;

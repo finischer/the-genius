@@ -136,10 +136,6 @@ export interface IServerToClientEvents {
   // updateAllRooms: ({ newRooms }: { newRooms: Room[] }) => void; // Currently not in use
   roomWasClosed: () => void;
   raiseException: ({ reason, msg }: { reason: TExceptionReason; msg: string }) => void;
-
-  // +++ MUSIC EVENTS +++
-  playMusic: (songId: TSongId) => void;
-  pauseMusic: () => void;
 }
 
 export interface TNextApiResponse extends NextApiResponse {

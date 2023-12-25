@@ -3,11 +3,11 @@ import React from "react";
 import type { INextHeadProps } from "./nextHead.types";
 
 const NextHead: React.FC<INextHeadProps> = ({ title }) => {
+  const titleStr = `${title} ${title && "|"} TheGenius`;
+
   return (
     <Head>
-      <title>
-        {title} {title && "|"} TheGenius
-      </title>
+      <title>{titleStr}</title>
     </Head>
   );
 };

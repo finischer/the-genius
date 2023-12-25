@@ -129,7 +129,7 @@ const RoomPage = () => {
     }
 
     return () => stop();
-  }, [room?.state.music.isActive]);
+  }, [room?.state.music.isActive, room?.state.music.title]);
 
   if (room === undefined) {
     return (

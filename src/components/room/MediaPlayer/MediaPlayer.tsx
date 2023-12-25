@@ -9,15 +9,15 @@ import ActionIcon from "~/components/shared/ActionIcon";
 import useMusic from "~/hooks/useMusic";
 
 const MediaPlayer = () => {
-  const { playMusic, songInfo, pauseMusic, isPlaying, playNextSong, playPreviousSong } = useMusic();
+  const { emitPauseMusic, songInfo, emitPlayMusic, isPlaying, playNextSong, playPreviousSong } = useMusic();
 
   const PlayIcon = isPlaying ? IconPlayerPause : IconPlayerPlay;
 
   const toggleMusic = () => {
     if (isPlaying) {
-      pauseMusic();
+      emitPauseMusic();
     } else {
-      playMusic(songInfo.id);
+      emitPlayMusic({ songId: songInfo.id });
     }
   };
 

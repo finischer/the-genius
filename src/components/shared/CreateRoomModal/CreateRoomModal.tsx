@@ -52,8 +52,6 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
   useEffect(() => {
     // reset form when modal was opened
     form.reset();
-    console.log("hasGameForOnlyTeamMode: ", hasGameForOnlyTeamMode);
-    console.log("Form: ", form.values);
   }, [openedModal]);
 
   const createRoom = form.onSubmit((values) => {

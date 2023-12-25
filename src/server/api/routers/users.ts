@@ -25,7 +25,6 @@ type UserPropertiesUpdatebaleByUser = Pick<User, "email" | "image" | "password" 
 export const usersRouter = createTRPCRouter({
   getAll: adminProcedure.query(async ({ ctx }) => {
     const userList = await ctx.prisma.user.findMany();
-    console.log(userList);
     return userList;
   }),
   updateUserByAdmin: adminProcedure

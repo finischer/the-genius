@@ -106,7 +106,6 @@ export function roomHandler(
     room.participants = [...room.participants, socket.user.name];
     room.update();
 
-    console.log(`user ${user.id} joined Room: ${room.id}`);
     cb(room);
   });
 

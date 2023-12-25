@@ -313,37 +313,6 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
 
             <MediaPlayer />
           </Flex>
-
-          {/* <Flex direction="column" gap="sm">
-                    
-                    
-                    </Flex>
-                    
-                <Flex direction="column" gap="sm">
-                    <Title order={titleOrder}>Aktionen</Title>
-                    <Button.Group orientation='vertical' >
-                        <Button {...btnVariantDefault}>10s Timer starten</Button>
-                        <Button {...btnVariantDefault}>Buzzer freigeben</Button>
-                        <Button {...btnVariantDefault}>Konfetti regnen lassen</Button>
-                        <Button {...btnVariantDefault} disabled>Musik starten</Button>
-                    </Button.Group>
-                    </Flex>
-                    
-                    <Flex direction="column" gap="sm">
-                    <Title order={titleOrder}>Sounds</Title>
-                    <Button.Group orientation='vertical' >
-                    <Button {...btnVariantDefault} disabled>Korrekte Antwort</Button>
-                    <Button {...btnVariantDefault} disabled>Falsche Antwort</Button>
-                    <Button {...btnVariantDefault} disabled>Winner Sound</Button>
-                    </Button.Group>
-                    </Flex>
-
-                    <Flex direction="column" gap="sm">
-                    <Title order={titleOrder}>Allgemein</Title>
-                    <Button.Group orientation='vertical'>
-                        <Button color='red' disabled>Raum schließen</Button>
-                    </Button.Group>
-                </Flex> */}
         </Flex>
       </Drawer>
     </>

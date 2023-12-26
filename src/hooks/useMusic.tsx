@@ -1,9 +1,7 @@
-import React, { useState, type FC, useEffect } from "react";
 import useSound from "use-sound";
 import type { TMusicSpriteMap, TSongId, TSongMap } from "~/components/room/MediaPlayer/mediaPlayer.types";
-import { socket } from "./useSocket";
 import { useRoom } from "./useRoom";
-import { useImmer } from "use-immer";
+import { socket } from "./useSocket";
 
 const songInformationMap: TSongMap = {
   violation: {

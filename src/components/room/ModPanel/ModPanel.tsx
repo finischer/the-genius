@@ -15,7 +15,7 @@ import { socket } from "~/hooks/useSocket";
 import type { TGame, TGameNames } from "../Game/games/game.types";
 import { type IModPanelProps } from "./modPanel.types";
 import MediaPlayer from "../MediaPlayer";
-import useSound from "~/hooks/useSound";
+import useAudio from "~/hooks/useAudio";
 
 const TIMER_SECONDS = 10;
 
@@ -45,7 +45,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
   const allPlayers = teamArray.map((t) => t.players).flat();
   const atLeastOneNotefieldIsActive = allPlayers.filter((p) => p.states.notefield.isActive).length > 0;
 
-  const { emitPlaySound } = useSound();
+  const { triggerAudioEvent } = useAudio();
 
   const handleOpenGameRules = (game: TGame) => {
     setClickedGame(game);
@@ -102,7 +102,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
   const startGame = (gameIdentifier: TGameNames) => {
     hideAnswer();
     socket.emit("startGame", { gameIdentifier });
-    emitPlaySound("intro");
+    triggerAudioEvent("playSound", "intro");
   };
 
   const changeView = (newView: RoomViews) => {
@@ -277,19 +277,19 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                   <Button.Group orientation="vertical">
                     <Button
                       {...btnVariantDefault}
-                      onClick={() => emitPlaySound("bell")}
+                      onClick={() => triggerAudioEvent("playSound", "bell")}
                     >
                       Korrekte Antwort
                     </Button>
                     <Button
                       {...btnVariantDefault}
-                      onClick={() => emitPlaySound("bass")}
+                      onClick={() => triggerAudioEvent("playSound", "bass")}
                     >
                       Falsche Antwort
                     </Button>
                     <Button
                       {...btnVariantDefault}
-                      onClick={() => emitPlaySound("winning")}
+                      onClick={() => triggerAudioEvent("playSound", "winning")}
                     >
                       Winner Sound
                     </Button>

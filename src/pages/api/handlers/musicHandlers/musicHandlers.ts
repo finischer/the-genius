@@ -42,10 +42,7 @@ export function musicHandler(
     room.state.sounds[soundId] = true;
     room.update();
 
-    setTimeout(() => {
-      room.state.sounds[soundId] = false;
-      room.update();
-    }, 500);
+    io.to(room.id).emit("playSound", { soundId });
   });
 
   socket.on("stopSound", ({ soundId }) => {
@@ -55,5 +52,6 @@ export function musicHandler(
 
     room.state.sounds[soundId] = false;
     room.update();
+    io.to(room.id).emit("stopSound", { soundId });
   });
 }

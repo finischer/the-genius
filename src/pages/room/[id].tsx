@@ -1,6 +1,7 @@
 import { Box, Center, Container, Flex, Text, useMantineTheme } from "@mantine/core";
 import { useDisclosure, useNetwork } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
+import type { RoomSounds } from "@prisma/client";
 import {
   IconArrowRight,
   IconInfoSmall,
@@ -28,6 +29,7 @@ import GameRulesModal from "~/components/shared/GameRulesModal/GameRulesModal";
 import Loader from "~/components/shared/Loader/Loader";
 import ModView from "~/components/shared/ModView";
 import NextHead from "~/components/shared/NextHead";
+import useAudio from "~/hooks/useAudio";
 import useBuzzer from "~/hooks/useBuzzer/useBuzzer";
 import useMusic from "~/hooks/useMusic";
 import useNotification from "~/hooks/useNotification";
@@ -37,7 +39,6 @@ import { sizes } from "~/styles/constants";
 import { type TUserReduced } from "~/types/socket.types";
 import { animations } from "~/utils/animations";
 import type Room from "../api/classes/Room/Room";
-import useSound from "~/hooks/useSound";
 
 type TNetworkStatusEffectiveType = "slow-2g" | "2g" | "3g" | "4g";
 
@@ -68,7 +69,7 @@ const RoomPage = () => {
   const roomId = router.query.id as string;
 
   const { play, pause, stop } = useMusic();
-  const { play: playSound, stop: stopSound } = useSound();
+  const { playAudio, audioList, stopAudio, stopAllAudio } = useAudio();
 
   useEffect(() => {
     if (session?.user) {
@@ -118,6 +119,25 @@ const RoomPage = () => {
     };
   }, [session]);
 
+  const handlePlaySound = ({ soundId }: { soundId: keyof RoomSounds }) => {
+    playAudio(soundId);
+  };
+
+  const handleStopSound = ({ soundId }: { soundId: keyof RoomSounds }) => {
+    stopAudio(soundId);
+  };
+
+  useEffect(() => {
+    socket.on("playSound", handlePlaySound);
+    socket.on("stopSound", handleStopSound);
+
+    return () => {
+      socket.off("playSound", handlePlaySound);
+      socket.off("stopSound", handleStopSound);
+      stopAllAudio();
+    };
+  }, [audioList]);
+
   // handle music
   useEffect(() => {
     if (!room) return;
@@ -131,19 +151,6 @@ const RoomPage = () => {
 
     return () => stop();
   }, [room?.state.music.isActive, room?.state.music.title]);
-
-  // handle sound effects
-  useEffect(() => {
-    if (!room) return;
-
-    Object.entries(room.state.sounds).forEach(([soundId, isPlaying]) => {
-      if (isPlaying) {
-        playSound({ id: soundId });
-      }
-    });
-
-    // return () => stopSound();
-  }, [room?.state.sounds]);
 
   if (room === undefined) {
     return (

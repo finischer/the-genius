@@ -1,13 +1,13 @@
 import { Avatar, Container, Flex, Text, useMantineTheme } from "@mantine/core";
-import React, { useEffect } from "react";
-import { useRoom } from "~/hooks/useRoom";
-import type { IScoreboardProps } from "./scoreboard.types";
-import ActionIcon from "~/components/shared/ActionIcon/ActionIcon";
-import { IconMinus, IconPlus } from "@tabler/icons-react";
-import { socket } from "~/hooks/useSocket";
-import ModView from "~/components/shared/ModView";
 import type { TeamAvatarImage } from "@prisma/client";
-import useSound from "~/hooks/useSound";
+import { IconMinus, IconPlus } from "@tabler/icons-react";
+import React from "react";
+import ActionIcon from "~/components/shared/ActionIcon/ActionIcon";
+import ModView from "~/components/shared/ModView";
+import useAudio from "~/hooks/useAudio";
+import { useRoom } from "~/hooks/useRoom";
+import { socket } from "~/hooks/useSocket";
+import type { IScoreboardProps } from "./scoreboard.types";
 
 const SCOREBOARD_BORDER_BACKGROUND_COLOR = "#7b68ee";
 const SCOREBOARD_BACKGROUND_COLOR = "#D8BFD8";
@@ -16,7 +16,7 @@ const DIVIDER_COLOR = "#f7f1f1";
 const Scoreboard: React.FC<IScoreboardProps> = ({ team, color }) => {
   const theme = useMantineTheme();
   const { room } = useRoom();
-  const { emitPlaySound } = useSound();
+  const { triggerAudioEvent } = useAudio();
   const avatarImages: TeamAvatarImage[] | string[] =
     team.avatarImageList.length === 0 ? Array(1).fill(team.avatarImage) : team.avatarImageList;
 
@@ -43,13 +43,13 @@ const Scoreboard: React.FC<IScoreboardProps> = ({ team, color }) => {
   const increaseScore = () => {
     if (team.totalScore >= minNumOfGamesToWin) return;
     socket.emit("increaseTotalScore", { teamId: team.id, step: 1 });
-    emitPlaySound("shimmer");
+    triggerAudioEvent("playSound", "shimmer");
   };
 
   const decreaseScore = () => {
     if (team.totalScore <= 0) return;
     socket.emit("decreaseTotalScore", { teamId: team.id, step: 1 });
-    emitPlaySound("shimmer");
+    triggerAudioEvent("playSound", "shimmer");
   };
 
   return (

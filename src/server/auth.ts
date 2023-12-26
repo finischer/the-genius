@@ -29,6 +29,7 @@ declare module "next-auth" {
   interface User {
     role: UserRole;
     username?: string;
+    isEmailVerified: boolean;
   }
 }
 
@@ -50,12 +51,15 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     signIn: signInCallback,
     session: sessionCallback,
+    redirect: ({ baseUrl }) => {
+      return baseUrl;
+    },
   },
   adapter: PrismaAdapter(prisma),
   providers: [GoogleProvider, DiscordProvider],
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: "/",
+    signIn: "/auth/signin",
     error: "/auth/error",
   },
   session: {

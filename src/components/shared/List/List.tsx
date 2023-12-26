@@ -7,8 +7,10 @@ import type { IListProps } from "./list.types";
 
 const List = <T,>({
   editable = false,
+  deletableItems = false,
   onClickItem = () => null,
   onDeleteItem = () => null,
+
   data,
   renderValueByKey,
   setData,
@@ -62,6 +64,7 @@ const List = <T,>({
         <ListItem
           key={item.id}
           item={item}
+          deletable={deletableItems}
           editable={editable}
           selected={item.id === selectedItemId}
           onClick={() => handleSelectItem(item)}

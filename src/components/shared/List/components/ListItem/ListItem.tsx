@@ -6,7 +6,15 @@ import ActionIcon from "~/components/shared/ActionIcon";
 import { useRaisedShadow } from "~/hooks/useRaisedShadow";
 import type { IListItem, IListItemProps } from "./listItem.types";
 
-const ListItem = <T,>({ item, editable, onDelete, onClick, selected, content }: IListItemProps<T>) => {
+const ListItem = <T,>({
+  item,
+  editable,
+  deletable,
+  onDelete,
+  onClick,
+  selected,
+  content,
+}: IListItemProps<T>) => {
   const y = useMotionValue(0);
   const boxShadow = useRaisedShadow(y);
   const controls = useDragControls();
@@ -45,7 +53,7 @@ const ListItem = <T,>({ item, editable, onDelete, onClick, selected, content }: 
           gap="md"
           align="flex-start"
         >
-          {editable && (
+          {deletable && (
             <ActionIcon
               size="sm"
               toolTip="Antwort löschen"

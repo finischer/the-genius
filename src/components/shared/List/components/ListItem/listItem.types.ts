@@ -5,6 +5,7 @@ export type IListItem<T = Record<string, unknown>> = {
 export interface IListItemProps<T> {
   item: IListItem<T>;
   editable: boolean;
+  deletable: boolean;
   selected?: boolean;
   onDelete?: () => void;
   onClick?: (itemId: string) => void;

@@ -23,18 +23,21 @@ import Scoreboard from "~/components/room/Scoreboard/Scoreboard";
 import Timer from "~/components/room/Timer/Timer";
 import ActionIcon from "~/components/shared/ActionIcon";
 import ContainerBox from "~/components/shared/ContainerBox";
+import FeedbackHandler from "~/components/shared/FeedbackHandler";
 import GameRulesModal from "~/components/shared/GameRulesModal/GameRulesModal";
 import Loader from "~/components/shared/Loader/Loader";
 import ModView from "~/components/shared/ModView";
+import NextHead from "~/components/shared/NextHead";
 import useBuzzer from "~/hooks/useBuzzer/useBuzzer";
+import useMusic from "~/hooks/useMusic";
 import useNotification from "~/hooks/useNotification";
 import { useRoom } from "~/hooks/useRoom";
 import { socket } from "~/hooks/useSocket";
-import { useUser } from "~/hooks/useUser";
 import { sizes } from "~/styles/constants";
 import { type TUserReduced } from "~/types/socket.types";
 import { animations } from "~/utils/animations";
 import type Room from "../api/classes/Room/Room";
+import useSound from "~/hooks/useSound";
 
 type TNetworkStatusEffectiveType = "slow-2g" | "2g" | "3g" | "4g";
 
@@ -64,16 +67,8 @@ const RoomPage = () => {
   const showCurrentGameCornerBanner = currentGame && room.state.view === "GAME" && showGame;
   const roomId = router.query.id as string;
 
-  // useEffect(() => {
-  //     // show info banner that no sounds/music are available until we have a license to use it
-  //     notifications.show({
-  //         title: "Info",
-  //         message: "Aus Lizenzgründen stehen Sounds/Musik aktuell nicht zur Verfügung",
-  //         color: "orange",
-  //         icon: <IconAlertCircle size="1rem" />,
-  //         autoClose: false,
-  //     })
-  // }, [])
+  const { play, pause, stop } = useMusic();
+  const { play: playSound, stop: stopSound } = useSound();
 
   useEffect(() => {
     if (session?.user) {
@@ -119,8 +114,36 @@ const RoomPage = () => {
 
     return () => {
       socket.removeAllListeners();
+      stop();
     };
   }, [session]);
+
+  // handle music
+  useEffect(() => {
+    if (!room) return;
+
+    const musicState = room.state.music;
+    if (musicState.isActive) {
+      play({ id: room.state.music.title });
+    } else {
+      pause();
+    }
+
+    return () => stop();
+  }, [room?.state.music.isActive, room?.state.music.title]);
+
+  // handle sound effects
+  useEffect(() => {
+    if (!room) return;
+
+    Object.entries(room.state.sounds).forEach(([soundId, isPlaying]) => {
+      if (isPlaying) {
+        playSound({ id: soundId });
+      }
+    });
+
+    // return () => stopSound();
+  }, [room?.state.sounds]);
 
   if (room === undefined) {
     return (
@@ -132,6 +155,7 @@ const RoomPage = () => {
 
   return (
     <>
+      <NextHead title={`Raum ${room.name}`} />
       {/* Modals */}
       <RoomDetailsModal
         room={room}
@@ -147,6 +171,9 @@ const RoomPage = () => {
         />
       )}
 
+      {/* FeedbackHandler only during beta phase */}
+      <FeedbackHandler />
+
       <Flex
         h="100vh"
         p={sizes.padding}
@@ -161,7 +188,7 @@ const RoomPage = () => {
           >
             <ActionIcon
               variant="filled"
-              toolTip="Spiele anzeigen"
+              toolTip="Mod-Panel öffnen"
             >
               <IconArrowRight onClick={modPanelDisclosure[1].open} />
             </ActionIcon>

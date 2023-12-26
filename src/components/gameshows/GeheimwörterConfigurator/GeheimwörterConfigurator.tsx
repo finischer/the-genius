@@ -10,6 +10,8 @@ import { useImmer } from "use-immer";
 import { v4 as uuidv4 } from "uuid";
 import type { TQuestionFormMode } from "../types";
 import type { constants } from "buffer";
+import { useMediaQuery } from "@mantine/hooks";
+import { useScreen } from "~/hooks/useScreen";
 
 const ALPHABET = [..."abcdefghijklmnoprstuvwxyz"];
 const DEFAULT_CODE_WORD_LIST = [
@@ -57,6 +59,7 @@ const generateCodeList = (alphabetList: string[], codeWords: string[]) => {
 };
 
 const GeheimwörterConfigurator = () => {
+  const { isMediumScreen } = useScreen();
   const [geheimwoerter, setGeheimwoerter, { enableFurtherButton, disableFurtherButton }] =
     useConfigurator("geheimwoerter");
   const [codeListEditable, setCodeListEditable] = useState(false);
@@ -111,11 +114,15 @@ const GeheimwörterConfigurator = () => {
   }, [geheimwoerter.codeList, geheimwoerter.questions]);
 
   return (
-    <Flex gap="md">
+    <Flex
+      gap="md"
+      direction={isMediumScreen ? "column" : "row"}
+    >
       <Flex
         direction="column"
         gap="sm"
         w="100%"
+        align="flex-start"
       >
         <CodeList
           codeList={geheimwoerter.codeList}

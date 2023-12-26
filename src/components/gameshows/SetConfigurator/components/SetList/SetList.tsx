@@ -24,6 +24,7 @@ const SetList: React.FC<ISetListProps> = ({ questions, setQuestions, setQuestion
         onClickItem={handleItemClick}
         setData={setQuestions}
         editable
+        deletableItems
         selectedItemId={selectedItemId}
       />
     </Flex>

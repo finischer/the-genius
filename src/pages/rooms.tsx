@@ -6,6 +6,7 @@ import { IconCheck } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import PageLayout from "~/components/layout";
+import NextHead from "~/components/shared/NextHead";
 import useNotification from "~/hooks/useNotification";
 import type { SafedRoom } from "~/server/api/routers/rooms";
 import { api } from "~/utils/api";
@@ -77,7 +78,7 @@ const RoomsPage = () => {
           </td>
           {/* <td>{nameOfCurrentGame || "Kein Spiel gestartet"}</td> */}
           <td>{room.creator.username}</td>
-          <td>{formatTimestamp(room.createdAt.toString())} Uhr</td>
+          <td>{formatTimestamp(room.createdAt)}</td>
         </tr>
       );
     }) ?? [];
@@ -122,6 +123,7 @@ const RoomsPage = () => {
 
   return (
     <>
+      <NextHead title="Räume" />
       {activeRoom && (
         <Modal
           onClose={closePasswordModal}
@@ -140,7 +142,7 @@ const RoomsPage = () => {
             >
               <PasswordInput
                 label="Passwort"
-                placeholder="Super secret passwort"
+                placeholder="Super geheimes passwort"
                 required
                 {...form.getInputProps("password")}
               />
@@ -165,6 +167,9 @@ const RoomsPage = () => {
           verticalSpacing="md"
           striped
           highlightOnHover
+          sx={{
+            overflowX: "auto",
+          }}
         >
           <thead>
             <tr>

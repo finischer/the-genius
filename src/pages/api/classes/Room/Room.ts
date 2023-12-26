@@ -93,11 +93,15 @@ export default class Room implements PrismaRoomFixed {
         title: "",
       },
       sounds: {
+        bass: false,
+        bell: false,
         buzzer: false,
-        correctAnswer: false,
-        intro: false,
         winning: false,
-        wrongAnswer: false,
+        intro: false,
+        shimmer: false,
+        typewriter: false,
+        warningBuzzer: false,
+        whoosh_1: false,
       },
       teamWithTurn: "",
     };
@@ -137,6 +141,9 @@ export default class Room implements PrismaRoomFixed {
 
     this.currentGame = gameIdentifier;
     this.state.display.game = false;
+
+    // reset gamescores
+    Object.values(this.teams).forEach((team) => team.resetGameScore());
 
     // tbd: stop current music
     // tbd: start intro music

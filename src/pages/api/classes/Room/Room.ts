@@ -93,11 +93,15 @@ export default class Room implements PrismaRoomFixed {
         title: "",
       },
       sounds: {
+        bass: false,
+        bell: false,
         buzzer: false,
-        correctAnswer: false,
-        intro: false,
         winning: false,
-        wrongAnswer: false,
+        intro: false,
+        shimmer: false,
+        typewriter: false,
+        warningBuzzer: false,
+        whoosh_1: false,
       },
       teamWithTurn: "",
     };

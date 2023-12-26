@@ -33,4 +33,27 @@ export function musicHandler(
     room.state.music.isActive = false;
     room.update();
   });
+
+  socket.on("playSound", ({ soundId }) => {
+    const room = roomManager.getRoom(socket.roomId);
+
+    if (!room) return new NoRoomException(socket);
+
+    room.state.sounds[soundId] = true;
+    room.update();
+
+    setTimeout(() => {
+      room.state.sounds[soundId] = false;
+      room.update();
+    }, 500);
+  });
+
+  socket.on("stopSound", ({ soundId }) => {
+    const room = roomManager.getRoom(socket.roomId);
+
+    if (!room) return new NoRoomException(socket);
+
+    room.state.sounds[soundId] = false;
+    room.update();
+  });
 }

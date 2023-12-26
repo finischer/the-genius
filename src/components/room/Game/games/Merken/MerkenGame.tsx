@@ -5,10 +5,12 @@ import { Button, Flex } from "@mantine/core";
 import { socket } from "~/hooks/useSocket";
 import { useUser } from "~/hooks/useUser";
 import ModView from "~/components/shared/ModView";
+import useSound from "~/hooks/useSound";
 
 const MerkenGame: React.FC<IMerkenGameProps> = ({ game }) => {
   const { isHost } = useUser();
   const isStartButtonDisabled = game.timerState.isActive;
+  const { emitPlaySound } = useSound();
 
   const handleStartGame = () => {
     if (!isHost || isStartButtonDisabled) return; // to make sure not start the game unintentionally
@@ -16,6 +18,7 @@ const MerkenGame: React.FC<IMerkenGameProps> = ({ game }) => {
   };
 
   const handleCardClick = (index: number) => {
+    emitPlaySound("whoosh_1");
     socket.emit("merken:flipCard", { cardIndex: index });
   };
 

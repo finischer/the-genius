@@ -207,11 +207,15 @@ type RoomDisplay {
 }
 
 type RoomSounds {
-  correctAnswer Boolean @default(false)
-  wrongAnswer   Boolean @default(false)
+  bass          Boolean @default(false)
+  bell          Boolean @default(false)
   buzzer        Boolean @default(false)
   winning       Boolean @default(false)
   intro         Boolean @default(false)
+  shimmer       Boolean @default(false)
+  typewriter    Boolean @default(false)
+  warningBuzzer Boolean @default(false)
+  whoosh_1      Boolean @default(false)
 }
 
 type RoomMusic {

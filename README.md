@@ -64,5 +64,5 @@ npm run dev
 ### Additional hints
 
 Prisma will run on Port: 4466  
-Webiste will run in Port: 3000  
+Webiste will run on Port: 3000  
 MongoDB will run on Port: 27017

@@ -7,6 +7,7 @@ import { IconMinus, IconPlus } from "@tabler/icons-react";
 import { socket } from "~/hooks/useSocket";
 import ModView from "~/components/shared/ModView";
 import type { TeamAvatarImage } from "@prisma/client";
+import useSound from "~/hooks/useSound";
 
 const SCOREBOARD_BORDER_BACKGROUND_COLOR = "#7b68ee";
 const SCOREBOARD_BACKGROUND_COLOR = "#D8BFD8";
@@ -15,6 +16,7 @@ const DIVIDER_COLOR = "#f7f1f1";
 const Scoreboard: React.FC<IScoreboardProps> = ({ team, color }) => {
   const theme = useMantineTheme();
   const { room } = useRoom();
+  const { emitPlaySound } = useSound();
   const avatarImages: TeamAvatarImage[] | string[] =
     team.avatarImageList.length === 0 ? Array(1).fill(team.avatarImage) : team.avatarImageList;
 
@@ -41,10 +43,13 @@ const Scoreboard: React.FC<IScoreboardProps> = ({ team, color }) => {
   const increaseScore = () => {
     if (team.totalScore >= minNumOfGamesToWin) return;
     socket.emit("increaseTotalScore", { teamId: team.id, step: 1 });
+    emitPlaySound("shimmer");
   };
+
   const decreaseScore = () => {
     if (team.totalScore <= 0) return;
     socket.emit("decreaseTotalScore", { teamId: team.id, step: 1 });
+    emitPlaySound("shimmer");
   };
 
   return (

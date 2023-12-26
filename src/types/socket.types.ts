@@ -1,6 +1,6 @@
 import { type TDuSagstAnswerBoxState } from "./../components/room/Game/games/DuSagst/duSagst.types";
 import { type TExceptionReason } from "./../pages/api/exceptions/exceptions.types";
-import { type RoomViews, type Gameshow, type User } from "@prisma/client";
+import { type RoomViews, type Gameshow, type User, type RoomSounds } from "@prisma/client";
 import { type NextApiResponse } from "next";
 import { type Server, type Socket } from "socket.io";
 import { string } from "zod";
@@ -121,9 +121,11 @@ export interface IClientToServerEvents {
   "duSagst:nextQuestion": () => void;
   "duSagst:prevQuestion": () => void;
 
-  // +++ MUSIC EVENTS +++
+  // +++ MUSIC/SOUND EVENTS +++
   playMusic: ({ songId }: { songId: TSongId }) => void;
   pauseMusic: () => void;
+  playSound: ({ soundId }: { soundId: keyof RoomSounds }) => void;
+  stopSound: ({ soundId }: { soundId: keyof RoomSounds }) => void;
 }
 
 export interface IServerToClientEvents {

@@ -37,6 +37,7 @@ import { sizes } from "~/styles/constants";
 import { type TUserReduced } from "~/types/socket.types";
 import { animations } from "~/utils/animations";
 import type Room from "../api/classes/Room/Room";
+import useSound from "~/hooks/useSound";
 
 type TNetworkStatusEffectiveType = "slow-2g" | "2g" | "3g" | "4g";
 
@@ -67,6 +68,7 @@ const RoomPage = () => {
   const roomId = router.query.id as string;
 
   const { play, pause, stop } = useMusic();
+  const { play: playSound, stop: stopSound } = useSound();
 
   useEffect(() => {
     if (session?.user) {
@@ -116,20 +118,32 @@ const RoomPage = () => {
     };
   }, [session]);
 
+  // handle music
   useEffect(() => {
     if (!room) return;
 
     const musicState = room.state.music;
     if (musicState.isActive) {
-      console.log("Music is active");
       play({ id: room.state.music.title });
     } else {
-      console.log("Music is not active");
       pause();
     }
 
     return () => stop();
   }, [room?.state.music.isActive, room?.state.music.title]);
+
+  // handle sound effects
+  useEffect(() => {
+    if (!room) return;
+
+    Object.entries(room.state.sounds).forEach(([soundId, isPlaying]) => {
+      if (isPlaying) {
+        playSound({ id: soundId });
+      }
+    });
+
+    return () => stopSound();
+  }, [room?.state.sounds]);
 
   if (room === undefined) {
     return (

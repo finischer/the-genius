@@ -15,6 +15,7 @@ import { socket } from "~/hooks/useSocket";
 import type { TGame, TGameNames } from "../Game/games/game.types";
 import { type IModPanelProps } from "./modPanel.types";
 import MediaPlayer from "../MediaPlayer";
+import useSound from "~/hooks/useSound";
 
 const TIMER_SECONDS = 10;
 
@@ -43,6 +44,8 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
 
   const allPlayers = teamArray.map((t) => t.players).flat();
   const atLeastOneNotefieldIsActive = allPlayers.filter((p) => p.states.notefield.isActive).length > 0;
+
+  const { emitPlaySound } = useSound();
 
   const handleOpenGameRules = (game: TGame) => {
     setClickedGame(game);
@@ -99,6 +102,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
   const startGame = (gameIdentifier: TGameNames) => {
     hideAnswer();
     socket.emit("startGame", { gameIdentifier });
+    emitPlaySound("intro");
   };
 
   const changeView = (newView: RoomViews) => {
@@ -273,19 +277,19 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                   <Button.Group orientation="vertical">
                     <Button
                       {...btnVariantDefault}
-                      disabled
+                      onClick={() => emitPlaySound("bell")}
                     >
                       Korrekte Antwort
                     </Button>
                     <Button
                       {...btnVariantDefault}
-                      disabled
+                      onClick={() => emitPlaySound("bass")}
                     >
                       Falsche Antwort
                     </Button>
                     <Button
                       {...btnVariantDefault}
-                      disabled
+                      onClick={() => emitPlaySound("winning")}
                     >
                       Winner Sound
                     </Button>

@@ -3,6 +3,7 @@ import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
+import { DefaultSeo } from "next-seo";
 import { type AppType } from "next/app";
 import GoogleAnalytics from "~/components/analytics/GoogleAnalytics";
 import NextHead from "~/components/shared/NextHead";
@@ -13,6 +14,7 @@ import { SocketProvider } from "~/hooks/useSocket";
 import { UserProvider } from "~/hooks/useUser";
 import "~/styles/globals.css";
 import { api } from "~/utils/api";
+import SEO from "~/config/next-seo.config";
 
 const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { session, ...pageProps } }) => {
   const { primaryColor } = useSettings();
@@ -20,7 +22,7 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
   return (
     <>
       {/* Head */}
-      <NextHead title="" />
+      <DefaultSeo {...SEO} />
       {/* Body */}
       <MantineProvider
         theme={{

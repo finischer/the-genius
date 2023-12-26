@@ -57,6 +57,8 @@ const useAudio = () => {
   function playAudio(soundId: TSoundId) {
     const elem = audioList.find((a) => a.id === soundId);
     if (!elem) return;
+
+    elem.audio.load();
     elem.audio.play();
   }
 
@@ -77,7 +79,6 @@ const useAudio = () => {
   }
 
   function stopAudio(soundId: TSoundId) {
-    console.log("Stop audio: ", soundId);
     const elem = audioList.find((a) => a.id === soundId);
     if (!elem) return;
     elem.audio.pause();

@@ -215,6 +215,7 @@ type RoomSounds {
   shimmer       Boolean @default(false)
   typewriter    Boolean @default(false)
   warningBuzzer Boolean @default(false)
+  whoosh_1      Boolean @default(false)
 }
 
 type RoomMusic {

@@ -17,7 +17,7 @@ const sounds: TSoundSpriteMap = {
   intro: [7500, 7581],
   typewriter: [15500, 473],
   warningBuzzer: [16000, 5490],
-  // whoosh_1: [22000, 224],
+  whoosh_1: [22000, 224],
   // whoosh_2: [22500, 224],
   winning: [23000, 3523],
 };

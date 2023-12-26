@@ -142,7 +142,7 @@ const RoomPage = () => {
       }
     });
 
-    return () => stopSound();
+    // return () => stopSound();
   }, [room?.state.sounds]);
 
   if (room === undefined) {

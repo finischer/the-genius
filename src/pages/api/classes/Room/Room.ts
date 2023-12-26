@@ -101,6 +101,7 @@ export default class Room implements PrismaRoomFixed {
         shimmer: false,
         typewriter: false,
         warningBuzzer: false,
+        whoosh_1: false,
       },
       teamWithTurn: "",
     };

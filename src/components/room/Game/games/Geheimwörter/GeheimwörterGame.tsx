@@ -68,7 +68,7 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
         direction="column"
         bg={theme.primaryColor}
         p="md"
-        sx={{ borderRadius: theme.radius.md }}
+        style={{ borderRadius: theme.radius.md }}
         opacity={showWords ? 1 : 0.4}
       >
         <SimpleGrid
@@ -114,7 +114,7 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
     >
       <SimpleGrid
         cols={2}
-        sx={{ display: "flex", alignItems: "center" }}
+        style={{ display: "flex", alignItems: "center" }}
         w={900}
         spacing="5rem"
       >
@@ -129,9 +129,7 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
                 <ActionIcon
                   onClick={toggleCodeList}
                   size={32}
-                  toolTip={`Codelist ${
-                    game.display.codeList ? "ausblenden" : "einblenden"
-                  }`}
+                  toolTip={`Codelist ${game.display.codeList ? "ausblenden" : "einblenden"}`}
                 >
                   <ToggleIcon action="codeList" />
                 </ActionIcon>

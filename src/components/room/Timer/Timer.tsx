@@ -35,7 +35,7 @@ const Timer = () => {
             p="0 1rem"
             justify="center"
             align="center"
-            sx={(theme) => ({
+            style={(theme) => ({
               borderRadius: theme.radius.sm,
               boxShadow: theme.shadows.xl,
             })}

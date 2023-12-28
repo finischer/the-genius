@@ -36,7 +36,7 @@ const SCOREBAR_HEIGHT = "3rem";
 
 const ScoreCircle: React.FC<IScoreCircleProps> = ({ filled }) => (
   <Box
-    sx={() => ({
+    style={() => ({
       height: "2rem",
       width: "2rem",
       background: filled ? colors.success : "transparent",
@@ -73,7 +73,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
       px="0.5rem"
       miw="2rem"
       h="2rem"
-      sx={{
+      style={{
         borderRadius: theme.radius.md,
         border: "1px solid white",
       }}
@@ -153,7 +153,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
           <motion.div {...animations.fadeInOut}>
             <Container
               bg={theme.primaryColor}
-              sx={scorebarTimerStyle}
+              style={scorebarTimerStyle}
             >
               {team.scorebarTimer.seconds}
             </Container>
@@ -196,7 +196,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
           left="50%"
           bottom="50%"
           opacity={0.9}
-          sx={{
+          style={{
             boxShadow: highlightBoxShadow,
             WebkitBoxShadow: highlightBoxShadow,
             animationName: stretchAnimation,
@@ -214,7 +214,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
         >
           <Box
             bg={theme.primaryColor}
-            sx={() => ({
+            style={() => ({
               minWidth: "20%",
               maxWidth: "50%",
               height: "100%",
@@ -296,7 +296,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
           bg={theme.primaryColor}
           h={SCOREBAR_HEIGHT}
           w="30rem"
-          sx={(theme) => ({
+          style={(theme) => ({
             borderRadius: "0.25rem",
             borderTopLeftRadius: 0,
             boxShadow: theme.shadows.xl,
@@ -306,7 +306,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
         >
           {/* Player names */}
           <Box
-            sx={() => ({
+            style={() => ({
               width: "50%",
               height: "100%",
               display: "inline-block",
@@ -314,7 +314,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
             })}
           >
             <Text
-              sx={() => ({
+              style={() => ({
                 width: "100%",
                 overflow: "hidden",
                 whiteSpace: "nowrap",
@@ -349,7 +349,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
           <motion.div {...animations.fadeInOut}>
             <Container
               bg={theme.primaryColor}
-              sx={scorebarTimerStyle}
+              style={scorebarTimerStyle}
             >
               {team.scorebarTimer.seconds}
             </Container>

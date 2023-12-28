@@ -5,5 +5,5 @@ export interface IContainerBoxProps extends BoxProps {
   contentCentered?: boolean;
   withShadow?: boolean;
   onClick?: () => void;
-  sx?: Sx;
+  style?: Sx;
 }

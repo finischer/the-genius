@@ -1,4 +1,4 @@
-import { Container, Flex, TextInput, Title, useMantineTheme } from "@mantine/core";
+import { Box, Center, Container, Flex, Text, TextInput, Title, useMantineTheme } from "@mantine/core";
 import SignInButton from "../SignInButton/SignInButton";
 
 const AuthenticationModal = () => {
@@ -74,23 +74,20 @@ const AuthenticationModal = () => {
   // })
 
   return (
-    <Container
+    <Box
       size={420}
       my={40}
     >
-      <Title
-        align="center"
-        variant="gradient"
-        gradient={{ from: theme.primaryColor, to: theme.colors.gray[5], deg: 45 }}
-      >
-        The Genius
-      </Title>
-      <Title
-        order={2}
-        align="center"
-      >
-        Willkommen zurück!
-      </Title>
+      <Center>
+        <Text
+          variant="gradient"
+          size="xl"
+          fw="bold"
+        >
+          The Genius
+        </Text>
+      </Center>
+      <Title order={2}>Willkommen zurück!</Title>
       <Flex
         direction="column"
         color="green"
@@ -148,7 +145,7 @@ const AuthenticationModal = () => {
                     </form>
                 </Paper> */}
       </Flex>
-    </Container>
+    </Box>
   );
 };
 

@@ -11,7 +11,8 @@ import SEO from "~/config/next-seo.config";
 import { RoomProvider } from "~/hooks/useRoom";
 import { SocketProvider } from "~/hooks/useSocket";
 import { UserProvider } from "~/hooks/useUser";
-import { THEME } from "~/styles/constants";
+import { THEME, cssResolver } from "~/styles/constants";
+import "@mantine/core/styles.css";
 import "~/styles/globals.css";
 import { api } from "~/utils/api";
 
@@ -23,8 +24,8 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
       {/* Body */}
       <MantineProvider
         theme={THEME}
-        withGlobalStyles
-        withNormalizeCSS
+        defaultColorScheme="dark"
+        cssVariablesResolver={cssResolver}
       >
         <ModalsProvider modals={modals}>
           <Notifications position="top-center" />

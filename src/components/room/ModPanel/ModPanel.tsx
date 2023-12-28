@@ -168,7 +168,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
         title={
           <Text
             size={28}
-            weight="bold"
+            fw="bold"
           >
             Mod-Panel
           </Text>

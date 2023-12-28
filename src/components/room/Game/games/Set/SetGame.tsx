@@ -83,7 +83,7 @@ const SetGame: React.FC<ISetGameProps> = ({ game }) => {
           cols={3}
           verticalSpacing="xs"
           spacing="xs"
-          sx={{
+          style={{
             perspective: "100rem",
           }}
         >
@@ -96,9 +96,7 @@ const SetGame: React.FC<ISetGameProps> = ({ game }) => {
                 card={card}
                 index={idx}
                 isFlipped={game.openedCards.includes(idx)}
-                marked={
-                  (isMarked && game.display.markedCards) || (isMarked && isHost)
-                }
+                marked={(isMarked && game.display.markedCards) || (isMarked && isHost)}
                 markerState={game.markedCardsState}
                 onClick={handleSelectCard}
               />
@@ -132,14 +130,9 @@ const SetGame: React.FC<ISetGameProps> = ({ game }) => {
             <Button
               onClick={handleMarkedCardClick}
               variant="default"
-              disabled={
-                game.markedCards.length !== 3 ||
-                game.markedCardsState !== "marked"
-              }
+              disabled={game.markedCards.length !== 3 || game.markedCardsState !== "marked"}
             >
-              {game.display.markedCards
-                ? "Antwort zeigen"
-                : "Markierten Karten zeigen"}
+              {game.display.markedCards ? "Antwort zeigen" : "Markierten Karten zeigen"}
             </Button>
             <Button
               onClick={handlePrevQuestion}

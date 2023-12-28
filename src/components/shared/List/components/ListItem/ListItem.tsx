@@ -44,7 +44,7 @@ const ListItem = <T,>({
     >
       <Flex
         bg={selected && editable ? theme.primaryColor : theme.colors.dark[5]}
-        sx={{ borderRadius: theme.radius.md }}
+        style={{ borderRadius: theme.radius.md }}
         px="md"
         py="sm"
         justify="space-between"

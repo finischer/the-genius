@@ -11,7 +11,7 @@ const PricingModal: React.FC<ContextModalProps<ContextModalProps<any>>> = () => 
 
   return (
     <Flex
-      sx={{ zIndex: 50 }}
+      style={{ zIndex: 50 }}
       justify="center"
     >
       <Stack spacing={40}>
@@ -38,7 +38,7 @@ const PricingModal: React.FC<ContextModalProps<ContextModalProps<any>>> = () => 
             gap={{ base: "1.5rem", sm: 0 }}
           >
             <Box
-              sx={{
+              style={{
                 boxShadow: "0px 30px 50px -7px rgba(0,0,0,0.1)",
                 height: "22rem",
                 width: "17rem",
@@ -65,7 +65,7 @@ const PricingModal: React.FC<ContextModalProps<ContextModalProps<any>>> = () => 
                 spacing={20}
               >
                 <Text
-                  sx={{
+                  style={{
                     fontWeight: 700,
                     color: theme.colorScheme === "dark" ? theme.colors.dark[1] : "hsl(233, 13%, 49%)",
                   }}
@@ -75,7 +75,7 @@ const PricingModal: React.FC<ContextModalProps<ContextModalProps<any>>> = () => 
                 </Text>
                 <Title
                   order={2}
-                  sx={{
+                  style={{
                     color: theme.colorScheme === "dark" ? "white" : "hsl(232, 13%, 33%)",
                     fontSize: 50,
                     display: "flex",
@@ -90,10 +90,10 @@ const PricingModal: React.FC<ContextModalProps<ContextModalProps<any>>> = () => 
                   w={"100%"}
                   align="center"
                   spacing={10}
-                  sx={{ color: theme.colorScheme === "light" ? "hsl(233, 13%, 49%)" : undefined }}
+                  style={{ color: theme.colorScheme === "light" ? "hsl(233, 13%, 49%)" : undefined }}
                 >
                   <Divider
-                    sx={{
+                    style={{
                       width: "100%",
                       borderColor: theme.colorScheme === "dark" ? "gray" : undefined,
                       opacity: theme.colorScheme === "dark" ? 0.7 : 1,
@@ -106,7 +106,7 @@ const PricingModal: React.FC<ContextModalProps<ContextModalProps<any>>> = () => 
                     500 GB Storage
                   </Text>
                   <Divider
-                    sx={{
+                    style={{
                       width: "100%",
                       borderColor: theme.colorScheme === "dark" ? "gray" : undefined,
                       opacity: theme.colorScheme === "dark" ? 0.7 : 1,
@@ -119,7 +119,7 @@ const PricingModal: React.FC<ContextModalProps<ContextModalProps<any>>> = () => 
                     2 Users Allowed
                   </Text>
                   <Divider
-                    sx={{
+                    style={{
                       width: "100%",
                       borderColor: theme.colorScheme === "dark" ? "gray" : undefined,
                       opacity: theme.colorScheme === "dark" ? 0.7 : 1,
@@ -132,7 +132,7 @@ const PricingModal: React.FC<ContextModalProps<ContextModalProps<any>>> = () => 
                     Send up to 3 GB
                   </Text>
                   <Divider
-                    sx={{
+                    style={{
                       width: "100%",
                       borderColor: theme.colorScheme === "dark" ? "gray" : undefined,
                       opacity: theme.colorScheme === "dark" ? 0.7 : 1,
@@ -149,7 +149,7 @@ const PricingModal: React.FC<ContextModalProps<ContextModalProps<any>>> = () => 
               </Stack>
             </Box>
             <Box
-              sx={{
+              style={{
                 boxShadow: "0px 30px 50px -7px rgba(0,0,0,0.1)",
                 height: "25rem",
                 width: "19rem",
@@ -173,7 +173,7 @@ const PricingModal: React.FC<ContextModalProps<ContextModalProps<any>>> = () => 
                 spacing={20}
               >
                 <Text
-                  sx={{
+                  style={{
                     fontWeight: 700,
                   }}
                   fz={"md"}
@@ -182,7 +182,7 @@ const PricingModal: React.FC<ContextModalProps<ContextModalProps<any>>> = () => 
                 </Text>
                 <Title
                   order={2}
-                  sx={{
+                  style={{
                     fontSize: 50,
                     display: "flex",
                     alignItems: "center",
@@ -198,7 +198,7 @@ const PricingModal: React.FC<ContextModalProps<ContextModalProps<any>>> = () => 
                   spacing={10}
                 >
                   <Divider
-                    sx={{
+                    style={{
                       width: "100%",
                       borderColor: theme.colorScheme === "dark" ? "white" : undefined,
                       opacity: theme.colorScheme === "dark" ? 0.6 : 1,
@@ -211,7 +211,7 @@ const PricingModal: React.FC<ContextModalProps<ContextModalProps<any>>> = () => 
                     1 TB Storage
                   </Text>
                   <Divider
-                    sx={{
+                    style={{
                       width: "100%",
                       borderColor: theme.colorScheme === "dark" ? "white" : undefined,
                       opacity: theme.colorScheme === "dark" ? 0.6 : 1,
@@ -224,7 +224,7 @@ const PricingModal: React.FC<ContextModalProps<ContextModalProps<any>>> = () => 
                     5 Users Allowed
                   </Text>
                   <Divider
-                    sx={{
+                    style={{
                       width: "100%",
                       borderColor: theme.colorScheme === "dark" ? "white" : undefined,
                       opacity: theme.colorScheme === "dark" ? 0.6 : 1,
@@ -237,7 +237,7 @@ const PricingModal: React.FC<ContextModalProps<ContextModalProps<any>>> = () => 
                     Send up to 10 GB
                   </Text>
                   <Divider
-                    sx={{
+                    style={{
                       width: "100%",
                       borderColor: theme.colorScheme === "dark" ? "white" : undefined,
                       opacity: theme.colorScheme === "dark" ? 0.6 : 1,
@@ -245,7 +245,7 @@ const PricingModal: React.FC<ContextModalProps<ContextModalProps<any>>> = () => 
                   />
                 </Stack>
                 <Button
-                  sx={{
+                  style={{
                     backgroundColor: "white",
                     color: "hsl(237, 63%, 64%)",
 
@@ -261,7 +261,7 @@ const PricingModal: React.FC<ContextModalProps<ContextModalProps<any>>> = () => 
               </Stack>
             </Box>
             <Box
-              sx={{
+              style={{
                 boxShadow: "0px 30px 50px -7px rgba(0,0,0,0.1)",
                 height: "22rem",
                 width: "18rem",
@@ -288,7 +288,7 @@ const PricingModal: React.FC<ContextModalProps<ContextModalProps<any>>> = () => 
                 spacing={20}
               >
                 <Text
-                  sx={{
+                  style={{
                     fontWeight: 700,
                     color: theme.colorScheme === "dark" ? theme.colors.dark[1] : "hsl(233, 13%, 49%)",
                   }}
@@ -298,7 +298,7 @@ const PricingModal: React.FC<ContextModalProps<ContextModalProps<any>>> = () => 
                 </Text>
                 <Title
                   order={2}
-                  sx={{
+                  style={{
                     color: theme.colorScheme === "dark" ? "white" : "hsl(232, 13%, 33%)",
                     fontSize: 50,
                     display: "flex",
@@ -313,10 +313,10 @@ const PricingModal: React.FC<ContextModalProps<ContextModalProps<any>>> = () => 
                   w={"100%"}
                   align="center"
                   spacing={10}
-                  sx={{ color: theme.colorScheme === "light" ? "hsl(233, 13%, 49%)" : undefined }}
+                  style={{ color: theme.colorScheme === "light" ? "hsl(233, 13%, 49%)" : undefined }}
                 >
                   <Divider
-                    sx={{
+                    style={{
                       width: "100%",
                       borderColor: theme.colorScheme === "dark" ? "gray" : undefined,
                       opacity: theme.colorScheme === "dark" ? 0.7 : 1,
@@ -329,7 +329,7 @@ const PricingModal: React.FC<ContextModalProps<ContextModalProps<any>>> = () => 
                     2 TB Storage
                   </Text>
                   <Divider
-                    sx={{
+                    style={{
                       width: "100%",
                       borderColor: theme.colorScheme === "dark" ? "gray" : undefined,
                       opacity: theme.colorScheme === "dark" ? 0.7 : 1,
@@ -342,7 +342,7 @@ const PricingModal: React.FC<ContextModalProps<ContextModalProps<any>>> = () => 
                     10 Users Allowed
                   </Text>
                   <Divider
-                    sx={{
+                    style={{
                       width: "100%",
                       borderColor: theme.colorScheme === "dark" ? "gray" : undefined,
                       opacity: theme.colorScheme === "dark" ? 0.7 : 1,
@@ -355,7 +355,7 @@ const PricingModal: React.FC<ContextModalProps<ContextModalProps<any>>> = () => 
                     Send up to 20 GB
                   </Text>
                   <Divider
-                    sx={{
+                    style={{
                       width: "100%",
                       borderColor: theme.colorScheme === "dark" ? "gray" : undefined,
                       opacity: theme.colorScheme === "dark" ? 0.7 : 1,

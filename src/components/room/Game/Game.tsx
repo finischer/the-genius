@@ -74,7 +74,7 @@ const Game: React.FC<IGameProps> = ({ game }) => {
           gap="lg"
           justify="center"
           align="center"
-          sx={{
+          style={{
             animation: `${zoomInAnimation} 2s, ${zoomOutAnimation} 500ms 8s, ${scaleAnimation} 6s 2s`,
             opacity: introState.alreadyPlayed ? 0 : 1,
           }}

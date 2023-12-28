@@ -93,10 +93,10 @@ const SetCard: React.FC<ISetCardProps> = ({
   }
 
   const FrontContent = () => (
-    <Container sx={cardStyle}>
+    <Container style={cardStyle}>
       <Text
         pos="absolute"
-        weight="bold"
+        fw="bold"
         size="2rem"
         color="dark"
       >
@@ -107,7 +107,7 @@ const SetCard: React.FC<ISetCardProps> = ({
 
   const BackContent = () => (
     <Container
-      sx={{
+      style={{
         ...cardStyle,
         transform: "scale(-1, 1)",
         ":hover": {
@@ -123,7 +123,7 @@ const SetCard: React.FC<ISetCardProps> = ({
       >
         <Text
           color="dimmed"
-          weight="bold"
+          fw="bold"
           size="xl"
         >
           {index + 1}

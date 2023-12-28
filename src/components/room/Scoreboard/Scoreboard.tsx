@@ -32,7 +32,7 @@ const Scoreboard: React.FC<IScoreboardProps> = ({ team, color }) => {
       m="1.2rem 0"
       w="12rem"
       opacity={0.8}
-      sx={{
+      style={{
         borderRight: index + 1 < minNumOfGamesToWin ? `1px solid ${DIVIDER_COLOR}` : "none",
       }}
     />
@@ -73,7 +73,7 @@ const Scoreboard: React.FC<IScoreboardProps> = ({ team, color }) => {
           <Text
             color="white"
             p="0 1rem"
-            weight="bold"
+            fw="bold"
             pos="absolute"
             top={-35}
           >
@@ -102,7 +102,7 @@ const Scoreboard: React.FC<IScoreboardProps> = ({ team, color }) => {
           h="7rem"
           ml="2rem"
           pos="relative"
-          sx={{
+          style={{
             border: `1px solid ${SCOREBOARD_BORDER_BACKGROUND_COLOR}`,
             borderRadius: "100px",
             overflow: "hidden",
@@ -111,7 +111,7 @@ const Scoreboard: React.FC<IScoreboardProps> = ({ team, color }) => {
           <Flex
             h="100%"
             bg="red"
-            sx={{ borderRadius: "100px" }}
+            style={{ borderRadius: "100px" }}
           />
           {lineElements}
           <div
@@ -129,7 +129,7 @@ const Scoreboard: React.FC<IScoreboardProps> = ({ team, color }) => {
             top={0}
             bottom={0}
             left={0}
-            sx={{
+            style={{
               borderRadius: "100px",
               transition: "width 2s",
             }}

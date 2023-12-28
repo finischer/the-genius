@@ -8,20 +8,20 @@ const ContainerBox: React.FC<IContainerBoxProps> = ({
   contentCentered = false,
   withShadow = false,
   onClick = undefined,
-  sx,
+  style,
   ...props
 }) => {
   return (
     <Box
       {...props}
-      sx={(theme) => ({
+      style={(theme) => ({
         display: "flex",
         justifyContent: contentCentered ? "center" : "flex-start",
         alignItems: contentCentered ? "center" : "flex-start",
         borderRadius: sizes.borderRadius,
         boxShadow: withShadow ? theme.shadows.xl : "none",
         userSelect: "none",
-        ...sx,
+        ...style,
       })}
       onClick={onClick}
     >

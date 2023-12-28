@@ -27,7 +27,7 @@ const CountryItem: React.FC<TransferListItemComponentProps> = ({ data, selected 
       checked={selected}
       onChange={() => null}
       tabIndex={-1}
-      sx={{ pointerEvents: "none" }}
+      style={{ pointerEvents: "none" }}
     />
     <Image
       src={`https://flagcdn.com/w40/${data.value}.png`}

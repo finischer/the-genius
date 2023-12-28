@@ -133,7 +133,8 @@ const RoomsPage = () => {
         >
           <LoadingOverlay
             visible={isLoadingValidatePassword}
-            overlayBlur={2}
+
+            // overlayBlur={2}
           />
           <form onSubmit={handleJoinRoomWithPassword}>
             <Flex
@@ -167,7 +168,7 @@ const RoomsPage = () => {
           verticalSpacing="md"
           striped
           highlightOnHover
-          sx={{
+          style={{
             overflowX: "auto",
           }}
         >

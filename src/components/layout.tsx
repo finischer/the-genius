@@ -1,13 +1,16 @@
 import {
   AppShell,
+  Box,
   Burger,
   Button,
+  Center,
   Flex,
-  Header,
-  MediaQuery,
+  Group,
   Modal,
+  Skeleton,
   Text,
   TextInput,
+  rem,
   useMantineTheme,
 } from "@mantine/core";
 import { useSession } from "next-auth/react";
@@ -15,10 +18,10 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useLoadingState from "~/hooks/useLoadingState/useLoadingState";
 import { useUser } from "~/hooks/useUser";
-import Footer from "./Footer";
 import AuthenticatedLayout from "./auth.layout";
-import Navbar from "./navbar";
 import Loader from "./shared/Loader";
+import Navbar from "./navbar";
+import { useDisclosure } from "@mantine/hooks";
 
 interface IPageLayout {
   showLoader?: boolean;
@@ -29,8 +32,7 @@ interface IPageLayout {
 const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage = "Lädt ...", children }) => {
   const { data: session, status } = useSession();
   const { pageIsLoading } = useLoadingState();
-  const theme = useMantineTheme();
-  const [isNavbarOpened, setIsNavbarOpened] = useState(false);
+  const [opened, { toggle }] = useDisclosure();
   const [usernameInput, setUsernameInput] = useState("");
   const { updateUsername, isLoading } = useUser();
   const router = useRouter();
@@ -80,43 +82,37 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
         </Modal>
 
         <AppShell
-          styles={{
-            main: {
-              background: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[0],
-              overflowX: "auto",
-            },
+          header={{ height: { base: 60, md: 70, lg: 80 } }}
+          navbar={{
+            width: { base: 200, md: 300, lg: 400 },
+            breakpoint: "sm",
+            collapsed: { mobile: !opened },
           }}
-          navbarOffsetBreakpoint="sm"
-          asideOffsetBreakpoint="sm"
-          navbar={<Navbar opened={isNavbarOpened} />}
-          footer={<Footer />}
-          header={
-            <Header
-              height={{ base: 50, md: 70 }}
-              p="md"
-            >
-              <div style={{ display: "flex", alignItems: "center", height: "100%" }}>
-                <MediaQuery
-                  largerThan="sm"
-                  styles={{ display: "none" }}
-                >
-                  <Burger
-                    opened={isNavbarOpened}
-                    onClick={() => setIsNavbarOpened((o) => !o)}
-                    size="sm"
-                    color={theme.colors.gray[6]}
-                    mr="xl"
-                  />
-                </MediaQuery>
-
-                {session.user.username && <Text>Schön dich zu sehen, {session.user.username}!</Text>}
-              </div>
-            </Header>
-          }
+          padding="md"
         >
-          {showLoader && <Loader message={loadingMessage} />}
-          {pageIsLoading && <Loader message="Lädt" />}
-          {!showLoader && !pageIsLoading && <Text>{children}</Text>}
+          <AppShell.Header>
+            <Group
+              h="100%"
+              px="md"
+            >
+              <Burger
+                color="gray.4"
+                opened={opened}
+                onClick={toggle}
+                hiddenFrom="sm"
+                size="sm"
+              />
+              {session.user.username && <Text>Schön dich zu sehen, {session.user.username}!</Text>}
+            </Group>
+          </AppShell.Header>
+          <AppShell.Navbar p="md">
+            <Navbar />
+          </AppShell.Navbar>
+          <AppShell.Main h="1rem">
+            {showLoader && <Loader message={loadingMessage} />}
+            {pageIsLoading && <Loader message="Lädt" />}
+            {!showLoader && !pageIsLoading && <Text>{children}</Text>}
+          </AppShell.Main>
         </AppShell>
       </AuthenticatedLayout>
     );

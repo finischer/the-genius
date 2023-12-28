@@ -28,14 +28,14 @@ const MediaPlayer = () => {
       py="xs"
       direction="column"
       gap="sm"
-      sx={(theme) => ({
+      style={(theme) => ({
         borderRadius: theme.radius.md,
       })}
     >
       <Flex direction="column">
-        <Text weight="bold">{songInfo.title}</Text>
+        <Text fw="bold">{songInfo.title}</Text>
         <Text
-          weight="bold"
+          fw="bold"
           color="dimmed"
         >
           {songInfo.interpret}
@@ -47,7 +47,7 @@ const MediaPlayer = () => {
         align="center"
         bg="dark"
         py="xs"
-        sx={(theme) => ({
+        style={(theme) => ({
           borderRadius: theme.radius.lg,
         })}
         justify="center"

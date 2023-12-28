@@ -245,7 +245,7 @@ export const COUNTRIES: ICountriesMap = {
   ss: "Südsudan",
   st: "São Tomé und Príncipe",
   sv: "El Salvador",
-  sx: "Sint Maarten",
+  style: "Sint Maarten",
   sy: "Syrien",
   sz: "Swasiland",
   tc: "Turks-und Caicosinseln",

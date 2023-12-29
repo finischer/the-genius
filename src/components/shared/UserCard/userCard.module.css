@@ -1,0 +1,8 @@
+.userCard {
+  padding: var(--mantine-spacing-sm);
+  border-radius: var(--mantine-radius-sm);
+
+  &:hover {
+    background-color: var(--mantine-color-dark-5);
+  }
+}

@@ -20,7 +20,7 @@ import useLoadingState from "~/hooks/useLoadingState/useLoadingState";
 import { useUser } from "~/hooks/useUser";
 import AuthenticatedLayout from "./auth.layout";
 import Loader from "./shared/Loader";
-import Navbar from "./navbar";
+import Navbar from "./Navbar";
 import { useDisclosure } from "@mantine/hooks";
 
 interface IPageLayout {
@@ -111,7 +111,7 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
           <AppShell.Main h="1rem">
             {showLoader && <Loader message={loadingMessage} />}
             {pageIsLoading && <Loader message="Lädt" />}
-            {!showLoader && !pageIsLoading && <Text>{children}</Text>}
+            {!showLoader && !pageIsLoading && <Box pb="xl">{children}</Box>}
           </AppShell.Main>
         </AppShell>
       </AuthenticatedLayout>

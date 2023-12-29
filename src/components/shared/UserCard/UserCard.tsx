@@ -8,6 +8,7 @@ import useNotification from "~/hooks/useNotification";
 import { api } from "~/utils/api";
 import { RoleBadge } from "../Badge/Badge";
 import { IconChevronRight, IconLogout, IconSettings } from "@tabler/icons-react";
+import classes from "./userCard.module.css";
 
 const UserCard = () => {
   const { colorScheme } = useMantineColorScheme();
@@ -37,14 +38,7 @@ const UserCard = () => {
       width={200}
     >
       <Menu.Target>
-        <Box
-          style={{
-            paddingTop: theme.spacing.sm,
-            // borderTop: `${rem(1)} solid ${
-            //   theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[2]
-            // }`,
-          }}
-        >
+        <Box className={classes.userCard}>
           <UnstyledButton
             style={{
               display: "block",
@@ -53,9 +47,6 @@ const UserCard = () => {
               padding: theme.spacing.xs,
               borderRadius: theme.radius.sm,
               color: colorScheme === "dark" ? theme.white : theme.black,
-              "&:hover": {
-                backgroundColor: colorScheme === "dark" ? theme.colors.dark[9] : theme.colors.gray[0],
-              },
             }}
           >
             <Flex

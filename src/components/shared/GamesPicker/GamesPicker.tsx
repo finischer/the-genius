@@ -1,18 +1,11 @@
-import { Box, Flex, Group, Paper } from "@mantine/core";
-import React, { type Dispatch, type SetStateAction, useEffect, useState } from "react";
-import { type TTransferListData, type IGamesPickerProps } from "./gamesPicker.types";
-import List from "../List";
-import { Text } from "@mantine/core";
-import Card from "../Card/Card";
-import {
-  IconInfoCircle,
-  IconInfoSmall,
-  IconInfoSquareRounded,
-  IconUser,
-  IconUsers,
-} from "@tabler/icons-react";
-import ActionIcon from "../ActionIcon";
+import { Group, Text } from "@mantine/core";
 import type { GameshowMode } from "@prisma/client";
+import { IconInfoSquareRounded, IconUser, IconUsers } from "@tabler/icons-react";
+import React, { useEffect, useState } from "react";
+import ActionIcon from "../ActionIcon";
+import Paper from "../Paper";
+import classes from "./gamesPicker.module.css";
+import { type IGamesPickerProps, type TTransferListData } from "./gamesPicker.types";
 
 const availableGames: TTransferListData = [
   [
@@ -39,7 +32,11 @@ const GamesPicker: React.FC<IGamesPickerProps> = ({ setSelectedGames }) => {
 
   const GameCard = ({ name, mode, isNew = false }: { name: string; mode: GameshowMode; isNew?: boolean }) => {
     return (
-      <Paper bg="dark.7">
+      <Paper
+        variant="light"
+        pos="relative"
+        onClick={() => console.log("Select game: ", name)}
+      >
         <Group>
           {mode === "DUELL" && <IconUser />}
           {mode === "TEAM" && <IconUsers />}
@@ -53,13 +50,11 @@ const GamesPicker: React.FC<IGamesPickerProps> = ({ setSelectedGames }) => {
         </Group>
 
         {/* New Banner */}
-        <Box
-          pos="absolute"
-          top={0}
-          right={0}
-        >
-          <Text>Neu</Text>
-        </Box>
+        {isNew && (
+          <div className={classes.ribbonWrapper}>
+            <div className={classes.ribbon}>Neu</div>
+          </div>
+        )}
       </Paper>
     );
   };

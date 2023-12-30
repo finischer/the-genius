@@ -32,6 +32,17 @@ model User {
   @@map("users")
 }
 
+model Game {
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  mode            GameshowMode
+  forPremiumUsers Boolean
+  isNew           Boolean
+  rules           Boolean
+
+  @@map("games")
+}
+
 model BetaTester {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   email     String   @unique

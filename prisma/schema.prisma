@@ -35,10 +35,14 @@ model User {
 model Game {
   id              String       @id @default(auto()) @map("_id") @db.ObjectId
   name            String
+  slug            String       @unique
   mode            GameshowMode
   forPremiumUsers Boolean
   isNew           Boolean
-  rules           Boolean
+  rules           String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("games")
 }

@@ -1,18 +1,20 @@
-import { Box, Flex, Card as MantineCard, Text, UnstyledButton, rem } from "@mantine/core";
+import { Box, Flex, Paper, Text, UnstyledButton, rem } from "@mantine/core";
 import { IconSquareRoundedChevronRight } from "@tabler/icons-react";
 import { type FC } from "react";
 import type { ICardProps } from "./card.types";
+import classes from "./card.module.css";
 
 const Card: FC<ICardProps> = ({ title, Icon, subTitle, onClick, disabled = false }) => {
   return (
     <UnstyledButton
+      className={!disabled ? classes.btn : undefined}
       onClick={onClick}
       disabled={disabled}
       style={{
         cursor: disabled ? "auto" : "pointer",
       }}
     >
-      <MantineCard
+      <Paper
         bg="dark.9"
         mih={rem(110)}
         w={rem(200)}
@@ -42,7 +44,7 @@ const Card: FC<ICardProps> = ({ title, Icon, subTitle, onClick, disabled = false
             </Box>
           )}
         </Flex>
-      </MantineCard>
+      </Paper>
     </UnstyledButton>
   );
 };

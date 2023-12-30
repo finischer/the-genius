@@ -1,17 +1,14 @@
-import { Box, Button, Flex, Group, Paper, Text, UnstyledButton, rem, useMantineTheme } from "@mantine/core";
-import { IconCategory, IconSearch, IconUser } from "@tabler/icons-react";
+import { Box, Flex, Grid, Group, SimpleGrid, useMantineTheme } from "@mantine/core";
+import { IconCategory, IconSearch, IconUsers } from "@tabler/icons-react";
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
+import InfoSection from "~/components/home/InfoSection/InfoSection";
 import PageLayout from "~/components/layout";
 import Card from "~/components/shared/Card/Card";
 import NextHead from "~/components/shared/NextHead";
 
-// TODO: Create Home page
-
 const Home: NextPage = () => {
   const { push: goTo } = useRouter();
-
-  const theme = useMantineTheme();
 
   return (
     <>
@@ -20,26 +17,34 @@ const Home: NextPage = () => {
         <Flex
           gap="xl"
           align="flex-start"
+          justify="space-between"
+          h="100%"
+          w="100%"
         >
-          <Card
-            title="Suchen"
-            Icon={IconSearch}
-            subTitle="Räume suchen"
-            onClick={() => void goTo("/rooms")}
-          />
-          <Card
-            title="Freunde"
-            Icon={IconUser}
-            subTitle="Hinzufügen und pflegen"
-            disabled
-            onClick={() => console.log("Move to: Räume suchen")}
-          />
-          <Card
-            title="Spielshows"
-            Icon={IconCategory}
-            subTitle="Erstellen und Starten"
-            onClick={() => void goTo("/gameshows")}
-          />
+          <Group align="flex-start">
+            <Card
+              title="Suchen"
+              Icon={IconSearch}
+              subTitle="Räume suchen"
+              onClick={() => void goTo("/rooms")}
+            />
+            <Card
+              title="Freunde"
+              Icon={IconUsers}
+              subTitle="Hinzufügen und pflegen"
+              disabled
+              onClick={() => console.log("Move to: Räume suchen")}
+            />
+            <Card
+              title="Spielshows"
+              Icon={IconCategory}
+              subTitle="Erstellen und Starten"
+              onClick={() => void goTo("/gameshows")}
+            />
+          </Group>
+          <Box h="100%">
+            <InfoSection />
+          </Box>
         </Flex>
       </PageLayout>
     </>

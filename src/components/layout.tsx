@@ -111,7 +111,7 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
           <AppShell.Main h="1rem">
             {showLoader && <Loader message={loadingMessage} />}
             {pageIsLoading && <Loader message="Lädt" />}
-            {!showLoader && !pageIsLoading && <Box pb="xl">{children}</Box>}
+            {!showLoader && !pageIsLoading && <Box h="100%">{children}</Box>}
           </AppShell.Main>
         </AppShell>
       </AuthenticatedLayout>

@@ -2,6 +2,7 @@ import { createTheme, rem, type MantineColorsTuple, Box, Menu, Button, Paper, Ca
 import { GameshowMode } from "@prisma/client";
 import { generateColors } from "@mantine/colors-generator";
 import type { CSSVariablesResolver } from "@mantine/core";
+import classes from "./styling.module.css";
 
 export const sizes = {
   base: 25,
@@ -41,7 +42,6 @@ export const GAMESHOW_MODES: GameshowMode[] = Object.values(GameshowMode).filter
 
 function createMantineColor(color: string): MantineColorsTuple {
   return generateColors(color);
-  // return new Array(10).fill(color) as unknown as MantineColorsTuple;
 }
 
 export const THEME = createTheme({
@@ -52,9 +52,11 @@ export const THEME = createTheme({
   // defaultRadius: rem(5),
   components: {
     Paper: Paper.extend({
+      classNames: classes,
       defaultProps: {
         py: rem(16),
-        px: rem(12),
+        px: rem(16),
+        bg: "dark.9",
       },
     }),
   },

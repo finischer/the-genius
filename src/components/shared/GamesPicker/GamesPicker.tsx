@@ -1,7 +1,18 @@
-import { Flex, TransferList, type TransferListData } from "@mantine/core";
+import { Box, Flex, Group, Paper } from "@mantine/core";
 import React, { type Dispatch, type SetStateAction, useEffect, useState } from "react";
 import { type TTransferListData, type IGamesPickerProps } from "./gamesPicker.types";
 import List from "../List";
+import { Text } from "@mantine/core";
+import Card from "../Card/Card";
+import {
+  IconInfoCircle,
+  IconInfoSmall,
+  IconInfoSquareRounded,
+  IconUser,
+  IconUsers,
+} from "@tabler/icons-react";
+import ActionIcon from "../ActionIcon";
+import type { GameshowMode } from "@prisma/client";
 
 const availableGames: TTransferListData = [
   [
@@ -26,29 +37,62 @@ const GamesPicker: React.FC<IGamesPickerProps> = ({ setSelectedGames }) => {
     setSelectedGames(games[1]);
   }, [games]);
 
+  const GameCard = ({ name, mode, isNew = false }: { name: string; mode: GameshowMode; isNew?: boolean }) => {
+    return (
+      <Paper bg="dark.7">
+        <Group>
+          {mode === "DUELL" && <IconUser />}
+          {mode === "TEAM" && <IconUsers />}
+          <Text>{name}</Text>
+          <ActionIcon
+            variant="default"
+            toolTip="Details anzeigen"
+          >
+            <IconInfoSquareRounded />
+          </ActionIcon>
+        </Group>
+
+        {/* New Banner */}
+        <Box
+          pos="absolute"
+          top={0}
+          right={0}
+        >
+          <Text>Neu</Text>
+        </Box>
+      </Paper>
+    );
+  };
+
   return (
-    // <Flex gap="xl">
-    //   <List
-    //     data={games}
-    //     setData={setGames}
-    //     renderValueByKey="label"
-    //   />
-    //   <List
-    //     data={games}
-    //     setData={setGames}
-    //     renderValueByKey="label"
-    //     editable
-    //   />
-    // </Flex>
-    <TransferList
-      value={games}
-      onChange={setGames as Dispatch<SetStateAction<TransferListData>>}
-      searchPlaceholder="Suchen ..."
-      nothingFound="Kein Spiel gefunden"
-      titles={[`Verfügbare Spiele (${games[0].length})`, `Ausgewählte Spiele (${games[1].length})`]}
-      breakpoint="sm"
-      listHeight={400}
-    />
+    <Paper display="inline-block">
+      <Group>
+        <GameCard
+          name="Merken"
+          mode="DUELL"
+        />
+        <GameCard
+          name="Referatbingo"
+          mode="DUELL"
+        />
+        <GameCard
+          name="Geheimwörter"
+          mode="DUELL"
+        />
+        <GameCard
+          name="Du sagst ..."
+          mode="TEAM"
+        />
+        <GameCard
+          name="Flaggen"
+          mode="DUELL"
+        />
+        <GameCard
+          name="Set"
+          mode="DUELL"
+        />
+      </Group>
+    </Paper>
   );
 };
 

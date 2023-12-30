@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Group, type StepProps, Stepper, TextInput, Title } from "@mantine/core";
+import { Box, Button, Flex, Group, type StepperProps, Stepper, TextInput, Title, Text } from "@mantine/core";
 import { useDisclosure, useLocalStorage } from "@mantine/hooks";
 import { IconQuestionMark } from "@tabler/icons-react";
 import { useRouter } from "next/router";
@@ -18,6 +18,7 @@ import { api } from "~/utils/api";
 import type { TGameNames } from "~/components/room/Game/games/game.types";
 import { GAME_CONFIGURATORS } from "~/components/gameshows/_game_configurator_map";
 import NextHead from "~/components/shared/NextHead";
+import type { StepperStepProps } from "@mantine/core";
 
 const NUM_OF_DEFAULT_STEPS = 2;
 
@@ -74,7 +75,7 @@ const CreateGameshowPage = () => {
   const selectedGamesReduced: TGameNames[] = selectedGames.map((g) => g.value);
   const numOfSteps = NUM_OF_DEFAULT_STEPS + selectedGames.length;
   const isLastStep = activeStep === numOfSteps;
-  const allowSelectStepProps: StepProps = { allowStepClick: !isLoading, allowStepSelect: !isLoading };
+  const allowSelectStepProps: StepperStepProps = { allowStepClick: !isLoading, allowStepSelect: !isLoading };
 
   const STEP_MAP = {
     selectGames: 0,
@@ -182,8 +183,8 @@ const CreateGameshowPage = () => {
             <Stepper
               active={activeStep}
               onStepClick={setActiveStep}
-              breakpoint="sm"
-              size="sm"
+              // hiddenFrom="sm"
+              // size="sm"
               allowNextStepsSelect={false}
             >
               <Stepper.Step
@@ -245,7 +246,7 @@ const CreateGameshowPage = () => {
             </Stepper>
 
             <Group
-              position="center"
+              // position="center"
               mt="xl"
             >
               {isLoading ? (

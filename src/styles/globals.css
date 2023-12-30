@@ -7,7 +7,3 @@
   font-family: "Montserrat-Bold"; /*a name to be used later*/
   src: url("../assets/fonts/montserrat/Montserrat-Bold.ttf"); /*URL to font*/
 }
-
-body {
-  /* background-color: var(--mantine-color-primary-filled); */
-}

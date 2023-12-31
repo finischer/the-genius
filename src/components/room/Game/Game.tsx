@@ -1,4 +1,4 @@
-import { Flex, keyframes } from "@mantine/core";
+import { Flex } from "@mantine/core";
 import React, { useEffect, useState } from "react";
 import { useRoom } from "~/hooks/useRoom";
 import { animations, zoomInAnimation, zoomOutAnimation } from "~/utils/animations";
@@ -20,10 +20,11 @@ import type { TDuSagstGameState } from "./games/DuSagst/config";
 import ReferatBingoGame from "./games/ReferatBingo/ReferatBingoGame";
 import type { TReferatBingoGameState } from "./games/ReferatBingo/config";
 
-const scaleAnimation = keyframes({
-  "0%": { transform: "scale(1,1)" },
-  "100%": { transform: "scale(1.4,1.4)" },
-});
+// const scaleAnimation = keyframes({
+//   "0%": { transform: "scale(1,1)" },
+//   "100%": { transform: "scale(1.4,1.4)" },
+// });
+const scaleAnimation = undefined;
 
 // Wrapper for the games
 // Handles also the intro sequence

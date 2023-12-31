@@ -23,7 +23,7 @@ const MediaPlayer = () => {
 
   return (
     <Flex
-      bg="gray"
+      bg="dark.7"
       px="md"
       py="xs"
       direction="column"
@@ -36,7 +36,7 @@ const MediaPlayer = () => {
         <Text fw="bold">{songInfo.title}</Text>
         <Text
           fw="bold"
-          color="dimmed"
+          c="dimmed"
         >
           {songInfo.interpret}
         </Text>
@@ -45,20 +45,26 @@ const MediaPlayer = () => {
       <Flex
         gap="md"
         align="center"
-        bg="dark"
+        bg="dark.8"
         py="xs"
         style={(theme) => ({
           borderRadius: theme.radius.lg,
         })}
         justify="center"
       >
-        <ActionIcon toolTip="Vorheriger Titel">
+        <ActionIcon
+          toolTip="Vorheriger Titel"
+          variant="light"
+        >
           <IconPlayerSkipBack onClick={playPreviousSong} />
         </ActionIcon>
-        <ActionIcon>
+        <ActionIcon variant="light">
           <PlayIcon onClick={toggleMusic} />
         </ActionIcon>
-        <ActionIcon toolTip="Nächster Titel">
+        <ActionIcon
+          toolTip="Nächster Titel"
+          variant="light"
+        >
           <IconPlayerSkipForward onClick={playNextSong} />
         </ActionIcon>
       </Flex>

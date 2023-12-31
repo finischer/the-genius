@@ -1,15 +1,4 @@
-import {
-  Badge,
-  Box,
-  Button,
-  Container,
-  Flex,
-  Group,
-  Text,
-  keyframes,
-  useMantineTheme,
-  type Sx,
-} from "@mantine/core";
+import { Badge, Box, Button, Container, Flex, Group, Text, useMantineTheme } from "@mantine/core";
 import { IconExposureMinus1, IconExposurePlus1, IconTargetArrow } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
@@ -25,10 +14,11 @@ import Notefield from "../Notefield/Notefield";
 import { type IScoreCircleProps, type IScorebarProps } from "./scorebar.types";
 import ModView from "~/components/shared/ModView";
 
-const stretchAnimation = keyframes({
-  "0%": { transform: "scale(0.75)" },
-  "100%": { transform: "scale(1.25)" },
-});
+// const stretchAnimation = keyframes({
+//   "0%": { transform: "scale(0.75)" },
+//   "100%": { transform: "scale(1.25)" },
+// });
+const stretchAnimation = undefined;
 
 const HIGHLIGHT_CONTAINER_COLOR = "#c6011f";
 
@@ -105,7 +95,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
     })
     .filter((p) => p);
 
-  const scorebarTimerStyle: Sx = {
+  const scorebarTimerStyle = {
     height: SCOREBAR_HEIGHT,
     width: SCOREBAR_HEIGHT,
     borderRadius: scorebarBorderRadius,

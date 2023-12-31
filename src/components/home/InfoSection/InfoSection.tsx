@@ -11,7 +11,7 @@ const InfoSection = () => {
   const theme = useMantineTheme();
   const { data: gameshows, isLoading } = api.gameshows.getAllByCreatorId.useQuery();
 
-  const gameshowsCreatedPercentage = gameshows ? (gameshows.length / MAX_NUM_GAMESHOWS) * 100 : 0;
+  const gameshowsCreatedPercentage = gameshows ? Math.round((gameshows.length / MAX_NUM_GAMESHOWS) * 100) : 0;
 
   return (
     <Paper

@@ -13,6 +13,8 @@ import { SocketProvider } from "~/hooks/useSocket";
 import { UserProvider } from "~/hooks/useUser";
 import { THEME, cssResolver } from "~/styles/constants";
 import "@mantine/core/styles.css";
+import "@mantine/notifications/styles.css";
+
 import "~/styles/globals.css";
 import { api } from "~/utils/api";
 

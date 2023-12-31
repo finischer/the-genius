@@ -106,6 +106,7 @@ const RoomsPage = () => {
         id: "joinRoom",
         title: "Erfolgreich",
         message: "Raum erfolgreich beigetreten",
+        loading: false,
         icon: <IconCheck size="1rem" />,
       });
     }

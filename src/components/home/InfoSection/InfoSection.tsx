@@ -17,6 +17,7 @@ const InfoSection = () => {
         flexDirection: "column",
         gap: theme.spacing.lg,
       }}
+      shadow="md"
     >
       <Paper
         variant="light"

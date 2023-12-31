@@ -14,7 +14,7 @@ interface IAdminBadgeProps {
 
 const AdminBadge: React.FC<IAdminBadgeProps> = ({ disableTooltip }) => (
   <Badge
-    color="yellow"
+    color="gold.8"
     tooltip={disableTooltip ? undefined : "Admin"}
   >
     <IconCrown style={{ width: rem(18), height: rem(18) }} />

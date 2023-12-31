@@ -149,6 +149,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                 id: "closeRoom",
                 title: "Erfolgreich",
                 message: "Raum wurde erfolgreich geschlossen",
+                loading: false,
                 icon: <IconCheck size="1rem" />,
               });
             }

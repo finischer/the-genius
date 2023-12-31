@@ -1,24 +1,24 @@
-import { Box, Button, Flex, Group, type StepperProps, Stepper, TextInput, Title, Text } from "@mantine/core";
+import type { StepperStepProps } from "@mantine/core";
+import { Box, Button, Flex, Group, Stepper, TextInput, Title } from "@mantine/core";
 import { useDisclosure, useLocalStorage } from "@mantine/hooks";
+import type { Game } from "@prisma/client";
 import { IconQuestionMark } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useImmer } from "use-immer";
+import { GAME_CONFIGURATORS } from "~/components/gameshows/_game_configurator_map";
+import PageLayout from "~/components/layout";
+import type { TGameNames } from "~/components/room/Game/games/game.types";
 import ActionIcon from "~/components/shared/ActionIcon";
 import GameRulesModal from "~/components/shared/GameRulesModal";
 import GamesPicker from "~/components/shared/GamesPicker";
-import { type TTransferListItem } from "~/components/shared/GamesPicker/gamesPicker.types";
 import Loader from "~/components/shared/Loader";
-import PageLayout from "~/components/layout";
+import NextHead from "~/components/shared/NextHead";
 import { ConfiguratorProvider } from "~/hooks/useConfigurator";
 import { GAME_STATE_MAP } from "~/hooks/useConfigurator/useConfigurator";
 import { type TGameshowConfig } from "~/hooks/useConfigurator/useConfigurator.types";
 import useNotification from "~/hooks/useNotification";
 import { api } from "~/utils/api";
-import type { TGameNames } from "~/components/room/Game/games/game.types";
-import { GAME_CONFIGURATORS } from "~/components/gameshows/_game_configurator_map";
-import NextHead from "~/components/shared/NextHead";
-import type { StepperStepProps } from "@mantine/core";
 
 const NUM_OF_DEFAULT_STEPS = 2;
 
@@ -41,7 +41,7 @@ const CreateGameshowPage = () => {
   const [furtherButtonDisabled, setFurtherButtonDisabled] = useState(false);
   const [openedGameRules, { open: openGameRules, close: closeGameRules }] = useDisclosure();
 
-  const [selectedGames, setSelectedGames] = useState<TTransferListItem[]>([]);
+  const [selectedGames, setSelectedGames] = useImmer<Game[]>([]);
 
   const activeGame = gameshow.games[activeStep - 1]; // -1 because Game configurators starts at step 1 and not 0
 
@@ -72,7 +72,7 @@ const CreateGameshowPage = () => {
     },
   });
 
-  const selectedGamesReduced: TGameNames[] = selectedGames.map((g) => g.value);
+  const selectedGamesReduced: TGameNames[] = selectedGames.map((g) => g.slug as TGameNames);
   const numOfSteps = NUM_OF_DEFAULT_STEPS + selectedGames.length;
   const isLastStep = activeStep === numOfSteps;
   const allowSelectStepProps: StepperStepProps = { allowStepClick: !isLoading, allowStepSelect: !isLoading };
@@ -192,34 +192,37 @@ const CreateGameshowPage = () => {
                 description="Wähle deine Spiele aus"
                 {...allowSelectStepProps}
               >
-                <GamesPicker setSelectedGames={setSelectedGames} />
+                <GamesPicker
+                  selectedGames={selectedGames}
+                  setSelectedGames={setSelectedGames}
+                />
               </Stepper.Step>
-              {selectedGames.map((g) => {
-                const game = GAME_STATE_MAP[g.value];
-                const gameRules = game.getRules().trim();
+              {selectedGames.map((game) => {
+                // const tmpGame = GAME_STATE_MAP[game.slug];
+                // const gameRules = tmpGame.getRules().trim();
 
                 return (
                   <Stepper.Step
-                    key={g.value}
-                    label={g.label}
+                    key={game.id}
+                    label={game.name}
                     {...allowSelectStepProps}
                   >
                     <Flex
                       align="center"
                       gap="xs"
                     >
-                      <Title order={2}>Einstellungen - {g.label}</Title>
-                      {gameRules && (
-                        <ActionIcon
-                          color="dimmed"
-                          toolTip="Regeln anzeigen"
-                          onClick={openGameRules}
-                        >
-                          <IconQuestionMark />
-                        </ActionIcon>
-                      )}
+                      <Title order={2}>Einstellungen - {game.name}</Title>
+                      {/* {gameRules && (
+                      <ActionIcon
+                        color="dimmed"
+                        toolTip="Regeln anzeigen"
+                        onClick={openGameRules}
+                      >
+                        <IconQuestionMark />
+                      </ActionIcon>
+                    )} */}
                     </Flex>
-                    <Box mt="xl">{GAME_CONFIGURATORS[g.value]}</Box>
+                    <Box mt="xl">{GAME_CONFIGURATORS[game.slug as TGameNames]}</Box>
                   </Stepper.Step>
                 );
               })}

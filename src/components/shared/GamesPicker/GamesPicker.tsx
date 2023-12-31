@@ -6,21 +6,30 @@ import { api } from "~/utils/api";
 import ActionIcon from "../ActionIcon";
 import Paper from "../Paper";
 import classes from "./gamesPicker.module.css";
-import { type IGamesPickerProps, type TTransferListData } from "./gamesPicker.types";
+import { type IGamesPickerProps } from "./gamesPicker.types";
 
-const GamesPicker: React.FC<IGamesPickerProps> = ({ setSelectedGames }) => {
+const GamesPicker: React.FC<IGamesPickerProps> = ({ selectedGames, setSelectedGames }) => {
   const { data: games } = api.games.getAll.useQuery();
 
-  // useEffect(() => {
-  //   setSelectedGames(games[1]);
-  // }, [games]);
+  const handleSelectGame = (game: Game) => {
+    setSelectedGames((draft) => {
+      draft.push(game);
+    });
+  };
 
   const GameCard = ({ game }: { game: Game }) => {
+    const alreadySelected = selectedGames.find((g) => g.id === game.id) ? true : false;
+
     return (
       <Paper
         variant="light"
         pos="relative"
-        onClick={() => console.log("Select game: ", game.name)}
+        disabled={alreadySelected || !game.active}
+        onClick={() => {
+          if (alreadySelected || !game.active) return;
+          handleSelectGame(game);
+        }}
+        opacity={alreadySelected || !game.active ? 0.3 : 1}
       >
         <Group>
           {game.mode === "DUELL" && <IconUser />}
@@ -29,6 +38,7 @@ const GamesPicker: React.FC<IGamesPickerProps> = ({ setSelectedGames }) => {
           <ActionIcon
             variant="default"
             toolTip="Details anzeigen"
+            disabled
           >
             <IconInfoSquareRounded />
           </ActionIcon>

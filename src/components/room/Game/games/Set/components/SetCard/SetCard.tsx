@@ -1,4 +1,4 @@
-import { Container, Text, useMantineTheme, type MantineStyleProp } from "@mantine/core";
+import { Container, Text, useMantineTheme, type MantineStyleProp, UnstyledButton } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import ActionIcon from "~/components/shared/ActionIcon";
@@ -6,6 +6,7 @@ import { useUser } from "~/hooks/useUser";
 import type { TSetCard, TSetGameMarkedCardsState } from "../../set.types";
 import SetForm from "../SetForm";
 import type { ISetCardProps } from "./setCard.types";
+import classes from "./setCard.module.css";
 
 const cardVariants = {
   selected: {
@@ -110,9 +111,7 @@ const SetCard: React.FC<ISetCardProps> = ({
       style={{
         ...cardStyle,
         transform: "scale(-1, 1)",
-        ":hover": {
-          cursor: isHost && markerState === "marked" ? "pointer" : "auto",
-        },
+        cursor: isHost && markerState === "marked" ? "pointer" : "auto",
       }}
     >
       <Container
@@ -124,7 +123,7 @@ const SetCard: React.FC<ISetCardProps> = ({
         <Text
           c="dimmed"
           fw="bold"
-          fz="lg"
+          fz=""
         >
           {index + 1}
         </Text>
@@ -144,6 +143,8 @@ const SetCard: React.FC<ISetCardProps> = ({
 
   return (
     <motion.div
+      className={classes.card}
+      data-isHost={isHost}
       variants={cardVariants}
       animate={isFlipped ? "selected" : "notSelected"}
       onClick={() => onClick(index)}

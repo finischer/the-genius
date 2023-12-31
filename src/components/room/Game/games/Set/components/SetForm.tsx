@@ -108,7 +108,6 @@ const SetForm: React.FC<ISetFormProps> = ({ editable = false, card, onChange, on
       <Flex
         h="100%"
         style={{
-          borderRadius: theme.radius.sm,
           cursor: "pointer",
           ":hover": {
             background: theme.colors.dark[0],

@@ -28,7 +28,6 @@ const Table: FC<ITableProps> = ({ data, keys, caption, head }) => {
     body: buildedData,
   };
 
-  console.log(tableData);
   return <MantineTable data={tableData} />;
 };
 

@@ -12,28 +12,29 @@ const SettingsPage = () => {
       <PageLayout>
         <Title order={2}>Einstellungen</Title>
 
-        <Tabs defaultValue="general">
+        <Tabs defaultValue="account">
           <Tabs.List>
-            <Tabs.Tab
+            {/* <Tabs.Tab
               value="general"
-              icon={<IconSettings />}
+              leftSection={<IconSettings />}
+              disabled
             >
               Allgemein
-            </Tabs.Tab>
+            </Tabs.Tab> */}
             <Tabs.Tab
               value="account"
-              icon={<IconUser />}
+              leftSection={<IconUser />}
             >
               Account
             </Tabs.Tab>
           </Tabs.List>
 
-          <Tabs.Panel
+          {/* <Tabs.Panel
             value="general"
             pt="xs"
           >
             <GeneralSettingsSection />
-          </Tabs.Panel>
+          </Tabs.Panel> */}
 
           <Tabs.Panel
             value="account"

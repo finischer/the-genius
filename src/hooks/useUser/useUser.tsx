@@ -17,9 +17,9 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
   const [team, setTeam] = useState<Team | undefined>(undefined);
   const isPlayer = team !== undefined;
   const [isHost, setIsHost] = useState(false);
-  const { showErrorNotification } = useNotification();
+  const { showErrorNotification, showSuccessNotification } = useNotification();
   const { mutateAsync: checkUsername, isLoading } = api.users.isUsernameInUse.useMutation();
-  console.log("Role: ", user.role);
+
   const isAdmin = user.role === "ADMIN";
 
   function initUser() {
@@ -63,6 +63,10 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
 
     const newUser = { ...session, user: { ...session?.user, username: newUsername } };
     await updateSession(newUser);
+
+    showSuccessNotification({
+      message: "Username erfolgreich geändert",
+    });
     return true;
   }
 

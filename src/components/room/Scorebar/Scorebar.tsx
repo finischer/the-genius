@@ -303,20 +303,24 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
               position: "relative",
             })}
           >
-            <Text
-              style={() => ({
-                width: "100%",
-                overflow: "hidden",
-                whiteSpace: "nowrap",
-                textOverflow: "ellipsis",
-                position: "absolute",
-                top: "50%",
-                transform: "translateY(-50%)",
-                display: "flex",
-              })}
-            >
-              {team.players.map((p) => p.name).join("/") || "Noch keiner da"}
-            </Text>
+            <Tooltip label={team.players.map((p) => p.name).join(", ")}>
+              <Text
+                truncate
+                lineClamp={1}
+                style={() => ({
+                  width: "100%",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
+                  position: "absolute",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  display: "flex",
+                })}
+              >
+                {team.players.map((p) => p.name).join("/") || "Keiner da"}
+              </Text>
+            </Tooltip>
           </Box>
 
           {/* Score circles */}

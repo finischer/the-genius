@@ -1,11 +1,17 @@
-import { Box, Flex, Group, Progress, Stack, Text, useMantineTheme } from "@mantine/core";
+import { Box, Center, Flex, Group, Progress, Stack, Text, useMantineTheme } from "@mantine/core";
 import { IconSquareRoundedPlus } from "@tabler/icons-react";
 import { useRouter } from "next/router";
+import Loader from "~/components/shared/Loader";
 import Paper from "~/components/shared/Paper";
+import { MAX_NUM_GAMESHOWS } from "~/config/standardFeatures";
+import { api } from "~/utils/api";
 
 const InfoSection = () => {
   const { push } = useRouter();
   const theme = useMantineTheme();
+  const { data: gameshows, isLoading } = api.gameshows.getAllByCreatorId.useQuery();
+
+  const gameshowsCreatedPercentage = gameshows ? (gameshows.length / MAX_NUM_GAMESHOWS) * 100 : 0;
 
   return (
     <Paper
@@ -39,15 +45,25 @@ const InfoSection = () => {
         variant="light"
         onClick={() => void push("/gameshows")}
       >
-        <Stack>
-          <Flex justify="space-between">
-            <Text fz="md">Meine Spielshows</Text>
-            <Text fz="md">33 % frei</Text>
-          </Flex>
-          <Text c="dimmed">2 von 3 erstellt</Text>
+        {isLoading && (
+          <Center>
+            <Loader message="Lädt ..." />
+          </Center>
+        )}
 
-          <Progress value={33} />
-        </Stack>
+        {!isLoading && gameshows && (
+          <Stack>
+            <Flex justify="space-between">
+              <Text fz="md">Meine Spielshows</Text>
+              <Text fz="md">{100 - gameshowsCreatedPercentage} % frei</Text>
+            </Flex>
+            <Text c="dimmed">
+              {gameshows.length} von {MAX_NUM_GAMESHOWS} erstellt
+            </Text>
+
+            <Progress value={gameshowsCreatedPercentage} />
+          </Stack>
+        )}
       </Paper>
     </Paper>
   );

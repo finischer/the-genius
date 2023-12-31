@@ -1,4 +1,4 @@
-import { Avatar, Container, Flex, Text, useMantineTheme } from "@mantine/core";
+import { Avatar, Container, Flex, Text, getGradient, useMantineTheme } from "@mantine/core";
 import type { TeamAvatarImage } from "@prisma/client";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
 import React from "react";
@@ -22,8 +22,8 @@ const Scoreboard: React.FC<IScoreboardProps> = ({ team, color }) => {
 
   const minNumOfGamesToWin = Math.round((room.games.length + 1) / 2);
 
-  const GREEN_GRADIENT = theme.fn.linearGradient(90, "#00C9FF", "#92FE9D");
-  const RED_GRADIENT = theme.fn.linearGradient(90, "#D53369", "#DAAE51");
+  const GREEN_GRADIENT = getGradient({ deg: 90, from: "#00C9FF", to: "#92FE9D" }, theme);
+  const RED_GRADIENT = getGradient({ deg: 90, from: "#D53369", to: "#DAAE51" }, theme);
 
   const lineElements = new Array(minNumOfGamesToWin).fill(null).map((_, index) => (
     <Container

@@ -27,7 +27,7 @@ const AnswerBanner: React.FC<IAnswerBannerProps> = ({
       {showAnswer && (
         <motion.div {...animations.fadeInOut}>
           <Box
-            bg={theme.white}
+            bg="gray.0"
             mah="5rem"
             miw={miw}
             maw="100%"
@@ -47,7 +47,7 @@ const AnswerBanner: React.FC<IAnswerBannerProps> = ({
             {...props}
           >
             <Text
-              transform="uppercase"
+              tt="uppercase"
               style={{
                 textOverflow: "ellipsis",
                 overflow: "hidden",

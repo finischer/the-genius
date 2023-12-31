@@ -55,7 +55,7 @@ const SetGame: React.FC<ISetGameProps> = ({ game }) => {
 
   const PossibleSets = () => (
     <>
-      <Text color="dimmed">Mögliche Sets</Text>
+      <Text c="dimmed">Mögliche Sets</Text>
       {possibleSets.length === 0 && "Mit diesem Stapel ist kein Set möglich"}
       {possibleSets.map((s, idx) => {
         const cardNumbers = s.map((s) => s + 1);

@@ -1,4 +1,4 @@
-import { Container, Text, useMantineTheme, type Sx } from "@mantine/core";
+import { Container, Text, useMantineTheme, type MantineStyleProp } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import ActionIcon from "~/components/shared/ActionIcon";
@@ -38,7 +38,7 @@ const SetCard: React.FC<ISetCardProps> = ({
   const theme = useMantineTheme();
   const borderColor = BORDER_COLOR_MAP[markerState];
 
-  const cardStyle: Sx = {
+  const cardStyle: MantineStyleProp = {
     height: "10rem",
     width: "15rem",
     background: "white",
@@ -98,7 +98,7 @@ const SetCard: React.FC<ISetCardProps> = ({
         pos="absolute"
         fw="bold"
         size="2rem"
-        color="dark"
+        c="dark"
       >
         {index + 1}
       </Text>
@@ -122,9 +122,9 @@ const SetCard: React.FC<ISetCardProps> = ({
         p={0}
       >
         <Text
-          color="dimmed"
+          c="dimmed"
           fw="bold"
-          size="xl"
+          fz="lg"
         >
           {index + 1}
         </Text>
@@ -148,7 +148,7 @@ const SetCard: React.FC<ISetCardProps> = ({
       animate={isFlipped ? "selected" : "notSelected"}
       onClick={() => onClick(index)}
       style={{
-        borderRadius: theme.radius.lg,
+        borderRadius: theme.radius.xl,
         border: `6px solid ${marked ? borderColor : "transparent"}`,
       }}
     >

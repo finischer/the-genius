@@ -1,4 +1,4 @@
-import { Box, Center, Flex, Group, Progress, Stack, Text, useMantineTheme } from "@mantine/core";
+import { Center, Flex, Progress, Stack, Text, useMantineTheme } from "@mantine/core";
 import { IconSquareRoundedPlus } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import Loader from "~/components/shared/Loader";

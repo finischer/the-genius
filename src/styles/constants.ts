@@ -1,8 +1,17 @@
-import { createTheme, rem, type MantineColorsTuple, Box, Menu, Button, Paper, Card } from "@mantine/core";
+import {
+  createTheme,
+  rem,
+  type MantineColorsTuple,
+  Box,
+  Menu,
+  Button,
+  Paper,
+  Card,
+  Modal,
+} from "@mantine/core";
 import { GameshowMode } from "@prisma/client";
 import { generateColors } from "@mantine/colors-generator";
 import type { CSSVariablesResolver } from "@mantine/core";
-import classes from "./styling.module.css";
 
 export const sizes = {
   base: 25,
@@ -52,11 +61,9 @@ export const THEME = createTheme({
   // defaultRadius: rem(5),
   components: {
     Paper: Paper.extend({
-      classNames: classes,
       defaultProps: {
         py: rem(16),
         px: rem(16),
-        bg: "dark.9",
       },
     }),
   },

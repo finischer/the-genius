@@ -177,27 +177,14 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
       <Drawer
         opened={isOpen}
         onClose={closeModPanel}
-        // title="Mod-Panel"
+        title={<Title>Mod-Panel</Title>}
         offset={8}
         radius="md"
-        withCloseButton={false}
         overlayProps={{
           opacity: 0.15,
         }}
         scrollAreaComponent={ScrollArea.Autosize}
       >
-        <Group
-          justify="space-between"
-          align="flex-start"
-        >
-          <Title mb="md">Mod-Panel</Title>
-          <ActionIcon
-            variant="transparent"
-            c="white"
-          >
-            <IconX onClick={closeModPanel} />
-          </ActionIcon>
-        </Group>
         <Flex
           h="100%"
           direction="column"

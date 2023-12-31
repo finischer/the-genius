@@ -2,7 +2,7 @@ import { Flex, Table, Text, Title, useMantineTheme } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconPlayerPlay, IconPlus, IconSettings, IconStar, IconStarFilled } from "@tabler/icons-react";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PageLayout from "~/components/layout";
 import ActionIcon from "~/components/shared/ActionIcon";
 import CreateRoomModal from "~/components/shared/CreateRoomModal";

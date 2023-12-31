@@ -51,6 +51,7 @@ const Navbar = () => {
       </Box>
       <NavLink
         {...tab}
+        component={Link}
         active={isActive(tab.href)}
         onClick={() => goTo(tab.href)}
         style={(theme) => ({

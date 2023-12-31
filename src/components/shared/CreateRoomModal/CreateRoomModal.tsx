@@ -7,7 +7,6 @@ import {
   Select,
   Text,
   TextInput,
-  type SelectItem,
   SegmentedControl,
   type SegmentedControlItem,
   Input,
@@ -103,7 +102,7 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
 
           {hasGameForOnlyTeamMode && (
             <Text
-              color="dimmed"
+              c="dimmed"
               size="sm"
             >
               Hinweis: Der Modus kann nicht geändert werden, da die Spielshow mind. 1 Spiel enthält, welches

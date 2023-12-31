@@ -23,9 +23,9 @@ const MediaPlayer = () => {
 
   return (
     <Flex
-      bg="dark.7"
+      bg="dark.6"
       px="md"
-      py="xs"
+      py="md"
       direction="column"
       gap="sm"
       style={(theme) => ({

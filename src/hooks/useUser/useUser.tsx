@@ -19,7 +19,7 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
   const [isHost, setIsHost] = useState(false);
   const { showErrorNotification } = useNotification();
   const { mutateAsync: checkUsername, isLoading } = api.users.isUsernameInUse.useMutation();
-
+  console.log("Role: ", user.role);
   const isAdmin = user.role === "ADMIN";
 
   function initUser() {

@@ -59,7 +59,7 @@ const useAudio = () => {
     if (!elem) return;
 
     elem.audio.load();
-    elem.audio.play();
+    void elem.audio.play();
   }
 
   function updateAudioOption<T extends keyof TAudioOption>(option: T, value: TAudioOption[T]) {

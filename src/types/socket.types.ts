@@ -138,6 +138,8 @@ export interface IServerToClientEvents {
   // updateAllRooms: ({ newRooms }: { newRooms: Room[] }) => void; // Currently not in use
   roomWasClosed: () => void;
   raiseException: ({ reason, msg }: { reason: TExceptionReason; msg: string }) => void;
+  playSound: ({ soundId }: { soundId: keyof RoomSounds }) => void;
+  stopSound: ({ soundId }: { soundId: keyof RoomSounds }) => void;
 }
 
 export interface TNextApiResponse extends NextApiResponse {

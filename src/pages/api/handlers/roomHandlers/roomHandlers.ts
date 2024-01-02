@@ -218,6 +218,7 @@ export function roomHandler(
     if (withTimer) {
       team.startScorebarTimer();
       room.update();
+
       const interval = setInterval(() => {
         if (team.scorebarTimer.seconds === 0) {
           clearInterval(interval);

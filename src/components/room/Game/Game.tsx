@@ -19,7 +19,6 @@ import DuSagstGame from "./games/DuSagst/DuSagstGame";
 import type { TDuSagstGameState } from "./games/DuSagst/config";
 import ReferatBingoGame from "./games/ReferatBingo/ReferatBingoGame";
 import type { TReferatBingoGameState } from "./games/ReferatBingo/config";
-import useSound from "~/hooks/useSound";
 
 const scaleAnimation = keyframes({
   "0%": { transform: "scale(1,1)" },
@@ -30,7 +29,6 @@ const scaleAnimation = keyframes({
 // Handles also the intro sequence
 const Game: React.FC<IGameProps> = ({ game }) => {
   const { room } = useRoom();
-  const { emitPlaySound } = useSound();
 
   const introState = room.state.display.gameIntro;
   const showGame = room.state.display.game;

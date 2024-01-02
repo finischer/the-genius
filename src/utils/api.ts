@@ -14,6 +14,8 @@ import { isProduction } from "./environment";
 
 const getBaseUrl = () => {
   if (typeof window !== "undefined") return ""; // browser should use relative url
+  console.log("Website URL: ", process.env.WEBSITE_URL);
+  console.log("Base Url: ", `https://${process.env.WEBSITE_URL}`);
   if (process.env.WEBSITE_URL && isProduction) {
     return `https://${process.env.WEBSITE_URL}`;
   }

@@ -4,7 +4,7 @@ import type { User } from "@prisma/client";
 import React from "react";
 import { formatTimestamp } from "~/utils/dates";
 
-interface IUserDetailsModalProps extends ContextModalProps<any> {
+interface IUserDetailsModalProps {
   user: User;
 }
 

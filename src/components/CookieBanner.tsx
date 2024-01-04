@@ -15,13 +15,13 @@ const CookieBanner: React.FC<ICookieBannerProps> = ({ onButtonClick }) => {
       pos="absolute"
       bottom={0}
       w="100%"
-      sx={{
+      style={{
         zIndex: 9999,
       }}
     >
       <Group
         mb="xs"
-        sx={{
+        style={{
           justify: "space-between",
         }}
       >
@@ -41,7 +41,7 @@ const CookieBanner: React.FC<ICookieBannerProps> = ({ onButtonClick }) => {
         aller Cookies für Ihre jeweilige Session zu.
       </Text>
       <Group
-        sx={{
+        style={{
           justify: "flex-end",
         }}
         mt="md"

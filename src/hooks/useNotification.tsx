@@ -1,23 +1,23 @@
-import { type NotificationProps, notifications } from "@mantine/notifications";
+import { notifications, type NotificationData } from "@mantine/notifications";
 import { IconInfoCircle } from "@tabler/icons-react";
 import type { ZodError, typeToFlattenedError } from "zod";
 
 const useNotification = () => {
-  const showErrorNotification = (notification: NotificationProps) => {
+  const showErrorNotification = (notification: NotificationData) => {
     notifications.show({
       ...notification,
       color: "red",
     });
   };
 
-  const showSuccessNotification = (notification: NotificationProps) => {
+  const showSuccessNotification = (notification: NotificationData) => {
     notifications.show({
       ...notification,
       color: "green",
     });
   };
 
-  const showInfoNotification = (notification: NotificationProps) => {
+  const showInfoNotification = (notification: NotificationData) => {
     notifications.show({
       ...notification,
       icon: <IconInfoCircle />,

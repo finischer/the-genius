@@ -1,4 +1,4 @@
-import { Container, Text, useMantineTheme, type Sx } from "@mantine/core";
+import { Container, Text, useMantineTheme, type MantineStyleProp, UnstyledButton } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import ActionIcon from "~/components/shared/ActionIcon";
@@ -6,6 +6,7 @@ import { useUser } from "~/hooks/useUser";
 import type { TSetCard, TSetGameMarkedCardsState } from "../../set.types";
 import SetForm from "../SetForm";
 import type { ISetCardProps } from "./setCard.types";
+import classes from "./setCard.module.css";
 
 const cardVariants = {
   selected: {
@@ -38,7 +39,7 @@ const SetCard: React.FC<ISetCardProps> = ({
   const theme = useMantineTheme();
   const borderColor = BORDER_COLOR_MAP[markerState];
 
-  const cardStyle: Sx = {
+  const cardStyle: MantineStyleProp = {
     height: "10rem",
     width: "15rem",
     background: "white",
@@ -93,12 +94,12 @@ const SetCard: React.FC<ISetCardProps> = ({
   }
 
   const FrontContent = () => (
-    <Container sx={cardStyle}>
+    <Container style={cardStyle}>
       <Text
         pos="absolute"
-        weight="bold"
+        fw="bold"
         size="2rem"
-        color="dark"
+        c="dark"
       >
         {index + 1}
       </Text>
@@ -107,12 +108,10 @@ const SetCard: React.FC<ISetCardProps> = ({
 
   const BackContent = () => (
     <Container
-      sx={{
+      style={{
         ...cardStyle,
         transform: "scale(-1, 1)",
-        ":hover": {
-          cursor: isHost && markerState === "marked" ? "pointer" : "auto",
-        },
+        cursor: isHost && markerState === "marked" ? "pointer" : "auto",
       }}
     >
       <Container
@@ -122,9 +121,9 @@ const SetCard: React.FC<ISetCardProps> = ({
         p={0}
       >
         <Text
-          color="dimmed"
-          weight="bold"
-          size="xl"
+          c="dimmed"
+          fw="bold"
+          fz=""
         >
           {index + 1}
         </Text>
@@ -144,11 +143,13 @@ const SetCard: React.FC<ISetCardProps> = ({
 
   return (
     <motion.div
+      className={classes.card}
+      data-isHost={isHost}
       variants={cardVariants}
       animate={isFlipped ? "selected" : "notSelected"}
       onClick={() => onClick(index)}
       style={{
-        borderRadius: theme.radius.lg,
+        borderRadius: theme.radius.xl,
         border: `6px solid ${marked ? borderColor : "transparent"}`,
       }}
     >

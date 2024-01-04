@@ -1,4 +1,4 @@
-import { Anchor, Group, Footer as MantineFooter, rem } from "@mantine/core";
+import { Anchor, AppShell, Group, rem } from "@mantine/core";
 import { useRouter } from "next/router";
 
 const links = [
@@ -20,21 +20,20 @@ const Footer = () => {
   ));
 
   return (
-    <MantineFooter
-      height={rem(60)}
+    <AppShell.Footer
       px="md"
       py="xs"
     >
       <Group
         h="100%"
-        sx={{
+        style={{
           justifyContent: "center",
           alignItems: "center",
         }}
       >
         {items}
       </Group>
-    </MantineFooter>
+    </AppShell.Footer>
   );
 };
 

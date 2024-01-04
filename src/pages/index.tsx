@@ -1,39 +1,51 @@
-import { Button, Card, Group, Text } from "@mantine/core";
+import { Box, Flex, Grid, Group, SimpleGrid, useMantineTheme } from "@mantine/core";
+import { IconCategory, IconSearch, IconUsers } from "@tabler/icons-react";
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
+import InfoSection from "~/components/home/InfoSection/InfoSection";
 import PageLayout from "~/components/layout";
+import Card from "~/components/shared/Card/Card";
 import NextHead from "~/components/shared/NextHead";
 
-// TODO: Create Home page
-
 const Home: NextPage = () => {
-  const router = useRouter();
+  const { push: goTo } = useRouter();
 
   return (
     <>
       <NextHead title="Startseite" />
       <PageLayout>
-        <Card
-          shadow="sm"
-          padding="lg"
-          radius="md"
-          withBorder
-          w="20rem"
+        <Flex
+          gap="xl"
+          align="flex-start"
+          justify="space-between"
+          h="100%"
+          w="100%"
         >
-          <Group mb="xs">
-            <Text fw={500}>Räume</Text>
+          <Group align="flex-start">
+            <Card
+              title="Suchen"
+              Icon={IconSearch}
+              subTitle="Räume suchen"
+              onClick={() => void goTo("/rooms")}
+            />
+            <Card
+              title="Freunde"
+              Icon={IconUsers}
+              subTitle="Hinzufügen und pflegen"
+              disabled
+              onClick={() => console.log("Move to: Räume suchen")}
+            />
+            <Card
+              title="Spielshows"
+              Icon={IconCategory}
+              subTitle="Erstellen und Starten"
+              onClick={() => void goTo("/gameshows")}
+            />
           </Group>
-
-          <Button
-            variant="light"
-            fullWidth
-            mt="md"
-            radius="md"
-            onClick={() => void router.push("/rooms")}
-          >
-            Zu den Räumen
-          </Button>
-        </Card>
+          <Box h="100%">
+            <InfoSection />
+          </Box>
+        </Flex>
       </PageLayout>
     </>
   );

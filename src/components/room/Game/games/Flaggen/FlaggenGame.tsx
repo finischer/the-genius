@@ -67,7 +67,7 @@ const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
             radius="sm"
             opacity={displayFlag ? 1 : isHost ? 0.5 : 0}
             onClick={handleFlagClick}
-            sx={{
+            style={{
               transform: `scale(${displayFlag ? "1" : "0.9"})`,
               transition: "all 500ms",
               userSelect: "none",

@@ -41,7 +41,7 @@ const FlipCard: React.FC<IFlipCardProps> = ({
       p={0}
       m={0}
       onClick={handleClick}
-      sx={{
+      style={{
         ":hover": {
           cursor: clickable ? "pointer" : "auto",
           opacity: clickable ? 0.9 : 1,

@@ -42,7 +42,7 @@ const AnswerBox: React.FC<AnswerBoxProps> = ({ selectedAnswer, playerName, playe
       <Flex
         direction="column"
         opacity={showAnswerBox ? defaultOpacity : 0}
-        sx={{
+        style={{
           transition: "opacity 300ms",
         }}
       >
@@ -51,7 +51,7 @@ const AnswerBox: React.FC<AnswerBoxProps> = ({ selectedAnswer, playerName, playe
           pl="xs"
           pr="lg"
           maw="7rem"
-          sx={{
+          style={{
             borderRadius: theme.radius.sm,
             borderBottomLeftRadius: 0,
             borderBottomRightRadius: 0,
@@ -60,7 +60,7 @@ const AnswerBox: React.FC<AnswerBoxProps> = ({ selectedAnswer, playerName, playe
         >
           <Tooltip label={playerName}>
             <Text
-              sx={{
+              style={{
                 overflow: "hidden",
                 textOverflow: "ellipsis",
               }}
@@ -75,7 +75,7 @@ const AnswerBox: React.FC<AnswerBoxProps> = ({ selectedAnswer, playerName, playe
           justify="center"
           align="center"
           bg={backgroundColor}
-          sx={{
+          style={{
             borderRadius: theme.radius.md,
             borderColor: isAnswerEmpty ? theme.colors.dark[4] : "transparent",
             borderStyle: "solid",
@@ -101,7 +101,7 @@ const AnswerBox: React.FC<AnswerBoxProps> = ({ selectedAnswer, playerName, playe
       </Flex>
 
       <ModView>
-        <Button.Group sx={{ alignSelf: "center" }}>
+        <Button.Group style={{ alignSelf: "center" }}>
           <Button
             variant="default"
             onClick={handleShowAnswerBox}

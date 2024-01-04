@@ -2,7 +2,7 @@ import { Flex, Table, Text, Title, useMantineTheme } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconPlayerPlay, IconPlus, IconSettings, IconStar, IconStarFilled } from "@tabler/icons-react";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PageLayout from "~/components/layout";
 import ActionIcon from "~/components/shared/ActionIcon";
 import CreateRoomModal from "~/components/shared/CreateRoomModal";
@@ -39,11 +39,11 @@ const GameshowsPage = () => {
   const rows =
     gameshows?.map((gameshow) => {
       return (
-        <tr key={gameshow.id}>
-          <td>{gameshow.name}</td>
-          <td>{gameshow.numOfGames}</td>
-          <td>{formatTimestamp(gameshow.createdAt)}</td>
-          <td>
+        <Table.Tr key={gameshow.id}>
+          <Table.Td>{gameshow.name}</Table.Td>
+          <Table.Td>{gameshow.numOfGames}</Table.Td>
+          <Table.Td>{formatTimestamp(gameshow.createdAt)}</Table.Td>
+          <Table.Td>
             <Flex gap="xl">
               <ActionIcon
                 toolTip="Bearbeiten"
@@ -66,8 +66,8 @@ const GameshowsPage = () => {
                 <IconPlayerPlay />
               </ActionIcon>
             </Flex>
-          </td>
-        </tr>
+          </Table.Td>
+        </Table.Tr>
       );
     }) ?? [];
 
@@ -105,15 +105,15 @@ const GameshowsPage = () => {
           verticalSpacing="md"
           striped
         >
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Anzahl Spiele</th>
-              <th>Erstellt am</th>
-              <th>Aktion</th>
-            </tr>
-          </thead>
-          <tbody>{rows}</tbody>
+          <Table.Thead>
+            <Table.Tr>
+              <Table.Th>Name</Table.Th>
+              <Table.Th>Anzahl Spiele</Table.Th>
+              <Table.Th>Erstellt am</Table.Th>
+              <Table.Th>Aktion</Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>{rows}</Table.Tbody>
         </Table>
       </PageLayout>
     </>

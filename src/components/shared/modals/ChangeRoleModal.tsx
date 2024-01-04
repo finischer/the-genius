@@ -1,18 +1,17 @@
-import { Button, Divider, Flex, Select, Text, rem } from "@mantine/core";
+import { Button, Flex, Select } from "@mantine/core";
 import type { ContextModalProps } from "@mantine/modals";
 import { UserRole } from "@prisma/client";
-import { revalidatePath } from "next/cache";
 import React, { useState } from "react";
 import useNotification from "~/hooks/useNotification";
 import { api } from "~/utils/api";
 
-interface IChangeRoleModalProps extends ContextModalProps<any> {
-  role: UserRole;
+interface IChangeRoleModalProps {
+  role: UserRole | null;
   userId: string;
 }
 
 const ChangeRoleModal: React.FC<ContextModalProps<IChangeRoleModalProps>> = ({ id, innerProps, context }) => {
-  const { showSuccessNotification, handleZodError } = useNotification();
+  const { showSuccessNotification, handleZodError, showInfoNotification } = useNotification();
   const { mutate: updateRole } = api.users.updateUserRole.useMutation({
     onSuccess: () => showSuccessNotification({ message: "Rolle wurde erfolgreich geändert" }),
     onError: (error) => {
@@ -21,11 +20,17 @@ const ChangeRoleModal: React.FC<ContextModalProps<IChangeRoleModalProps>> = ({ i
   });
 
   const { role, userId } = innerProps;
-  const [selectedRole, setSelectedRole] = useState<UserRole>(role);
+  const [selectedRole, setSelectedRole] = useState<UserRole | null>(role);
 
   const allRoles = Object.keys(UserRole);
 
   const handleChangeRole = () => {
+    if (!selectedRole) {
+      return showInfoNotification({
+        message: "Die aktuelle Rolle konnte nicht abgerufen werden und kann daher nicht geändert werden.",
+      });
+    }
+
     updateRole({
       userId,
       newRole: selectedRole,
@@ -45,7 +50,7 @@ const ChangeRoleModal: React.FC<ContextModalProps<IChangeRoleModalProps>> = ({ i
         label="Wähle eine Rolle aus"
         placeholder="Rolle auswählen"
         data={allRoles}
-        dropdownPosition="bottom"
+        comboboxProps={{ position: "bottom" }}
         defaultValue={selectedRole}
         onChange={(role) => role !== null && setSelectedRole(role as UserRole)}
       />

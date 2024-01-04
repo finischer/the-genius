@@ -20,6 +20,6 @@ export const openPricingModal = () => {
   modalsContext.openContextModal({
     modal: "pricing",
     size: "50vw",
-    innerProps: null,
+    innerProps: {},
   });
 };

@@ -10,7 +10,6 @@ const List = <T,>({
   deletableItems = false,
   onClickItem = () => null,
   onDeleteItem = () => null,
-
   data,
   renderValueByKey,
   setData,

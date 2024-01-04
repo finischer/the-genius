@@ -80,7 +80,6 @@ const BetaUsersPage = () => {
       <Flex
         direction="column"
         gap="xl"
-        w="40rem"
       >
         <Flex
           direction="column"
@@ -101,7 +100,7 @@ const BetaUsersPage = () => {
         </Flex>
 
         <Title order={4}>Alle Betatester</Title>
-        <Table>
+        <Table w="40rem">
           <thead>
             <tr>
               <th>Email</th>

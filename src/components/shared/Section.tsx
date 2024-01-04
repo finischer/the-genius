@@ -5,7 +5,7 @@ const Section = ({ children }: { children: React.ReactNode }) => (
     direction="column"
     gap="xs"
     mt="xl"
-    sx={{
+    style={{
       ":first-of-type": {
         marginTop: 0,
       },
@@ -15,4 +15,4 @@ const Section = ({ children }: { children: React.ReactNode }) => (
   </Flex>
 );
 
-export default Section
+export default Section;

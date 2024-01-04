@@ -1,8 +1,11 @@
+import type { Game } from "@prisma/client";
 import { type Dispatch } from "react";
+import type { Updater } from "use-immer";
 import type { TGameNames } from "~/components/room/Game/games/game.types";
 
 export interface IGamesPickerProps {
-  setSelectedGames: Dispatch<TTransferListItem[]>;
+  selectedGames: Game[];
+  setSelectedGames: Updater<Game[]>;
 }
 
 export type TTransferListItem = {

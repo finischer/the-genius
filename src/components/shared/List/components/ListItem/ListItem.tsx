@@ -46,41 +46,47 @@ const ListItem = <T,>({
       onClick={() => handleClick(item.id.toString())}
     >
       <Flex
-        bg={selected && editable ? theme.primaryColor : theme.colors.dark[5]}
-        style={{ borderRadius: theme.radius.md }}
-        px="md"
-        py="sm"
-        w="100%"
-        justify="space-between"
+        align="center"
+        gap="md"
       >
+        {showIndex && <span>{index + 1}.</span>}
         <Flex
-          gap="md"
-          align="flex-start"
+          bg={selected && editable ? theme.primaryColor : theme.colors.dark[5]}
+          style={{ borderRadius: theme.radius.md }}
+          px="md"
+          py="sm"
+          w="100%"
+          justify="space-between"
         >
-          {editable && (
-            <Flex
-              w={30}
-              justify="flex-end"
-              onPointerDown={(e) => controls.start(e)}
-              style={{ cursor: "grab" }}
-            >
-              <IconGripVertical />
-            </Flex>
-          )}
-
-          <span>{content}</span>
-        </Flex>
-        {deletable && (
-          <ActionIcon
-            size="sm"
-            variant="subtle"
-            radius="xs"
-            toolTip="Aus Liste entfernen"
-            onClick={handleDelete}
+          <Flex
+            gap="md"
+            align="flex-start"
           >
-            <IconX />
-          </ActionIcon>
-        )}
+            {editable && (
+              <Flex
+                w={30}
+                justify="flex-end"
+                onPointerDown={(e) => controls.start(e)}
+                style={{ cursor: "grab" }}
+              >
+                <IconGripVertical />
+              </Flex>
+            )}
+
+            <span>{content}</span>
+          </Flex>
+          {deletable && (
+            <ActionIcon
+              size="sm"
+              variant="subtle"
+              radius="xs"
+              toolTip="Aus Liste entfernen"
+              onClick={handleDelete}
+            >
+              <IconX />
+            </ActionIcon>
+          )}
+        </Flex>
       </Flex>
     </Reorder.Item>
   );

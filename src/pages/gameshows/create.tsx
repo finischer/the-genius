@@ -1,8 +1,8 @@
 import type { StepperStepProps } from "@mantine/core";
-import { Box, Button, Flex, Group, Stepper, TextInput, Title } from "@mantine/core";
+import { Box, Center, Flex, Group, Stepper, TextInput, Title } from "@mantine/core";
 import { useDisclosure, useLocalStorage } from "@mantine/hooks";
 import type { Game } from "@prisma/client";
-import { IconQuestionMark } from "@tabler/icons-react";
+import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useImmer } from "use-immer";
@@ -15,7 +15,6 @@ import GamesPicker from "~/components/shared/GamesPicker";
 import Loader from "~/components/shared/Loader";
 import NextHead from "~/components/shared/NextHead";
 import { ConfiguratorProvider } from "~/hooks/useConfigurator";
-import { GAME_STATE_MAP } from "~/hooks/useConfigurator/useConfigurator";
 import { type TGameshowConfig } from "~/hooks/useConfigurator/useConfigurator.types";
 import useNotification from "~/hooks/useNotification";
 import { api } from "~/utils/api";
@@ -178,6 +177,7 @@ const CreateGameshowPage = () => {
           <Flex
             gap="xl"
             direction="column"
+            justify="space-between"
           >
             <Title>Erstelle deine Spielshow</Title>
             <Stepper
@@ -192,10 +192,12 @@ const CreateGameshowPage = () => {
                 description="Wähle deine Spiele aus"
                 {...allowSelectStepProps}
               >
-                <GamesPicker
-                  selectedGames={selectedGames}
-                  setSelectedGames={setSelectedGames}
-                />
+                <Center>
+                  <GamesPicker
+                    selectedGames={selectedGames}
+                    setSelectedGames={setSelectedGames}
+                  />
+                </Center>
               </Stepper.Step>
               {selectedGames.map((game) => {
                 // const tmpGame = GAME_STATE_MAP[game.slug];
@@ -249,26 +251,26 @@ const CreateGameshowPage = () => {
             </Stepper>
 
             <Group
-              // position="center"
+              justify="center"
               mt="xl"
             >
               {isLoading ? (
                 <Loader message="Spielshow wird erstellt ..." />
               ) : (
                 <>
-                  <Button
+                  <ActionIcon
                     variant="default"
                     onClick={() => !isLoading && prevStep()}
                   >
-                    Zurück
-                  </Button>
-                  <Button
+                    <IconChevronLeft />
+                  </ActionIcon>
+                  <ActionIcon
                     onClick={() => (isLastStep && !isLoading ? saveGameshow() : nextStep())}
-                    loading={isLoading}
                     disabled={furtherButtonDisabled}
+                    loading={isLoading}
                   >
-                    {isLastStep ? "Spielshow speichern" : "Weiter"}
-                  </Button>
+                    <IconChevronRight />
+                  </ActionIcon>
                 </>
               )}
             </Group>

@@ -1,6 +1,5 @@
-import { Flex, Group, Text } from "@mantine/core";
+import { Flex, Text } from "@mantine/core";
 import { Reorder } from "framer-motion";
-import React from "react";
 import ListItem from "./components/ListItem";
 import type { IListItem } from "./components/ListItem/listItem.types";
 import type { IListProps } from "./list.types";

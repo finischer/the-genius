@@ -69,7 +69,7 @@ export const THEME = createTheme({
     }),
     ActionIcon: ActionIcon.extend({
       defaultProps: {
-        color: "white",
+        c: "white",
       },
     }),
   },

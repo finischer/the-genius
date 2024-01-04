@@ -47,7 +47,7 @@
     "chroma-js": "^2.4.2",
     "dayjs": "^1.11.10",
     "embla-carousel-react": "^7.1.0",
-    "framer-motion": "^10.15.1",
+    "framer-motion": "^10.12.7",
     "immer": "^10.0.2",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",

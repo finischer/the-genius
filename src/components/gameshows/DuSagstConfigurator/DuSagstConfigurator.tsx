@@ -129,6 +129,7 @@ const DuSagstConfigurator = () => {
       <Flex
         direction="column"
         gap="xl"
+        w="100%"
       >
         <TextInput
           ref={inputRef}

@@ -83,7 +83,7 @@ const QuestionFormLayout = <T extends { id: string }>({
         <Title order={3}>{listTitle}</Title>
         <ScrollArea
           mih="100%"
-          h="calc(100vh - 30rem)"
+          // h="calc(100vh - 30rem)"
         >
           <List
             data={questions}

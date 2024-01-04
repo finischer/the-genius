@@ -12,4 +12,5 @@ export interface IListItemProps<T> {
   content?: string;
   showIndex?: boolean;
   index: number;
+  clickable: boolean;
 }

@@ -17,6 +17,7 @@ const ListItem = <T,>({
   content,
   showIndex,
   index,
+  clickable,
 }: IListItemProps<T>) => {
   const y = useMotionValue(0);
   const boxShadow = useRaisedShadow(y);
@@ -52,7 +53,7 @@ const ListItem = <T,>({
         {showIndex && <span>{index + 1}.</span>}
         <Flex
           bg={selected && editable ? theme.primaryColor : theme.colors.dark[5]}
-          style={{ borderRadius: theme.radius.md }}
+          style={{ borderRadius: theme.radius.md, cursor: clickable ? "pointer" : "auto" }}
           px="md"
           py="sm"
           w="100%"

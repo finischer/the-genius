@@ -7,7 +7,7 @@ import type { IListProps } from "./list.types";
 const List = <T,>({
   editable = false,
   deletableItems = false,
-  onClickItem = () => null,
+  onClickItem,
   onDeleteItem = () => null,
   data,
   renderValueByKey,
@@ -79,6 +79,7 @@ const List = <T,>({
           content={!renderValueByKey ? `${itemName} ${index + 1}` : item[renderValueByKey]}
           showIndex={showIndex}
           index={index}
+          clickable={onClickItem ? true : false}
         />
       ))}
     </Reorder.Group>

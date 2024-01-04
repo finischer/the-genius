@@ -1,8 +1,9 @@
-import { SimpleGrid, Text, type Sx } from "@mantine/core";
+import { SimpleGrid, Text } from "@mantine/core";
 import React from "react";
 import FlipCard from "~/components/shared/FlipCard/FlipCard";
 import type { IMerkenPlaygroundProps } from "./merkenPlayground.types";
 import Image from "next/image";
+import type { MantineStyleProp } from "@mantine/core";
 
 const MerkenPlayground: React.FC<IMerkenPlaygroundProps> = ({
   cards,
@@ -11,7 +12,7 @@ const MerkenPlayground: React.FC<IMerkenPlaygroundProps> = ({
   allCardsFlipped = false,
   onCardClick,
 }) => {
-  const defaultCardStyle: Sx = {
+  const defaultCardStyle: MantineStyleProp = {
     height: "5rem",
     width: "5rem",
     backgroundColor: "whitesmoke",
@@ -52,14 +53,7 @@ const MerkenPlayground: React.FC<IMerkenPlaygroundProps> = ({
   };
 
   return (
-    <SimpleGrid
-      cols={6}
-      breakpoints={[
-        { maxWidth: "62rem", cols: 6, spacing: "md" },
-        { maxWidth: "48rem", cols: 5, spacing: "sm" },
-        { maxWidth: "36rem", cols: 3, spacing: "sm" },
-      ]}
-    >
+    <SimpleGrid cols={{ base: 4, md: 6, lg: 6 }}>
       {cards.map((elem, idx) => (
         <FlipCard
           key={idx}

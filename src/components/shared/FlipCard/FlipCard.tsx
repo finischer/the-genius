@@ -1,4 +1,4 @@
-import { Container, Title, type Sx, useMantineTheme } from "@mantine/core";
+import { Container, Title, useMantineTheme, type MantineStyleProp } from "@mantine/core";
 import React from "react";
 import ReactCardFlip from "react-card-flip";
 import { sizes } from "~/styles/constants";
@@ -17,7 +17,7 @@ const FlipCard: React.FC<IFlipCardProps> = ({
   const theme = useMantineTheme();
   const themeColors = theme.colors[theme.primaryColor];
 
-  const defaultCardStyle: Sx = {
+  const defaultCardStyle: MantineStyleProp = {
     boxShadow: "4px 3px 32px -7px rgba(0, 0, 0, 0.75)",
     WebkitBoxShadow: "4px 3px 32px -7px rgba(0, 0, 0, 0.75)",
     padding: "1rem 2.5rem",

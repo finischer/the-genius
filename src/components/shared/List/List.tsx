@@ -1,4 +1,4 @@
-import { Flex, Text } from "@mantine/core";
+import { Flex, Group, Text } from "@mantine/core";
 import { Reorder } from "framer-motion";
 import React from "react";
 import ListItem from "./components/ListItem";
@@ -16,6 +16,7 @@ const List = <T,>({
   selectedItemId,
   emptyListText = "Füge deine erste Frage hinzu!",
   itemName = "Frage",
+  showIndex = false,
 }: IListProps<T>) => {
   const handleDeleteItem = (itemId: string | number) => {
     if (!editable) return;
@@ -50,6 +51,7 @@ const List = <T,>({
     <Reorder.Group
       values={data}
       axis="y"
+      as="ol"
       onReorder={setData}
       style={{
         gap: "1rem",
@@ -57,6 +59,7 @@ const List = <T,>({
         flexDirection: "column",
         padding: 0,
         margin: 0,
+        userSelect: "none",
       }}
     >
       {data.map((item, index) => (
@@ -70,6 +73,8 @@ const List = <T,>({
           onDelete={() => handleDeleteItem(item.id)}
           // @ts-ignore
           content={!renderValueByKey ? `${itemName} ${index + 1}` : item[renderValueByKey]}
+          showIndex={showIndex}
+          index={index}
         />
       ))}
     </Reorder.Group>

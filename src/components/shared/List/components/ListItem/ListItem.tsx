@@ -4,7 +4,8 @@ import { Reorder, useDragControls, useMotionValue } from "framer-motion";
 import React from "react";
 import ActionIcon from "~/components/shared/ActionIcon";
 import { useRaisedShadow } from "~/hooks/useRaisedShadow";
-import type { IListItem, IListItemProps } from "./listItem.types";
+import type { IListItemProps } from "./listItem.types";
+import { Group } from "@mantine/core";
 
 const ListItem = <T,>({
   item,
@@ -14,6 +15,8 @@ const ListItem = <T,>({
   onClick,
   selected,
   content,
+  showIndex,
+  index,
 }: IListItemProps<T>) => {
   const y = useMotionValue(0);
   const boxShadow = useRaisedShadow(y);
@@ -47,32 +50,36 @@ const ListItem = <T,>({
         style={{ borderRadius: theme.radius.md }}
         px="md"
         py="sm"
+        w="100%"
         justify="space-between"
       >
         <Flex
           gap="md"
           align="flex-start"
         >
-          {deletable && (
-            <ActionIcon
-              size="sm"
-              toolTip="Antwort löschen"
-              onClick={handleDelete}
+          {editable && (
+            <Flex
+              w={30}
+              justify="flex-end"
+              onPointerDown={(e) => controls.start(e)}
+              style={{ cursor: "grab" }}
             >
-              <IconX />
-            </ActionIcon>
+              <IconGripVertical />
+            </Flex>
           )}
+
           <span>{content}</span>
         </Flex>
-        {editable && (
-          <Flex
-            w={40}
-            justify="flex-end"
-            onPointerDown={(e) => controls.start(e)}
-            style={{ cursor: "grab" }}
+        {deletable && (
+          <ActionIcon
+            size="sm"
+            variant="subtle"
+            radius="xs"
+            toolTip="Aus Liste entfernen"
+            onClick={handleDelete}
           >
-            <IconGripVertical />
-          </Flex>
+            <IconX />
+          </ActionIcon>
         )}
       </Flex>
     </Reorder.Item>

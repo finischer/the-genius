@@ -12,4 +12,5 @@ export interface IListProps<T> {
   renderValueByKey?: keyof T;
   emptyListText?: string;
   itemName?: string; // how the item should be called in the list
+  showIndex?: boolean;
 }

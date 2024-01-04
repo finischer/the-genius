@@ -65,6 +65,8 @@ const SetConfigurator = () => {
       listTitle="Sets"
       noQuestionsText="Füge dein erstes Set hinzu!"
       itemName="Set"
+      maw={400}
+      w={300}
     >
       <CreateSetContainer
         question={questionItem}

@@ -1,10 +1,10 @@
-import { Button, Container, Flex, ScrollArea, Title } from "@mantine/core";
+import { Button, Container, Flex, ScrollArea, Title, type FlexProps, Box } from "@mantine/core";
 import React, { useEffect, type SyntheticEvent } from "react";
 import { useConfigurator } from "~/hooks/useConfigurator";
 import List from "../shared/List";
 import type { IListItem } from "../shared/List/components/ListItem/listItem.types";
 
-interface IQuestionFormLayoutProps<T> {
+interface IQuestionFormLayoutProps<T> extends FlexProps {
   setQuestions: React.Dispatch<React.SetStateAction<T[]>>;
   questions: T[];
   children: React.ReactNode;
@@ -30,6 +30,7 @@ const QuestionFormLayout = <T extends { id: string }>({
   listTitle = "Fragen",
   noQuestionsText,
   itemName,
+  ...props
 }: IQuestionFormLayoutProps<T>) => {
   const [_, __, { enableFurtherButton, disableFurtherButton }] = useConfigurator("duSagst"); // TODO: Move button functions to an independent component
   const questionIds = questions.map((q) => q.id);
@@ -52,8 +53,10 @@ const QuestionFormLayout = <T extends { id: string }>({
     <Flex
       mah="100%"
       gap="xl"
+      direction={{ base: "column", md: "row", lg: "row" }}
+      align={{ base: "center", md: "unset", lg: "unset" }}
     >
-      <Container w="100%">
+      <Box w="100%">
         <form
           onSubmit={handleSubmit}
           style={{ width: "100%" }}
@@ -61,6 +64,7 @@ const QuestionFormLayout = <T extends { id: string }>({
           <Flex
             direction="column"
             gap="xl"
+            align="center"
           >
             {children}
             <Button type="submit">
@@ -68,12 +72,13 @@ const QuestionFormLayout = <T extends { id: string }>({
             </Button>
           </Flex>
         </form>
-      </Container>
+      </Box>
 
       <Flex
         w="100%"
         direction="column"
         gap="md"
+        {...props}
       >
         <Title order={3}>{listTitle}</Title>
         <ScrollArea

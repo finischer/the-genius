@@ -1,4 +1,4 @@
-import { Flex, Text } from "@mantine/core";
+import { Center, Flex, Text } from "@mantine/core";
 import { Reorder } from "framer-motion";
 import ListItem from "./components/ListItem";
 import type { IListItem } from "./components/ListItem/listItem.types";
@@ -41,7 +41,12 @@ const List = <T,>({
         justify="center"
         align="center"
       >
-        <Text size="xl">{emptyListText}</Text>
+        <Text
+          size="xl"
+          ta="center"
+        >
+          {emptyListText}
+        </Text>
       </Flex>
     );
   }

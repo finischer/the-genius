@@ -144,7 +144,7 @@ const SetCard: React.FC<ISetCardProps> = ({
   return (
     <motion.div
       className={classes.card}
-      data-isHost={isHost}
+      data-ishost={isHost}
       variants={cardVariants}
       animate={isFlipped ? "selected" : "notSelected"}
       onClick={() => onClick(index)}

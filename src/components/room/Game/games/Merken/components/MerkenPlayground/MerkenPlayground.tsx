@@ -1,4 +1,4 @@
-import { SimpleGrid, Text } from "@mantine/core";
+import { Box, Center, SimpleGrid, Text } from "@mantine/core";
 import React from "react";
 import FlipCard from "~/components/shared/FlipCard/FlipCard";
 import type { IMerkenPlaygroundProps } from "./merkenPlayground.types";
@@ -29,7 +29,7 @@ const MerkenPlayground: React.FC<IMerkenPlaygroundProps> = ({
 
   const BackContent = ({ content, index }: { content: string; index: number }) => {
     return (
-      <div>
+      <Box>
         <span
           style={{
             position: "absolute",
@@ -42,13 +42,15 @@ const MerkenPlayground: React.FC<IMerkenPlaygroundProps> = ({
         >
           {index + 1}
         </span>
-        <Image
-          src={content}
-          alt={index.toString()}
-          width={48}
-          height={48}
-        />
-      </div>
+        <Center>
+          <Image
+            src={content}
+            alt={index.toString()}
+            width={48}
+            height={48}
+          />
+        </Center>
+      </Box>
     );
   };
 

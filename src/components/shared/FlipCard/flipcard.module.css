@@ -1,0 +1,6 @@
+.flipcard {
+  &[data-clickable="true"]:hover {
+    cursor: pointer;
+    opacity: 0.9;
+  }
+}

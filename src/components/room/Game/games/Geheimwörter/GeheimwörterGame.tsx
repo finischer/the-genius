@@ -11,6 +11,7 @@ import { animations } from "~/utils/animations";
 import type { IGeheimwörterGameProps } from "./geheimwörter.types";
 import ArrowActionButton from "~/components/shared/ArrowActionButton";
 import ModView from "~/components/shared/ModView";
+import useAudio from "~/hooks/useAudio";
 
 const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
   const theme = useMantineTheme();
@@ -19,6 +20,7 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
   const showWords = game.display.words;
   const { isHost } = useUser();
   const { socket } = useSocket();
+  const { triggerAudioEvent } = useAudio();
 
   const ToggleIcon = ({ action }: { action: keyof typeof game.display }) => {
     if (game.display[action]) {
@@ -37,6 +39,7 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
   };
 
   const handleShowAnswer = () => {
+    triggerAudioEvent("playSound", "bell");
     socket.emit("geheimwoerter:showAnswer");
   };
 

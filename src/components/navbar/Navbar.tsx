@@ -1,4 +1,4 @@
-import { AppShell, Box, Button, Flex, NavLink } from "@mantine/core";
+import { AppShell, Box, Button, Flex, NavLink, Stack } from "@mantine/core";
 import { useRouter } from "next/router";
 import { useUser } from "~/hooks/useUser";
 import { AdminBadge } from "../shared/Badge/Badge";
@@ -6,6 +6,8 @@ import { openPricingModal } from "../shared/modals/modalComponents";
 import { navbartabs } from "./navbarTabs";
 import UserCard from "../shared/UserCard/UserCard";
 import Link from "next/link";
+import { Text } from "@mantine/core";
+import pack from "package.json";
 
 const Navbar = () => {
   const router = useRouter();
@@ -81,14 +83,27 @@ const Navbar = () => {
             {isAdmin && adminTabsElements}
           </Flex>
 
-          <Button
-            mt="md"
-            variant="subtle"
-            onClick={() => openPricingModal()}
-            disabled
+          <Stack
+            align="center"
+            gap="xs"
           >
-            Premium kaufen 👑
-          </Button>
+            <Text
+              c="dimmed"
+              fz="xs"
+            >
+              The Genius Beta v{pack.version}
+            </Text>
+
+            <Button
+              fullWidth
+              mt="md"
+              variant="subtle"
+              onClick={() => openPricingModal()}
+              disabled
+            >
+              Premium kaufen 👑
+            </Button>
+          </Stack>
         </Flex>
       </AppShell.Section>
 

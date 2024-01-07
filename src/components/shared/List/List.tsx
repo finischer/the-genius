@@ -31,7 +31,8 @@ const List = <T,>({
       return newList;
     });
 
-    onDeleteItem();
+    const item = data.find((d) => d[keyId] === itemId);
+    onDeleteItem(item);
   };
 
   const handleSelectItem = (item: IListItem<T>) => {

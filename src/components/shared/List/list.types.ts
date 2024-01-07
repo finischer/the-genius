@@ -6,7 +6,7 @@ export interface IListProps<T> {
   editable?: boolean;
   deletableItems?: boolean;
   onClickItem?: (item: IListItem<T>) => void;
-  onDeleteItem?: () => void;
+  onDeleteItem?: (item: IListItem<T> | undefined) => void;
   data: IListItem<T>[];
   selectedItemId?: string;
   setData: Dispatch<SetStateAction<IListItem<T>[]>>;

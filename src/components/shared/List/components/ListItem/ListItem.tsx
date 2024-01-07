@@ -19,7 +19,7 @@ const ListItem = <T,>({
   index,
   clickable,
   keyId,
-  highlight
+  highlight,
 }: IListItemProps<T>) => {
   const y = useMotionValue(0);
   const boxShadow = useRaisedShadow(y);

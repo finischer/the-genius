@@ -1,4 +1,4 @@
-import { Checkbox, Flex, Group, Image, Text } from "@mantine/core";
+import { Checkbox, Flex, Group, Image, ScrollArea, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useImmer } from "use-immer";
 import QuestionFormLayout from "~/components/Layouts/QuestionFormLayout";
@@ -63,31 +63,52 @@ const FlaggenConfigurator = () => {
   }, [selectedCountries.length]);
 
   const handleSelectCountry = (country: TCountry) => {
-    console.log("Select Country: ", country.shortCode);
+    if (selectedCountries.find((c) => c.shortCode === country.shortCode)) {
+      return;
+    }
+
     setSelectedCountries((draft) => {
       draft.push(country);
     });
   };
 
-  return (
-    <Flex gap="md">
-      <List
-        data={countries}
-        setData={setCountries}
-        keyId="shortCode"
-        renderValueByKey="country"
-        onClickItem={handleSelectCountry}
-        clickable
-      />
+  const handleDeselectCountry = (country: TCountry | undefined) => {
+    if (!country || !selectedCountries.find((c) => c.shortCode === country.shortCode)) {
+      return;
+    }
 
-      <List
-        data={selectedCountries}
-        setData={setSelectedCountries}
-        keyId="shortCode"
-        renderValueByKey="country"
-        editable
-        deletableItems
-      />
+    setSelectedCountries((draft) => {
+      draft = draft.filter((c) => c.shortCode !== country.shortCode);
+    });
+  };
+
+  return (
+    <Flex
+      gap="md"
+      justify="space-between"
+    >
+      <ScrollArea mah={800}>
+        <List
+          data={countries}
+          setData={setCountries}
+          keyId="shortCode"
+          renderValueByKey="country"
+          onClickItem={handleSelectCountry}
+          onDeleteItem={handleDeselectCountry}
+          clickable
+        />
+      </ScrollArea>
+
+      <ScrollArea mah={800}>
+        <List
+          data={selectedCountries}
+          setData={setSelectedCountries}
+          keyId="shortCode"
+          renderValueByKey="country"
+          editable
+          deletableItems
+        />
+      </ScrollArea>
     </Flex>
     // <TransferList
     //   value={countries}

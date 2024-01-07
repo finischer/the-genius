@@ -70,6 +70,7 @@ export const THEME = createTheme({
     ActionIcon: ActionIcon.extend({
       defaultProps: {
         c: "white",
+        radius: "xs",
       },
     }),
   },

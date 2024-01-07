@@ -3,6 +3,8 @@ import { Reorder } from "framer-motion";
 import ListItem from "./components/ListItem";
 import type { IListItem } from "./components/ListItem/listItem.types";
 import type { IListProps } from "./list.types";
+import { useState } from "react";
+import { useImmer } from "use-immer";
 
 const List = <T,>({
   editable = false,
@@ -16,12 +18,16 @@ const List = <T,>({
   emptyListText = "Füge deine erste Frage hinzu!",
   itemName = "Frage",
   showIndex = false,
+  keyId,
+  clickable = false,
 }: IListProps<T>) => {
+  const [selectedItems, setSelectedItems] = useImmer<string[]>([]);
+
   const handleDeleteItem = (itemId: string | number) => {
     if (!editable) return;
 
     setData((oldState: IListItem<T>[]) => {
-      const newList = oldState.filter((item) => item.id !== itemId);
+      const newList = oldState.filter((item) => item[keyId] !== itemId);
       return newList;
     });
 
@@ -29,7 +35,19 @@ const List = <T,>({
   };
 
   const handleSelectItem = (item: IListItem<T>) => {
-    if (onClickItem && editable) {
+    if (onClickItem && clickable) {
+      const id = item[keyId] as string;
+
+      if (selectedItems.includes(id)) {
+        setSelectedItems((draft) => {
+          draft = draft.filter((itemId) => itemId !== id);
+        });
+      } else {
+        setSelectedItems((draft) => {
+          draft.push(id);
+        });
+      }
+
       onClickItem(item);
     }
   };
@@ -66,22 +84,27 @@ const List = <T,>({
         userSelect: "none",
       }}
     >
-      {data.map((item, index) => (
-        <ListItem
-          key={item.id}
-          item={item}
-          deletable={deletableItems}
-          editable={editable}
-          selected={item.id === selectedItemId}
-          onClick={() => handleSelectItem(item)}
-          onDelete={() => handleDeleteItem(item.id)}
-          // @ts-ignore
-          content={!renderValueByKey ? `${itemName} ${index + 1}` : item[renderValueByKey]}
-          showIndex={showIndex}
-          index={index}
-          clickable={onClickItem ? true : false}
-        />
-      ))}
+      {data.map((item, index) => {
+        const key = item[keyId] as string;
+
+        return (
+          <ListItem
+            key={key}
+            item={item}
+            deletable={deletableItems}
+            editable={editable}
+            selected={key === selectedItemId}
+            onClick={() => handleSelectItem(item)}
+            onDelete={() => handleDeleteItem(key)}
+            // @ts-ignore
+            content={!renderValueByKey ? `${itemName} ${index + 1}` : item[renderValueByKey]}
+            showIndex={showIndex}
+            index={index}
+            clickable={onClickItem ? true : false}
+            highlight={selectedItems.includes(key)}
+          />
+        );
+      })}
     </Reorder.Group>
   );
 };

@@ -1,5 +1,5 @@
 export type IListItem<T = Record<string, unknown>> = {
-  id: string;
+  id?: string;
 } & T;
 
 export interface IListItemProps<T> {
@@ -13,4 +13,6 @@ export interface IListItemProps<T> {
   showIndex?: boolean;
   index: number;
   clickable: boolean;
+  keyId: keyof T;
+  highlight: boolean;
 }

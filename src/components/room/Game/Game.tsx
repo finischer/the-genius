@@ -62,7 +62,7 @@ const Game: React.FC<IGameProps> = ({ game }) => {
       setMountIntroContainer(false);
     } else {
       setMountIntroContainer(true);
-      introAnimation();
+      void introAnimation();
     }
   }, [introState.alreadyPlayed, showGame]);
 

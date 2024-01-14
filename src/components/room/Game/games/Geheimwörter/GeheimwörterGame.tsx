@@ -1,7 +1,7 @@
 import { Box, Button, Flex, SimpleGrid, useMantineTheme } from "@mantine/core";
 import { IconEye, IconEyeOff } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
-import React from "react";
+import React, { Fragment } from "react";
 import CodeList from "~/components/gameshows/GeheimwörterConfigurator/components/CodeList";
 import AnswerBanner from "~/components/room/AnswerBanner";
 import ActionIcon from "~/components/shared/ActionIcon";
@@ -12,6 +12,7 @@ import type { IGeheimwörterGameProps } from "./geheimwörter.types";
 import ArrowActionButton from "~/components/shared/ArrowActionButton";
 import ModView from "~/components/shared/ModView";
 import useAudio from "~/hooks/useAudio";
+import { slug } from "~/utils/strings";
 
 const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
   const theme = useMantineTheme();
@@ -79,8 +80,8 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
           verticalSpacing={0}
           spacing="md"
         >
-          {question.words.map((word) => (
-            <>
+          {question.words.map((word, index) => (
+            <Fragment key={slug([word.word, index])}>
               <span style={{ fontWeight: "bold" }}>{word.word}</span>
               {showAnswer && (
                 <span>
@@ -88,7 +89,7 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
                   <span>{word.category.slice(1)}</span>
                 </span>
               )}
-            </>
+            </Fragment>
           ))}
         </SimpleGrid>
       </Flex>

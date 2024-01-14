@@ -1,9 +1,19 @@
-import { Accordion, Button, Drawer, Flex, ScrollArea, Text, Title, type ButtonProps } from "@mantine/core";
+import {
+  Accordion,
+  Button,
+  Drawer,
+  Flex,
+  ScrollArea,
+  Text,
+  Title,
+  type ButtonProps,
+  Group,
+} from "@mantine/core";
 import { useDisclosure, useLocalStorage } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import type { RoomViews } from "@prisma/client";
-import { IconCheck, IconQuestionMark } from "@tabler/icons-react";
+import { IconCheck, IconQuestionMark, IconX } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import GameRulesModal from "~/components/shared/GameRulesModal/GameRulesModal";
@@ -16,6 +26,7 @@ import type { TGame, TGameNames } from "../Game/games/game.types";
 import { type IModPanelProps } from "./modPanel.types";
 import MediaPlayer from "../MediaPlayer";
 import useAudio from "~/hooks/useAudio";
+import ActionIcon from "~/components/shared/ActionIcon";
 
 const TIMER_SECONDS = 10;
 
@@ -138,6 +149,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                 id: "closeRoom",
                 title: "Erfolgreich",
                 message: "Raum wurde erfolgreich geschlossen",
+                loading: false,
                 icon: <IconCheck size="1rem" />,
               });
             }
@@ -165,15 +177,9 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
       <Drawer
         opened={isOpen}
         onClose={closeModPanel}
-        title={
-          <Text
-            size={28}
-            weight="bold"
-          >
-            Mod-Panel
-          </Text>
-        }
-        size="sm"
+        title="Mod-Panel"
+        offset={8}
+        radius="md"
         overlayProps={{
           opacity: 0.15,
         }}

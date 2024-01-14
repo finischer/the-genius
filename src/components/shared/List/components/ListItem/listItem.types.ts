@@ -10,4 +10,8 @@ export interface IListItemProps<T> {
   onDelete?: () => void;
   onClick?: (itemId: string) => void;
   content?: string;
+  showIndex?: boolean;
+  index: number;
+  clickable: boolean;
+  highlight: boolean;
 }

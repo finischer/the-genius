@@ -1,6 +1,7 @@
 import moment from "moment";
+import { MONGO_DB_TIME_FORMAT } from "~/config/database";
 
-export function formatTimestamp(d: string | Date, format = "DD.MM.yyyy, HH:mm", suffix = "Uhr") {
-  const formattedStringDate: string = moment(d.toString()).format(format);
-  return formattedStringDate.concat(` ${suffix}`);
+export function formatTimestamp(d: Date, format = "DD.MM.yyyy, HH:mm", suffix = "Uhr") {
+  const ts = moment(d, MONGO_DB_TIME_FORMAT).format(format);
+  return ts.concat(` ${suffix}`);
 }

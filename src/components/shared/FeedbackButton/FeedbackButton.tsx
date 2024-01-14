@@ -14,7 +14,7 @@ const FeedbackButton: React.FC<IFeedbackButtonProps> = ({ onClick, ...props }) =
       bottom={100}
       radius="xl"
       size="xl"
-      sx={(theme) => ({
+      style={(theme) => ({
         zIndex: 99999,
         boxShadow: theme.shadows.xl,
       })}

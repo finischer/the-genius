@@ -79,7 +79,7 @@ const AccountSettingsSection = () => {
           )}
         </Flex>
         <Text
-          color="dimmed"
+          c="dimmed"
           size="sm"
         >
           Der Username wird in den Spielshows verwendet und ist für andere User sichtbar
@@ -94,7 +94,7 @@ const AccountSettingsSection = () => {
           value={session?.user.name || "NAME NOT FOUND"}
         />
         <Text
-          color="dimmed"
+          c="dimmed"
           size="sm"
         >
           Dein Name wird nicht öffentlich angezeigt und kann nicht geändert werden
@@ -110,13 +110,13 @@ const AccountSettingsSection = () => {
 
       <Button
         mt="lg"
-        color="red"
+        c="red"
         disabled
       >
         Account löschen
       </Button>
       <Text
-        color="dimmed"
+        c="dimmed"
         size="sm"
       >
         Diese Funktion ist noch nicht verfügbar

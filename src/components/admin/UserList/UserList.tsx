@@ -1,4 +1,4 @@
-import { Avatar, Checkbox, Group, Menu, Table, Text, rem } from "@mantine/core";
+import { Avatar, Center, Checkbox, Group, Menu, Table, Text, rem } from "@mantine/core";
 import type { User } from "@prisma/client";
 import {
   IconArrowsExchange2,
@@ -54,28 +54,25 @@ const ActionMenu = ({ user }: { user: User }) => {
       </ActionIcon>
 
       <Menu.Dropdown>
-        <Text
-          align="center"
-          my="sm"
-        >
-          {user.username}
-        </Text>
+        <Center>
+          <Text my="sm">{user.username}</Text>
+        </Center>
         <Menu.Label>Allgemein</Menu.Label>
         <Menu.Item
-          icon={<IconInfoCircle size={14} />}
+          leftSection={<IconInfoCircle size={14} />}
           onClick={openUserDetails}
         >
           Details anzeigen
         </Menu.Item>
         <Menu.Item
           disabled={disableAction}
-          icon={<IconArrowsExchange2 size={14} />}
+          leftSection={<IconArrowsExchange2 size={14} />}
           onClick={openChangeRoleModal}
         >
           Rolle wechseln
         </Menu.Item>
         <Menu.Item
-          icon={<IconSettings size={14} />}
+          leftSection={<IconSettings size={14} />}
           disabled
         >
           Bearbeiten
@@ -85,14 +82,14 @@ const ActionMenu = ({ user }: { user: User }) => {
 
         <Menu.Label>Danger zone</Menu.Label>
         <Menu.Item
-          icon={<IconBan size={14} />}
+          leftSection={<IconBan size={14} />}
           disabled
         >
           User bannen
         </Menu.Item>
         <Menu.Item
           color="red"
-          icon={<IconTrash size={14} />}
+          leftSection={<IconTrash size={14} />}
           disabled
         >
           User löschen
@@ -123,7 +120,7 @@ const UserList: React.FC<IUserListProps> = ({ users }) => {
           />
         </td>
         <td>
-          <Group spacing="sm">
+          <Group gap="sm">
             <Avatar
               size={26}
               src={user.image}

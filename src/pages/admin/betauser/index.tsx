@@ -3,7 +3,7 @@ import { useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import { IconTrash } from "@tabler/icons-react";
 import React, { useState } from "react";
-import PageLayout from "~/components/layout";
+import PageLayout from "~/components/layout/PageLayout";
 import ActionIcon from "~/components/shared/ActionIcon";
 import useNotification from "~/hooks/useNotification";
 import { api } from "~/utils/api";
@@ -80,7 +80,6 @@ const BetaUsersPage = () => {
       <Flex
         direction="column"
         gap="xl"
-        w="40rem"
       >
         <Flex
           direction="column"
@@ -101,7 +100,7 @@ const BetaUsersPage = () => {
         </Flex>
 
         <Title order={4}>Alle Betatester</Title>
-        <Table>
+        <Table w="40rem">
           <thead>
             <tr>
               <th>Email</th>

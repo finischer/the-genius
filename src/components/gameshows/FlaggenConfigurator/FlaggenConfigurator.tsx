@@ -1,90 +1,115 @@
-import {
-  Checkbox,
-  Group,
-  Image,
-  Text,
-  TransferList,
-  type TransferListData,
-  type TransferListItemComponentProps,
-} from "@mantine/core";
+import { Checkbox, Flex, Group, Image, ScrollArea, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
+import { useImmer } from "use-immer";
+import QuestionFormLayout from "~/components/layout/QuestionFormLayout";
 import { COUNTRIES } from "~/components/room/Game/games/Flaggen/config";
 import type { TCountry } from "~/components/room/Game/games/Flaggen/flaggen.types";
+import List from "~/components/shared/List";
 import { useConfigurator } from "~/hooks/useConfigurator";
 
-const availableCountries = Object.keys(COUNTRIES).map((code) => ({
-  key: code,
-  value: code,
-  label: COUNTRIES[code] as string,
+const availableCountries: TCountry[] = Object.keys(COUNTRIES).map((code) => ({
+  id: code,
+  shortCode: code,
+  country: COUNTRIES[code] as string,
 }));
 
-const transferList: TransferListData = [availableCountries, []];
-
 // TODO: Optimize performance
-const CountryItem: React.FC<TransferListItemComponentProps> = ({ data, selected }) => (
-  <Group noWrap>
-    <Checkbox
-      checked={selected}
-      onChange={() => null}
-      tabIndex={-1}
-      sx={{ pointerEvents: "none" }}
-    />
-    <Image
-      src={`https://flagcdn.com/w40/${data.value}.png`}
-      alt={data.label}
-      width={40}
-    />
-    <Text>{data.label}</Text>
-  </Group>
-);
+// const CountryItem = () => (
+//   <Group>
+//     <Checkbox
+//       checked={selected}
+//       onChange={() => null}
+//       tabIndex={-1}
+//       style={{ pointerEvents: "none" }}
+//     />
+//     <Image
+//       src={`https://flagcdn.com/w40/${data.value}.png`}
+//       alt={data.label}
+//       width={40}
+//     />
+//     <Text>{data.label}</Text>
+//   </Group>
+// );
 
 const FlaggenConfigurator = () => {
   const [flaggen, setFlaggen, { enableFurtherButton, disableFurtherButton }] = useConfigurator("flaggen");
-  const [countries, setCountries] = useState(transferList);
+  const [countries, setCountries] = useState(flaggen.countries);
+  const [selectedCountries, setSelectedCountries] = useImmer<TCountry[]>([]);
 
   useEffect(() => {
-    const selectedCountries = flaggen.countries.map((c) => ({
-      key: c.shortCode,
-      value: c.shortCode,
-      label: c.country,
+    const selectedCountries: TCountry[] = flaggen.countries.map((c) => ({
+      id: c.shortCode,
+      country: c.country,
+      shortCode: c.shortCode,
     }));
+
     const notSelectedCountries = availableCountries.filter(
-      (c) => !selectedCountries.map((c) => c.value).includes(c.value)
+      (c) => !selectedCountries.map((c) => c.shortCode).includes(c.shortCode)
     );
 
-    setCountries([notSelectedCountries, selectedCountries]);
+    setCountries(notSelectedCountries);
+    setSelectedCountries(selectedCountries);
   }, []);
 
   useEffect(() => {
-    const transformedCountries: TCountry[] = countries[1].map((c) => ({
-      key: c.value,
-      shortCode: c.value,
-      country: c.label,
-    }));
-
     setFlaggen((draft) => {
-      draft.flaggen.countries = transformedCountries;
+      draft.flaggen.countries = selectedCountries;
     });
 
     // check further button state
-    if (transformedCountries.length > 0) {
+    if (selectedCountries.length > 0) {
       enableFurtherButton();
     } else {
       disableFurtherButton();
     }
-  }, [countries]);
+  }, [selectedCountries.length]);
+
+  const handleSelectCountry = (country: TCountry) => {
+    if (selectedCountries.find((c) => c.shortCode === country.shortCode)) {
+      return;
+    }
+
+    setSelectedCountries((draft) => {
+      draft.push(country);
+    });
+  };
+
+  const handleDeselectCountry = (country: TCountry | undefined) => {
+    if (!country || !selectedCountries.find((c) => c.shortCode === country.shortCode)) {
+      return;
+    }
+
+    setSelectedCountries((draft) => {
+      draft = draft.filter((c) => c.shortCode !== country.shortCode);
+    });
+  };
 
   return (
-    <TransferList
-      value={countries}
-      onChange={setCountries}
-      itemComponent={CountryItem}
-      searchPlaceholder="Flagge suchen ..."
-      nothingFound="Keine Flagge gefunden"
-      titles={[`Verfügbare Flaggen (${countries[0].length})`, `Ausgewählte Flaggen (${countries[1].length})`]}
-      breakpoint="sm"
-      listHeight={600}
-    />
+    <Flex
+      gap="md"
+      justify="space-between"
+    >
+      <ScrollArea mah={800}>
+        <List
+          data={countries}
+          setData={setCountries}
+          renderValueByKey="country"
+          onClickItem={handleSelectCountry}
+          onDeleteItem={handleDeselectCountry}
+          clickable
+        />
+      </ScrollArea>
+
+      <ScrollArea mah={800}>
+        <List
+          data={selectedCountries}
+          setData={setSelectedCountries}
+          renderValueByKey="country"
+          editable
+          deletableItems
+        />
+      </ScrollArea>
+    </Flex>
   );
 };
 

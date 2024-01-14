@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useImmer } from "use-immer";
-import QuestionFormLayout from "~/components/Layouts/QuestionFormLayout";
+import QuestionFormLayout from "~/components/layout/QuestionFormLayout";
 import type { TSetQuestionItem, TSetQuestionList } from "~/components/room/Game/games/Set/set.types";
 import { useConfigurator } from "~/hooks/useConfigurator";
 import CreateSetContainer from "./components/CreateSetContainer";
@@ -65,6 +65,8 @@ const SetConfigurator = () => {
       listTitle="Sets"
       noQuestionsText="Füge dein erstes Set hinzu!"
       itemName="Set"
+      maw={400}
+      w={300}
     >
       <CreateSetContainer
         question={questionItem}

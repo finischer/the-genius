@@ -2,7 +2,7 @@ import { Flex, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import QuestionFormLayout from "~/components/Layouts/QuestionFormLayout";
+import QuestionFormLayout from "~/components/layout/QuestionFormLayout";
 import type { TDuSagstQuestion } from "~/components/room/Game/games/DuSagst/duSagst.types";
 import { useConfigurator } from "~/hooks/useConfigurator";
 import type { TDuSagstFormValues } from "./duSagstConfigurator.types";
@@ -129,6 +129,7 @@ const DuSagstConfigurator = () => {
       <Flex
         direction="column"
         gap="xl"
+        w="100%"
       >
         <TextInput
           ref={inputRef}

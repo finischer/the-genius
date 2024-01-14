@@ -1,0 +1,5 @@
+.card {
+  &[data-ishost="true"]:hover {
+    background: var(--mantine-color-gold-5);
+  }
+}

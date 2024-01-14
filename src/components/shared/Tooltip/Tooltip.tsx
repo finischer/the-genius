@@ -9,7 +9,7 @@ const Tooltip: React.FC<TooltipProps> = ({ children, ...props }) => {
     <MantineTooltip
       withArrow
       bg={theme.colors.dark[6]}
-      color={colors.lightText}
+      color={colors.textLight}
       transitionProps={{ transition: "fade", duration: 300 }}
       disabled={!props.label}
       {...props}

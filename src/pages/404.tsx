@@ -20,7 +20,6 @@ const ErrorPage404 = () => {
           src="/images/error_404.svg"
           height={450}
           width={450}
-          objectFit="contain"
           alt="error-404"
         />
 
@@ -35,7 +34,7 @@ const ErrorPage404 = () => {
             <Title>{"Die Seite scheint nicht zu existieren".toUpperCase()}</Title>
           </div>
           <Button
-            uppercase
+            tt="uppercase"
             onClick={() => void router.push("/")}
           >
             Zurück zur Startseite

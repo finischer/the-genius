@@ -52,7 +52,7 @@ const IntroductionBanner = () => {
         <Text>
           Solltest du Anmerkungen, Verbesserungsvorschläge oder Bugs gefunden haben, kannst du jederzeit den
           Feedback-Button unten rechts benutzen. Alternativ kannst du auch eine Mail an{" "}
-          <Text italic>support@the-genius.de</Text>
+          <Text fs="italic">support@the-genius.de</Text>
           schreiben
         </Text>
 

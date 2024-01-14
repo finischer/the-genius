@@ -1,54 +1,90 @@
-import { Flex, TransferList, type TransferListData } from "@mantine/core";
-import React, { type Dispatch, type SetStateAction, useEffect, useState } from "react";
-import { type TTransferListData, type IGamesPickerProps } from "./gamesPicker.types";
+import { Group, Stack, Text } from "@mantine/core";
+import type { Game } from "@prisma/client";
+import { IconChevronRight, IconInfoSquareRounded, IconUser, IconUsers } from "@tabler/icons-react";
+import React, { useState } from "react";
+import { api } from "~/utils/api";
+import ActionIcon from "../ActionIcon";
+import Paper from "../Paper";
+import classes from "./gamesPicker.module.css";
+import { type IGamesPickerProps } from "./gamesPicker.types";
 import List from "../List";
+import { useImmer } from "use-immer";
 
-const availableGames: TTransferListData = [
-  [
-    { value: "flaggen", label: "Flaggen" },
-    { value: "merken", label: "Merken" },
-    { value: "geheimwoerter", label: "Geheimwörter" },
-    { value: "set", label: "Set" },
-    { value: "duSagst", label: "Du sagst ..." },
-    // { value: "referatBingo", label: "Referat-Bingo" },
-    // { value: 'zehnSetzen', label: 'Zehn setzen' },
-    // { value: 'fragenhagel', label: 'Fragenhagel' },
-    // { value: 'buchstabensalat', label: 'Buchstabensalat' },
-  ],
-  [],
-];
+const GamesPicker: React.FC<IGamesPickerProps> = ({ selectedGames, setSelectedGames }) => {
+  const { data: games } = api.games.getAll.useQuery();
+  const [tst, setTst] = useImmer([1, 2, 3, 4, 5]);
 
-const GamesPicker: React.FC<IGamesPickerProps> = ({ setSelectedGames }) => {
-  // const [games, setGames] = useState(availableGames[0].map((g) => ({ ...g, id: g.value })));
-  const [games, setGames] = useState<TTransferListData>(availableGames);
+  const handleSelectGame = (game: Game) => {
+    setSelectedGames((draft) => {
+      draft.push(game);
+    });
+  };
 
-  useEffect(() => {
-    setSelectedGames(games[1]);
-  }, [games]);
+  const GameCard = ({ game }: { game: Game }) => {
+    const alreadySelected = selectedGames.find((g) => g.id === game.id) ? true : false;
+
+    return (
+      <Paper
+        variant="light"
+        pos="relative"
+        disabled={alreadySelected || !game.active}
+        onClick={() => {
+          if (alreadySelected || !game.active) return;
+          handleSelectGame(game);
+        }}
+        opacity={alreadySelected || !game.active ? 0.3 : 1}
+      >
+        <Group>
+          {game.mode === "DUELL" && <IconUser />}
+          {game.mode === "TEAM" && <IconUsers />}
+          <Text>{game.name}</Text>
+          <ActionIcon
+            variant="default"
+            toolTip="Details anzeigen"
+            disabled
+          >
+            <IconInfoSquareRounded />
+          </ActionIcon>
+        </Group>
+
+        {/* New Banner */}
+        {game.isNew && (
+          <div className={classes.ribbonWrapper}>
+            <div className={classes.ribbon}>Neu</div>
+          </div>
+        )}
+      </Paper>
+    );
+  };
 
   return (
-    // <Flex gap="xl">
-    //   <List
-    //     data={games}
-    //     setData={setGames}
-    //     renderValueByKey="label"
-    //   />
-    //   <List
-    //     data={games}
-    //     setData={setGames}
-    //     renderValueByKey="label"
-    //     editable
-    //   />
-    // </Flex>
-    <TransferList
-      value={games}
-      onChange={setGames as Dispatch<SetStateAction<TransferListData>>}
-      searchPlaceholder="Suchen ..."
-      nothingFound="Kein Spiel gefunden"
-      titles={[`Verfügbare Spiele (${games[0].length})`, `Ausgewählte Spiele (${games[1].length})`]}
-      breakpoint="sm"
-      listHeight={400}
-    />
+    <Stack gap="xl">
+      <Paper display="inline-block">
+        {!games && <Text>Aktuell sind keine Spieler verfügbar</Text>}
+
+        {games && (
+          <Group>
+            {games.map((game) => (
+              <GameCard
+                key={game.id}
+                game={game}
+              />
+            ))}
+          </Group>
+        )}
+      </Paper>
+
+      <List
+        data={selectedGames}
+        setData={setSelectedGames}
+        itemName="Spiel"
+        renderValueByKey="name"
+        editable
+        deletableItems
+        emptyListText="Füge dein erstes Spiel hinzu"
+        showIndex
+      />
+    </Stack>
   );
 };
 

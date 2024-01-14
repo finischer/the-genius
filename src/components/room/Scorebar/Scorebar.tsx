@@ -1,15 +1,4 @@
-import {
-  Badge,
-  Box,
-  Button,
-  Container,
-  Flex,
-  Group,
-  Text,
-  keyframes,
-  useMantineTheme,
-  type Sx,
-} from "@mantine/core";
+import { Badge, Box, Button, Container, Flex, Group, Text, useMantineTheme } from "@mantine/core";
 import { IconExposureMinus1, IconExposurePlus1, IconTargetArrow } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
@@ -25,10 +14,11 @@ import Notefield from "../Notefield/Notefield";
 import { type IScoreCircleProps, type IScorebarProps } from "./scorebar.types";
 import ModView from "~/components/shared/ModView";
 
-const stretchAnimation = keyframes({
-  "0%": { transform: "scale(0.75)" },
-  "100%": { transform: "scale(1.25)" },
-});
+// const stretchAnimation = keyframes({
+//   "0%": { transform: "scale(0.75)" },
+//   "100%": { transform: "scale(1.25)" },
+// });
+const stretchAnimation = undefined;
 
 const HIGHLIGHT_CONTAINER_COLOR = "#c6011f";
 
@@ -36,7 +26,7 @@ const SCOREBAR_HEIGHT = "3rem";
 
 const ScoreCircle: React.FC<IScoreCircleProps> = ({ filled }) => (
   <Box
-    sx={() => ({
+    style={() => ({
       height: "2rem",
       width: "2rem",
       background: filled ? colors.success : "transparent",
@@ -44,7 +34,7 @@ const ScoreCircle: React.FC<IScoreCircleProps> = ({ filled }) => (
       border: "1px solid white",
       marginLeft: "0.8rem",
       transition: "background 500ms",
-      "&:nth-of-type(1)": {
+      "&:nthOfType(1)": {
         marginLeft: 0,
       },
     })}
@@ -73,7 +63,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
       px="0.5rem"
       miw="2rem"
       h="2rem"
-      sx={{
+      style={{
         borderRadius: theme.radius.md,
         border: "1px solid white",
       }}
@@ -105,7 +95,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
     })
     .filter((p) => p);
 
-  const scorebarTimerStyle: Sx = {
+  const scorebarTimerStyle = {
     height: SCOREBAR_HEIGHT,
     width: SCOREBAR_HEIGHT,
     borderRadius: scorebarBorderRadius,
@@ -153,7 +143,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
           <motion.div {...animations.fadeInOut}>
             <Container
               bg={theme.primaryColor}
-              sx={scorebarTimerStyle}
+              style={scorebarTimerStyle}
             >
               {team.scorebarTimer.seconds}
             </Container>
@@ -196,7 +186,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
           left="50%"
           bottom="50%"
           opacity={0.9}
-          sx={{
+          style={{
             boxShadow: highlightBoxShadow,
             WebkitBoxShadow: highlightBoxShadow,
             animationName: stretchAnimation,
@@ -214,7 +204,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
         >
           <Box
             bg={theme.primaryColor}
-            sx={() => ({
+            style={() => ({
               minWidth: "20%",
               maxWidth: "50%",
               height: "100%",
@@ -296,7 +286,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
           bg={theme.primaryColor}
           h={SCOREBAR_HEIGHT}
           w="30rem"
-          sx={(theme) => ({
+          style={(theme) => ({
             borderRadius: "0.25rem",
             borderTopLeftRadius: 0,
             boxShadow: theme.shadows.xl,
@@ -306,27 +296,31 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
         >
           {/* Player names */}
           <Box
-            sx={() => ({
+            style={() => ({
               width: "50%",
               height: "100%",
               display: "inline-block",
               position: "relative",
             })}
           >
-            <Text
-              sx={() => ({
-                width: "100%",
-                overflow: "hidden",
-                whiteSpace: "nowrap",
-                textOverflow: "ellipsis",
-                position: "absolute",
-                top: "50%",
-                transform: "translateY(-50%)",
-                display: "flex",
-              })}
-            >
-              {team.players.map((p) => p.name).join("/") || "Noch keiner da"}
-            </Text>
+            <Tooltip label={team.players.map((p) => p.name).join(", ")}>
+              <Text
+                truncate
+                lineClamp={1}
+                style={() => ({
+                  width: "100%",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
+                  position: "absolute",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  display: "flex",
+                })}
+              >
+                {team.players.map((p) => p.name).join("/") || "Keiner da"}
+              </Text>
+            </Tooltip>
           </Box>
 
           {/* Score circles */}
@@ -349,7 +343,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
           <motion.div {...animations.fadeInOut}>
             <Container
               bg={theme.primaryColor}
-              sx={scorebarTimerStyle}
+              style={scorebarTimerStyle}
             >
               {team.scorebarTimer.seconds}
             </Container>

@@ -1,14 +1,15 @@
-import { Checkbox, Flex, Group, Image, Text } from "@mantine/core";
+import { Checkbox, Flex, Group, Image, ScrollArea, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
+import { useImmer } from "use-immer";
 import QuestionFormLayout from "~/components/Layouts/QuestionFormLayout";
 import { COUNTRIES } from "~/components/room/Game/games/Flaggen/config";
 import type { TCountry } from "~/components/room/Game/games/Flaggen/flaggen.types";
+import List from "~/components/shared/List";
 import { useConfigurator } from "~/hooks/useConfigurator";
 
-const availableCountries = Object.keys(COUNTRIES).map((code) => ({
-  key: code,
-  value: code,
-  label: COUNTRIES[code] as string,
+const availableCountries: TCountry[] = Object.keys(COUNTRIES).map((code) => ({
+  shortCode: code,
+  country: COUNTRIES[code] as string,
 }));
 
 // TODO: Optimize performance
@@ -32,41 +33,83 @@ const availableCountries = Object.keys(COUNTRIES).map((code) => ({
 const FlaggenConfigurator = () => {
   const [flaggen, setFlaggen, { enableFurtherButton, disableFurtherButton }] = useConfigurator("flaggen");
   const [countries, setCountries] = useState(flaggen.countries);
+  const [selectedCountries, setSelectedCountries] = useImmer<TCountry[]>([]);
 
-  // useEffect(() => {
-  //   const selectedCountries = flaggen.countries.map((c) => ({
-  //     key: c.shortCode,
-  //     value: c.shortCode,
-  //     label: c.country,
-  //   }));
-  //   const notSelectedCountries = availableCountries.filter(
-  //     (c) => !selectedCountries.map((c) => c.value).includes(c.value)
-  //   );
+  useEffect(() => {
+    const selectedCountries: TCountry[] = flaggen.countries.map((c) => ({
+      country: c.country,
+      shortCode: c.shortCode,
+    }));
 
-  //   setCountries([notSelectedCountries, selectedCountries]);
-  // }, []);
+    const notSelectedCountries = availableCountries.filter(
+      (c) => !selectedCountries.map((c) => c.shortCode).includes(c.shortCode)
+    );
 
-  // useEffect(() => {
-  //   const transformedCountries: TCountry[] = countries[1].map((c) => ({
-  //     key: c.value,
-  //     shortCode: c.value,
-  //     country: c.label,
-  //   }));
+    setCountries(notSelectedCountries);
+    setSelectedCountries(selectedCountries);
+  }, []);
 
-  //   setFlaggen((draft) => {
-  //     draft.flaggen.countries = transformedCountries;
-  //   });
+  useEffect(() => {
+    setFlaggen((draft) => {
+      draft.flaggen.countries = selectedCountries;
+    });
 
-  //   // check further button state
-  //   if (transformedCountries.length > 0) {
-  //     enableFurtherButton();
-  //   } else {
-  //     disableFurtherButton();
-  //   }
-  // }, [countries]);
+    // check further button state
+    if (selectedCountries.length > 0) {
+      enableFurtherButton();
+    } else {
+      disableFurtherButton();
+    }
+  }, [selectedCountries.length]);
+
+  const handleSelectCountry = (country: TCountry) => {
+    if (selectedCountries.find((c) => c.shortCode === country.shortCode)) {
+      return;
+    }
+
+    setSelectedCountries((draft) => {
+      draft.push(country);
+    });
+  };
+
+  const handleDeselectCountry = (country: TCountry | undefined) => {
+    if (!country || !selectedCountries.find((c) => c.shortCode === country.shortCode)) {
+      return;
+    }
+
+    setSelectedCountries((draft) => {
+      draft = draft.filter((c) => c.shortCode !== country.shortCode);
+    });
+  };
 
   return (
-    <></>
+    <Flex
+      gap="md"
+      justify="space-between"
+    >
+      <ScrollArea mah={800}>
+        <List
+          data={countries}
+          setData={setCountries}
+          keyId="shortCode"
+          renderValueByKey="country"
+          onClickItem={handleSelectCountry}
+          onDeleteItem={handleDeselectCountry}
+          clickable
+        />
+      </ScrollArea>
+
+      <ScrollArea mah={800}>
+        <List
+          data={selectedCountries}
+          setData={setSelectedCountries}
+          keyId="shortCode"
+          renderValueByKey="country"
+          editable
+          deletableItems
+        />
+      </ScrollArea>
+    </Flex>
     // <TransferList
     //   value={countries}
     //   onChange={setCountries}

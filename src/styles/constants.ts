@@ -8,6 +8,7 @@ import {
   Paper,
   Card,
   Modal,
+  ActionIcon,
 } from "@mantine/core";
 import { GameshowMode } from "@prisma/client";
 import { generateColors } from "@mantine/colors-generator";
@@ -64,6 +65,12 @@ export const THEME = createTheme({
       defaultProps: {
         py: rem(16),
         px: rem(16),
+      },
+    }),
+    ActionIcon: ActionIcon.extend({
+      defaultProps: {
+        c: "white",
+        radius: "xs",
       },
     }),
   },

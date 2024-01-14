@@ -1,5 +1,5 @@
 export type IListItem<T = Record<string, unknown>> = {
-  id: string;
+  id?: string;
 } & T;
 
 export interface IListItemProps<T> {
@@ -10,4 +10,9 @@ export interface IListItemProps<T> {
   onDelete?: () => void;
   onClick?: (itemId: string) => void;
   content?: string;
+  showIndex?: boolean;
+  index: number;
+  clickable: boolean;
+  keyId: keyof T;
+  highlight: boolean;
 }

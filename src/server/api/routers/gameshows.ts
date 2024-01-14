@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { type TGameshowConfig } from "~/hooks/useConfigurator/useConfigurator.types";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { MAX_NUM_GAMESHOWS } from "~/config/standardFeatures";
+import { FEATURES } from "~/config/features";
 import { TRPCError } from "@trpc/server";
 
 export const safedGameshowSchema = z.object({
@@ -43,14 +43,17 @@ export const gameshowsRouter = createTRPCRouter({
     return modifiedGameshows;
   }),
   create: protectedProcedure.input(z.unknown()).mutation(async ({ ctx, input }) => {
-    if (ctx.session.user.role === "USER") {
+    const role = ctx.session.user.role;
+    const maxNumGameshows = FEATURES[role].maxNumGameshows;
+
+    if (maxNumGameshows !== Infinity) {
       const numOfGameshows = await ctx.prisma.gameshow.count({
         where: {
           creatorId: ctx.session.user.id,
         },
       });
 
-      if (numOfGameshows >= MAX_NUM_GAMESHOWS) {
+      if (numOfGameshows >= maxNumGameshows) {
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "Du hast die maximale Anzahl an Spielshows erreichst",

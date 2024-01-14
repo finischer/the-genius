@@ -1,17 +1,21 @@
 import { Center, Flex, Progress, Stack, Text, useMantineTheme } from "@mantine/core";
 import { IconSquareRoundedPlus } from "@tabler/icons-react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Loader from "~/components/shared/Loader";
 import Paper from "~/components/shared/Paper";
-import { MAX_NUM_GAMESHOWS } from "~/config/standardFeatures";
+import { FEATURES } from "~/config/features";
 import { api } from "~/utils/api";
 
 const InfoSection = () => {
   const { push } = useRouter();
   const theme = useMantineTheme();
   const { data: gameshows, isLoading } = api.gameshows.getAllByCreatorId.useQuery();
+  const { data: session } = useSession();
 
-  const gameshowsCreatedPercentage = gameshows ? Math.round((gameshows.length / MAX_NUM_GAMESHOWS) * 100) : 0;
+  const maxNumGameshows = FEATURES[session?.user.role ?? "USER"].maxNumGameshows;
+
+  const gameshowsCreatedPercentage = gameshows ? Math.round((gameshows.length / maxNumGameshows) * 100) : 0;
 
   return (
     <Paper
@@ -58,7 +62,7 @@ const InfoSection = () => {
               <Text fz="md">{100 - gameshowsCreatedPercentage} % frei</Text>
             </Flex>
             <Text c="dimmed">
-              {gameshows.length} von {MAX_NUM_GAMESHOWS} erstellt
+              {gameshows.length} von {maxNumGameshows === Infinity ? "∞" : maxNumGameshows} erstellt
             </Text>
 
             <Progress value={gameshowsCreatedPercentage} />

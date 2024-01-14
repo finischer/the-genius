@@ -112,6 +112,7 @@ const SetCard: React.FC<ISetCardProps> = ({
         ...cardStyle,
         transform: "scale(-1, 1)",
         cursor: isHost && markerState === "marked" ? "pointer" : "auto",
+        position: "relative",
       }}
     >
       <Container
@@ -123,7 +124,7 @@ const SetCard: React.FC<ISetCardProps> = ({
         <Text
           c="dimmed"
           fw="bold"
-          fz=""
+          fz="md"
         >
           {index + 1}
         </Text>
@@ -144,13 +145,14 @@ const SetCard: React.FC<ISetCardProps> = ({
   return (
     <motion.div
       className={classes.card}
-      data-isHost={isHost}
+      data-ishost={isHost}
       variants={cardVariants}
       animate={isFlipped ? "selected" : "notSelected"}
       onClick={() => onClick(index)}
       style={{
         borderRadius: theme.radius.xl,
         border: `6px solid ${marked ? borderColor : "transparent"}`,
+        position: "relative",
       }}
     >
       {!isFlipped ? <FrontContent /> : <BackContent />}

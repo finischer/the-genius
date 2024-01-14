@@ -1,8 +1,9 @@
-import { Container, Title, type Sx, useMantineTheme } from "@mantine/core";
+import { Container, Title, useMantineTheme, type MantineStyleProp, Box } from "@mantine/core";
 import React from "react";
 import ReactCardFlip from "react-card-flip";
 import { sizes } from "~/styles/constants";
 import { type IFlipCardProps } from "./flipcard.types";
+import classes from "./flipcard.module.css";
 
 const FlipCard: React.FC<IFlipCardProps> = ({
   isFlipped = false,
@@ -17,7 +18,7 @@ const FlipCard: React.FC<IFlipCardProps> = ({
   const theme = useMantineTheme();
   const themeColors = theme.colors[theme.primaryColor];
 
-  const defaultCardStyle: Sx = {
+  const defaultCardStyle: MantineStyleProp = {
     boxShadow: "4px 3px 32px -7px rgba(0, 0, 0, 0.75)",
     WebkitBoxShadow: "4px 3px 32px -7px rgba(0, 0, 0, 0.75)",
     padding: "1rem 2.5rem",
@@ -37,16 +38,10 @@ const FlipCard: React.FC<IFlipCardProps> = ({
   };
 
   return (
-    <Container
-      p={0}
-      m={0}
+    <Box
       onClick={handleClick}
-      style={{
-        ":hover": {
-          cursor: clickable ? "pointer" : "auto",
-          opacity: clickable ? 0.9 : 1,
-        },
-      }}
+      className={classes.flipcard}
+      data-clickable={clickable}
     >
       <ReactCardFlip
         isFlipped={isFlipped}
@@ -75,7 +70,7 @@ const FlipCard: React.FC<IFlipCardProps> = ({
           <Title>{back}</Title>
         </Container>
       </ReactCardFlip>
-    </Container>
+    </Box>
   );
 };
 

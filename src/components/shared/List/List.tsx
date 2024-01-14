@@ -18,7 +18,6 @@ const List = <T,>({
   emptyListText = "Füge deine erste Frage hinzu!",
   itemName = "Frage",
   showIndex = false,
-  keyId,
   clickable = false,
 }: IListProps<T>) => {
   const [selectedItems, setSelectedItems] = useImmer<string[]>([]);
@@ -27,25 +26,23 @@ const List = <T,>({
     if (!editable) return;
 
     setData((oldState: IListItem<T>[]) => {
-      const newList = oldState.filter((item) => item[keyId] !== itemId);
+      const newList = oldState.filter((item) => item.id !== itemId);
       return newList;
     });
 
-    const item = data.find((d) => d[keyId] === itemId);
+    const item = data.find((d) => d.id === itemId);
     onDeleteItem(item);
   };
 
   const handleSelectItem = (item: IListItem<T>) => {
     if (onClickItem && clickable) {
-      const id = item[keyId] as string;
-
-      if (selectedItems.includes(id)) {
+      if (selectedItems.includes(item.id)) {
         setSelectedItems((draft) => {
-          draft = draft.filter((itemId) => itemId !== id);
+          draft = draft.filter((itemId) => itemId !== item.id);
         });
       } else {
         setSelectedItems((draft) => {
-          draft.push(id);
+          draft.push(item.id);
         });
       }
 
@@ -86,23 +83,21 @@ const List = <T,>({
       }}
     >
       {data.map((item, index) => {
-        const key = item[keyId] as string;
-
         return (
           <ListItem
-            key={key}
+            key={item.id}
             item={item}
             deletable={deletableItems}
             editable={editable}
-            selected={key === selectedItemId}
+            selected={item.id === selectedItemId}
             onClick={() => handleSelectItem(item)}
-            onDelete={() => handleDeleteItem(key)}
+            onDelete={() => handleDeleteItem(item.id)}
             // @ts-ignore
             content={!renderValueByKey ? `${itemName} ${index + 1}` : item[renderValueByKey]}
             showIndex={showIndex}
             index={index}
             clickable={onClickItem ? true : false}
-            highlight={selectedItems.includes(key)}
+            highlight={selectedItems.includes(item.id)}
           />
         );
       })}

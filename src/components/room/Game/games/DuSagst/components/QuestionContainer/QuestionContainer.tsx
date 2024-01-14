@@ -121,7 +121,7 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerO
             transition: "opacity 300ms",
           }}
         >
-          <Text align="center">{q}</Text>
+          <Text ta="center">{q}</Text>
         </ContainerBox>
       </Flex>
 

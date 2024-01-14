@@ -1,18 +1,7 @@
-import {
-  createTheme,
-  rem,
-  type MantineColorsTuple,
-  Box,
-  Menu,
-  Button,
-  Paper,
-  Card,
-  Modal,
-  ActionIcon,
-} from "@mantine/core";
-import { GameshowMode } from "@prisma/client";
 import { generateColors } from "@mantine/colors-generator";
 import type { CSSVariablesResolver } from "@mantine/core";
+import { ActionIcon, Paper, createTheme, rem, type MantineColorsTuple } from "@mantine/core";
+import { GameshowMode } from "@prisma/client";
 
 export const sizes = {
   base: 25,

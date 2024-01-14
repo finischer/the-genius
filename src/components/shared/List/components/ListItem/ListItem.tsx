@@ -18,15 +18,12 @@ const ListItem = <T,>({
   showIndex,
   index,
   clickable,
-  keyId,
   highlight,
 }: IListItemProps<T>) => {
   const y = useMotionValue(0);
   const boxShadow = useRaisedShadow(y);
   const controls = useDragControls();
   const theme = useMantineTheme();
-
-  const id = item[keyId] as string;
 
   const handleClick = (itemId: string) => {
     if (onClick) {
@@ -43,12 +40,12 @@ const ListItem = <T,>({
 
   return (
     <Reorder.Item
-      id={id}
+      id={item.id}
       value={item}
       dragListener={false}
       style={{ boxShadow, y, listStyle: "none", cursor: editable ? "pointer" : "auto" }}
       dragControls={controls}
-      onClick={() => handleClick(id)}
+      onClick={() => handleClick(item.id)}
     >
       <Flex
         align="center"

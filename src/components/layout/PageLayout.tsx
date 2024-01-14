@@ -18,9 +18,9 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useLoadingState from "~/hooks/useLoadingState/useLoadingState";
 import { useUser } from "~/hooks/useUser";
-import AuthenticatedLayout from "./auth.layout";
-import Loader from "./shared/Loader";
-import Navbar from "./Navbar";
+import AuthenticatedLayout from "../auth.layout";
+import Loader from "../shared/Loader";
+import Navbar from "../Navbar";
 import { useDisclosure } from "@mantine/hooks";
 
 interface IPageLayout {

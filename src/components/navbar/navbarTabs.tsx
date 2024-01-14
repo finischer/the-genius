@@ -7,7 +7,7 @@ import {
   IconTools,
   IconUser,
 } from "@tabler/icons-react";
-import type { INavbarTabs } from "./navbar.types";
+import type { INavbarTabs } from "~/components/Navbar/navbar.types";
 
 const DEFAULT_ICON_SIZE = "1.3rem";
 

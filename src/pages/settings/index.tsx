@@ -1,6 +1,6 @@
 import { Tabs, Title } from "@mantine/core";
 import { IconSettings, IconUser } from "@tabler/icons-react";
-import PageLayout from "~/components/layout";
+import PageLayout from "~/components/layout/PageLayout";
 import AccountSettingsSection from "~/components/settings/AccountSettingsSection";
 import GeneralSettingsSection from "~/components/settings/GeneralSettingsSection";
 import NextHead from "~/components/shared/NextHead";

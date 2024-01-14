@@ -1,6 +1,7 @@
 import { type TFlaggenGameState } from "./config";
 
 export type TCountry = {
+  id: string;
   country: string;
   shortCode: string;
 };

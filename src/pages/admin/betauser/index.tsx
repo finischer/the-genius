@@ -3,7 +3,7 @@ import { useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import { IconTrash } from "@tabler/icons-react";
 import React, { useState } from "react";
-import PageLayout from "~/components/layout";
+import PageLayout from "~/components/layout/PageLayout";
 import ActionIcon from "~/components/shared/ActionIcon";
 import useNotification from "~/hooks/useNotification";
 import { api } from "~/utils/api";

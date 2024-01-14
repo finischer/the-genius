@@ -5,7 +5,7 @@ import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import PageLayout from "~/components/layout";
+import PageLayout from "~/components/layout/PageLayout";
 import NextHead from "~/components/shared/NextHead";
 import useNotification from "~/hooks/useNotification";
 import type { SafedRoom } from "~/server/api/routers/rooms";

@@ -76,7 +76,7 @@ const Game: React.FC<IGameProps> = ({ game }) => {
           justify="center"
           align="center"
           style={{
-            animation: `${zoomInAnimation} 2s, ${zoomOutAnimation} 500ms 8s, ${scaleAnimation} 6s 2s`,
+            // animation: `${zoomInAnimation} 2s, ${zoomOutAnimation} 500ms 8s, ${scaleAnimation} 6s 2s`,
             opacity: introState.alreadyPlayed ? 0 : 1,
           }}
         >

@@ -1,13 +1,14 @@
 import { Checkbox, Flex, Group, Image, ScrollArea, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useImmer } from "use-immer";
-import QuestionFormLayout from "~/components/Layouts/QuestionFormLayout";
+import QuestionFormLayout from "~/components/layout/QuestionFormLayout";
 import { COUNTRIES } from "~/components/room/Game/games/Flaggen/config";
 import type { TCountry } from "~/components/room/Game/games/Flaggen/flaggen.types";
 import List from "~/components/shared/List";
 import { useConfigurator } from "~/hooks/useConfigurator";
 
 const availableCountries: TCountry[] = Object.keys(COUNTRIES).map((code) => ({
+  id: code,
   shortCode: code,
   country: COUNTRIES[code] as string,
 }));
@@ -37,6 +38,7 @@ const FlaggenConfigurator = () => {
 
   useEffect(() => {
     const selectedCountries: TCountry[] = flaggen.countries.map((c) => ({
+      id: c.shortCode,
       country: c.country,
       shortCode: c.shortCode,
     }));
@@ -91,7 +93,6 @@ const FlaggenConfigurator = () => {
         <List
           data={countries}
           setData={setCountries}
-          keyId="shortCode"
           renderValueByKey="country"
           onClickItem={handleSelectCountry}
           onDeleteItem={handleDeselectCountry}
@@ -103,23 +104,12 @@ const FlaggenConfigurator = () => {
         <List
           data={selectedCountries}
           setData={setSelectedCountries}
-          keyId="shortCode"
           renderValueByKey="country"
           editable
           deletableItems
         />
       </ScrollArea>
     </Flex>
-    // <TransferList
-    //   value={countries}
-    //   onChange={setCountries}
-    //   itemComponent={CountryItem}
-    //   searchPlaceholder="Flagge suchen ..."
-    //   nothingFound="Keine Flagge gefunden"
-    //   titles={[`Verfügbare Flaggen (${countries[0].length})`, `Ausgewählte Flaggen (${countries[1].length})`]}
-    //   breakpoint="sm"
-    //   listHeight={600}
-    // />
   );
 };
 

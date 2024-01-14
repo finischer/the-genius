@@ -34,7 +34,7 @@ const ScoreCircle: React.FC<IScoreCircleProps> = ({ filled }) => (
       border: "1px solid white",
       marginLeft: "0.8rem",
       transition: "background 500ms",
-      "&:nth-of-type(1)": {
+      "&:nthOfType(1)": {
         marginLeft: 0,
       },
     })}

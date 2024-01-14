@@ -177,7 +177,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
       <Drawer
         opened={isOpen}
         onClose={closeModPanel}
-        title={<Title order={3}>Mod-Panel</Title>}
+        title="Mod-Panel"
         offset={8}
         radius="md"
         overlayProps={{

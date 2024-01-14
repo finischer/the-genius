@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import UserList from "~/components/admin/UserList";
 import withAdminAuth from "~/components/admin/withAdminAuth";
-import PageLayout from "~/components/layout";
+import PageLayout from "~/components/layout/PageLayout";
 import { api } from "~/utils/api";
 
 const UsersPage = () => {

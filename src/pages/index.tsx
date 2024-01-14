@@ -3,7 +3,7 @@ import { IconCategory, IconSearch, IconUsers } from "@tabler/icons-react";
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
 import InfoSection from "~/components/home/InfoSection/InfoSection";
-import PageLayout from "~/components/layout";
+import PageLayout from "~/components/layout/PageLayout";
 import Card from "~/components/shared/Card/Card";
 import NextHead from "~/components/shared/NextHead";
 

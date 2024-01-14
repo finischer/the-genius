@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useImmer } from "use-immer";
 import { GAME_CONFIGURATORS } from "~/components/gameshows/_game_configurator_map";
-import PageLayout from "~/components/layout";
+import PageLayout from "~/components/layout/PageLayout";
 import type { TGameNames } from "~/components/room/Game/games/game.types";
 import ActionIcon from "~/components/shared/ActionIcon";
 import GameRulesModal from "~/components/shared/GameRulesModal";

@@ -85,14 +85,14 @@ const AnswerBox: React.FC<AnswerBoxProps> = ({ selectedAnswer, playerName, playe
         >
           <Text
             size={labelSize}
-            align="center"
+            ta="center"
           >
             {label}
           </Text>
         </Flex>
 
         <Text
-          align="center"
+          ta="center"
           my="md"
           w="100%"
         >

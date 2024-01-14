@@ -14,6 +14,5 @@ export interface IListProps<T> {
   emptyListText?: string;
   itemName?: string; // how the item should be called in the list
   showIndex?: boolean;
-  keyId: keyof T;
   clickable?: boolean;
 }

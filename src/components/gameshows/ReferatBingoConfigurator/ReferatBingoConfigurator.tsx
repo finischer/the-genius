@@ -2,7 +2,7 @@ import { TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import React, { useEffect, useRef, useState } from "react";
 import { string } from "zod";
-import QuestionFormLayout from "~/components/Layouts/QuestionFormLayout";
+import QuestionFormLayout from "~/components/layout/QuestionFormLayout";
 import { useConfigurator } from "~/hooks/useConfigurator";
 import { v4 as uuidv4 } from "uuid";
 import type { TPresentationTopic } from "~/components/room/Game/games/ReferatBingo/referatBingo.types";

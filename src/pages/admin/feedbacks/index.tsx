@@ -2,7 +2,7 @@ import { Divider, useMantineTheme } from "@mantine/core";
 import { IconRefresh } from "@tabler/icons-react";
 import FeedbackList from "~/components/admin/feedbacks/FeedbackList";
 import withAdminAuth from "~/components/admin/withAdminAuth";
-import PageLayout from "~/components/layout";
+import PageLayout from "~/components/layout/PageLayout";
 import ActionIcon from "~/components/shared/ActionIcon";
 import { api } from "~/utils/api";
 

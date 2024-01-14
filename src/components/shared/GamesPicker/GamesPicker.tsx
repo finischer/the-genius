@@ -83,7 +83,6 @@ const GamesPicker: React.FC<IGamesPickerProps> = ({ selectedGames, setSelectedGa
         deletableItems
         emptyListText="Füge dein erstes Spiel hinzu"
         showIndex
-        keyId="id"
       />
     </Stack>
   );

@@ -89,10 +89,14 @@ const FlaggenConfigurator = () => {
     <Flex
       gap="md"
       justify="center"
+      direction={{ base: "column", md: "row", lg: "row" }}
     >
-      <Stack w="50%">
+      <Stack w="100%">
         <Title order={3}>Verfügbare Flaggen</Title>
-        <ScrollArea mah={800}>
+        <ScrollArea
+          mah={800}
+          type="auto"
+        >
           <List
             data={countries.filter((c) => !selectedCountries.map((c) => c.shortCode).includes(c.shortCode))}
             setData={setCountries}
@@ -109,9 +113,12 @@ const FlaggenConfigurator = () => {
           />
         </ScrollArea>
       </Stack>
-      <Stack w="50%">
+      <Stack w="100%">
         <Title order={3}>Ausgewählte Flaggen</Title>
-        <ScrollArea mah={800}>
+        <ScrollArea
+          mah={800}
+          type="auto"
+        >
           <List
             emptyListText="Füge deine erste Flagge hinzu!"
             data={selectedCountries}

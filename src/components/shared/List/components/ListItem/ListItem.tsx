@@ -19,6 +19,7 @@ const ListItem = <T,>({
   index,
   clickable,
   highlight,
+  itemContent,
 }: IListItemProps<T>) => {
   const y = useMotionValue(0);
   const boxShadow = useRaisedShadow(y);
@@ -75,7 +76,7 @@ const ListItem = <T,>({
               </Flex>
             )}
 
-            <span>{content}</span>
+            {itemContent || <span>{content}</span>}
           </Flex>
           {deletable && (
             <ActionIcon

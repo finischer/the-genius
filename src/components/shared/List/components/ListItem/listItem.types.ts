@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 export type IListItem<T = Record<string, unknown>> = {
   id: string;
 } & T;
@@ -14,4 +16,5 @@ export interface IListItemProps<T> {
   index: number;
   clickable: boolean;
   highlight: boolean;
+  itemContent?: ReactNode | string;
 }

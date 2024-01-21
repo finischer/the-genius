@@ -1,6 +1,5 @@
-import type { Dispatch, SetStateAction } from "react";
+import type { Dispatch, ReactNode, SetStateAction } from "react";
 import type { IListItem } from "./components/ListItem/listItem.types";
-import { string } from "zod";
 
 export interface IListProps<T> {
   editable?: boolean;
@@ -11,6 +10,7 @@ export interface IListProps<T> {
   selectedItemId?: string;
   setData: Dispatch<SetStateAction<IListItem<T>[]>>;
   renderValueByKey?: keyof T;
+  listItem?: ReactNode[] | string[];
   emptyListText?: string;
   itemName?: string; // how the item should be called in the list
   showIndex?: boolean;

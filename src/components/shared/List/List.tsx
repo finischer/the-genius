@@ -1,10 +1,9 @@
 import { Center, Flex, Text } from "@mantine/core";
 import { Reorder } from "framer-motion";
+import { useImmer } from "use-immer";
 import ListItem from "./components/ListItem";
 import type { IListItem } from "./components/ListItem/listItem.types";
 import type { IListProps } from "./list.types";
-import { useState } from "react";
-import { useImmer } from "use-immer";
 
 const List = <T,>({
   editable = false,
@@ -19,8 +18,9 @@ const List = <T,>({
   itemName = "Frage",
   showIndex = false,
   clickable = false,
+  listItem,
 }: IListProps<T>) => {
-  const [selectedItems, setSelectedItems] = useImmer<string[]>([]);
+  // const [selectedItems, setSelectedItems] = useImmer<string[]>([]);
 
   const handleDeleteItem = (itemId: string | number) => {
     if (!editable) return;
@@ -36,16 +36,15 @@ const List = <T,>({
 
   const handleSelectItem = (item: IListItem<T>) => {
     if (onClickItem && clickable) {
-      if (selectedItems.includes(item.id)) {
-        setSelectedItems((draft) => {
-          draft = draft.filter((itemId) => itemId !== item.id);
-        });
-      } else {
-        setSelectedItems((draft) => {
-          draft.push(item.id);
-        });
-      }
-
+      // if (selectedItems.includes(item.id)) {
+      //   setSelectedItems((draft) => {
+      //     draft = draft.filter((itemId) => itemId !== item.id);
+      //   });
+      // } else {
+      //   setSelectedItems((draft) => {
+      //     draft.push(item.id);
+      //   });
+      // }
       onClickItem(item);
     }
   };
@@ -87,6 +86,7 @@ const List = <T,>({
           <ListItem
             key={item.id}
             item={item}
+            itemContent={listItem?.at(index)}
             deletable={deletableItems}
             editable={editable}
             selected={item.id === selectedItemId}
@@ -97,7 +97,7 @@ const List = <T,>({
             showIndex={showIndex}
             index={index}
             clickable={onClickItem ? true : false}
-            highlight={selectedItems.includes(item.id)}
+            highlight={false}
           />
         );
       })}

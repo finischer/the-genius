@@ -102,8 +102,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    fontSize: theme.fontSizes.xl,
-    fontWeight: "bold",
+    fontSize: theme.fontSizes.lg,
   };
 
   const joinTeam = () => {

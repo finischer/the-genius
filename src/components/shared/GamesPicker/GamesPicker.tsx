@@ -11,7 +11,7 @@ import List from "../List";
 import { useImmer } from "use-immer";
 
 const GamesPicker: React.FC<IGamesPickerProps> = ({ selectedGames, setSelectedGames }) => {
-  const { data: games } = api.games.getAll.useQuery();
+  const { data: games, isLoading } = api.games.getAll.useQuery();
   const [tst, setTst] = useImmer([1, 2, 3, 4, 5]);
 
   const handleSelectGame = (game: Game) => {
@@ -60,7 +60,9 @@ const GamesPicker: React.FC<IGamesPickerProps> = ({ selectedGames, setSelectedGa
   return (
     <Stack gap="xl">
       <Paper display="inline-block">
-        {!games && <Text>Aktuell sind keine Spieler verfügbar</Text>}
+        {!games && (
+          <Text>{isLoading ? "Spiele werden geladen ..." : "Aktuell sind keine Spieler verfügbar"}</Text>
+        )}
 
         {games && (
           <Group>

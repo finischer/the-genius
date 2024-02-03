@@ -1,4 +1,4 @@
-import { type PaperProps, Paper as MantinePaper, UnstyledButton } from "@mantine/core";
+import { type PaperProps, Paper as MantinePaper, UnstyledButton, Box } from "@mantine/core";
 import React, { type FC, type ReactNode } from "react";
 import classes from "./paper.module.css";
 

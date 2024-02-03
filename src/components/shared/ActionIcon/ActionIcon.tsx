@@ -1,5 +1,5 @@
 import { ActionIcon as MantineActionIcon } from "@mantine/core";
-import React from "react";
+import React, { type SyntheticEvent } from "react";
 import { type IActionIconProps } from "./actionIcon.types";
 import Tooltip from "../Tooltip/Tooltip";
 
@@ -10,6 +10,12 @@ const ActionIcon: React.FC<IActionIconProps> = ({
   disabled = false,
   ...props
 }) => {
+  const handleClick = (e: SyntheticEvent) => {
+    e.stopPropagation();
+    if (!onClick) return;
+    onClick(e);
+  };
+
   return (
     <Tooltip
       label={toolTip}
@@ -17,7 +23,7 @@ const ActionIcon: React.FC<IActionIconProps> = ({
       openDelay={500}
     >
       <MantineActionIcon
-        onClick={onClick}
+        onClick={handleClick}
         disabled={disabled}
         {...props}
       >

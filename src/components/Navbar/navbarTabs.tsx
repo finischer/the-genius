@@ -48,6 +48,7 @@ export const navbartabs: INavbarTabs = {
       href: "/admin/betauser",
       description: "Füge neue Betatester hinzu",
       leftSection: <IconTestPipe size={DEFAULT_ICON_SIZE} />,
+      disabled: true,
     },
   ],
 };

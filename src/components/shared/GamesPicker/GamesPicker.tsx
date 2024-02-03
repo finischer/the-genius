@@ -1,15 +1,15 @@
 import { Group, Stack, Text } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import type { Game } from "@prisma/client";
 import { IconInfoSquareRounded, IconUser, IconUsers } from "@tabler/icons-react";
 import React from "react";
+import GameDetailsModal from "~/components/gameshows/GameDetailsModal";
 import { api } from "~/utils/api";
 import ActionIcon from "../ActionIcon";
 import List from "../List";
 import Paper from "../Paper";
 import classes from "./gamesPicker.module.css";
 import { type IGamesPickerProps } from "./gamesPicker.types";
-import GameDetailsModal from "~/components/gameshows/GameDetailsModal";
-import { useDisclosure } from "@mantine/hooks";
 
 const GamesPicker: React.FC<IGamesPickerProps> = ({ selectedGames, setSelectedGames }) => {
   const { data: games, isLoading } = api.games.getAll.useQuery();
@@ -67,7 +67,10 @@ const GamesPicker: React.FC<IGamesPickerProps> = ({ selectedGames, setSelectedGa
 
   return (
     <Stack gap="xl">
-      <Paper display="inline-block">
+      <Paper
+        display="inline-block"
+        asButton={false}
+      >
         {!games && (
           <Text>{isLoading ? "Spiele werden geladen ..." : "Aktuell sind keine Spieler verfügbar"}</Text>
         )}

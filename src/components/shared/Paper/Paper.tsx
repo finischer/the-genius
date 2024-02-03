@@ -7,6 +7,7 @@ interface IPaperProps extends PaperProps {
   variant?: "light" | "dark";
   disabled?: boolean;
   onClick?: () => void | null;
+  asButton?: boolean;
 }
 
 const Paper: FC<IPaperProps> = ({
@@ -14,6 +15,7 @@ const Paper: FC<IPaperProps> = ({
   disabled = false,
   children,
   onClick = null,
+  asButton = true,
   ...props
 }) => {
   const bgColor = variant === "dark" ? "dark.9" : "dark.7";
@@ -23,7 +25,7 @@ const Paper: FC<IPaperProps> = ({
     onClick();
   };
 
-  return (
+  if (asButton) {
     <UnstyledButton
       className={!disabled && onClick ? classes.btn : undefined}
       onClick={handleClick}
@@ -39,7 +41,17 @@ const Paper: FC<IPaperProps> = ({
       >
         {children}
       </MantinePaper>
-    </UnstyledButton>
+    </UnstyledButton>;
+  }
+
+  return (
+    <MantinePaper
+      variant={variant}
+      bg={bgColor}
+      {...props}
+    >
+      {children}
+    </MantinePaper>
   );
 };
 

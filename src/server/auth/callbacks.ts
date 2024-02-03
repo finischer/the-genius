@@ -1,11 +1,10 @@
-import { ObjectId } from "bson";
 import type { CallbacksOptions, Session } from "next-auth";
 import type { DiscordProfile } from "next-auth/providers/discord";
 import type { GoogleProfile } from "next-auth/providers/google";
+import { getOrCreateObjectId } from "~/utils/database";
 import { capitalize } from "~/utils/strings";
 import { prisma } from "../db";
 import { updateLoginTimestamp } from "../db/users";
-import { getOrCreateObjectId } from "~/utils/database";
 import { GOOGLE_MAIL_SUFFIXES } from "./providers/GoogleProvider";
 
 const isOtherProviderAlreadyInUse = async (userEmail: string | null | undefined, provider: string) => {
@@ -28,53 +27,50 @@ const isOtherProviderAlreadyInUse = async (userEmail: string | null | undefined,
   return alreadyUsedProviders.length > 0;
 };
 
-// ONLY DURING TEST PHASE
-const MAX_USERS = 150;
-const maxUsersReached = async (userEmail: string) => {
-  const user = await prisma.user.findUnique({
-    where: {
-      email: userEmail,
-    },
-    select: {
-      id: true,
-    },
-  });
+// ONLY USED DURING PRIVATE BETA
+// const MAX_USERS = 150;
+// const maxUsersReached = async (userEmail: string) => {
+//   const user = await prisma.user.findUnique({
+//     where: {
+//       email: userEmail,
+//     },
+//     select: {
+//       id: true,
+//     },
+//   });
 
-  // if user already exists, user can log in
-  if (user) return false;
+//   // if user already exists, user can log in
+//   if (user) return false;
 
-  // check if users collection is full
-  const users = await prisma.user.findMany({
-    select: {
-      id: true,
-    },
-  });
+//   // check if users collection is full
+//   const users = await prisma.user.findMany({
+//     select: {
+//       id: true,
+//     },
+//   });
 
-  if (users.length >= MAX_USERS) return true;
+//   if (users.length >= MAX_USERS) return true;
 
-  return false;
-};
+//   return false;
+// };
 
-const checkIfBetaUser = async (userEmail: string) => {
-  const user = await prisma.betaTester.findUnique({
-    where: {
-      email: userEmail,
-    },
-  });
+// ONLY USED DURING PRIVATE BETA
+// const checkIfBetaUser = async (userEmail: string) => {
+//   const user = await prisma.betaTester.findUnique({
+//     where: {
+//       email: userEmail,
+//     },
+//   });
 
-  if (user) {
-    return true;
-  }
+//   if (user) {
+//     return true;
+//   }
 
-  return false;
-};
+//   return false;
+// };
 
 export const signInCallback: CallbacksOptions["signIn"] = async ({ user, account, profile }) => {
   if (!user.email) throw new Error("Es wurde keine Email in der Anfrage angegeben");
-
-  if (!(await checkIfBetaUser(user.email))) {
-    throw new Error("Du hast keinen Zugang zur Beta");
-  }
 
   if (!user.isEmailVerified)
     throw new Error(
@@ -84,10 +80,6 @@ export const signInCallback: CallbacksOptions["signIn"] = async ({ user, account
   if (account && (await isOtherProviderAlreadyInUse(user.email, account.provider))) {
     // other provider already in use
     throw new Error("Ein anderer Account nutzt diese Email bereits!");
-  }
-
-  if (await maxUsersReached(user.email)) {
-    throw new Error("Die maximale Anzahl an Usern ist leider schon erreicht wurden");
   }
 
   let canSignIn = false;

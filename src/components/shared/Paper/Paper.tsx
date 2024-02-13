@@ -15,7 +15,7 @@ const Paper: FC<IPaperProps> = ({
   disabled = false,
   children,
   onClick = null,
-  asButton = true,
+  asButton = false,
   ...props
 }) => {
   const bgColor = variant === "dark" ? "dark.9" : "dark.7";
@@ -26,28 +26,35 @@ const Paper: FC<IPaperProps> = ({
   };
 
   if (asButton) {
-    <UnstyledButton
-      className={!disabled && onClick ? classes.btn : undefined}
-      onClick={handleClick}
-      disabled={disabled}
-      style={{
-        cursor: disabled || !onClick ? "auto" : "pointer",
-      }}
-    >
-      <MantinePaper
-        variant={variant}
-        bg={bgColor}
-        {...props}
+    return (
+      <UnstyledButton
+        className={!disabled && onClick ? classes.btn : undefined}
+        onClick={handleClick}
+        disabled={disabled}
+        style={{
+          cursor: disabled || !onClick ? "auto" : "pointer",
+        }}
       >
-        {children}
-      </MantinePaper>
-    </UnstyledButton>;
+        <MantinePaper
+          variant={variant}
+          bg={bgColor}
+          {...props}
+        >
+          {children}
+        </MantinePaper>
+      </UnstyledButton>
+    );
   }
 
   return (
     <MantinePaper
       variant={variant}
       bg={bgColor}
+      className={!disabled && onClick ? classes.btn : undefined}
+      onClick={handleClick}
+      style={{
+        cursor: disabled || !onClick ? "auto" : "pointer",
+      }}
       {...props}
     >
       {children}

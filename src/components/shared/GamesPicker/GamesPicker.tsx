@@ -1,13 +1,13 @@
-import { Group, Stack, Text } from "@mantine/core";
+import { Button, Group, Stack, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import type { Game } from "@prisma/client";
 import { IconInfoSquareRounded, IconUser, IconUsers } from "@tabler/icons-react";
 import React from "react";
 import GameDetailsModal from "~/components/gameshows/GameDetailsModal";
 import { api } from "~/utils/api";
-import ActionIcon from "../ActionIcon";
 import List from "../List";
 import Paper from "../Paper";
+import Tooltip from "../Tooltip";
 import classes from "./gamesPicker.module.css";
 import { type IGamesPickerProps } from "./gamesPicker.types";
 
@@ -31,46 +31,49 @@ const GamesPicker: React.FC<IGamesPickerProps> = ({ selectedGames, setSelectedGa
           opened={gameRulesOpened}
           onClose={closeGameDetails}
         />
-        <Paper
-          variant="light"
-          pos="relative"
-          disabled={alreadySelected || !game.active}
-          onClick={() => {
-            if (alreadySelected || !game.active) return;
-            handleSelectGame(game);
-          }}
-          opacity={alreadySelected || !game.active ? 0.3 : 1}
-        >
-          <Group>
-            {game.mode === "DUELL" && <IconUser />}
-            {game.mode === "TEAM" && <IconUsers />}
-            <Text>{game.name}</Text>
-            <ActionIcon
+
+        <Button.Group>
+          <Button
+            variant="default"
+            onClick={() => {
+              if (alreadySelected || !game.active) return;
+              handleSelectGame(game);
+            }}
+            disabled={alreadySelected || !game.active}
+            opacity={alreadySelected || !game.active ? 0.3 : 1}
+          >
+            <Group
+              gap="md"
+              ml={game.isNew ? "md" : undefined}
+            >
+              {game.mode === "DUELL" && <IconUser />}
+              {game.mode === "TEAM" && <IconUsers />}
+              <Text>{game.name}</Text>
+            </Group>
+
+            {game.isNew && (
+              <div className={classes.ribbonWrapper}>
+                <div className={classes.ribbon}>Neu</div>
+              </div>
+            )}
+          </Button>
+
+          <Tooltip label="Details anzeigen">
+            <Button
               variant="default"
-              toolTip="Details anzeigen"
               onClick={openGameDetails}
             >
               <IconInfoSquareRounded />
-            </ActionIcon>
-          </Group>
-
-          {/* New Banner */}
-          {game.isNew && (
-            <div className={classes.ribbonWrapper}>
-              <div className={classes.ribbon}>Neu</div>
-            </div>
-          )}
-        </Paper>
+            </Button>
+          </Tooltip>
+        </Button.Group>
       </>
     );
   };
 
   return (
     <Stack gap="xl">
-      <Paper
-        display="inline-block"
-        asButton={false}
-      >
+      <Paper display="inline-block">
         {!games && (
           <Text>{isLoading ? "Spiele werden geladen ..." : "Aktuell sind keine Spieler verfügbar"}</Text>
         )}

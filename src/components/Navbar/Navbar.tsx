@@ -94,7 +94,7 @@ const Navbar = () => {
               The Genius Beta v{pack.version}
             </Text>
 
-            <Button
+            {/* <Button
               fullWidth
               mt="md"
               variant="subtle"
@@ -102,7 +102,7 @@ const Navbar = () => {
               disabled
             >
               Premium kaufen 👑
-            </Button>
+            </Button> */}
           </Stack>
         </Flex>
       </AppShell.Section>

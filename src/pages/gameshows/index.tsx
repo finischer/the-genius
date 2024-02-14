@@ -1,4 +1,3 @@
-import { rem } from "@mantine/core";
 import { Flex, Menu, Table, Text, Title, useMantineTheme } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
@@ -8,7 +7,6 @@ import {
   IconEdit,
   IconPlayerPlay,
   IconPlus,
-  IconSettings,
   IconStar,
   IconStarFilled,
   IconTrash,
@@ -25,6 +23,8 @@ import type { SafedGameshow } from "~/server/api/routers/gameshows";
 import { api } from "~/utils/api";
 import { formatTimestamp } from "~/utils/dates";
 
+const MENU_ICON_SIZE = 14;
+
 const ActionMenu = ({
   gameshow,
   onDeleteGameshow,
@@ -32,9 +32,11 @@ const ActionMenu = ({
   gameshow: Gameshow;
   onDeleteGameshow: (gameshowId: string) => void;
 }) => {
-  const ICON_SIZE = 14;
-
-  const StarIcon = gameshow.isFavorite ? <IconStarFilled size={ICON_SIZE} /> : <IconStar size={ICON_SIZE} />;
+  const StarIcon = gameshow.isFavorite ? (
+    <IconStarFilled size={MENU_ICON_SIZE} />
+  ) : (
+    <IconStar size={MENU_ICON_SIZE} />
+  );
 
   const openDeleteConfirmModal = () =>
     modals.openConfirmModal({
@@ -65,7 +67,7 @@ const ActionMenu = ({
         <Menu.Label>Aktionen für {gameshow.name}</Menu.Label>
         <Menu.Item
           disabled
-          leftSection={<IconEdit size={ICON_SIZE} />}
+          leftSection={<IconEdit size={MENU_ICON_SIZE} />}
         >
           Bearbeiten
         </Menu.Item>
@@ -77,7 +79,7 @@ const ActionMenu = ({
         </Menu.Item>
         <Menu.Item
           color="red"
-          leftSection={<IconTrash size={ICON_SIZE} />}
+          leftSection={<IconTrash size={MENU_ICON_SIZE} />}
           onClick={openDeleteConfirmModal}
         >
           Löschen

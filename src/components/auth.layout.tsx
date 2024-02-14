@@ -9,7 +9,6 @@ const AuthenticatedLayout: React.FC<IAuthenticatedLayout> = ({ children }) => {
   return (
     <>
       <IntroductionBanner />
-      {/* FeedbackHandler only during beta phase */}
       {children}
     </>
   );

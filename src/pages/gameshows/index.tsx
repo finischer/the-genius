@@ -40,7 +40,7 @@ const ActionMenu = ({
 
   const openDeleteConfirmModal = () =>
     modals.openConfirmModal({
-      title: <Text>Möchtest du wirklich die Spielshow "{gameshow.name}" löschen?</Text>,
+      title: <Text>Möchtest du wirklich die Spielshow &quot;{gameshow.name}&quot; löschen?</Text>,
       centered: true,
       children: (
         <Text size="sm">

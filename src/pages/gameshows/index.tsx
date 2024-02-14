@@ -1,6 +1,18 @@
-import { Flex, Table, Text, Title, useMantineTheme } from "@mantine/core";
+import { rem } from "@mantine/core";
+import { Flex, Menu, Table, Text, Title, useMantineTheme } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconPlayerPlay, IconPlus, IconSettings, IconStar, IconStarFilled } from "@tabler/icons-react";
+import { modals } from "@mantine/modals";
+import type { Gameshow } from "@prisma/client";
+import {
+  IconDots,
+  IconEdit,
+  IconPlayerPlay,
+  IconPlus,
+  IconSettings,
+  IconStar,
+  IconStarFilled,
+  IconTrash,
+} from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import PageLayout from "~/components/layout/PageLayout";
@@ -8,15 +20,97 @@ import ActionIcon from "~/components/shared/ActionIcon";
 import CreateRoomModal from "~/components/shared/CreateRoomModal";
 import NextHead from "~/components/shared/NextHead";
 import useLoadingState from "~/hooks/useLoadingState/useLoadingState";
+import useNotification from "~/hooks/useNotification";
 import type { SafedGameshow } from "~/server/api/routers/gameshows";
 import { api } from "~/utils/api";
 import { formatTimestamp } from "~/utils/dates";
+
+const ActionMenu = ({
+  gameshow,
+  onDeleteGameshow,
+}: {
+  gameshow: Gameshow;
+  onDeleteGameshow: (gameshowId: string) => void;
+}) => {
+  const ICON_SIZE = 14;
+
+  const StarIcon = gameshow.isFavorite ? <IconStarFilled size={ICON_SIZE} /> : <IconStar size={ICON_SIZE} />;
+
+  const openDeleteConfirmModal = () =>
+    modals.openConfirmModal({
+      title: <Text>Möchtest du wirklich die Spielshow "{gameshow.name}" löschen?</Text>,
+      centered: true,
+      children: (
+        <Text size="sm">
+          Diese Aktion ist unwiderruflich und führt dazu, dass alle Daten und Einstellungen der Spielshow
+          dauerhaft entfernt werden. Bist du sicher, dass Du fortfahren möchtest?
+        </Text>
+      ),
+      labels: {
+        confirm: "Spielshow löschen",
+        cancel: "Abbrechen",
+      },
+      confirmProps: { color: "red" },
+      onConfirm: () => onDeleteGameshow(gameshow.id),
+    });
+
+  return (
+    <Menu>
+      <ActionIcon variant="default">
+        <Menu.Target>
+          <IconDots />
+        </Menu.Target>
+      </ActionIcon>
+      <Menu.Dropdown>
+        <Menu.Label>Aktionen für {gameshow.name}</Menu.Label>
+        <Menu.Item
+          disabled
+          leftSection={<IconEdit size={ICON_SIZE} />}
+        >
+          Bearbeiten
+        </Menu.Item>
+        <Menu.Item
+          disabled
+          leftSection={StarIcon}
+        >
+          Als Favorit {gameshow.isFavorite ? "entfernen" : "hinzufügen"}
+        </Menu.Item>
+        <Menu.Item
+          color="red"
+          leftSection={<IconTrash size={ICON_SIZE} />}
+          onClick={openDeleteConfirmModal}
+        >
+          Löschen
+        </Menu.Item>
+      </Menu.Dropdown>
+    </Menu>
+  );
+};
 
 const GameshowsPage = () => {
   const theme = useMantineTheme();
   const { pageIsLoading } = useLoadingState();
   const router = useRouter();
-  const { data: gameshows, isLoading } = api.gameshows.getAllByCreatorId.useQuery();
+
+  const { showSuccessNotification, handleZodError } = useNotification();
+
+  const {
+    data: gameshows,
+    isLoading,
+    refetch: refetchGameshows,
+  } = api.gameshows.getAllByCreatorId.useQuery();
+  const { mutate: deleteGameshow } = api.gameshows.delete.useMutation({
+    onSuccess: () => {
+      showSuccessNotification({
+        message: "Spielshow wurde erfolgreich gelöscht",
+      });
+      void refetchGameshows();
+    },
+    onError: (error) => {
+      handleZodError(error.data?.zodError, error.message ?? "Spielshow konnte nicht gelöscht werden");
+    },
+  });
+
   const [openedCreateRoomModal, { open: openCreateRoomModal, close: closeCreateRoomModal }] =
     useDisclosure(false);
   const [activeGameshow, setActiveGameshow] = useState<SafedGameshow | undefined>(undefined);
@@ -36,6 +130,10 @@ const GameshowsPage = () => {
     void router.push("/gameshows/create");
   };
 
+  const handleDeleteGameshow = (gameshowId: string) => {
+    void deleteGameshow({ gameshowId });
+  };
+
   const rows =
     gameshows?.map((gameshow) => {
       return (
@@ -45,19 +143,13 @@ const GameshowsPage = () => {
           <Table.Td>{formatTimestamp(gameshow.createdAt)}</Table.Td>
           <Table.Td>
             <Flex gap="xl">
-              <ActionIcon
-                toolTip="Bearbeiten"
-                disabled
-              >
-                <IconSettings />
-              </ActionIcon>
-              <ActionIcon
+              {/* <ActionIcon
                 toolTip="Als Favorit hinzufügen"
                 color="yellow"
                 disabled
               >
                 {gameshow.isFavorite ? <IconStarFilled /> : <IconStar />}
-              </ActionIcon>
+              </ActionIcon> */}
               <ActionIcon
                 toolTip="Raum erstellen"
                 color="green"
@@ -65,6 +157,11 @@ const GameshowsPage = () => {
               >
                 <IconPlayerPlay />
               </ActionIcon>
+
+              <ActionMenu
+                gameshow={gameshow}
+                onDeleteGameshow={handleDeleteGameshow}
+              />
             </Flex>
           </Table.Td>
         </Table.Tr>

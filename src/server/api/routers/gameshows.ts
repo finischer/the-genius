@@ -73,4 +73,32 @@ export const gameshowsRouter = createTRPCRouter({
     });
     return gameshow;
   }),
+  delete: protectedProcedure
+    .input(
+      z.object({
+        gameshowId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const gameshowToDelete = await ctx.prisma.gameshow.findFirst({
+        where: {
+          creatorId: ctx.session.user.id,
+          id: input.gameshowId,
+        },
+      });
+
+      if (!gameshowToDelete) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+        });
+      }
+
+      const gameshow = await ctx.prisma.gameshow.delete({
+        where: {
+          id: input.gameshowId,
+        },
+      });
+
+      return gameshow;
+    }),
 });

@@ -74,6 +74,7 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
       opened={openedModal}
       onClose={onClose}
       title={gameshow.name}
+      centered
     >
       <form onSubmit={createRoom}>
         <Flex

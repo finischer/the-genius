@@ -14,15 +14,11 @@ import Notefield from "../Notefield/Notefield";
 import { type IScoreCircleProps, type IScorebarProps } from "./scorebar.types";
 import ModView from "~/components/shared/ModView";
 
-// const stretchAnimation = keyframes({
-//   "0%": { transform: "scale(0.75)" },
-//   "100%": { transform: "scale(1.25)" },
-// });
 const stretchAnimation = undefined;
 
 const HIGHLIGHT_CONTAINER_COLOR = "#c6011f";
-
 const SCOREBAR_HEIGHT = "3rem";
+const PULSE_ANIMATION_DURATION_SECONDS = 5;
 
 const ScoreCircle: React.FC<IScoreCircleProps> = ({ filled }) => (
   <Box
@@ -102,8 +98,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    fontSize: theme.fontSizes.xl,
-    fontWeight: "bold",
+    fontSize: theme.fontSizes.lg,
   };
 
   const joinTeam = () => {
@@ -181,12 +176,19 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
         pos="relative"
       >
         {/* Highlight container to represent that it is the turn of this team  */}
-        <Box
-          pos="absolute"
-          left="50%"
-          bottom="50%"
-          opacity={0.9}
+        <motion.div
+          animate={{
+            scale: [0.75, 1.25, 0.75],
+          }}
+          transition={{
+            repeat: Infinity,
+            duration: PULSE_ANIMATION_DURATION_SECONDS,
+            ease: "easeInOut",
+          }}
           style={{
+            position: "absolute",
+            left: "50%",
+            bottom: "50%",
             boxShadow: highlightBoxShadow,
             WebkitBoxShadow: highlightBoxShadow,
             animationName: stretchAnimation,

@@ -4,7 +4,6 @@ import {
   IconHome,
   IconMessageReport,
   IconTestPipe,
-  IconTools,
   IconUser,
 } from "@tabler/icons-react";
 import type { INavbarTabs } from "~/components/Navbar/navbar.types";
@@ -29,6 +28,12 @@ export const navbartabs: INavbarTabs = {
       description: "Starte oder erstelle deine eigene Spielshow",
       leftSection: <IconCategory size={DEFAULT_ICON_SIZE} />,
     },
+    {
+      label: "Feedback",
+      href: "/feedback",
+      description: "Gib uns dein Feedback und mache TheGenius besser",
+      leftSection: <IconMessageReport size={DEFAULT_ICON_SIZE} />,
+    },
   ],
   admin: [
     {
@@ -48,6 +53,7 @@ export const navbartabs: INavbarTabs = {
       href: "/admin/betauser",
       description: "Füge neue Betatester hinzu",
       leftSection: <IconTestPipe size={DEFAULT_ICON_SIZE} />,
+      disabled: true,
     },
   ],
 };

@@ -24,7 +24,6 @@ import Scoreboard from "~/components/room/Scoreboard/Scoreboard";
 import Timer from "~/components/room/Timer/Timer";
 import ActionIcon from "~/components/shared/ActionIcon";
 import ContainerBox from "~/components/shared/ContainerBox";
-import FeedbackHandler from "~/components/shared/FeedbackHandler";
 import GameRulesModal from "~/components/shared/GameRulesModal/GameRulesModal";
 import Loader from "~/components/shared/Loader/Loader";
 import ModView from "~/components/shared/ModView";
@@ -177,9 +176,6 @@ const RoomPage = () => {
           rules={currentGame.rules}
         />
       )}
-
-      {/* FeedbackHandler only during beta phase */}
-      <FeedbackHandler />
 
       <Flex
         h="100vh"

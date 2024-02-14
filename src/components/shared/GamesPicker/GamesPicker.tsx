@@ -1,18 +1,18 @@
-import { Group, Stack, Text } from "@mantine/core";
+import { Button, Group, Stack, Text } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import type { Game } from "@prisma/client";
-import { IconChevronRight, IconInfoSquareRounded, IconUser, IconUsers } from "@tabler/icons-react";
-import React, { useState } from "react";
+import { IconInfoSquareRounded, IconUser, IconUsers } from "@tabler/icons-react";
+import React from "react";
+import GameDetailsModal from "~/components/gameshows/GameDetailsModal";
 import { api } from "~/utils/api";
-import ActionIcon from "../ActionIcon";
+import List from "../List";
 import Paper from "../Paper";
+import Tooltip from "../Tooltip";
 import classes from "./gamesPicker.module.css";
 import { type IGamesPickerProps } from "./gamesPicker.types";
-import List from "../List";
-import { useImmer } from "use-immer";
 
 const GamesPicker: React.FC<IGamesPickerProps> = ({ selectedGames, setSelectedGames }) => {
-  const { data: games } = api.games.getAll.useQuery();
-  const [tst, setTst] = useImmer([1, 2, 3, 4, 5]);
+  const { data: games, isLoading } = api.games.getAll.useQuery();
 
   const handleSelectGame = (game: Game) => {
     setSelectedGames((draft) => {
@@ -22,45 +22,61 @@ const GamesPicker: React.FC<IGamesPickerProps> = ({ selectedGames, setSelectedGa
 
   const GameCard = ({ game }: { game: Game }) => {
     const alreadySelected = selectedGames.find((g) => g.id === game.id) ? true : false;
+    const [gameRulesOpened, { open: openGameDetails, close: closeGameDetails }] = useDisclosure(false);
 
     return (
-      <Paper
-        variant="light"
-        pos="relative"
-        disabled={alreadySelected || !game.active}
-        onClick={() => {
-          if (alreadySelected || !game.active) return;
-          handleSelectGame(game);
-        }}
-        opacity={alreadySelected || !game.active ? 0.3 : 1}
-      >
-        <Group>
-          {game.mode === "DUELL" && <IconUser />}
-          {game.mode === "TEAM" && <IconUsers />}
-          <Text>{game.name}</Text>
-          <ActionIcon
-            variant="default"
-            toolTip="Details anzeigen"
-            disabled
-          >
-            <IconInfoSquareRounded />
-          </ActionIcon>
-        </Group>
+      <>
+        <GameDetailsModal
+          game={game}
+          opened={gameRulesOpened}
+          onClose={closeGameDetails}
+        />
 
-        {/* New Banner */}
-        {game.isNew && (
-          <div className={classes.ribbonWrapper}>
-            <div className={classes.ribbon}>Neu</div>
-          </div>
-        )}
-      </Paper>
+        <Button.Group>
+          <Button
+            variant="default"
+            onClick={() => {
+              if (alreadySelected || !game.active) return;
+              handleSelectGame(game);
+            }}
+            disabled={alreadySelected || !game.active}
+            opacity={alreadySelected || !game.active ? 0.3 : 1}
+          >
+            <Group
+              gap="md"
+              ml={game.isNew ? "md" : undefined}
+            >
+              {game.mode === "DUELL" && <IconUser />}
+              {game.mode === "TEAM" && <IconUsers />}
+              <Text>{game.name}</Text>
+            </Group>
+
+            {game.isNew && (
+              <div className={classes.ribbonWrapper}>
+                <div className={classes.ribbon}>Neu</div>
+              </div>
+            )}
+          </Button>
+
+          <Tooltip label="Details anzeigen">
+            <Button
+              variant="default"
+              onClick={openGameDetails}
+            >
+              <IconInfoSquareRounded />
+            </Button>
+          </Tooltip>
+        </Button.Group>
+      </>
     );
   };
 
   return (
     <Stack gap="xl">
       <Paper display="inline-block">
-        {!games && <Text>Aktuell sind keine Spieler verfügbar</Text>}
+        {!games && (
+          <Text>{isLoading ? "Spiele werden geladen ..." : "Aktuell sind keine Spieler verfügbar"}</Text>
+        )}
 
         {games && (
           <Group>

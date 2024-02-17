@@ -1,25 +1,18 @@
 import type { GameshowMode } from "@prisma/client";
-import { type TGameSettingsMap } from "~/hooks/useConfigurator/useConfigurator.types";
+import { type TGameSettingsMap } from "~/hooks/useGameConfigurator/useGameConfigurator.types";
 
 export type TScorebarMode = "number" | "circle";
 
 export enum Games {
   FLAGGEN = "flaggen",
-  MEMORY = "memory",
   GEHEIMWOERTER = "geheimwoerter",
+  MERKEN = "merken",
   SET = "set",
   DUSAGST = "duSagst",
   REFERATBINTO = "referatBingo",
 }
 
-export type TGameNames =
-  | "flaggen"
-  | "memory"
-  | "merken"
-  | "geheimwoerter"
-  | "set"
-  | "duSagst"
-  | "referatBingo";
+export type TGameNames = "flaggen" | "merken" | "geheimwoerter" | "set" | "duSagst" | "referatBingo";
 
 export interface IGameGeneralState {
   name: string;

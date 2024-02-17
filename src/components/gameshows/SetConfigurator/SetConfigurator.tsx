@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useImmer } from "use-immer";
 import QuestionFormLayout from "~/components/layout/QuestionFormLayout";
 import type { TSetQuestionItem, TSetQuestionList } from "~/components/room/Game/games/Set/set.types";
-import { useConfigurator } from "~/hooks/useConfigurator";
+import { useConfigurator } from "~/hooks/useGameConfigurator";
 import CreateSetContainer from "./components/CreateSetContainer";
 import { generateNewSetQuestion } from "./helpers";
 
@@ -44,7 +44,7 @@ const SetConfigurator = () => {
 
   useEffect(() => {
     setSet((draft) => {
-      draft.set.questions = questions;
+      draft.questions = questions;
     });
 
     if (questions.length <= 0) {

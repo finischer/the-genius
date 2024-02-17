@@ -10,8 +10,6 @@ import FlaggenGame from "./games/Flaggen/FlaggenGame";
 import { type TFlaggenGameState } from "./games/Flaggen/config";
 import GeheimwörterGame from "./games/Geheimwörter/GeheimwörterGame";
 import type { TGeheimwörterGameState } from "./games/Geheimwörter/config";
-import MemoryGame from "./games/Memory/MemoryGame";
-import { type TMemoryGameState } from "./games/Memory/config";
 import MerkenGame from "./games/Merken/MerkenGame";
 import { type TMerkenGameState } from "./games/Merken/config";
 import ReferatBingoGame from "./games/ReferatBingo/ReferatBingoGame";
@@ -43,7 +41,6 @@ const Game: React.FC<IGameProps> = ({ game }) => {
     const GAME_MAP: TGameMap = {
       flaggen: <FlaggenGame game={game as TFlaggenGameState} />,
       merken: <MerkenGame game={game as TMerkenGameState} />,
-      memory: <MemoryGame game={game as TMemoryGameState} />,
       geheimwoerter: <GeheimwörterGame game={game as TGeheimwörterGameState} />,
       set: <SetGame game={game as TSetGameState} />,
       duSagst: <DuSagstGame game={game as TDuSagstGameState} />,

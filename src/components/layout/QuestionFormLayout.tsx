@@ -1,6 +1,6 @@
 import { Button, Container, Flex, ScrollArea, Title, type FlexProps, Box } from "@mantine/core";
 import React, { useEffect, type SyntheticEvent } from "react";
-import { useConfigurator } from "~/hooks/useConfigurator";
+import { useConfigurator } from "~/hooks/useGameConfigurator";
 import List from "../shared/List";
 import type { IListItem } from "../shared/List/components/ListItem/listItem.types";
 

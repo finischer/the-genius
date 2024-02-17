@@ -1,26 +1,27 @@
-import { Button, type StepperStepProps } from "@mantine/core";
+import { Button, type ActionIconProps, type StepperStepProps } from "@mantine/core";
 import { Text } from "@mantine/core";
 import { Box, Center, Flex, Group, Stepper, TextInput, Title } from "@mantine/core";
 import { useDisclosure, useLocalStorage } from "@mantine/hooks";
 import type { Game } from "@prisma/client";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
+import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useImmer } from "use-immer";
-import { GAME_CONFIGURATORS } from "~/components/gameshows/_game_configurator_map";
+import { useImmer, useImmerReducer } from "use-immer";
+import { GAME_CONFIGURATORS } from "~/components/gameshows/GameConfig";
 import PageLayout from "~/components/layout/PageLayout";
-import type { TGameNames } from "~/components/room/Game/games/game.types";
+import type { TGame, TGameNames } from "~/components/room/Game/games/game.types";
 import ActionIcon from "~/components/shared/ActionIcon";
 import GameRulesModal from "~/components/shared/GameRulesModal";
 import GamesPicker from "~/components/shared/GamesPicker";
 import Loader from "~/components/shared/Loader";
 import NextHead from "~/components/shared/NextHead";
-import { ConfiguratorProvider } from "~/hooks/useConfigurator";
-import { type TGameshowConfig } from "~/hooks/useConfigurator/useConfigurator.types";
+import { type TGameshowConfig } from "~/hooks/useGameConfigurator/useGameConfigurator.types";
 import useNotification from "~/hooks/useNotification";
 import { api } from "~/utils/api";
-
-const NUM_OF_DEFAULT_STEPS = 2;
+import type { TApiActions } from "../../server/api/api.types";
+import { GameConfiguratorProvider } from "~/hooks/useGameConfigurator/useGameConfigurator";
+import GamesConfigStepper from "~/components/gameshows/GamesConfigStepper";
 
 type TGameshowConfigKeys = Omit<TGameshowConfig, "games">; // config of gameshow that can be adjust by the user at details screen
 
@@ -29,25 +30,48 @@ export const DEFAULT_GAMESHOW_CONFIG = {
   games: [],
 };
 
+// const CreateGameshowPage = () => {
+//   +++ api calls +++
+//   1. get all available games from database
+//   2. when a gameshowID is in search params -> fetch this gameshow from database
+
+//   variables
+//   const [availableGames, setAvailableGames] = useState([])
+//   const [gameshow, setGameshow] = useState(undefined)
+
+//   +++ type structure +++
+//   type GameNames;
+//   type GameConfigurations = {
+//    [GameNames as Key]: GameConfiguration of specific game
+//   }
+
+//   +++ components structure +++
+//   <GameConfigProvider>
+
+//   return (
+//     <GameConfiguratorProvider
+//       gameshow={gameshow}
+//       setGameshow={setGameshow}
+//     >
+//       <GamesPicker />
+
+//       <GamesConfigStepper />
+//     </GameConfiguratorProvider>
+//   );
+// };
+
 const CreateGameshowPage = () => {
-  const { showErrorNotification } = useNotification();
   const router = useRouter();
-  const [activeStep, setActiveStep] = useState(0);
-  const [cachedGameshow, setCashedGameshow] = useLocalStorage<TGameshowConfig>({
-    key: "cachedGameshow",
-    defaultValue: DEFAULT_GAMESHOW_CONFIG,
-  });
-  const [gameshow, setGameshow] = useImmer<TGameshowConfig>(cachedGameshow);
-  const [furtherButtonDisabled, setFurtherButtonDisabled] = useState(false);
-  const [openedGameRules, { open: openGameRules, close: closeGameRules }] = useDisclosure();
+  const searchParams = useSearchParams();
 
-  const [selectedGames, setSelectedGames] = useImmer<Game[]>([]);
+  const gameshowId = searchParams.get("gameshowId");
+  const action: TApiActions = (searchParams.get("action") as TApiActions) ?? "create";
 
-  const activeGame = gameshow.games[activeStep - 1]; // -1 because Game configurators starts at step 1 and not 0
-
+  // api
+  const { data: availableGames, isLoading: isLoadingAllAvailableGames } = api.games.getAll.useQuery();
   const {
     mutateAsync: createGameshow,
-    isLoading,
+    isLoading: isLoadingCreateGameshow,
     isSuccess,
   } = api.gameshows.create.useMutation({
     onError: (e) => {
@@ -72,30 +96,46 @@ const CreateGameshowPage = () => {
     },
   });
 
+  const { refetch: fetchGameshow, isFetching: isFetchingGameshow } = api.gameshows.getById.useQuery(
+    { gameshowId: gameshowId ?? "" },
+    { enabled: !!gameshowId }
+  );
+
+  const isLoading = isFetchingGameshow || isLoadingCreateGameshow || isLoadingAllAvailableGames;
+
+  // gameshow
+  const [cachedGameshow, setCachedGameshow] = useLocalStorage<TGameshowConfig>({
+    key: "cachedGameshow",
+    defaultValue: DEFAULT_GAMESHOW_CONFIG,
+    getInitialValueInEffect: false,
+  });
+
+  const [gameshow, setGameshow] = useImmer<TGameshowConfig>(cachedGameshow);
+  const [selectedGames, setSelectedGames] = useImmer<Game[]>([]);
+  const [continuteButtonDisabled, setContinueButtonDisabled] = useState(false);
+
+  const enableContinueButton = () => {
+    setContinueButtonDisabled(false);
+  };
+
+  const disableContinueButton = () => {
+    setContinueButtonDisabled(true);
+  };
+
+  const { showErrorNotification } = useNotification();
+
+  const [activeStep, setActiveStep] = useState(0);
+  const [openedGameRules, { open: openGameRules, close: closeGameRules }] = useDisclosure();
+
+  const activeGame = gameshow.games[activeStep - 1]; // -1 because Game configurators starts at step 1 and not 0
+
   const selectedGamesReduced: TGameNames[] = selectedGames.map((g) => g.slug as TGameNames);
-  const numOfSteps = NUM_OF_DEFAULT_STEPS + selectedGames.length;
-  const isLastStep = activeStep === numOfSteps;
-  const allowSelectStepProps: StepperStepProps = { allowStepClick: !isLoading, allowStepSelect: !isLoading };
 
-  const STEP_MAP = {
-    selectGames: 0,
-    detailsGameshow: numOfSteps - 1,
-    summary: numOfSteps,
-  };
-
-  const nextStep = () => setActiveStep((current) => (current < numOfSteps ? current + 1 : current));
-  const prevStep = () => {
-    if (activeStep === 0) {
-      return router.push("/gameshows");
-    }
-
-    setActiveStep((current) => (current > 0 ? current - 1 : current));
-  };
   const saveGameshow = async () => {
     // generate rules as string
     const gamesWithRules = gameshow.games.map((g) => ({
       ...g,
-      rules: g.getRules(),
+      rules: g.rules,
     }));
 
     const gameshowWithGameRules: TGameshowConfig = {
@@ -118,61 +158,73 @@ const CreateGameshowPage = () => {
     });
   };
 
-  const enableFurtherButton = () => {
-    setFurtherButtonDisabled(false);
-  };
+  useEffect(() => {
+    const handleFetchGameshow = async () => {
+      const { data: gameshow } = await fetchGameshow();
 
-  const disableFurtherButton = () => {
-    setFurtherButtonDisabled(true);
-  };
+      if (!gameshow) return;
+
+      const gameshowConfig: TGameshowConfig = {
+        name: gameshow.name,
+        games: gameshow.games as unknown as TGame[],
+      };
+
+      // load to cache
+      setCachedGameshow(gameshowConfig);
+
+      // save to local state
+      setGameshow(gameshowConfig);
+
+      // get all games from fetched gameshow
+      const selectedGames =
+        availableGames?.map((game) => {
+          if (gameshowConfig.games.find((g) => g.identifier === game.slug)) {
+            return game;
+          }
+        }) ?? [];
+
+      const selectedGamesFiltered = selectedGames.filter((game): game is Game => game !== undefined);
+
+      setSelectedGames(selectedGamesFiltered);
+    };
+
+    console.log("GameshowID: ", gameshowId);
+    if (gameshowId) {
+      console.log("Fetch gameshow!");
+      void handleFetchGameshow();
+    } else {
+      console.log("Set gameshow to default state!");
+      // set default state
+      setGameshow(DEFAULT_GAMESHOW_CONFIG);
+    }
+  }, [isLoadingAllAvailableGames]);
 
   useEffect(() => {
-    setCashedGameshow(gameshow); // save to localStorage
+    setCachedGameshow(gameshow); // save to localStorage
   }, [gameshow]);
-
-  // Handle further button state for details gameshow step
-  useEffect(() => {
-    if (activeStep === STEP_MAP["detailsGameshow"]) {
-      if (gameshow.name === "") {
-        disableFurtherButton();
-      } else {
-        enableFurtherButton();
-      }
-    }
-  }, [activeStep, gameshow.name]);
-
-  // Handle further button state for select games step
-  useEffect(() => {
-    if (activeStep === STEP_MAP["selectGames"]) {
-      if (selectedGames.length === 0) {
-        disableFurtherButton();
-      } else {
-        enableFurtherButton();
-      }
-    }
-  }, [activeStep, selectedGames.length]);
 
   return (
     <>
       <NextHead title="Spielshow erstellen" />
       <PageLayout
-        showLoader={isSuccess}
+        showLoader={isLoading}
         loadingMessage="Spielshows werden geladen ..."
       >
         {activeGame && (
           <GameRulesModal
             centered
-            rules={activeGame.getRules()}
+            rules={activeGame.rules}
             gameName={activeGame.name}
             onClose={closeGameRules}
             opened={openedGameRules}
           />
         )}
-        <ConfiguratorProvider
-          enableFurtherButton={enableFurtherButton}
-          disableFurtherButton={disableFurtherButton}
-          updateGameshowConfig={setGameshow}
-          gameshowConfig={gameshow}
+
+        <GameConfiguratorProvider
+          enableFurtherButton={enableContinueButton}
+          disableFurtherButton={disableContinueButton}
+          updateGameshow={setGameshow}
+          gameshow={gameshow}
           selectedGames={selectedGamesReduced}
         >
           <Flex
@@ -181,114 +233,14 @@ const CreateGameshowPage = () => {
             justify="space-between"
           >
             <Title>Erstelle deine Spielshow</Title>
-            <Stepper
-              active={activeStep}
-              onStepClick={setActiveStep}
-              // hiddenFrom="sm"
-              // size="sm"
-              allowNextStepsSelect={false}
-            >
-              <Stepper.Step
-                label="Spiele"
-                description="Wähle deine Spiele aus"
-                {...allowSelectStepProps}
-              >
-                <Center>
-                  <GamesPicker
-                    selectedGames={selectedGames}
-                    setSelectedGames={setSelectedGames}
-                  />
-                </Center>
-              </Stepper.Step>
-              {selectedGames.map((game) => {
-                // const tmpGame = GAME_STATE_MAP[game.slug];
-                // const gameRules = tmpGame.getRules().trim();
 
-                return (
-                  <Stepper.Step
-                    key={game.id}
-                    label={game.name}
-                    {...allowSelectStepProps}
-                  >
-                    <Flex
-                      align="center"
-                      gap="xs"
-                    >
-                      <Title order={2}>Einstellungen - {game.name}</Title>
-                      {/* {gameRules && (
-                      <ActionIcon
-                        color="dimmed"
-                        toolTip="Regeln anzeigen"
-                        onClick={openGameRules}
-                      >
-                        <IconQuestionMark />
-                      </ActionIcon>
-                    )} */}
-                    </Flex>
-                    <Box mt="xl">{GAME_CONFIGURATORS[game.slug as TGameNames]}</Box>
-                  </Stepper.Step>
-                );
-              })}
-              <Stepper.Step
-                label="Details Spielshow"
-                description=""
-                {...allowSelectStepProps}
-              >
-                <Title order={2}>Details Spielshow</Title>
-                <Box mt="xl">
-                  <TextInput
-                    label="Name der Spielshow"
-                    withAsterisk
-                    onChange={updateGameshowConfig}
-                    id="name"
-                    value={gameshow.name}
-                  />
-                </Box>
-              </Stepper.Step>
-              <Stepper.Completed>
-                <></>
-                {/* TODO: Add summary component before gameshow will be saved */}
-              </Stepper.Completed>
-            </Stepper>
-
-            <Group
-              justify="center"
-              mt="xl"
-            >
-              {isLoading ? (
-                <Loader message="Spielshow wird erstellt ..." />
-              ) : (
-                <>
-                  <ActionIcon
-                    variant="default"
-                    onClick={() => !isLoading && prevStep()}
-                  >
-                    <IconChevronLeft />
-                  </ActionIcon>
-                  {isLastStep ? (
-                    <Button
-                      loading={isLoading}
-                      disabled={isLoading}
-                      size="compact-sm"
-                      px="xl"
-                      onClick={saveGameshow}
-                    >
-                      Speichern
-                    </Button>
-                  ) : (
-                    <ActionIcon
-                      onClick={nextStep}
-                      disabled={furtherButtonDisabled || isLoading}
-                      loading={isLoading}
-                    >
-                      <IconChevronRight />
-                    </ActionIcon>
-                  )}
-                </>
-              )}
-            </Group>
+            <GamesConfigStepper
+              enableContinueButton={enableContinueButton}
+              disableContinueButton={disableContinueButton}
+              continuteButtonDisabled={continuteButtonDisabled}
+            />
           </Flex>
-        </ConfiguratorProvider>
+        </GameConfiguratorProvider>
       </PageLayout>
     </>
   );

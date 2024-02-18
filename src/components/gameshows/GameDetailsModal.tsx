@@ -5,7 +5,6 @@ import type { TGameNames } from "../room/Game/games/game.types";
 import { DEFAULT_FLAGGEN_STATE } from "../room/Game/games/Flaggen/config";
 import { DEFAULT_DUSAGST_STATE } from "../room/Game/games/DuSagst/config";
 import { DEFAULT_GEHEIMWOERTER_STATE } from "../room/Game/games/Geheimwörter/config";
-import { DEFAULT_MEMORY_STATE } from "../room/Game/games/Memory/config";
 import { DEFAULT_MERKEN_STATE } from "../room/Game/games/Merken/config";
 import { DEFAULT_REFERAT_BINGO_STATE } from "../room/Game/games/ReferatBingo/config";
 import { DEFAULT_SET_STATE } from "../room/Game/games/Set/config";
@@ -20,13 +19,12 @@ type TGameRulesMap = {
 };
 
 const gameRulesMap: TGameRulesMap = {
-  flaggen: DEFAULT_FLAGGEN_STATE.getRules(),
-  duSagst: DEFAULT_DUSAGST_STATE.getRules(),
-  geheimwoerter: DEFAULT_GEHEIMWOERTER_STATE.getRules(),
-  memory: DEFAULT_MEMORY_STATE.getRules(),
-  merken: DEFAULT_MERKEN_STATE.getRules(),
-  referatBingo: DEFAULT_REFERAT_BINGO_STATE.getRules(),
-  set: DEFAULT_SET_STATE.getRules(),
+  flaggen: DEFAULT_FLAGGEN_STATE.rules,
+  duSagst: DEFAULT_DUSAGST_STATE.rules,
+  geheimwoerter: DEFAULT_GEHEIMWOERTER_STATE.rules,
+  merken: DEFAULT_MERKEN_STATE.rules,
+  referatBingo: DEFAULT_REFERAT_BINGO_STATE.rules,
+  set: DEFAULT_SET_STATE.rules,
 };
 
 const GameDetailsModal: FC<IGameDetailsModalProps> = ({ game, ...props }) => {

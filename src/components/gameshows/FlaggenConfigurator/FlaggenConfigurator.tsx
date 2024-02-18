@@ -4,7 +4,7 @@ import { useImmer } from "use-immer";
 import { COUNTRIES } from "~/components/room/Game/games/Flaggen/config";
 import type { TCountry } from "~/components/room/Game/games/Flaggen/flaggen.types";
 import List from "~/components/shared/List";
-import { useConfigurator } from "~/hooks/useConfigurator";
+import { useConfigurator } from "~/hooks/useGameConfigurator";
 
 const availableCountries: TCountry[] = Object.keys(COUNTRIES).map((code) => ({
   id: code,
@@ -46,7 +46,7 @@ const FlaggenConfigurator = () => {
 
   useEffect(() => {
     setFlaggen((draft) => {
-      draft.flaggen.countries = selectedCountries;
+      draft.countries = selectedCountries;
     });
 
     // check further button state

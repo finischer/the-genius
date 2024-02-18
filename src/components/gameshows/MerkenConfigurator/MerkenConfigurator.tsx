@@ -3,7 +3,7 @@ import { parseInt } from "lodash";
 import { useEffect } from "react";
 import { useImmer } from "use-immer";
 import MerkenPlayground from "~/components/room/Game/games/Merken/components/MerkenPlayground/MerkenPlayground";
-import { useConfigurator } from "~/hooks/useConfigurator";
+import { useConfigurator } from "~/hooks/useGameConfigurator";
 import { shuffleArray } from "~/utils/array";
 
 const MAX_TIME_TO_THINK_SECONDS = 180; // 3 minutes
@@ -20,7 +20,7 @@ const MerkenConfigurator = () => {
     const convertedValue = typeof value === "string" ? parseInt(value) : value;
 
     setMerken((draft) => {
-      draft.merken.timerState.timeToThinkSeconds = convertedValue;
+      draft.timerState.timeToThinkSeconds = convertedValue;
     });
   };
 
@@ -45,7 +45,7 @@ const MerkenConfigurator = () => {
 
   useEffect(() => {
     setMerken((draft) => {
-      draft.merken.cards = shuffleArray(cards);
+      draft.cards = shuffleArray(cards);
     });
   }, []);
 

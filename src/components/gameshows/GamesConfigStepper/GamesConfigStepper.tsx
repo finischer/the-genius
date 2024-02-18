@@ -155,9 +155,6 @@ const GamesConfigStepper: FC<IGamesConfigStepperProps> = ({
           </Center>
         </Stepper.Step>
         {selectedGames.map((game) => {
-          // const tmpGame = GAME_STATE_MAP[game.slug];
-          // const gameRules = tmpGame.getRules().trim();
-
           return (
             <Stepper.Step
               key={game.id}
@@ -169,15 +166,6 @@ const GamesConfigStepper: FC<IGamesConfigStepperProps> = ({
                 gap="xs"
               >
                 <Title order={2}>Einstellungen - {game.name}</Title>
-                {/* {gameRules && (
-          <ActionIcon
-          color="dimmed"
-          toolTip="Regeln anzeigen"
-          onClick={openGameRules}
-          >
-          <IconQuestionMark />
-          </ActionIcon>
-        )} */}
               </Flex>
               <Box mt="xl">
                 <GameConfig gameSlug={game.slug as TGameNames} />

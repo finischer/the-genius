@@ -1,4 +1,4 @@
-import { type IGameGeneralState } from "../game.types";
+import { Games, type IGameGeneralState } from "../game.types";
 import type { IReferatBingoState, TReferatBingoNotefieldState } from "./referatBingo.types";
 
 export type TReferatBingoGameState = IReferatBingoState & IGameGeneralState;
@@ -12,12 +12,11 @@ const DEFAULT_NOTEFIELD_STATE: TReferatBingoNotefieldState = {
 };
 
 export const DEFAULT_REFERAT_BINGO_STATE: TReferatBingoGameState = {
-  identifier: "referatBingo",
+  identifier: Games.REFERATBINTO,
   name: "Referat Bingo",
   modes: ["TEAM"],
   maxPoints: 999,
   scorebarMode: "number",
-  rules: "",
   topics: [],
   qIndex: 0,
   presenter: {
@@ -36,9 +35,20 @@ export const DEFAULT_REFERAT_BINGO_STATE: TReferatBingoGameState = {
     },
     topic: false,
   },
-  getRules() {
-    return `
-        
-    `;
-  },
+  rules: `
+  
+Spiel: {{ gameName }}
+
+### Ziel:
+Das Ziel von "{{ gameName }}" ist es, bestimmte Begriffe oder Phrasen während eines Referats zu identifizieren, um Bingo zu erreichen.
+
+### Spielablauf:
+Während eines Referats teilt sich jedes Team jeweils eine Bingo-Karte.
+  
+Ein Mitglied aus einem Team stellt das Referat vor, während die anderen Spieler (auch das Gegnerteam) ihre Bingo-Karten verwenden, um bestimmte Begriffe oder Phrasen zu markieren, wenn sie erwähnt werden.
+
+Markiert ein Teammitglied einen Begriff oder eine Phrase auf seiner Bingo-Karte, wenn sie im Referat erwähnt wird, erhält das Team einen Punkt.
+
+Das Team, das die meisten Punkte nach 4 Referaten hat, gewinnt das Spiel. 
+  `,
 };

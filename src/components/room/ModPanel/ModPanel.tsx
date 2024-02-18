@@ -27,6 +27,7 @@ import { type IModPanelProps } from "./modPanel.types";
 import MediaPlayer from "../MediaPlayer";
 import useAudio from "~/hooks/useAudio";
 import ActionIcon from "~/components/shared/ActionIcon";
+import GameDetailsModal from "~/components/gameshows/GameDetailsModal";
 
 const TIMER_SECONDS = 10;
 
@@ -166,12 +167,10 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
   return (
     <>
       {clickedGame && (
-        <GameRulesModal
-          zIndex={999}
-          opened={openedGameRules}
+        <GameDetailsModal
+          game={clickedGame}
           onClose={closeGameRules}
-          gameName={clickedGame.name}
-          rules={clickedGame.rules}
+          opened={openedGameRules}
         />
       )}
       <Drawer

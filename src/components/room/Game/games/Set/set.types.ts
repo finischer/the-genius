@@ -1,4 +1,5 @@
 import type { IListItem } from "~/components/shared/List/components/ListItem/listItem.types";
+import type { Games } from "../game.types";
 
 export enum SET_COLORS {
   RED = "#F94900",
@@ -25,6 +26,8 @@ export interface ISetGameProps {
 export type TSetGameMarkedCardsState = "wrong" | "correct" | "marked";
 
 export interface ISetGameState {
+  identifier: Games.SET;
+
   questions: TSetQuestionList;
   qIndex: number;
   display: {

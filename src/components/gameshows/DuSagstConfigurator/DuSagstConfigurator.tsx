@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import QuestionFormLayout from "~/components/layout/QuestionFormLayout";
 import type { TDuSagstQuestion } from "~/components/room/Game/games/DuSagst/duSagst.types";
-import { useConfigurator } from "~/hooks/useConfigurator";
+import { useConfigurator } from "~/hooks/useGameConfigurator";
 import type { TDuSagstFormValues } from "./duSagstConfigurator.types";
 
 const PLACEHOLDER_MAP: { [index: number]: string } = {
@@ -113,7 +113,7 @@ const DuSagstConfigurator = () => {
     }
 
     setDuSagst((draft) => {
-      draft.duSagst.questions = questions as unknown as TDuSagstQuestion[];
+      draft.questions = questions as unknown as TDuSagstQuestion[];
     });
   }, [questions]);
 

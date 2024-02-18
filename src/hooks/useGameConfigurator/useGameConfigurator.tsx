@@ -1,17 +1,11 @@
 import { createContext, useContext, useEffect } from "react";
 import { useImmer } from "use-immer";
-import { DEFAULT_DUSAGST_STATE, type TDuSagstGameState } from "~/components/room/Game/games/DuSagst/config";
-import { DEFAULT_FLAGGEN_STATE, type TFlaggenGameState } from "~/components/room/Game/games/Flaggen/config";
-import {
-  DEFAULT_GEHEIMWOERTER_STATE,
-  type TGeheimwörterGameState,
-} from "~/components/room/Game/games/Geheimwörter/config";
-import { DEFAULT_MERKEN_STATE, type TMerkenGameState } from "~/components/room/Game/games/Merken/config";
-import {
-  DEFAULT_REFERAT_BINGO_STATE,
-  type TReferatBingoGameState,
-} from "~/components/room/Game/games/ReferatBingo/config";
-import { DEFAULT_SET_STATE, type TSetGameState } from "~/components/room/Game/games/Set/config";
+import { DEFAULT_DUSAGST_STATE } from "~/components/room/Game/games/DuSagst/config";
+import { DEFAULT_FLAGGEN_STATE } from "~/components/room/Game/games/Flaggen/config";
+import { DEFAULT_GEHEIMWOERTER_STATE } from "~/components/room/Game/games/Geheimwörter/config";
+import { DEFAULT_MERKEN_STATE } from "~/components/room/Game/games/Merken/config";
+import { DEFAULT_REFERAT_BINGO_STATE } from "~/components/room/Game/games/ReferatBingo/config";
+import { DEFAULT_SET_STATE } from "~/components/room/Game/games/Set/config";
 import type { TGame, TGameNames } from "~/components/room/Game/games/game.types";
 import {
   type IConfiguratorProvider,
@@ -31,12 +25,14 @@ export const GAME_STATE_MAP: TGameSettingsMap = {
 
 export type TSelectedGameSettingsArray = TGame[];
 
+type TGameshowConfigKeys = Omit<TGameshowConfig, "games">; // config of gameshow that can be adjust by the user at details screen
+
 const GameConfiguratorContext = createContext<TConfiguratorContext | undefined>(undefined);
 
 // Funktion zur Erstellung der gameSettingsMap
 // TODO: Make function generic with type compatibility
 function generateGameSettingsMap(gameshowConfig: TGameshowConfig): TGameSettingsMap {
-  const gameSettingsMap: TGameSettingsMap = {
+  let gameSettingsMap: TGameSettingsMap = {
     flaggen: DEFAULT_FLAGGEN_STATE,
     merken: DEFAULT_MERKEN_STATE,
     geheimwoerter: DEFAULT_GEHEIMWOERTER_STATE,
@@ -47,28 +43,11 @@ function generateGameSettingsMap(gameshowConfig: TGameshowConfig): TGameSettings
 
   // Iteriere über die Spiele in gameshowConfig und fülle die gameSettingsMap entsprechend
   gameshowConfig.games.forEach((game: TGame) => {
-    switch (game.identifier) {
-      case "flaggen":
-        gameSettingsMap.flaggen = game as TFlaggenGameState;
-        break;
-      case "merken":
-        gameSettingsMap.merken = game as TMerkenGameState;
-        break;
-      case "geheimwoerter":
-        gameSettingsMap.geheimwoerter = game as TGeheimwörterGameState;
-        break;
-      case "set":
-        gameSettingsMap.set = game as TSetGameState;
-        break;
-      case "duSagst":
-        gameSettingsMap.duSagst = game as TDuSagstGameState;
-        break;
-      case "referatBingo":
-        gameSettingsMap.referatBingo = game as TReferatBingoGameState;
-        break;
-      default:
-        // Unbekanntes Spiel
-        break;
+    const gameConfig = gameSettingsMap[game.identifier];
+
+    if (gameConfig) {
+      // @ts-ignore
+      gameSettingsMap[game.identifier] = game;
     }
   });
 
@@ -103,7 +82,7 @@ const GameConfiguratorProvider: React.FC<IConfiguratorProvider> = ({
   selectedGames,
   children,
 }) => {
-  const [gameConfigs, setGameConfigs] = useImmer<TGameSettingsMap>(GAME_STATE_MAP);
+  const [gameConfigs, setGameConfigs] = useImmer<TGameSettingsMap>(generateGameSettingsMap(gameshow));
 
   useEffect(() => {
     const newGameSettings: TSelectedGameSettingsArray = [];
@@ -119,7 +98,11 @@ const GameConfiguratorProvider: React.FC<IConfiguratorProvider> = ({
 
   return (
     <GameConfiguratorContext.Provider
-      value={[gameConfigs, setGameConfigs, { enableFurtherButton, disableFurtherButton }]}
+      value={[
+        gameConfigs,
+        setGameConfigs,
+        { enableFurtherButton, disableFurtherButton, updateGameshowMetadata: updateGameshow },
+      ]}
     >
       {children}
     </GameConfiguratorContext.Provider>
@@ -133,7 +116,7 @@ function useConfigurator<T extends TGameNames>(game: T) {
     throw Error("useConfigurator must be used within ConfiguratorProvider");
   }
 
-  const [gameConfigs, setGameConfigs, handleFurtherButton] = context;
+  const [gameConfigs, setGameConfigs, options] = context;
 
   const updateGameConfig = (updateFn: (config: TGameSettingsMap[T]) => void) => {
     setGameConfigs((draft) => {
@@ -142,7 +125,14 @@ function useConfigurator<T extends TGameNames>(game: T) {
     });
   };
 
-  return [gameConfigs[game], updateGameConfig, handleFurtherButton] as const;
+  const updateGameshowMetadata = (updateFn: (config: TGameshowConfigKeys) => void) => {
+    options.updateGameshowMetadata((draft) => {
+      // Rufe die übergebene Update-Funktion mit der aktuellen Spielkonfiguration auf
+      updateFn(draft);
+    });
+  };
+
+  return [gameConfigs[game], updateGameConfig, { ...options, updateGameshowMetadata }] as const;
 }
 
 export { GameConfiguratorProvider, useConfigurator };

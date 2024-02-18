@@ -24,10 +24,6 @@ const MerkenConfigurator = () => {
     });
   };
 
-  useEffect(() => {
-    console.log("Merken: ", merken);
-  }, [merken]);
-
   const handleCardClick = (index: number) => {
     updateOpenCards((draft) => {
       if (openCards.includes(index)) {

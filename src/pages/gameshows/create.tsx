@@ -23,8 +23,6 @@ import type { TApiActions } from "../../server/api/api.types";
 import { GameConfiguratorProvider } from "~/hooks/useGameConfigurator/useGameConfigurator";
 import GamesConfigStepper from "~/components/gameshows/GamesConfigStepper";
 
-type TGameshowConfigKeys = Omit<TGameshowConfig, "games">; // config of gameshow that can be adjust by the user at details screen
-
 export const DEFAULT_GAMESHOW_CONFIG = {
   name: "",
   games: [],
@@ -61,7 +59,6 @@ export const DEFAULT_GAMESHOW_CONFIG = {
 // };
 
 const CreateGameshowPage = () => {
-  const router = useRouter();
   const searchParams = useSearchParams();
 
   const gameshowId = searchParams.get("gameshowId");
@@ -69,39 +66,12 @@ const CreateGameshowPage = () => {
 
   // api
   const { data: availableGames, isLoading: isLoadingAllAvailableGames } = api.games.getAll.useQuery();
-  const {
-    mutateAsync: createGameshow,
-    isLoading: isLoadingCreateGameshow,
-    isSuccess,
-  } = api.gameshows.create.useMutation({
-    onError: (e) => {
-      const errorMessage = e.data?.zodError?.fieldErrors;
-      const errorMessagesArray = errorMessage ? Object.values(errorMessage) : [];
-
-      if (errorMessagesArray.length > 0) {
-        errorMessagesArray.forEach((messages) => {
-          if (messages && messages[0]) {
-            showErrorNotification({
-              title: "Ein Fehler ist aufgetreten",
-              message: messages[0],
-            });
-          }
-        });
-      } else {
-        showErrorNotification({
-          title: "Ein Fehler ist aufgetreten",
-          message: e.message ?? "Probiere es später nochmal",
-        });
-      }
-    },
-  });
-
   const { refetch: fetchGameshow, isFetching: isFetchingGameshow } = api.gameshows.getById.useQuery(
     { gameshowId: gameshowId ?? "" },
     { enabled: !!gameshowId }
   );
 
-  const isLoading = isFetchingGameshow || isLoadingCreateGameshow || isLoadingAllAvailableGames;
+  const isLoading = isFetchingGameshow || isLoadingAllAvailableGames;
 
   // gameshow
   const [cachedGameshow, setCachedGameshow] = useLocalStorage<TGameshowConfig>({
@@ -111,7 +81,10 @@ const CreateGameshowPage = () => {
   });
 
   const [gameshow, setGameshow] = useImmer<TGameshowConfig>(cachedGameshow);
+
   const [selectedGames, setSelectedGames] = useImmer<Game[]>([]);
+  const selectedGamesReduced: TGameNames[] = selectedGames.map((g) => g.slug as TGameNames);
+
   const [continuteButtonDisabled, setContinueButtonDisabled] = useState(false);
 
   const enableContinueButton = () => {
@@ -120,42 +93,6 @@ const CreateGameshowPage = () => {
 
   const disableContinueButton = () => {
     setContinueButtonDisabled(true);
-  };
-
-  const { showErrorNotification } = useNotification();
-
-  const [activeStep, setActiveStep] = useState(0);
-  const [openedGameRules, { open: openGameRules, close: closeGameRules }] = useDisclosure();
-
-  const activeGame = gameshow.games[activeStep - 1]; // -1 because Game configurators starts at step 1 and not 0
-
-  const selectedGamesReduced: TGameNames[] = selectedGames.map((g) => g.slug as TGameNames);
-
-  const saveGameshow = async () => {
-    // generate rules as string
-    const gamesWithRules = gameshow.games.map((g) => ({
-      ...g,
-      rules: g.rules,
-    }));
-
-    const gameshowWithGameRules: TGameshowConfig = {
-      ...gameshow,
-      games: gamesWithRules,
-    };
-
-    try {
-      await createGameshow(gameshowWithGameRules);
-      // navigate back to gameshows
-      void router.push("/gameshows");
-    } catch (err) {}
-  };
-
-  const updateGameshowConfig = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const key: keyof TGameshowConfigKeys = e.target.id as keyof TGameshowConfigKeys;
-
-    setGameshow((draft) => {
-      draft[key] = e.target.value;
-    });
   };
 
   useEffect(() => {
@@ -188,12 +125,9 @@ const CreateGameshowPage = () => {
       setSelectedGames(selectedGamesFiltered);
     };
 
-    console.log("GameshowID: ", gameshowId);
     if (gameshowId) {
-      console.log("Fetch gameshow!");
       void handleFetchGameshow();
     } else {
-      console.log("Set gameshow to default state!");
       // set default state
       setGameshow(DEFAULT_GAMESHOW_CONFIG);
     }
@@ -210,16 +144,6 @@ const CreateGameshowPage = () => {
         showLoader={isLoading}
         loadingMessage="Spielshows werden geladen ..."
       >
-        {activeGame && (
-          <GameRulesModal
-            centered
-            rules={activeGame.rules}
-            gameName={activeGame.name}
-            onClose={closeGameRules}
-            opened={openedGameRules}
-          />
-        )}
-
         <GameConfiguratorProvider
           enableFurtherButton={enableContinueButton}
           disableFurtherButton={disableContinueButton}
@@ -232,12 +156,20 @@ const CreateGameshowPage = () => {
             direction="column"
             justify="space-between"
           >
-            <Title>Erstelle deine Spielshow</Title>
+            {action === "create" && <Title>Erstelle deine Spielshow</Title>}
+            {action === "update" && (
+              <Title>
+                Spielshow <i>{gameshow.name}</i> bearbeiten
+              </Title>
+            )}
 
             <GamesConfigStepper
+              gameshow={gameshow}
               enableContinueButton={enableContinueButton}
               disableContinueButton={disableContinueButton}
               continuteButtonDisabled={continuteButtonDisabled}
+              selectedGames={selectedGames}
+              setSelectedGames={setSelectedGames}
             />
           </Flex>
         </GameConfiguratorProvider>

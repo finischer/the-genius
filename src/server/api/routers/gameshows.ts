@@ -99,6 +99,44 @@ export const gameshowsRouter = createTRPCRouter({
     });
     return gameshow;
   }),
+  update: protectedProcedure
+    .input(
+      z.object({
+        gameshowId: z.string(),
+        updatedGameshow: z.unknown(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const gameshow = await ctx.prisma.gameshow.findFirst({
+        where: {
+          id: input.gameshowId,
+          creatorId: ctx.session.user.id,
+        },
+      });
+
+      if (!gameshow) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Gameshow konnte nicht gespeichert werden",
+        });
+      }
+
+      const config = input.updatedGameshow as TGameshowConfig;
+
+      const updatedGameshow = await ctx.prisma.gameshow.update({
+        data: {
+          name: config.name,
+          // workaround until prisma type is set correctly
+          // @ts-expect-error
+          games: config.games, // TODO: fix game schema in prisma
+        },
+        where: {
+          id: input.gameshowId,
+        },
+      });
+
+      return updatedGameshow;
+    }),
   delete: protectedProcedure
     .input(
       z.object({

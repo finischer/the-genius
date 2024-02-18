@@ -37,6 +37,7 @@ export type TConfiguratorContext = [
   {
     enableFurtherButton: () => void;
     disableFurtherButton: () => void;
+    updateGameshowMetadata: Updater<TGameshowConfig>;
   }
 ];
 

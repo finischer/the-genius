@@ -1,38 +1,63 @@
 import type { StepperStepProps } from "@mantine/core";
-import { Loader } from "@mantine/core";
-import { Box, Group, TextInput } from "@mantine/core";
-import { ActionIcon } from "@mantine/core";
-import { Button } from "@mantine/core";
-import { Center, Flex, Stepper, Title } from "@mantine/core";
+import { Box, Center, Flex, Stepper, TextInput, Title } from "@mantine/core";
 import type { Game } from "@prisma/client";
-import { IconChevronRight } from "@tabler/icons-react";
-import { IconChevronLeft } from "@tabler/icons-react";
-import React, { useState, type FC, useEffect } from "react";
-import { useImmer } from "use-immer";
-import GamesPicker from "~/components/shared/GamesPicker";
-import StepperButtons from "./components/StepperButtons";
+import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
-import GameConfig from "../GameConfig";
+import { useEffect, useState, type FC } from "react";
+import { type Updater } from "use-immer";
 import type { TGameNames } from "~/components/room/Game/games/game.types";
+import GamesPicker from "~/components/shared/GamesPicker";
+import { useConfigurator } from "~/hooks/useGameConfigurator";
+import type { TGameshowConfig } from "~/hooks/useGameConfigurator/useGameConfigurator.types";
+import useNotification from "~/hooks/useNotification";
+import type { TApiActions } from "~/server/api/api.types";
+import { api } from "~/utils/api";
+import GameConfig from "../GameConfig";
+import StepperButtons from "./components/StepperButtons";
 
 interface IGamesConfigStepperProps {
+  gameshow: TGameshowConfig;
   disableContinueButton: () => void;
   enableContinueButton: () => void;
   continuteButtonDisabled: boolean;
+  selectedGames: Game[];
+  setSelectedGames: Updater<Game[]>;
 }
 
 const NUM_OF_DEFAULT_STEPS = 2;
 
 const GamesConfigStepper: FC<IGamesConfigStepperProps> = ({
+  gameshow,
   enableContinueButton,
   disableContinueButton,
   continuteButtonDisabled,
+  selectedGames,
+  setSelectedGames,
 }) => {
+  const { handleZodError } = useNotification();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
+  const action: TApiActions = (searchParams.get("action") as TApiActions) ?? "create";
+  const gameshowId = searchParams.get("gameshowId");
+
+  const [, , { updateGameshowMetadata }] = useConfigurator("duSagst");
   const [activeStep, setActiveStep] = useState(0);
 
-  const [selectedGames, setSelectedGames] = useImmer<Game[]>([]);
+  // api create gameshow
+  const {
+    mutateAsync: createGameshow,
+    isLoading: isLoadingCreateGameshow,
+    isSuccess,
+  } = api.gameshows.create.useMutation({
+    onError: (error) => handleZodError(error.data?.zodError, error.message ?? "Ein Fehler ist aufgetreten"),
+  });
+
+  // api update gameshow
+  const { mutateAsync: updateGameshow, isLoading: isLoadingUpdateGameshow } =
+    api.gameshows.update.useMutation({
+      onError: (error) => handleZodError(error.data?.zodError, error.message ?? "Ein Fehler ist aufgetreten"),
+    });
 
   const allowSelectStepProps: StepperStepProps = {
     allowStepClick: false,
@@ -57,16 +82,45 @@ const GamesConfigStepper: FC<IGamesConfigStepperProps> = ({
     setActiveStep((current) => (current > 0 ? current - 1 : current));
   };
 
+  const handleSaveGameshow = async () => {
+    // generate rules as string
+    const gamesWithRules = gameshow.games.map((g) => ({
+      ...g,
+      rules: g.rules,
+    }));
+
+    const gameshowWithGameRules: TGameshowConfig = {
+      ...gameshow,
+      games: gamesWithRules,
+    };
+
+    try {
+      if (action === "create") {
+        await createGameshow(gameshowWithGameRules);
+      } else if (action === "update" && gameshowId) {
+        await updateGameshow({
+          gameshowId,
+          updatedGameshow: gameshow,
+        });
+      } else {
+        return;
+      }
+
+      // navigate back to gameshows
+      void router.push("/gameshows");
+    } catch (err) {}
+  };
+
   // Handle further button state for details gameshow step
-  //   useEffect(() => {
-  //     if (activeStep === STEP_MAP["detailsGameshow"]) {
-  //       if (gameshow.name === "") {
-  //         disableFurtherButton();
-  //       } else {
-  //         enableFurtherButton();
-  //       }
-  //     }
-  //   }, [activeStep, gameshow.name]);
+  useEffect(() => {
+    if (activeStep === STEP_MAP["detailsGameshow"]) {
+      if (gameshow.name === "") {
+        disableContinueButton();
+      } else {
+        enableContinueButton();
+      }
+    }
+  }, [activeStep, gameshow.name]);
 
   // Handle further button state for select games step
   useEffect(() => {
@@ -138,13 +192,17 @@ const GamesConfigStepper: FC<IGamesConfigStepperProps> = ({
         >
           <Title order={2}>Details Spielshow</Title>
           <Box mt="xl">
-            {/* <TextInput
-        label="Name der Spielshow"
-        withAsterisk
-        onChange={updateGameshowConfig}
-        id="name"
-        value={gameshow.name}
-        /> */}
+            <TextInput
+              label="Name der Spielshow"
+              withAsterisk
+              onChange={(e) =>
+                updateGameshowMetadata((draft) => {
+                  draft.name = e.target.value;
+                })
+              }
+              id="name"
+              value={gameshow.name}
+            />
           </Box>
         </Stepper.Step>
         <Stepper.Completed>
@@ -156,10 +214,12 @@ const GamesConfigStepper: FC<IGamesConfigStepperProps> = ({
       <StepperButtons
         onClickRightButton={nextStep}
         onClickLeftButton={prevStep}
+        onSaveClick={handleSaveGameshow}
         rightButtonProps={{
           disabled: continuteButtonDisabled,
         }}
         isLastStep={isLastStep}
+        disabledButtons={isLoadingCreateGameshow || isLoadingUpdateGameshow}
       />
     </>
   );

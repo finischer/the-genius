@@ -32,7 +32,7 @@ const GameConfiguratorContext = createContext<TConfiguratorContext | undefined>(
 // Funktion zur Erstellung der gameSettingsMap
 // TODO: Make function generic with type compatibility
 function generateGameSettingsMap(gameshowConfig: TGameshowConfig): TGameSettingsMap {
-  let gameSettingsMap: TGameSettingsMap = {
+  const gameSettingsMap: TGameSettingsMap = {
     flaggen: DEFAULT_FLAGGEN_STATE,
     merken: DEFAULT_MERKEN_STATE,
     geheimwoerter: DEFAULT_GEHEIMWOERTER_STATE,

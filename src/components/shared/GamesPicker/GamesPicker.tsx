@@ -10,6 +10,8 @@ import Paper from "../Paper";
 import Tooltip from "../Tooltip";
 import classes from "./gamesPicker.module.css";
 import { type IGamesPickerProps } from "./gamesPicker.types";
+import { GAME_STATE_MAP } from "~/hooks/useGameConfigurator/useGameConfigurator";
+import type { TGameNames } from "~/components/room/Game/games/game.types";
 
 const GamesPicker: React.FC<IGamesPickerProps> = ({ selectedGames, setSelectedGames }) => {
   const { data: games, isLoading } = api.games.getAll.useQuery();
@@ -24,10 +26,12 @@ const GamesPicker: React.FC<IGamesPickerProps> = ({ selectedGames, setSelectedGa
     const alreadySelected = selectedGames.find((g) => g.id === game.id) ? true : false;
     const [gameRulesOpened, { open: openGameDetails, close: closeGameDetails }] = useDisclosure(false);
 
+    const defaultGameState = GAME_STATE_MAP[game.slug as TGameNames];
+
     return (
       <>
         <GameDetailsModal
-          game={game}
+          game={defaultGameState}
           opened={gameRulesOpened}
           onClose={closeGameDetails}
         />

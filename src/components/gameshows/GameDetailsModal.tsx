@@ -1,31 +1,52 @@
-import { Modal, Text, type ModalProps, rem, Divider } from "@mantine/core";
-import type { Game } from "@prisma/client";
-import React, { type FC } from "react";
-import type { TGameNames } from "../room/Game/games/game.types";
-import { DEFAULT_FLAGGEN_STATE } from "../room/Game/games/Flaggen/config";
-import { DEFAULT_DUSAGST_STATE } from "../room/Game/games/DuSagst/config";
-import { DEFAULT_GEHEIMWOERTER_STATE } from "../room/Game/games/Geheimwörter/config";
-import { DEFAULT_MERKEN_STATE } from "../room/Game/games/Merken/config";
-import { DEFAULT_REFERAT_BINGO_STATE } from "../room/Game/games/ReferatBingo/config";
-import { DEFAULT_SET_STATE } from "../room/Game/games/Set/config";
-import { formatTimestamp } from "~/utils/dates";
+import { Divider, Modal, Text, type ModalProps } from "@mantine/core";
+import Handlebars from "handlebars";
+import { capitalize } from "lodash";
+import { type FC } from "react";
+import Markdown from "react-markdown";
+import { Games, type TGame } from "../room/Game/games/game.types";
+import { GAME_STATE_MAP } from "~/hooks/useGameConfigurator/useGameConfigurator";
 
 interface IGameDetailsModalProps extends ModalProps {
-  game: Game;
+  game: TGame;
 }
 
-type TGameRulesMap = {
-  [index in TGameNames]: string;
-};
+function getFormattedGameRules(game: TGame) {
+  const metadata = {
+    gameName: game.name,
+    maxPoints: game.maxPoints,
+    "maxPoints.equalOne": game.maxPoints === 1,
+    modes: game.modes,
+  };
 
-const gameRulesMap: TGameRulesMap = {
-  flaggen: DEFAULT_FLAGGEN_STATE.rules,
-  duSagst: DEFAULT_DUSAGST_STATE.rules,
-  geheimwoerter: DEFAULT_GEHEIMWOERTER_STATE.rules,
-  merken: DEFAULT_MERKEN_STATE.rules,
-  referatBingo: DEFAULT_REFERAT_BINGO_STATE.rules,
-  set: DEFAULT_SET_STATE.rules,
-};
+  let gameData = {};
+
+  const rules = GAME_STATE_MAP[game.identifier].rules;
+
+  switch (game.identifier) {
+    case Games.DUSAGST:
+      gameData = {
+        "timeToThinkSeconds.equalOne": game.timeToThinkSeconds === 1,
+        timeToThinkSeconds: game.timeToThinkSeconds,
+      };
+      break;
+    case Games.MERKEN:
+      gameData = {
+        "timeToThinkSeconds.equalOne": game.timerState.timeToThinkSeconds === 1,
+        timeToThinkSeconds: game.timerState.timeToThinkSeconds,
+      };
+    default:
+      break;
+  }
+
+  const data = {
+    ...metadata,
+    ...gameData,
+  };
+
+  const template = Handlebars.compile(rules);
+
+  return template(data);
+}
 
 const GameDetailsModal: FC<IGameDetailsModalProps> = ({ game, ...props }) => {
   const ModalTitle = () => (
@@ -36,9 +57,10 @@ const GameDetailsModal: FC<IGameDetailsModalProps> = ({ game, ...props }) => {
       >
         {game.name}
       </Text>
-      <Text c="dimmed">Hinzugefügt am: {formatTimestamp(game.createdAt, "DD.MM.YYYY", "")}</Text>
     </>
   );
+
+  const gameRules = getFormattedGameRules(game);
 
   return (
     <Modal
@@ -47,9 +69,9 @@ const GameDetailsModal: FC<IGameDetailsModalProps> = ({ game, ...props }) => {
       centered
       title={<ModalTitle />}
     >
-      <Text>Modus: {game.mode}</Text>
+      <Text>Modus: {game.modes.map((mode) => capitalize(mode)).join(", ")}</Text>
       <Divider my="md" />
-      <Text>Regeln: {gameRulesMap[game.slug as TGameNames]}</Text>
+      <Markdown>{gameRules}</Markdown>
     </Modal>
   );
 };

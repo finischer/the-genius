@@ -1,6 +1,7 @@
 import type { TCodeList } from "~/components/gameshows/GeheimwörterConfigurator/components/CodeList/codeList.types";
 import { type TGeheimwörterGameState } from "./config";
 import type { IListItem } from "~/components/shared/List/components/ListItem/listItem.types";
+import type { Games } from "../game.types";
 
 export type TGeheimWoerterQuestionsWordsItem = {
   word: string;
@@ -13,6 +14,7 @@ export type TGeheimwoerterQuestionItem = IListItem<{
 }>;
 
 export interface IGeheimwörterState {
+  identifier: Games.GEHEIMWOERTER;
   answer: string;
   codeList: TCodeList;
   questions: TGeheimwoerterQuestionItem[];

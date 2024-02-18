@@ -1,6 +1,6 @@
 import { generateColors } from "@mantine/colors-generator";
 import type { CSSVariablesResolver } from "@mantine/core";
-import { ActionIcon, Paper, createTheme, rem, type MantineColorsTuple } from "@mantine/core";
+import { ActionIcon, Paper, createTheme, rem, type MantineColorsTuple, Modal } from "@mantine/core";
 import { GameshowMode } from "@prisma/client";
 
 export const sizes = {
@@ -60,6 +60,15 @@ export const THEME = createTheme({
       defaultProps: {
         c: "white",
         radius: "xs",
+      },
+    }),
+    Modal: Modal.extend({
+      styles: {
+        header: {
+          width: "100%",
+          top: -20,
+          borderRadius: 0,
+        },
       },
     }),
   },

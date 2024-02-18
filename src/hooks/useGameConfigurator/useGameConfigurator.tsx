@@ -31,6 +31,11 @@ const GameConfiguratorContext = createContext<TConfiguratorContext | undefined>(
 
 // Funktion zur Erstellung der gameSettingsMap
 // TODO: Make function generic with type compatibility
+
+export function getDefaultGameState<T extends TGameNames>(gameName: T) {
+  return GAME_STATE_MAP[gameName];
+}
+
 function generateGameSettingsMap(gameshowConfig: TGameshowConfig): TGameSettingsMap {
   const gameSettingsMap: TGameSettingsMap = {
     flaggen: DEFAULT_FLAGGEN_STATE,

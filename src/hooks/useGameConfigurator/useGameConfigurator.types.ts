@@ -8,7 +8,6 @@ import type { TSetGameState } from "~/components/room/Game/games/Set/config";
 import type { TGame, TGameNames } from "~/components/room/Game/games/game.types";
 
 export type TGameSettingsMap = {
-  // [key in TGameNames]: TFlaggenGameState | TMemoryGameState | TMerkenGameState;
   flaggen: TFlaggenGameState;
   merken: TMerkenGameState;
   geheimwoerter: TGeheimwörterGameState;

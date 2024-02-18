@@ -1,10 +1,11 @@
+import { Games } from "./../game.types";
 import { type IGameGeneralState } from "../game.types";
 import { type IFlaggenState } from "./flaggen.types";
 
 export type TFlaggenGameState = IFlaggenState & IGameGeneralState;
 
 export const DEFAULT_FLAGGEN_STATE: TFlaggenGameState = {
-  identifier: "flaggen",
+  identifier: Games.FLAGGEN,
   modes: ["DUELL", "TEAM"],
   maxPoints: 7,
   name: "Flaggen",
@@ -15,14 +16,18 @@ export const DEFAULT_FLAGGEN_STATE: TFlaggenGameState = {
     answer: false,
     country: false,
   },
-  rules: "",
-  getRules() {
-    return `
-      Ihr bekommt eine Flagge gezeigt. Meint ihr das Land dieser Flagge zu kennen, buzzert ihr und gebt innerhalb von 5 Sekunden eine Antwort. 
-      Ist die Antwort korrekt, bekommt ihr einen Punkt. Ist die Antwort falsch, bekommt der Gegner einen Punkt. 
-      Wer zuerst ${this.maxPoints} Punkte hat, hat das Spiel für sich gewonnen.
-    `;
-  },
+  rules: `  
+  Spiel: {{gameName}}
+  
+  ### Ziel des Spiels:
+  Das Ziel von "{{gameName}}" ist es, das Land einer gezeigten Flagge richtig zu identifizieren und so viele Punkte wie möglich zu sammeln, indem die Spieler schnell reagieren.
+  
+  ### Spielablauf:
+  1. Flaggenpräsentation: Eine Flagge wird angezeigt.
+  2. Antwortzeit: Wenn du denkst, dass du das Land der Flagge kennst, musst du rechtzeitig buzzern und innerhalb von 5 Sekunden eine Antwort geben.
+  3. Punktvergabe: Wenn deine Antwort korrekt ist, erhältst du einen Punkt. Ist die Antwort falsch, erhält der Gegner einen Punkt.
+  4. Siegbedingungen: Das Team, das zuerst {{maxPoints}} Punkte erreicht, gewinnt das Spiel.
+  `,
 };
 
 interface ICountriesMap {

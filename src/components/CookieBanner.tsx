@@ -38,7 +38,7 @@ const CookieBanner: React.FC<ICookieBannerProps> = ({ onButtonClick }) => {
       >
         Wir verwenden analytische Cookies und einige Cookies werden von Drittanbietern platziert, die auf
         unseren Seiten erscheinen. Durch Klicken auf &quot;Alle akzeptieren&quot; stimmen Sie der Verwendung
-        aller Cookies für Ihre jeweilige Session zu.
+        aller Cookies zu.
       </Text>
       <Group
         style={{

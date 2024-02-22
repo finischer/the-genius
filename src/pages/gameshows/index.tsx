@@ -1,5 +1,5 @@
 import { Flex, Menu, Table, Text, Title, useMantineTheme } from "@mantine/core";
-import { useDisclosure, useLocalStorage } from "@mantine/hooks";
+import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import type { Gameshow } from "@prisma/client";
 import {
@@ -39,9 +39,6 @@ const ActionMenu = ({
   ) : (
     <IconStar size={MENU_ICON_SIZE} />
   );
-  const [_, setCachedGameshow] = useLocalStorage<TGameshowConfig>({
-    key: "cachedGameshow",
-  });
   const router = useRouter();
 
   const openDeleteConfirmModal = () =>
@@ -67,8 +64,6 @@ const ActionMenu = ({
       name: gameshow.name,
       games: gameshow.games as unknown as TGame[],
     };
-
-    setCachedGameshow(gameshowConfig);
 
     const searchParams = new URLSearchParams();
     searchParams.set("gameshowId", gameshow.id);

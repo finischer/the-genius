@@ -1,83 +1,31 @@
+import { cloneDeep } from "lodash";
 import { createContext, useContext, useEffect } from "react";
 import { useImmer } from "use-immer";
-import { DEFAULT_DUSAGST_STATE } from "~/components/room/Game/games/DuSagst/config";
-import { DEFAULT_FLAGGEN_STATE } from "~/components/room/Game/games/Flaggen/config";
-import { DEFAULT_GEHEIMWOERTER_STATE } from "~/components/room/Game/games/Geheimwörter/config";
-import { DEFAULT_MERKEN_STATE } from "~/components/room/Game/games/Merken/config";
-import { DEFAULT_REFERAT_BINGO_STATE } from "~/components/room/Game/games/ReferatBingo/config";
-import { DEFAULT_SET_STATE } from "~/components/room/Game/games/Set/config";
-import type { TGame, TGameNames } from "~/components/room/Game/games/game.types";
+import { GAME_STATE_MAP } from "~/components/room/Game/games/game.constants";
+import type { TGame, TGameNames, TGameSettingsMap } from "~/components/room/Game/games/game.types";
+import { getDefaultGameState } from "~/utils/gameHelpers";
 import {
   type IConfiguratorProvider,
   type TConfiguratorContext,
-  type TGameSettingsMap,
   type TGameshowConfig,
 } from "./useGameConfigurator.types";
-
-export const GAME_STATE_MAP: TGameSettingsMap = {
-  flaggen: DEFAULT_FLAGGEN_STATE,
-  merken: DEFAULT_MERKEN_STATE,
-  geheimwoerter: DEFAULT_GEHEIMWOERTER_STATE,
-  set: DEFAULT_SET_STATE,
-  duSagst: DEFAULT_DUSAGST_STATE,
-  referatBingo: DEFAULT_REFERAT_BINGO_STATE,
-};
-
 export type TSelectedGameSettingsArray = TGame[];
 
 type TGameshowConfigKeys = Omit<TGameshowConfig, "games">; // config of gameshow that can be adjust by the user at details screen
 
 const GameConfiguratorContext = createContext<TConfiguratorContext | undefined>(undefined);
 
-// Funktion zur Erstellung der gameSettingsMap
-// TODO: Make function generic with type compatibility
-
-export function getDefaultGameState<T extends TGameNames>(gameName: T) {
-  return GAME_STATE_MAP[gameName];
-}
-
 function generateGameSettingsMap(gameshowConfig: TGameshowConfig): TGameSettingsMap {
-  const gameSettingsMap: TGameSettingsMap = {
-    flaggen: DEFAULT_FLAGGEN_STATE,
-    merken: DEFAULT_MERKEN_STATE,
-    geheimwoerter: DEFAULT_GEHEIMWOERTER_STATE,
-    set: DEFAULT_SET_STATE,
-    duSagst: DEFAULT_DUSAGST_STATE,
-    referatBingo: DEFAULT_REFERAT_BINGO_STATE,
-  };
+  const gameSettingsMap: TGameSettingsMap = cloneDeep(GAME_STATE_MAP);
 
   // Iteriere über die Spiele in gameshowConfig und fülle die gameSettingsMap entsprechend
   gameshowConfig.games.forEach((game: TGame) => {
-    const gameConfig = gameSettingsMap[game.identifier];
-
-    if (gameConfig) {
-      // @ts-ignore
-      gameSettingsMap[game.identifier] = game;
-    }
+    // @ts-ignore
+    gameSettingsMap[game.identifier] = game;
   });
 
   return gameSettingsMap;
 }
-
-// function generateGameSettingsMap2<T extends TGameshowConfig>(gameshowConfig: T): TGameSettingsMap {
-//   // Erstelle ein leeres Objekt für die gameSettingsMap
-//   const gameSettingsMap: Partial<TGameSettingsMap> = {};
-
-//   // Iteriere über die Spiele in gameshowConfig und fülle die gameSettingsMap entsprechend
-//   gameshowConfig.games.forEach((game: TGame) => {
-//     // Überprüfe, ob der Name des Spiels ein gültiger Schlüssel für die gameSettingsMap ist
-//     if (game.identifier in gameSettingsMap) {
-//       // Weise das Spiel der entsprechenden Eigenschaft in der gameSettingsMap zu
-//       gameSettingsMap[game.name as keyof TGameSettingsMap] = game
-//     } else {
-//       // Unbekanntes Spiel
-//       console.warn(`Unbekanntes Spiel "${game.name}"`);
-//     }
-//   });
-
-//   // Rückgabe des vollständigen gameSettingsMap-Objekts
-//   return gameSettingsMap as TGameSettingsMap;
-// }
 
 const GameConfiguratorProvider: React.FC<IConfiguratorProvider> = ({
   gameshow,
@@ -92,9 +40,13 @@ const GameConfiguratorProvider: React.FC<IConfiguratorProvider> = ({
   useEffect(() => {
     const newGameSettings: TSelectedGameSettingsArray = [];
 
+    console.log("SelectedGames: ", selectedGames);
+    console.log("GameConfig: ", gameConfigs);
     selectedGames.forEach((gameName) => {
       newGameSettings.push(gameConfigs[gameName]);
     });
+
+    console.log("New game settings: ", newGameSettings);
 
     updateGameshow((draft) => {
       draft.games = newGameSettings;

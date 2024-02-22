@@ -22,50 +22,42 @@ import { api } from "~/utils/api";
 import type { TApiActions } from "../../server/api/api.types";
 import { GameConfiguratorProvider } from "~/hooks/useGameConfigurator/useGameConfigurator";
 import GamesConfigStepper from "~/components/gameshows/GamesConfigStepper";
+import { LOCAL_STORAGE_KEYS } from "~/config/localStorage";
 
 export const DEFAULT_GAMESHOW_CONFIG = {
   name: "",
   games: [],
 };
 
-// const CreateGameshowPage = () => {
-//   +++ api calls +++
-//   1. get all available games from database
-//   2. when a gameshowID is in search params -> fetch this gameshow from database
+function getSelectedGamesFromGameshow(availableGames: Game[], gameshowGames: TGame[]) {
+  console.log("Available games: ", availableGames);
+  console.log("Gameshow games: ", gameshowGames);
 
-//   variables
-//   const [availableGames, setAvailableGames] = useState([])
-//   const [gameshow, setGameshow] = useState(undefined)
+  const selectedGames: Game[] = [];
 
-//   +++ type structure +++
-//   type GameNames;
-//   type GameConfigurations = {
-//    [GameNames as Key]: GameConfiguration of specific game
-//   }
+  gameshowGames.forEach((game) => {
+    const selectedGame = availableGames.find((g) => g.slug === game.identifier);
+    if (selectedGame) {
+      selectedGames.push(selectedGame);
+    }
+  });
 
-//   +++ components structure +++
-//   <GameConfigProvider>
-
-//   return (
-//     <GameConfiguratorProvider
-//       gameshow={gameshow}
-//       setGameshow={setGameshow}
-//     >
-//       <GamesPicker />
-
-//       <GamesConfigStepper />
-//     </GameConfiguratorProvider>
-//   );
-// };
+  return selectedGames;
+}
 
 const CreateGameshowPage = () => {
   const searchParams = useSearchParams();
+  const { handleZodError } = useNotification();
 
   const gameshowId = searchParams.get("gameshowId");
   const action: TApiActions = (searchParams.get("action") as TApiActions) ?? "create";
 
   // api
-  const { data: availableGames, isLoading: isLoadingAllAvailableGames } = api.games.getAll.useQuery();
+  const { refetch: fetchAvailableGames, isLoading: isLoadingAllAvailableGames } = api.games.getAll.useQuery(
+    undefined,
+    { enabled: false, onError: (error) => handleZodError(error.data?.zodError, error.message) }
+  );
+
   const { refetch: fetchGameshow, isFetching: isFetchingGameshow } = api.gameshows.getById.useQuery(
     { gameshowId: gameshowId ?? "" },
     { enabled: !!gameshowId }
@@ -73,19 +65,12 @@ const CreateGameshowPage = () => {
 
   const isLoading = isFetchingGameshow || isLoadingAllAvailableGames;
 
-  // gameshow
-  const [cachedGameshow, setCachedGameshow] = useLocalStorage<TGameshowConfig>({
-    key: "cachedGameshow",
-    defaultValue: DEFAULT_GAMESHOW_CONFIG,
-    getInitialValueInEffect: false,
-  });
-
-  const [gameshow, setGameshow] = useImmer<TGameshowConfig>(cachedGameshow);
+  const [gameshow, setGameshow] = useImmer<TGameshowConfig>(DEFAULT_GAMESHOW_CONFIG);
 
   const [selectedGames, setSelectedGames] = useImmer<Game[]>([]);
   const selectedGamesReduced: TGameNames[] = selectedGames.map((g) => g.slug as TGameNames);
 
-  const [continuteButtonDisabled, setContinueButtonDisabled] = useState(false);
+  const [continueButtonDisabled, setContinueButtonDisabled] = useState(false);
 
   const enableContinueButton = () => {
     setContinueButtonDisabled(false);
@@ -95,47 +80,29 @@ const CreateGameshowPage = () => {
     setContinueButtonDisabled(true);
   };
 
-  useEffect(() => {
-    const handleFetchGameshow = async () => {
+  async function handleFetchGameshowAndGames() {
+    const { data: availableGames } = await fetchAvailableGames();
+
+    if (!availableGames) return;
+
+    if (gameshowId && action === "update") {
       const { data: gameshow } = await fetchGameshow();
 
       if (!gameshow) return;
 
-      const gameshowConfig: TGameshowConfig = {
-        name: gameshow.name,
-        games: gameshow.games as unknown as TGame[],
-      };
+      setGameshow(gameshow);
 
-      // load to cache
-      setCachedGameshow(gameshowConfig);
+      const selectedGames = getSelectedGamesFromGameshow(availableGames, gameshow.games);
 
-      // save to local state
-      setGameshow(gameshowConfig);
-
-      // get all games from fetched gameshow
-      const selectedGames =
-        availableGames?.map((game) => {
-          if (gameshowConfig.games.find((g) => g.identifier === game.slug)) {
-            return game;
-          }
-        }) ?? [];
-
-      const selectedGamesFiltered = selectedGames.filter((game): game is Game => game !== undefined);
-
-      setSelectedGames(selectedGamesFiltered);
-    };
-
-    if (gameshowId) {
-      void handleFetchGameshow();
+      setSelectedGames(selectedGames);
     } else {
-      // set default state
       setGameshow(DEFAULT_GAMESHOW_CONFIG);
     }
-  }, [isLoadingAllAvailableGames]);
+  }
 
   useEffect(() => {
-    setCachedGameshow(gameshow); // save to localStorage
-  }, [gameshow]);
+    handleFetchGameshowAndGames();
+  }, []);
 
   return (
     <>
@@ -167,7 +134,7 @@ const CreateGameshowPage = () => {
               gameshow={gameshow}
               enableContinueButton={enableContinueButton}
               disableContinueButton={disableContinueButton}
-              continuteButtonDisabled={continuteButtonDisabled}
+              continueButtonDisabled={continueButtonDisabled}
               selectedGames={selectedGames}
               setSelectedGames={setSelectedGames}
             />

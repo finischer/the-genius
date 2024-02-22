@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import InfoSection from "~/components/home/InfoSection/InfoSection";
 import PageLayout from "~/components/layout/PageLayout";
 import Card from "~/components/shared/Card/Card";
+import IntroductionBanner from "~/components/shared/IntroductionBanner";
 import NextHead from "~/components/shared/NextHead";
 
 const Home: NextPage = () => {
@@ -13,6 +14,7 @@ const Home: NextPage = () => {
   return (
     <>
       <NextHead title="Startseite" />
+      <IntroductionBanner />
       <PageLayout>
         <Flex
           gap="xl"

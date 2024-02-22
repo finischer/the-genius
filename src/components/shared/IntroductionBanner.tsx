@@ -1,4 +1,4 @@
-import { Flex, Modal, ScrollArea, Stack, Text } from "@mantine/core";
+import { Checkbox, Divider, Flex, Modal, ScrollArea, Stack, Text } from "@mantine/core";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { api } from "~/utils/api";
@@ -8,6 +8,7 @@ const IntroductionBanner = () => {
   const { data: user, refetch } = api.users.me.useQuery();
   const { mutateAsync: updateFirstVisit } = api.users.updateFirstVisit.useMutation();
   const [showIntroductionBanner, setShowIntroductionBanner] = useState(false);
+  const [checkboxChecked, setCheckboxChecked] = useState(false);
 
   useEffect(() => {
     if (status === "authenticated" && session.user.username && user && user.isFirstVisit) {
@@ -16,8 +17,11 @@ const IntroductionBanner = () => {
   }, [user?.isFirstVisit]);
 
   const handleCloseModalClick = async () => {
-    await updateFirstVisit();
-    await refetch();
+    if (checkboxChecked) {
+      await updateFirstVisit();
+      await refetch();
+    }
+
     setShowIntroductionBanner(false);
   };
 
@@ -25,7 +29,7 @@ const IntroductionBanner = () => {
     <Modal
       opened={showIntroductionBanner}
       onClose={handleCloseModalClick}
-      size="xl"
+      size="lg"
       centered
       title={<Text>Herzlich Willkommen bei TheGenius!</Text>}
     >
@@ -59,6 +63,13 @@ const IntroductionBanner = () => {
         <br />
         <Text>Herzliche Grüße,</Text>
         <Text>dein TheGenius-Team</Text>
+
+        <Divider />
+        <Checkbox
+          label="Hinweis nicht mehr anzeigen"
+          checked={checkboxChecked}
+          onChange={(event) => setCheckboxChecked(event.currentTarget.checked)}
+        />
       </Stack>
     </Modal>
   );

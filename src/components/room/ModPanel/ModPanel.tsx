@@ -1,33 +1,22 @@
-import {
-  Accordion,
-  Button,
-  Drawer,
-  Flex,
-  ScrollArea,
-  Text,
-  Title,
-  type ButtonProps,
-  Group,
-} from "@mantine/core";
+import { Accordion, Button, Drawer, Flex, ScrollArea, Text, Title, type ButtonProps } from "@mantine/core";
 import { useDisclosure, useLocalStorage } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import type { RoomViews } from "@prisma/client";
-import { IconCheck, IconQuestionMark, IconX } from "@tabler/icons-react";
+import { IconCheck, IconQuestionMark } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import GameRulesModal from "~/components/shared/GameRulesModal/GameRulesModal";
+import GameDetailsModal from "~/components/gameshows/GameDetailsModal";
 import Tooltip from "~/components/shared/Tooltip/Tooltip";
+import useAudio from "~/hooks/useAudio";
 import useLoadingState from "~/hooks/useLoadingState/useLoadingState";
 import useNotification from "~/hooks/useNotification";
 import { useRoom } from "~/hooks/useRoom";
 import { socket } from "~/hooks/useSocket";
 import type { TGame, TGameNames } from "../Game/games/game.types";
-import { type IModPanelProps } from "./modPanel.types";
 import MediaPlayer from "../MediaPlayer";
-import useAudio from "~/hooks/useAudio";
-import ActionIcon from "~/components/shared/ActionIcon";
-import GameDetailsModal from "~/components/gameshows/GameDetailsModal";
+import { type IModPanelProps } from "./modPanel.types";
+import { LOCAL_STORAGE_KEYS } from "~/config/localStorage";
 
 const TIMER_SECONDS = 10;
 
@@ -36,7 +25,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
   const router = useRouter();
   const { pageIsLoading } = useLoadingState();
   const [openedItems, setOpenedItems] = useLocalStorage<string[]>({
-    key: "modPanelOpenedItems",
+    key: LOCAL_STORAGE_KEYS.MOD_PANEL_OPENED_ITEMS,
     defaultValue: [],
   });
 
@@ -94,19 +83,18 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
         >
           {g.name} {btnDisabled && "(Läuft gerade)"}
         </Button>
-        {g.rules && (
-          <Tooltip
-            label="Regeln anzeigen"
-            openDelay={500}
+
+        <Tooltip
+          label="Regeln anzeigen"
+          openDelay={500}
+        >
+          <Button
+            {...btnVariantDefault}
+            onClick={() => handleOpenGameRules(g)}
           >
-            <Button
-              {...btnVariantDefault}
-              onClick={() => handleOpenGameRules(g)}
-            >
-              <IconQuestionMark />
-            </Button>
-          </Tooltip>
-        )}
+            <IconQuestionMark />
+          </Button>
+        </Tooltip>
       </Button.Group>
     );
   });

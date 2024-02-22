@@ -19,7 +19,7 @@ interface IGamesConfigStepperProps {
   gameshow: TGameshowConfig;
   disableContinueButton: () => void;
   enableContinueButton: () => void;
-  continuteButtonDisabled: boolean;
+  continueButtonDisabled: boolean;
   selectedGames: Game[];
   setSelectedGames: Updater<Game[]>;
 }
@@ -30,7 +30,7 @@ const GamesConfigStepper: FC<IGamesConfigStepperProps> = ({
   gameshow,
   enableContinueButton,
   disableContinueButton,
-  continuteButtonDisabled,
+  continueButtonDisabled,
   selectedGames,
   setSelectedGames,
 }) => {
@@ -204,7 +204,7 @@ const GamesConfigStepper: FC<IGamesConfigStepperProps> = ({
         onClickLeftButton={prevStep}
         onSaveClick={handleSaveGameshow}
         rightButtonProps={{
-          disabled: continuteButtonDisabled,
+          disabled: continueButtonDisabled,
         }}
         isLastStep={isLastStep}
         disabledButtons={isLoadingCreateGameshow || isLoadingUpdateGameshow}

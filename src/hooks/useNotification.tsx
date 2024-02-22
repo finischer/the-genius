@@ -26,7 +26,7 @@ const useNotification = () => {
 
   const handleZodError = (
     errorList: typeToFlattenedError<any, string> | null | undefined,
-    defaultErrorMsg: string
+    defaultErrorMsg: string = "Ein Fehler ist aufgetreten"
   ) => {
     if (!errorList) {
       showErrorNotification({

@@ -10,8 +10,8 @@ import Paper from "../Paper";
 import Tooltip from "../Tooltip";
 import classes from "./gamesPicker.module.css";
 import { type IGamesPickerProps } from "./gamesPicker.types";
-import { GAME_STATE_MAP } from "~/hooks/useGameConfigurator/useGameConfigurator";
 import type { TGameNames } from "~/components/room/Game/games/game.types";
+import { GAME_STATE_MAP } from "~/components/room/Game/games/game.constants";
 
 const GamesPicker: React.FC<IGamesPickerProps> = ({ selectedGames, setSelectedGames }) => {
   const { data: games, isLoading } = api.games.getAll.useQuery();

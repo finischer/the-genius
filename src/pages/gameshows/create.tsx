@@ -80,7 +80,7 @@ const CreateGameshowPage = () => {
     setContinueButtonDisabled(true);
   };
 
-  async function handleFetchGameshowAndGames() {
+  async function setupGameshowConfig() {
     const { data: availableGames } = await fetchAvailableGames();
 
     if (!availableGames) return;
@@ -92,7 +92,7 @@ const CreateGameshowPage = () => {
 
       setGameshow(gameshow);
 
-      const selectedGames = getSelectedGamesFromGameshow(availableGames, gameshow.games);
+      const selectedGames = getSelectedGamesFromGameshow(availableGames, gameshow.games as TGame[]);
 
       setSelectedGames(selectedGames);
     } else {
@@ -101,7 +101,7 @@ const CreateGameshowPage = () => {
   }
 
   useEffect(() => {
-    handleFetchGameshowAndGames();
+    void setupGameshowConfig();
   }, []);
 
   return (

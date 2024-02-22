@@ -3,7 +3,6 @@ import { createContext, useContext, useEffect } from "react";
 import { useImmer } from "use-immer";
 import { GAME_STATE_MAP } from "~/components/room/Game/games/game.constants";
 import type { TGame, TGameNames, TGameSettingsMap } from "~/components/room/Game/games/game.types";
-import { getDefaultGameState } from "~/utils/gameHelpers";
 import {
   type IConfiguratorProvider,
   type TConfiguratorContext,

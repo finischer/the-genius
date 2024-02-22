@@ -1,6 +1,5 @@
 import type { GameshowMode, Prisma, Room as PrismaRoom, RoomState, RoomViews } from "@prisma/client";
-import type { TGame, TGameNames } from "~/components/room/Game/games/game.types";
-import { type TGameSettingsMap } from "~/hooks/useGameConfigurator/useGameConfigurator.types";
+import type { TGame, TGameNames, TGameSettingsMap } from "~/components/room/Game/games/game.types";
 import { io } from "../../socket";
 import Team from "../Team/Team";
 import { type IRoomMaxPlayersTeamMap, type PrismaRoomFixed, type TRoomTeams } from "./room.types";

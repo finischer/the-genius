@@ -17,12 +17,10 @@ const useGameshowConfig = <T extends Games>(gameName: T) => {
   const updateGame = (updateFn: (config: TGameSettingsMap[T]) => void) => {
     if (!gameName) return;
 
-    console.log("updateGame - Games: ", gameshow.games);
-
     const gameIndex = gameshow.games.findIndex((g) => g.identifier === gameName);
 
     if (gameIndex === -1) {
-      console.log("Could not find game: ", gameName);
+      console.error("Could not find game: ", gameName);
       return;
     }
 

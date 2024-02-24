@@ -45,7 +45,6 @@ const GameConfigProvider: FC<IGameConfigProviderProps> = ({ children }) => {
     enabled: true,
     onError: (error) => handleZodError(error.data?.zodError, error.message),
     onSuccess(data) {
-      console.log("Fetch available games - Success!");
       setAvailableGames(data);
     },
   });
@@ -56,8 +55,6 @@ const GameConfigProvider: FC<IGameConfigProviderProps> = ({ children }) => {
       enabled: !!gameshowId,
       onError: (error) => handleZodError(error.data?.zodError, error.message),
       onSuccess(data) {
-        console.log("Fetch gameshow - Success!");
-
         const gameshowConfig: TGameshowConfig = {
           name: data.name,
           games: data.games as TGame[],
@@ -66,11 +63,6 @@ const GameConfigProvider: FC<IGameConfigProviderProps> = ({ children }) => {
       },
     }
   );
-
-  useEffect(() => {
-    console.log("Games: ", availableGames);
-    console.log("Gameshow: ", gameshow);
-  }, [availableGames, gameshow]);
 
   return (
     <GameConfigContext.Provider value={{ gameshow, setGameshow, availableGames, setAvailableGames }}>

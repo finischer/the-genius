@@ -43,7 +43,6 @@ const GamesConfigStepper = () => {
 
   useEffect(() => {
     if (gameshow.games.length > 0 && availableGames && !initSelectedGamesDone) {
-      console.log("Selected games: ", selectedGames);
       setSelectedGames(getAlreadySelectedGames(gameshow.games, availableGames));
       setInitSelectedGamesDone(true);
     }

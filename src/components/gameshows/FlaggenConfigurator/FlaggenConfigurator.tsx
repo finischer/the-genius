@@ -1,10 +1,12 @@
 import { Flex, Group, Image, ScrollArea, Stack, Text, Title } from "@mantine/core";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useImmer } from "use-immer";
 import { COUNTRIES } from "~/components/room/Game/games/Flaggen/config";
 import type { TCountry } from "~/components/room/Game/games/Flaggen/flaggen.types";
+import { Games } from "~/components/room/Game/games/game.types";
 import List from "~/components/shared/List";
-import { useConfigurator } from "~/hooks/useConfigurator";
+import { StepperControlsContext } from "~/context/StepperControlsContext";
+import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";
 
 const availableCountries: TCountry[] = Object.keys(COUNTRIES).map((code) => ({
   id: code,
@@ -25,7 +27,9 @@ const CountryItem = ({ country }: { country: TCountry }) => (
 );
 
 const FlaggenConfigurator = () => {
-  const [flaggen, setFlaggen, { enableFurtherButton, disableFurtherButton }] = useConfigurator("flaggen");
+  const { disableContinueButton, enableContinueButton } = useContext(StepperControlsContext);
+  const { flaggen, updateGame } = useGameshowConfig(Games.FLAGGEN);
+
   const [countries, setCountries] = useImmer(flaggen.countries);
   const [selectedCountries, setSelectedCountries] = useImmer<TCountry[]>([]);
 
@@ -45,15 +49,15 @@ const FlaggenConfigurator = () => {
   }, []);
 
   useEffect(() => {
-    setFlaggen((draft) => {
-      draft.flaggen.countries = selectedCountries;
+    updateGame((draft) => {
+      draft.countries = selectedCountries;
     });
 
     // check further button state
     if (selectedCountries.length > 0) {
-      enableFurtherButton();
+      enableContinueButton();
     } else {
-      disableFurtherButton();
+      disableContinueButton();
     }
   }, [selectedCountries.length]);
 

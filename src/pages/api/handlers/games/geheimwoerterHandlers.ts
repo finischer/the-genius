@@ -6,18 +6,14 @@ import {
 } from "~/types/socket.types";
 import { roomManager } from "../../controllers/RoomManager";
 import NoRoomException from "../../exceptions/NoRoomException";
+import { Games } from "~/components/room/Game/games/game.types";
 
-const GAME_IDENTIFIER = "geheimwoerter";
+const GAME_IDENTIFIER = Games.GEHEIMWOERTER;
 const MS_DELAY = 1000;
 
 export function geheimwoerterHandler(
   io: Server,
-  socket: Socket<
-    IClientToServerEvents,
-    IServerToClientEvents,
-    IServerSocketData
-  > &
-    IServerSocketData
+  socket: Socket<IClientToServerEvents, IServerToClientEvents, IServerSocketData> & IServerSocketData
 ) {
   socket.on("geheimwoerter:toggleCodeList", () => {
     const room = roomManager.getRoom(socket.roomId);

@@ -3,6 +3,7 @@ import Script from "next/script";
 import { isProduction } from "~/utils/environment";
 import CookieBanner from "../CookieBanner";
 import { useEffect, useState } from "react";
+import { LOCAL_STORAGE_KEYS } from "~/config/localStorage";
 
 export enum CookieBannerAction {
   ACCEPT = "ACCEPT",
@@ -12,7 +13,7 @@ export enum CookieBannerAction {
 const GoogleAnalytics = () => {
   const [rendered, setRendered] = useState(false);
   const [analytics, setAnalytics] = useLocalStorage<boolean | undefined>({
-    key: "analytics",
+    key: LOCAL_STORAGE_KEYS.ANALYTICS,
     defaultValue: undefined,
   });
 

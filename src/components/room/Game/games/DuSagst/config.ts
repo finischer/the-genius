@@ -1,4 +1,4 @@
-import { type IGameGeneralState } from "../game.types";
+import { Games, type IGameGeneralState } from "../game.types";
 import type { IDuSagstState, TDuSagstAnswerBoxState, TDuSagstTeamState } from "./duSagst.types";
 import { v4 as uuidv4 } from "uuid";
 
@@ -20,7 +20,7 @@ const createDefaultTeamState = (): TDuSagstTeamState => ({
 export const DUSAGST_TIME_TO_THINK_SECONDS = 30;
 
 export const DEFAULT_DUSAGST_STATE: TDuSagstGameState = {
-  identifier: "duSagst",
+  identifier: Games.DUSAGST,
   name: "Du Sagst...",
   modes: ["TEAM"],
   maxPoints: 6,
@@ -36,22 +36,17 @@ export const DEFAULT_DUSAGST_STATE: TDuSagstGameState = {
     answers: [],
     question: false,
   },
-  rules: "",
-  getRules() {
-    return `
-        Die Spieler bekommen eine Frage gestellt, bei der es 4 Antwortmöglichkeiten gibt. 
-        Anschließend habt ihr ${
-          this.timeToThinkSeconds === 1
-            ? "eine Sekunde"
-            : `${
-                this.timeToThinkSeconds
-              } Sekunden Zeit und in dieser Zeit muss ein Teammitglied die Frage beantworten,
-        während das andere Teammitglied einschätzen muss, welche Antwort der Teampartner geben wird. Stimmen die beiden Antworten überein, gibt es einen Punkt. Stimmen die Antworten nicht überein, gibt es keinen Punkt.
-        Das Team, welches zuerst ${
-          this.maxPoints === 1 ? "einen Punkt" : `${this.maxPoints} Punkte`
-        } hat, gewinnt das Spiel.
-        `
-        }
-    `;
-  },
+  rules: `
+  
+  Spiel: {{ gameName }}
+  
+  ### Ziel des Spiels:
+  Das Ziel von "{{ gameName }}" ist es, so viele Punkte wie möglich zu sammeln, indem die Spieler Fragen beantworten und die Antworten ihrer Teammitglieder richtig einschätzen.
+  
+  ### Spielablauf:
+  1. Fragestellung: Die Spieler erhalten eine Frage mit vier Antwortmöglichkeiten.
+  2. Antwortzeit: Jedes Team hat {{#if timeToThinkSeconds.equalOne}}eine Sekunde{{else}}{{timeToThinkSeconds}} Sekunden Zeit{{/if}}, um die Frage zu beantworten. Während dieser Zeit muss ein Teammitglied die Frage beantworten, während das andere Teammitglied einschätzt, welche Antwort sein Teampartner geben wird.
+  3. Punktvergabe: Wenn die Antworten der Teammitglieder übereinstimmen, erhält das Team einen Punkt. Andernfalls gibt es keinen Punkt.
+  4. Siegbedingungen: Das Team, das zuerst {{#if maxPoints.equalOne }}einen Punkt{{else}}{{maxPoints}} Punkte{{/if}} erreicht, gewinnt das Spiel.
+  `,
 };

@@ -6,12 +6,7 @@ interface IAuthenticatedLayout {
 }
 
 const AuthenticatedLayout: React.FC<IAuthenticatedLayout> = ({ children }) => {
-  return (
-    <>
-      <IntroductionBanner />
-      {children}
-    </>
-  );
+  return <>{children}</>;
 };
 
 export default AuthenticatedLayout;

@@ -1,10 +1,10 @@
-import { type IGameGeneralState } from "../game.types";
+import { Games, type IGameGeneralState } from "../game.types";
 import { type IMerkenState } from "./merken.types";
 
 export type TMerkenGameState = IMerkenState & IGameGeneralState;
 
 export const DEFAULT_MERKEN_STATE: TMerkenGameState = {
-  identifier: "merken",
+  identifier: Games.MERKEN,
   name: "Merken",
   modes: ["DUELL", "TEAM"],
   maxPoints: 7,
@@ -16,23 +16,21 @@ export const DEFAULT_MERKEN_STATE: TMerkenGameState = {
     isActive: false,
     timeToThinkSeconds: 60,
   },
-  rules: "",
-  getRules() {
-    return `
-        Vor euch seht ihr ein Feld mit verdeckten Feldern. Hinter diesen Feldern verbirgt sich eine Abbildung. 
-        Ihr habt gleich ${this.timerState.timeToThinkSeconds} ${
-      Math.abs(this.timerState.timeToThinkSeconds) === 1
-        ? "Sekunde"
-        : "Sekunden"
-    } Zeit, um euch die Abbildung und die dazugehörige Nummer einzuprägen. Nach ${
-      Math.abs(this.timerState.timeToThinkSeconds) === 1
-        ? "der einen Sekunde"
-        : `${this.timerState.timeToThinkSeconds} Sekunden`
-    } werden alle Felder wieder verdeckt. 
-        Danach fragt ihr abwechselnd euren Gegner, welche Abbildung sich hinter einem Feld eurer Wahl verbirgt. 
-        Gebt ihr eine richtige Antwort, bekommt ihr einen Punkt und das Feld bleibt offen.
-        Gebt ihr eine falsche Antwort, wird das Feld wieder verdeckt und keiner bekommt einen Punkt.
-        Wer zuerst ${this.maxPoints} Punkte hat, der gewinnt das Spiel.
-    `;
-  },
+  rules: `
+Spiel: {{ gameName }}
+
+### Ziel:
+Das Ziel des Spiels "{{ gameName }}" ist es, durch Erinnerung und Geschicklichkeit die meisten Punkte zu sammeln.
+
+### Spielablauf:
+Vor euch liegt ein Feld mit verdeckten Karten. Hinter jeder Karte verbirgt sich eine Abbildung.
+
+Ihr habt {{ timeToThinkSeconds }} {{#if timeToThinkSeconds.equalOne }}Sekunde{{else}}Sekunden{{/if}}, um euch die Abbildung und die dazugehörige Nummer einzuprägen. Nach Ablauf dieser Zeit werden alle Karten wieder verdeckt.
+
+Dann seid ihr abwechselnd an der Reihe, euren Gegnerteam zu fragen, welche Abbildung sich hinter einer von euch ausgewählten verdeckten Karte verbirgt.
+
+Bei einer richtigen Antwort bekommt das Gegnerteam einen Punkt, und die Karte bleibt offen. Bei einer falschen Antwort wird die Karte wieder verdeckt, und keiner bekommt einen Punkt.
+
+Das erste Team, das {{ maxPoints }} Punkte erreicht, gewinnt das Spiel.
+  `,
 };

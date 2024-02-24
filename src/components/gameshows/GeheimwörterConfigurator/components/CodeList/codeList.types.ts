@@ -1,6 +1,5 @@
-import type { Dispatch, SetStateAction } from "react";
-import type { Updater } from "use-immer";
-import type { TGameSettingsMap } from "~/hooks/useConfigurator/useConfigurator.types";
+import type { Games } from "~/components/room/Game/games/game.types";
+import type { TGameConfigUpdateFn } from "~/hooks/useGameshowConfig/useGameshowConfig.types";
 
 export type TCodeListItem = {
   letter: string;
@@ -11,7 +10,7 @@ export type TCodeList = TCodeListItem[];
 
 export interface ICodeListProps {
   codeList: TCodeList;
-  setCodeList?: Updater<TGameSettingsMap>;
+  setCodeList?: TGameConfigUpdateFn<Games.GEHEIMWOERTER>;
   editable?: boolean;
   showTitle?: boolean;
 }

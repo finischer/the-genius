@@ -83,11 +83,9 @@ const CodeList: React.FC<ICodeListProps> = ({
   function onWordChange(letter: string, newWord: string) {
     if (setCodeList) {
       setCodeList((draft) => {
-        const indexItem = draft.geheimwoerter.codeList.findIndex(
-          (item) => item.letter.toLowerCase() === letter
-        );
+        const indexItem = draft.codeList.findIndex((item) => item.letter.toLowerCase() === letter);
 
-        draft.geheimwoerter.codeList[indexItem] = {
+        draft.codeList[indexItem] = {
           letter,
           category: newWord || letter.toUpperCase(),
         };

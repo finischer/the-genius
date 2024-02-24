@@ -1,3 +1,4 @@
+import type { Games } from "../game.types";
 import { type TFlaggenGameState } from "./config";
 
 export type TCountry = {
@@ -12,6 +13,7 @@ export type TFlaggenDisplayState = {
 };
 
 export interface IFlaggenState {
+  identifier: Games.FLAGGEN;
   countries: TCountry[];
   qIndex: number;
   display: TFlaggenDisplayState;

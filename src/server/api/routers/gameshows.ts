@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { type TGameshowConfig } from "~/hooks/useConfigurator/useConfigurator.types";
+import { type TGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig.types";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { FEATURES } from "~/config/features";
 import { TRPCError } from "@trpc/server";
@@ -42,6 +42,32 @@ export const gameshowsRouter = createTRPCRouter({
 
     return modifiedGameshows;
   }),
+  getById: protectedProcedure
+    .input(z.object({ gameshowId: z.string() }))
+    .output(safedGameshowSchema)
+    .query(async ({ input, ctx }) => {
+      const gameshow = await ctx.prisma.gameshow.findFirst({
+        where: {
+          id: input.gameshowId,
+          creatorId: ctx.session.user.id,
+        },
+      });
+
+      if (!gameshow) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Gameshow not found",
+        });
+      }
+
+      // add num of games to every gameshow
+      const modifiedGameshow: z.infer<typeof safedGameshowSchema> = {
+        ...gameshow,
+        numOfGames: gameshow.games.length,
+      };
+
+      return modifiedGameshow;
+    }),
   create: protectedProcedure.input(z.unknown()).mutation(async ({ ctx, input }) => {
     const role = ctx.session.user.role;
     const maxNumGameshows = FEATURES[role].maxNumGameshows;
@@ -73,6 +99,44 @@ export const gameshowsRouter = createTRPCRouter({
     });
     return gameshow;
   }),
+  update: protectedProcedure
+    .input(
+      z.object({
+        gameshowId: z.string(),
+        updatedGameshow: z.unknown(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const gameshow = await ctx.prisma.gameshow.findFirst({
+        where: {
+          id: input.gameshowId,
+          creatorId: ctx.session.user.id,
+        },
+      });
+
+      if (!gameshow) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Gameshow konnte nicht gespeichert werden",
+        });
+      }
+
+      const config = input.updatedGameshow as TGameshowConfig;
+
+      const updatedGameshow = await ctx.prisma.gameshow.update({
+        data: {
+          name: config.name,
+          // workaround until prisma type is set correctly
+          // @ts-expect-error
+          games: config.games, // TODO: fix game schema in prisma
+        },
+        where: {
+          id: input.gameshowId,
+        },
+      });
+
+      return updatedGameshow;
+    }),
   delete: protectedProcedure
     .input(
       z.object({

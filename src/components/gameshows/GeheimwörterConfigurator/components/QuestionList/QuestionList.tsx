@@ -32,6 +32,7 @@ const QuestionList: React.FC<IQuestionListProps> = ({
         onClickItem={handleItemClick}
         renderValueByKey={keyForRendering}
         editable
+        clickable
         deletableItems
         selectedItemId={selectedItemId}
       />

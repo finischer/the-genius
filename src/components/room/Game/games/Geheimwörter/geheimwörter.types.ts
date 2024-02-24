@@ -9,6 +9,7 @@ export type TGeheimWoerterQuestionsWordsItem = {
 };
 
 export type TGeheimwoerterQuestionItem = IListItem<{
+  id: string;
   words: TGeheimWoerterQuestionsWordsItem[];
   answer: string;
 }>;

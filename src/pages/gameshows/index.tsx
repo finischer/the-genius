@@ -14,11 +14,9 @@ import {
 import { useRouter } from "next/router";
 import { useState } from "react";
 import PageLayout from "~/components/layout/PageLayout";
-import type { TGame } from "~/components/room/Game/games/game.types";
 import ActionIcon from "~/components/shared/ActionIcon";
 import CreateRoomModal from "~/components/shared/CreateRoomModal";
 import NextHead from "~/components/shared/NextHead";
-import type { TGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig.types";
 import useLoadingState from "~/hooks/useLoadingState/useLoadingState";
 import useNotification from "~/hooks/useNotification";
 import type { SafedGameshow } from "~/server/api/routers/gameshows";
@@ -43,7 +41,7 @@ const ActionMenu = ({
 
   const openDeleteConfirmModal = () =>
     modals.openConfirmModal({
-      title: <Text>Möchtest du wirklich die Spielshow &qout;{gameshow.name}&qout; löschen?</Text>,
+      title: <Text>Möchtest du wirklich die Spielshow &quot;{gameshow.name}&quot; löschen?</Text>,
       centered: true,
       children: (
         <Text size="sm">
@@ -60,11 +58,6 @@ const ActionMenu = ({
     });
 
   const handleEditGameshow = () => {
-    const gameshowConfig: TGameshowConfig = {
-      name: gameshow.name,
-      games: gameshow.games as unknown as TGame[],
-    };
-
     const searchParams = new URLSearchParams();
     searchParams.set("gameshowId", gameshow.id);
     searchParams.set("action", "update");

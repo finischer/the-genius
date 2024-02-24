@@ -3,61 +3,70 @@ import { Box, Center, Flex, Stepper, TextInput, Title } from "@mantine/core";
 import type { Game } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
-import { useEffect, useState, type FC } from "react";
-import { type Updater } from "use-immer";
-import type { TGameNames } from "~/components/room/Game/games/game.types";
+import { createContext, useEffect, useState } from "react";
+import { useImmer } from "use-immer";
+import { Games, type TGame } from "~/components/room/Game/games/game.types";
 import GamesPicker from "~/components/shared/GamesPicker";
-import { useConfigurator } from "~/hooks/useGameConfigurator";
-import type { TGameshowConfig } from "~/hooks/useGameConfigurator/useGameConfigurator.types";
+import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";
+import type { TGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig.types";
 import useNotification from "~/hooks/useNotification";
-import type { TApiActions } from "~/server/api/api.types";
+import { TApiActions } from "~/server/api/api.types";
 import { api } from "~/utils/api";
 import GameConfig from "../GameConfig";
 import StepperButtons from "./components/StepperButtons";
-
-interface IGamesConfigStepperProps {
-  gameshow: TGameshowConfig;
-  disableContinueButton: () => void;
-  enableContinueButton: () => void;
-  continueButtonDisabled: boolean;
-  selectedGames: Game[];
-  setSelectedGames: Updater<Game[]>;
-}
+import { StepperControlsContext } from "~/context/StepperControlsContext";
 
 const NUM_OF_DEFAULT_STEPS = 2;
 
-const GamesConfigStepper: FC<IGamesConfigStepperProps> = ({
-  gameshow,
-  enableContinueButton,
-  disableContinueButton,
-  continueButtonDisabled,
-  selectedGames,
-  setSelectedGames,
-}) => {
+const getAlreadySelectedGames = (games: TGame[], availableGames: Game[]) => {
+  const alreadySelected: Game[] = [];
+
+  games.forEach((g) => {
+    const game = availableGames.find((availableGame) => availableGame.slug === g.identifier);
+
+    if (game) {
+      alreadySelected.push(game);
+    }
+  });
+
+  return alreadySelected;
+};
+
+const GamesConfigStepper = () => {
+  const { gameshow, updateGameshowMetadata, updateGameList, availableGames } = useGameshowConfig(
+    Games.DUSAGST
+  );
+  const [selectedGames, setSelectedGames] = useImmer<Game[]>(
+    getAlreadySelectedGames(gameshow.games, availableGames)
+  );
+
+  const [initSelectedGamesDone, setInitSelectedGamesDone] = useState(false);
+
   const { handleZodError } = useNotification();
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const action: TApiActions = (searchParams.get("action") as TApiActions) ?? "create";
+  const action: TApiActions = (searchParams.get("action") as TApiActions) ?? TApiActions.CREATE;
   const gameshowId = searchParams.get("gameshowId");
 
-  const [, , { updateGameshowMetadata }] = useConfigurator("duSagst");
   const [activeStep, setActiveStep] = useState(0);
 
+  const [stepperButtons, setStepperButons] = useImmer({
+    leftBtnDisabled: true,
+    rightBtnDisabled: true,
+  });
+
   // api create gameshow
-  const {
-    mutateAsync: createGameshow,
-    isLoading: isLoadingCreateGameshow,
-    isSuccess,
-  } = api.gameshows.create.useMutation({
+  const createGameshowApi = api.gameshows.create.useMutation({
     onError: (error) => handleZodError(error.data?.zodError, error.message ?? "Ein Fehler ist aufgetreten"),
   });
 
-  // api update gameshow
-  const { mutateAsync: updateGameshow, isLoading: isLoadingUpdateGameshow } =
-    api.gameshows.update.useMutation({
-      onError: (error) => handleZodError(error.data?.zodError, error.message ?? "Ein Fehler ist aufgetreten"),
-    });
+  // // api update gameshow
+  const updateGameshowApi = api.gameshows.update.useMutation({
+    onError: (error) => handleZodError(error.data?.zodError, error.message ?? "Ein Fehler ist aufgetreten"),
+  });
+
+  const isLoading = createGameshowApi.isLoading || updateGameshowApi.isLoading;
 
   const allowSelectStepProps: StepperStepProps = {
     allowStepClick: false,
@@ -82,6 +91,18 @@ const GamesConfigStepper: FC<IGamesConfigStepperProps> = ({
     setActiveStep((current) => (current > 0 ? current - 1 : current));
   };
 
+  const enableContinueButton = () => {
+    setStepperButons((draft) => {
+      draft.rightBtnDisabled = false;
+    });
+  };
+
+  const disableContinueButton = () => {
+    setStepperButons((draft) => {
+      draft.rightBtnDisabled = true;
+    });
+  };
+
   const handleSaveGameshow = async () => {
     // generate rules as string
     const gamesWithRules = gameshow.games.map((g) => ({
@@ -95,10 +116,10 @@ const GamesConfigStepper: FC<IGamesConfigStepperProps> = ({
     };
 
     try {
-      if (action === "create") {
-        await createGameshow(gameshowWithGameRules);
-      } else if (action === "update" && gameshowId) {
-        await updateGameshow({
+      if (action === TApiActions.CREATE) {
+        await createGameshowApi.mutateAsync(gameshowWithGameRules);
+      } else if (action === TApiActions.UPDATE && gameshowId) {
+        await updateGameshowApi.mutateAsync({
           gameshowId,
           updatedGameshow: gameshow,
         });
@@ -110,6 +131,13 @@ const GamesConfigStepper: FC<IGamesConfigStepperProps> = ({
       void router.push("/gameshows");
     } catch (err) {}
   };
+
+  useEffect(() => {
+    if (gameshow.games.length > 0 && availableGames && !initSelectedGamesDone) {
+      setSelectedGames(getAlreadySelectedGames(gameshow.games, availableGames));
+      setInitSelectedGamesDone(true);
+    }
+  }, [gameshow, availableGames]);
 
   // Handle further button state for details gameshow step
   useEffect(() => {
@@ -133,83 +161,92 @@ const GamesConfigStepper: FC<IGamesConfigStepperProps> = ({
     }
   }, [activeStep, selectedGames.length]);
 
-  return (
-    <>
-      <Stepper
-        active={activeStep}
-        onStepClick={setActiveStep}
-        // hiddenFrom="sm"
-        // size="sm"
-        allowNextStepsSelect={false}
-      >
-        <Stepper.Step
-          label="Spiele"
-          description="Wähle deine Spiele aus"
-          {...allowSelectStepProps}
-        >
-          <Center>
-            <GamesPicker
-              selectedGames={selectedGames}
-              setSelectedGames={setSelectedGames}
-            />
-          </Center>
-        </Stepper.Step>
-        {selectedGames.map((game) => {
-          return (
-            <Stepper.Step
-              key={game.id}
-              label={game.name}
-              {...allowSelectStepProps}
-            >
-              <Flex
-                align="center"
-                gap="xs"
-              >
-                <Title order={2}>Einstellungen - {game.name}</Title>
-              </Flex>
-              <Box mt="xl">
-                <GameConfig gameSlug={game.slug as TGameNames} />
-              </Box>
-            </Stepper.Step>
-          );
-        })}
-        <Stepper.Step
-          label="Details Spielshow"
-          description=""
-          {...allowSelectStepProps}
-        >
-          <Title order={2}>Details Spielshow</Title>
-          <Box mt="xl">
-            <TextInput
-              label="Name der Spielshow"
-              withAsterisk
-              onChange={(e) =>
-                updateGameshowMetadata((draft) => {
-                  draft.name = e.target.value;
-                })
-              }
-              id="name"
-              value={gameshow.name}
-            />
-          </Box>
-        </Stepper.Step>
-        <Stepper.Completed>
-          <></>
-          {/* TODO: Add summary component before gameshow will be saved */}
-        </Stepper.Completed>
-      </Stepper>
+  useEffect(() => {
+    updateGameList(selectedGames);
+  }, [selectedGames]);
 
-      <StepperButtons
-        onClickRightButton={nextStep}
-        onClickLeftButton={prevStep}
-        onSaveClick={handleSaveGameshow}
-        rightButtonProps={{
-          disabled: continueButtonDisabled,
-        }}
-        isLastStep={isLastStep}
-        disabledButtons={isLoadingCreateGameshow || isLoadingUpdateGameshow}
-      />
-    </>
+  return (
+    <StepperControlsContext.Provider value={{ enableContinueButton, disableContinueButton }}>
+      <Box
+        pos="relative"
+        h="100%"
+      >
+        <Stepper
+          active={activeStep}
+          onStepClick={setActiveStep}
+          // hiddenFrom="sm"
+          // size="sm"
+          allowNextStepsSelect={false}
+        >
+          <Stepper.Step
+            label="Spiele"
+            description="Wähle deine Spiele aus"
+            {...allowSelectStepProps}
+          >
+            <Center>
+              <GamesPicker
+                selectedGames={selectedGames}
+                setSelectedGames={setSelectedGames}
+              />
+            </Center>
+          </Stepper.Step>
+          {selectedGames.map((game) => {
+            return (
+              <Stepper.Step
+                key={game.id}
+                label={game.name}
+                {...allowSelectStepProps}
+              >
+                <Flex
+                  align="center"
+                  gap="xs"
+                >
+                  <Title order={2}>Einstellungen - {game.name}</Title>
+                </Flex>
+                <Box mt="xl">
+                  <GameConfig gameSlug={game.slug as Games} />
+                </Box>
+              </Stepper.Step>
+            );
+          })}
+          <Stepper.Step
+            label="Details Spielshow"
+            description=""
+            {...allowSelectStepProps}
+          >
+            <Title order={2}>Details Spielshow</Title>
+            <Box mt="xl">
+              <TextInput
+                label="Name der Spielshow"
+                withAsterisk
+                onChange={(e) =>
+                  updateGameshowMetadata((draft) => {
+                    draft.name = e.target.value;
+                  })
+                }
+                id="name"
+                value={gameshow.name}
+              />
+            </Box>
+          </Stepper.Step>
+          <Stepper.Completed>
+            <></>
+            {/* TODO: Add summary component before gameshow will be saved */}
+          </Stepper.Completed>
+        </Stepper>
+
+        <StepperButtons
+          onClickRightButton={nextStep}
+          onClickLeftButton={prevStep}
+          onSaveClick={handleSaveGameshow}
+          rightButtonProps={{
+            disabled: stepperButtons.rightBtnDisabled,
+          }}
+          isLastStep={isLastStep}
+          disabledButtons={isLoading}
+        />
+      </Box>
+    </StepperControlsContext.Provider>
   );
 };
 

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { type TGameshowConfig } from "~/hooks/useGameConfigurator/useGameConfigurator.types";
+import { type TGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig.types";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { FEATURES } from "~/config/features";
 import { TRPCError } from "@trpc/server";

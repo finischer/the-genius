@@ -18,7 +18,7 @@ import type { TGame } from "~/components/room/Game/games/game.types";
 import ActionIcon from "~/components/shared/ActionIcon";
 import CreateRoomModal from "~/components/shared/CreateRoomModal";
 import NextHead from "~/components/shared/NextHead";
-import type { TGameshowConfig } from "~/hooks/useGameConfigurator/useGameConfigurator.types";
+import type { TGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig.types";
 import useLoadingState from "~/hooks/useLoadingState/useLoadingState";
 import useNotification from "~/hooks/useNotification";
 import type { SafedGameshow } from "~/server/api/routers/gameshows";

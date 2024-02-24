@@ -1,6 +1,6 @@
 import Handlebars from "handlebars";
 import { GAME_STATE_MAP } from "~/components/room/Game/games/game.constants";
-import { Games, type TGame, type TGameNames } from "~/components/room/Game/games/game.types";
+import { Games, type TGame } from "~/components/room/Game/games/game.types";
 
 export function getFormattedGameRules(game: TGame) {
   const metadata = {
@@ -40,6 +40,6 @@ export function getFormattedGameRules(game: TGame) {
   return template(data);
 }
 
-export function getDefaultGameState<T extends TGameNames>(gameName: T) {
+export function getDefaultGameState<T extends Games>(gameName: T) {
   return GAME_STATE_MAP[gameName];
 }

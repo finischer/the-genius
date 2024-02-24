@@ -12,8 +12,9 @@ import { roomManager } from "../../controllers/RoomManager";
 import NoRoomException from "../../exceptions/NoRoomException";
 import { getRoomAndTeam } from "../helpers";
 import type { TDuSagstGameState } from "~/components/room/Game/games/DuSagst/config";
+import { Games } from "~/components/room/Game/games/game.types";
 
-const GAME_IDENTIFIER = "duSagst";
+const GAME_IDENTIFIER = Games.DUSAGST;
 
 function getAllBoxes(game: TDuSagstGameState): TDuSagstAnswerBoxState[] {
   return Object.values(game.teamStates).flatMap((i) => i.boxStates);

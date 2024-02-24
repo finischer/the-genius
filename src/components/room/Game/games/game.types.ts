@@ -14,7 +14,7 @@ export enum Games {
   MERKEN = "merken",
   SET = "set",
   DUSAGST = "duSagst",
-  REFERATBINTO = "referatBingo",
+  REFERATBINGO = "referatBingo",
 }
 
 export type TGameSettingsMap = {
@@ -26,8 +26,6 @@ export type TGameSettingsMap = {
   referatBingo: TReferatBingoGameState;
 };
 
-export type TGameNames = "flaggen" | "merken" | "geheimwoerter" | "set" | "duSagst" | "referatBingo";
-
 export interface IGameGeneralState {
   name: string;
   maxPoints: number;
@@ -37,10 +35,10 @@ export interface IGameGeneralState {
 }
 
 export type TGameMap = {
-  [gameIdentifier in TGameNames]: React.ReactNode;
+  [gameIdentifier in Games]: React.ReactNode;
 };
 
-export type TGame = TGameSettingsMap[TGameNames];
+export type TGame = TGameSettingsMap[Games];
 
 // types for index.tsx (Game)
 export interface IGameProps {

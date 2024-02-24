@@ -29,21 +29,24 @@ const StepperButtons: FC<IStepperButtonsProps> = ({
 }) => {
   return (
     <Group
-      justify="center"
       mt="xl"
+      pos="fixed"
+      bottom={20}
+      right={20}
     >
       <ActionIcon
         variant="default"
         onClick={onClickLeftButton}
         disabled={disabledButtons}
         {...leftButtonProps}
+        size="xl"
       >
         <IconChevronLeft />
       </ActionIcon>
 
       {isLastStep ? (
         <Button
-          size="compact-sm"
+          size="md"
           px="xl"
           disabled={disabledButtons}
           onClick={onSaveClick}
@@ -56,6 +59,7 @@ const StepperButtons: FC<IStepperButtonsProps> = ({
           onClick={onClickRightButton}
           disabled={disabledButtons}
           {...rightButtonProps}
+          size="xl"
         >
           <IconChevronRight />
         </ActionIcon>

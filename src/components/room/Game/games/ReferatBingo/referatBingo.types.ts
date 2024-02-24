@@ -12,7 +12,7 @@ export type TReferatBingoNotefieldState = {
 };
 
 export type IReferatBingoState = {
-  identifier: Games.REFERATBINTO;
+  identifier: Games.REFERATBINGO;
   topics: TPresentationTopic[];
   qIndex: number;
   presenter: {

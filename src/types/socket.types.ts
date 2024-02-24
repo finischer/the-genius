@@ -1,14 +1,13 @@
-import { type TDuSagstAnswerBoxState } from "./../components/room/Game/games/DuSagst/duSagst.types";
-import { type TExceptionReason } from "./../pages/api/exceptions/exceptions.types";
-import { type RoomViews, type Gameshow, type User, type RoomSounds } from "@prisma/client";
+import { type Gameshow, type RoomSounds, type RoomViews } from "@prisma/client";
 import { type NextApiResponse } from "next";
 import { type Server, type Socket } from "socket.io";
-import { string } from "zod";
-import type { TGameNames } from "~/components/room/Game/games/game.types";
+import type { Games } from "~/components/room/Game/games/game.types";
 import type { TSongId } from "~/components/room/MediaPlayer/mediaPlayer.types";
 import type { ICreateRoomConfig } from "~/components/shared/CreateRoomModal/createRoomModal.types";
 import type Room from "~/pages/api/classes/Room/Room";
 import type { SafedUser } from "~/server/api/routers/users";
+import { type TDuSagstAnswerBoxState } from "./../components/room/Game/games/DuSagst/duSagst.types";
+import { type TExceptionReason } from "./../pages/api/exceptions/exceptions.types";
 
 type TSocketUser = {
   id: string;
@@ -49,7 +48,7 @@ export interface IClientToServerEvents {
     cb: () => void
   ) => { teamId: string; playerId: string };
   listAllRooms: (cb: (rooms: Room[]) => void) => void;
-  startGame: ({ gameIdentifier }: { gameIdentifier: TGameNames }) => void;
+  startGame: ({ gameIdentifier }: { gameIdentifier: Games }) => void;
   showAnswerBanner: ({
     answer,
     withSound,

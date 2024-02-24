@@ -12,7 +12,7 @@ const DEFAULT_NOTEFIELD_STATE: TReferatBingoNotefieldState = {
 };
 
 export const DEFAULT_REFERAT_BINGO_STATE: TReferatBingoGameState = {
-  identifier: Games.REFERATBINTO,
+  identifier: Games.REFERATBINGO,
   name: "Referat Bingo",
   modes: ["TEAM"],
   maxPoints: 999,

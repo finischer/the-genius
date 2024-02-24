@@ -26,20 +26,6 @@ export type TGameSettingsMap = {
   referatBingo: TReferatBingoGameState;
 };
 
-// export type TGameConfig<T extends Games> = T extends Games.DUSAGST
-//   ? TDuSagstGameState
-//   : T extends Games.MERKEN
-//   ? TMerkenGameState
-//   : T extends Games.GEHEIMWOERTER
-//   ? TGeheimwörterGameState
-//   : T extends Games.SET
-//   ? TSetGameState
-//   : T extends Games.REFERATBINTO
-//   ? TReferatBingoGameState
-//   : string;
-
-export type TGameNames = "flaggen" | "merken" | "geheimwoerter" | "set" | "duSagst" | "referatBingo";
-
 export interface IGameGeneralState {
   name: string;
   maxPoints: number;
@@ -49,10 +35,10 @@ export interface IGameGeneralState {
 }
 
 export type TGameMap = {
-  [gameIdentifier in TGameNames]: React.ReactNode;
+  [gameIdentifier in Games]: React.ReactNode;
 };
 
-export type TGame = TGameSettingsMap[TGameNames];
+export type TGame = TGameSettingsMap[Games];
 
 // types for index.tsx (Game)
 export interface IGameProps {

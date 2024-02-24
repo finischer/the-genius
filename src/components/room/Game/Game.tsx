@@ -16,7 +16,7 @@ import ReferatBingoGame from "./games/ReferatBingo/ReferatBingoGame";
 import type { TReferatBingoGameState } from "./games/ReferatBingo/config";
 import SetGame from "./games/Set/SetGame";
 import type { TSetGameState } from "./games/Set/config";
-import { type IGameProps, type TGameMap, type TGameNames } from "./games/game.types";
+import { Games, type IGameProps, type TGameMap } from "./games/game.types";
 
 // Wrapper for the games
 // Handles also the intro sequence
@@ -37,7 +37,7 @@ const Game: React.FC<IGameProps> = ({ game }) => {
     await animate(scope.current, { scale: 0 }, { duration: 0.5 });
   };
 
-  function getGame(identifier: TGameNames) {
+  function getGame(identifier: Games) {
     const GAME_MAP: TGameMap = {
       flaggen: <FlaggenGame game={game as TFlaggenGameState} />,
       merken: <MerkenGame game={game as TMerkenGameState} />,

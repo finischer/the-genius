@@ -3,17 +3,17 @@ import { Box, Center, Flex, Stepper, TextInput, Title } from "@mantine/core";
 import type { Game } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
-import { useEffect, useState, type FC } from "react";
+import { useEffect, useState } from "react";
 import { useImmer } from "use-immer";
-import { Games, type TGame, type TGameNames } from "~/components/room/Game/games/game.types";
+import { Games, type TGame } from "~/components/room/Game/games/game.types";
 import GamesPicker from "~/components/shared/GamesPicker";
 import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";
+import type { TGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig.types";
 import useNotification from "~/hooks/useNotification";
-import type { TApiActions } from "~/server/api/api.types";
+import { TApiActions } from "~/server/api/api.types";
 import { api } from "~/utils/api";
 import GameConfig from "../GameConfig";
 import StepperButtons from "./components/StepperButtons";
-import type { TGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig.types";
 
 const NUM_OF_DEFAULT_STEPS = 2;
 
@@ -52,25 +52,22 @@ const GamesConfigStepper = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const action: TApiActions = (searchParams.get("action") as TApiActions) ?? "create";
+  const action: TApiActions = (searchParams.get("action") as TApiActions) ?? TApiActions.CREATE;
   const gameshowId = searchParams.get("gameshowId");
 
   const [activeStep, setActiveStep] = useState(0);
 
   // api create gameshow
-  const {
-    mutateAsync: createGameshow,
-    isLoading: isLoadingCreateGameshow,
-    isSuccess,
-  } = api.gameshows.create.useMutation({
+  const createGameshowApi = api.gameshows.create.useMutation({
     onError: (error) => handleZodError(error.data?.zodError, error.message ?? "Ein Fehler ist aufgetreten"),
   });
 
-  // api update gameshow
-  const { mutateAsync: updateGameshow, isLoading: isLoadingUpdateGameshow } =
-    api.gameshows.update.useMutation({
-      onError: (error) => handleZodError(error.data?.zodError, error.message ?? "Ein Fehler ist aufgetreten"),
-    });
+  // // api update gameshow
+  const updateGameshowApi = api.gameshows.update.useMutation({
+    onError: (error) => handleZodError(error.data?.zodError, error.message ?? "Ein Fehler ist aufgetreten"),
+  });
+
+  const isLoading = createGameshowApi.isLoading || updateGameshowApi.isLoading;
 
   const allowSelectStepProps: StepperStepProps = {
     allowStepClick: false,
@@ -108,10 +105,10 @@ const GamesConfigStepper = () => {
     };
 
     try {
-      if (action === "create") {
-        await createGameshow(gameshowWithGameRules);
-      } else if (action === "update" && gameshowId) {
-        await updateGameshow({
+      if (action === TApiActions.CREATE) {
+        await createGameshowApi.mutateAsync(gameshowWithGameRules);
+      } else if (action === TApiActions.UPDATE && gameshowId) {
+        await updateGameshowApi.mutateAsync({
           gameshowId,
           updatedGameshow: gameshow,
         });
@@ -185,7 +182,7 @@ const GamesConfigStepper = () => {
                 <Title order={2}>Einstellungen - {game.name}</Title>
               </Flex>
               <Box mt="xl">
-                <GameConfig gameSlug={game.slug as TGameNames} />
+                <GameConfig gameSlug={game.slug as Games} />
               </Box>
             </Stepper.Step>
           );
@@ -224,7 +221,7 @@ const GamesConfigStepper = () => {
         //   disabled: continueButtonDisabled,
         // }}
         isLastStep={isLastStep}
-        disabledButtons={isLoadingCreateGameshow || isLoadingUpdateGameshow}
+        disabledButtons={isLoading}
       />
     </>
   );

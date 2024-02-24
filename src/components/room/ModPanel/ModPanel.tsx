@@ -8,15 +8,15 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import GameDetailsModal from "~/components/gameshows/GameDetailsModal";
 import Tooltip from "~/components/shared/Tooltip/Tooltip";
+import { LOCAL_STORAGE_KEYS } from "~/config/localStorage";
 import useAudio from "~/hooks/useAudio";
 import useLoadingState from "~/hooks/useLoadingState/useLoadingState";
 import useNotification from "~/hooks/useNotification";
 import { useRoom } from "~/hooks/useRoom";
 import { socket } from "~/hooks/useSocket";
-import type { TGame, TGameNames } from "../Game/games/game.types";
+import type { Games, TGame } from "../Game/games/game.types";
 import MediaPlayer from "../MediaPlayer";
 import { type IModPanelProps } from "./modPanel.types";
-import { LOCAL_STORAGE_KEYS } from "~/config/localStorage";
 
 const TIMER_SECONDS = 10;
 
@@ -99,7 +99,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
     );
   });
 
-  const startGame = (gameIdentifier: TGameNames) => {
+  const startGame = (gameIdentifier: Games) => {
     hideAnswer();
     socket.emit("startGame", { gameIdentifier });
     triggerAudioEvent("playSound", "intro");

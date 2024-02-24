@@ -6,17 +6,13 @@ import {
 } from "~/types/socket.types";
 import { roomManager } from "../../controllers/RoomManager";
 import NoRoomException from "../../exceptions/NoRoomException";
+import { Games } from "~/components/room/Game/games/game.types";
 
-const GAME_IDENTIFIER = "merken";
+const GAME_IDENTIFIER = Games.MERKEN;
 
 export function merkenHandler(
   io: Server,
-  socket: Socket<
-    IClientToServerEvents,
-    IServerToClientEvents,
-    IServerSocketData
-  > &
-    IServerSocketData
+  socket: Socket<IClientToServerEvents, IServerToClientEvents, IServerSocketData> & IServerSocketData
 ) {
   socket.on("merken:startGame", () => {
     const room = roomManager.getRoom(socket.roomId);

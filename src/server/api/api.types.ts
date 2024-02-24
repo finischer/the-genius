@@ -1,1 +1,4 @@
-export type TApiActions = "create" | "update";
+export enum TApiActions {
+  CREATE = "create",
+  UPDATE = "update",
+}

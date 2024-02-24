@@ -4,36 +4,51 @@ import type { Game } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { useEffect, useState, type FC } from "react";
-import { type Updater } from "use-immer";
-import type { TGameNames } from "~/components/room/Game/games/game.types";
+import { useImmer } from "use-immer";
+import { Games, type TGame, type TGameNames } from "~/components/room/Game/games/game.types";
 import GamesPicker from "~/components/shared/GamesPicker";
-import { useConfigurator } from "~/hooks/useGameConfigurator";
-import type { TGameshowConfig } from "~/hooks/useGameConfigurator/useGameConfigurator.types";
+import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";
 import useNotification from "~/hooks/useNotification";
 import type { TApiActions } from "~/server/api/api.types";
 import { api } from "~/utils/api";
 import GameConfig from "../GameConfig";
 import StepperButtons from "./components/StepperButtons";
-
-interface IGamesConfigStepperProps {
-  gameshow: TGameshowConfig;
-  disableContinueButton: () => void;
-  enableContinueButton: () => void;
-  continueButtonDisabled: boolean;
-  selectedGames: Game[];
-  setSelectedGames: Updater<Game[]>;
-}
+import type { TGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig.types";
 
 const NUM_OF_DEFAULT_STEPS = 2;
 
-const GamesConfigStepper: FC<IGamesConfigStepperProps> = ({
-  gameshow,
-  enableContinueButton,
-  disableContinueButton,
-  continueButtonDisabled,
-  selectedGames,
-  setSelectedGames,
-}) => {
+const getAlreadySelectedGames = (games: TGame[], availableGames: Game[]) => {
+  const alreadySelected: Game[] = [];
+
+  games.forEach((g) => {
+    const game = availableGames.find((availableGame) => availableGame.slug === g.identifier);
+
+    if (game) {
+      alreadySelected.push(game);
+    }
+  });
+
+  return alreadySelected;
+};
+
+const GamesConfigStepper = () => {
+  const { gameshow, updateGameshowMetadata, updateGameList, availableGames } = useGameshowConfig(
+    Games.DUSAGST
+  );
+  const [selectedGames, setSelectedGames] = useImmer<Game[]>(
+    getAlreadySelectedGames(gameshow.games, availableGames)
+  );
+
+  const [initSelectedGamesDone, setInitSelectedGamesDone] = useState(false);
+
+  useEffect(() => {
+    if (gameshow.games.length > 0 && availableGames && !initSelectedGamesDone) {
+      console.log("Selected games: ", selectedGames);
+      setSelectedGames(getAlreadySelectedGames(gameshow.games, availableGames));
+      setInitSelectedGamesDone(true);
+    }
+  }, [gameshow, availableGames]);
+
   const { handleZodError } = useNotification();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -41,7 +56,6 @@ const GamesConfigStepper: FC<IGamesConfigStepperProps> = ({
   const action: TApiActions = (searchParams.get("action") as TApiActions) ?? "create";
   const gameshowId = searchParams.get("gameshowId");
 
-  const [, , { updateGameshowMetadata }] = useConfigurator("duSagst");
   const [activeStep, setActiveStep] = useState(0);
 
   // api create gameshow
@@ -115,9 +129,9 @@ const GamesConfigStepper: FC<IGamesConfigStepperProps> = ({
   useEffect(() => {
     if (activeStep === STEP_MAP["detailsGameshow"]) {
       if (gameshow.name === "") {
-        disableContinueButton();
+        // disableContinueButton();
       } else {
-        enableContinueButton();
+        // enableContinueButton();
       }
     }
   }, [activeStep, gameshow.name]);
@@ -126,12 +140,16 @@ const GamesConfigStepper: FC<IGamesConfigStepperProps> = ({
   useEffect(() => {
     if (activeStep === STEP_MAP["selectGames"]) {
       if (selectedGames.length === 0) {
-        disableContinueButton();
+        // disableContinueButton();
       } else {
-        enableContinueButton();
+        // enableContinueButton();
       }
     }
   }, [activeStep, selectedGames.length]);
+
+  useEffect(() => {
+    updateGameList(selectedGames);
+  }, [selectedGames]);
 
   return (
     <>
@@ -203,9 +221,9 @@ const GamesConfigStepper: FC<IGamesConfigStepperProps> = ({
         onClickRightButton={nextStep}
         onClickLeftButton={prevStep}
         onSaveClick={handleSaveGameshow}
-        rightButtonProps={{
-          disabled: continueButtonDisabled,
-        }}
+        // rightButtonProps={{
+        //   disabled: continueButtonDisabled,
+        // }}
         isLastStep={isLastStep}
         disabledButtons={isLoadingCreateGameshow || isLoadingUpdateGameshow}
       />

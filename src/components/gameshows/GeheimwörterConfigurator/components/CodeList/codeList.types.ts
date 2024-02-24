@@ -1,4 +1,4 @@
-import type { TGameConfigUpdateFn } from "~/hooks/useGameConfigurator/useGameConfigurator.types";
+import type { TGameConfigUpdateFn } from "~/hooks/useGameshowConfig/useGameshowConfig.types";
 
 export type TCodeListItem = {
   letter: string;

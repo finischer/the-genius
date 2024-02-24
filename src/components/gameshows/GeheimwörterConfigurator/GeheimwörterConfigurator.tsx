@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { useImmer } from "use-immer";
 import { v4 as uuidv4 } from "uuid";
 import type { TGeheimwoerterQuestionItem } from "~/components/room/Game/games/Geheimwörter/geheimwörter.types";
-import { useConfigurator } from "~/hooks/useGameConfigurator";
+import { Games } from "~/components/room/Game/games/game.types";
+import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";
 import { useScreen } from "~/hooks/useScreen";
 import type { TQuestionFormMode } from "../types";
 import CodeList from "./components/CodeList";
@@ -58,8 +59,8 @@ const generateCodeList = (alphabetList: string[], codeWords: string[]) => {
 
 const GeheimwörterConfigurator = () => {
   const { isMediumScreen } = useScreen();
-  const [geheimwoerter, setGeheimwoerter, { enableFurtherButton, disableFurtherButton }] =
-    useConfigurator("geheimwoerter");
+
+  const { updateGame, geheimwoerter } = useGameshowConfig(Games.GEHEIMWOERTER);
   const [codeListEditable, setCodeListEditable] = useState(false);
   const [questionList, setQuestionList] = useState<TGeheimwoerterQuestionItem[]>(geheimwoerter.questions);
   const [questionItem, setQuestionItem] = useImmer<TGeheimwoerterQuestionItem>({
@@ -74,7 +75,7 @@ const GeheimwörterConfigurator = () => {
   useEffect(() => {
     // set default code list
     if (geheimwoerter.codeList.length === 0) {
-      setGeheimwoerter((draft) => {
+      updateGame((draft) => {
         draft.codeList = generateCodeList(ALPHABET, DEFAULT_CODE_WORD_LIST);
       });
     }
@@ -96,7 +97,7 @@ const GeheimwörterConfigurator = () => {
   };
 
   useEffect(() => {
-    setGeheimwoerter((draft) => {
+    updateGame((draft) => {
       draft.questions = questionList;
     });
   }, [questionList]);
@@ -104,11 +105,11 @@ const GeheimwörterConfigurator = () => {
   useEffect(() => {
     const codes = geheimwoerter.codeList.map((item) => item.category);
 
-    if (codes.some((item) => item.length === 1) || geheimwoerter.questions.length === 0) {
-      disableFurtherButton();
-    } else {
-      enableFurtherButton();
-    }
+    // if (codes.some((item) => item.length === 1) || geheimwoerter.questions.length === 0) {
+    //   disableFurtherButton();
+    // } else {
+    //   enableFurtherButton();
+    // }
   }, [geheimwoerter.codeList, geheimwoerter.questions]);
 
   return (
@@ -124,7 +125,7 @@ const GeheimwörterConfigurator = () => {
       >
         <CodeList
           codeList={geheimwoerter.codeList}
-          setCodeList={setGeheimwoerter}
+          setCodeList={updateGame}
           editable={codeListEditable}
         />
         <Button onClick={() => setCodeListEditable((oldState) => !oldState)}>

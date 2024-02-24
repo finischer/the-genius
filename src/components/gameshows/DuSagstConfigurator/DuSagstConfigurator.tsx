@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import QuestionFormLayout from "~/components/layout/QuestionFormLayout";
 import type { TDuSagstQuestion } from "~/components/room/Game/games/DuSagst/duSagst.types";
-import { useConfigurator } from "~/hooks/useGameConfigurator";
+import { Games } from "~/components/room/Game/games/game.types";
+import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";
 import type { TDuSagstFormValues } from "./duSagstConfigurator.types";
 
 const PLACEHOLDER_MAP: { [index: number]: string } = {
@@ -15,7 +16,7 @@ const PLACEHOLDER_MAP: { [index: number]: string } = {
 };
 
 const DuSagstConfigurator = () => {
-  const [duSagst, setDuSagst, { disableFurtherButton, enableFurtherButton }] = useConfigurator("duSagst");
+  const { duSagst, updateGame } = useGameshowConfig(Games.DUSAGST);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [questions, setQuestions] = useState<TDuSagstQuestion[]>(duSagst.questions);
 
@@ -106,13 +107,13 @@ const DuSagstConfigurator = () => {
   };
 
   useEffect(() => {
-    if (questions.length > 0) {
-      enableFurtherButton();
-    } else {
-      disableFurtherButton();
-    }
+    // if (questions.length > 0) {
+    //   enableFurtherButton();
+    // } else {
+    //   disableFurtherButton();
+    // }
 
-    setDuSagst((draft) => {
+    updateGame((draft) => {
       draft.questions = questions as unknown as TDuSagstQuestion[];
     });
   }, [questions]);

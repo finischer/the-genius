@@ -1,6 +1,5 @@
-import { Button, Container, Flex, ScrollArea, Title, type FlexProps, Box } from "@mantine/core";
+import { Box, Button, Flex, ScrollArea, Title, type FlexProps } from "@mantine/core";
 import React, { useEffect, type SyntheticEvent } from "react";
-import { useConfigurator } from "~/hooks/useGameConfigurator";
 import List from "../shared/List";
 import type { IListItem } from "../shared/List/components/ListItem/listItem.types";
 
@@ -32,16 +31,15 @@ const QuestionFormLayout = <T extends { id: string }>({
   itemName,
   ...props
 }: IQuestionFormLayoutProps<T>) => {
-  const [_, __, { enableFurtherButton, disableFurtherButton }] = useConfigurator("duSagst"); // TODO: Move button functions to an independent component
   const questionIds = questions.map((q) => q.id);
   const questionExists = questionIds.includes(selectedQuestionId);
 
   useEffect(() => {
-    if (questions.length > 0) {
-      enableFurtherButton();
-    } else {
-      disableFurtherButton();
-    }
+    // if (questions.length > 0) {
+    //   enableFurtherButton();
+    // } else {
+    //   disableFurtherButton();
+    // }
   }, [questions]);
 
   const handleSubmit = (e: SyntheticEvent) => {

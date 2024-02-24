@@ -3,8 +3,9 @@ import { useEffect } from "react";
 import { useImmer } from "use-immer";
 import { COUNTRIES } from "~/components/room/Game/games/Flaggen/config";
 import type { TCountry } from "~/components/room/Game/games/Flaggen/flaggen.types";
+import { Games } from "~/components/room/Game/games/game.types";
 import List from "~/components/shared/List";
-import { useConfigurator } from "~/hooks/useGameConfigurator";
+import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";
 
 const availableCountries: TCountry[] = Object.keys(COUNTRIES).map((code) => ({
   id: code,
@@ -25,7 +26,8 @@ const CountryItem = ({ country }: { country: TCountry }) => (
 );
 
 const FlaggenConfigurator = () => {
-  const [flaggen, setFlaggen, { enableFurtherButton, disableFurtherButton }] = useConfigurator("flaggen");
+  const { flaggen, updateGame } = useGameshowConfig(Games.FLAGGEN);
+
   const [countries, setCountries] = useImmer(flaggen.countries);
   const [selectedCountries, setSelectedCountries] = useImmer<TCountry[]>([]);
 
@@ -45,16 +47,16 @@ const FlaggenConfigurator = () => {
   }, []);
 
   useEffect(() => {
-    setFlaggen((draft) => {
+    updateGame((draft) => {
       draft.countries = selectedCountries;
     });
 
     // check further button state
-    if (selectedCountries.length > 0) {
-      enableFurtherButton();
-    } else {
-      disableFurtherButton();
-    }
+    // if (selectedCountries.length > 0) {
+    //   enableFurtherButton();
+    // } else {
+    //   disableFurtherButton();
+    // }
   }, [selectedCountries.length]);
 
   const handleSelectCountry = (country: TCountry) => {

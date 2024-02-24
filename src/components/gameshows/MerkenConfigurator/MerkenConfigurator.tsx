@@ -3,7 +3,8 @@ import { parseInt } from "lodash";
 import { useEffect } from "react";
 import { useImmer } from "use-immer";
 import MerkenPlayground from "~/components/room/Game/games/Merken/components/MerkenPlayground/MerkenPlayground";
-import { useConfigurator } from "~/hooks/useGameConfigurator";
+import { Games } from "~/components/room/Game/games/game.types";
+import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";
 import { shuffleArray } from "~/utils/array";
 
 const MAX_TIME_TO_THINK_SECONDS = 180; // 3 minutes
@@ -12,14 +13,14 @@ const MIN_TIME_TO_THINK_SECONDS = 1;
 const PATH_TO_ICONS = "/icons/merken";
 
 const MerkenConfigurator = () => {
-  const [merken, setMerken, { enableFurtherButton, disableFurtherButton }] = useConfigurator("merken");
+  const { merken, updateGame } = useGameshowConfig(Games.MERKEN);
   const cards = new Array(24).fill(null).map((_, idx) => `${PATH_TO_ICONS}/${idx + 1}.png`);
   const [openCards, updateOpenCards] = useImmer<number[]>([]);
 
   const updateTimeToThink = (value: number | string) => {
     const convertedValue = typeof value === "string" ? parseInt(value) : value;
 
-    setMerken((draft) => {
+    updateGame((draft) => {
       draft.timerState.timeToThinkSeconds = convertedValue;
     });
   };
@@ -36,15 +37,15 @@ const MerkenConfigurator = () => {
 
   useEffect(() => {
     const timeToThink = merken.timerState.timeToThinkSeconds;
-    if (timeToThink >= MIN_TIME_TO_THINK_SECONDS && timeToThink <= MAX_TIME_TO_THINK_SECONDS) {
-      enableFurtherButton();
-    } else {
-      disableFurtherButton();
-    }
+    // if (timeToThink >= MIN_TIME_TO_THINK_SECONDS && timeToThink <= MAX_TIME_TO_THINK_SECONDS) {
+    //   enableFurtherButton();
+    // } else {
+    //   disableFurtherButton();
+    // }
   }, [merken]);
 
   useEffect(() => {
-    setMerken((draft) => {
+    updateGame((draft) => {
       draft.cards = shuffleArray(cards);
     });
   }, []);

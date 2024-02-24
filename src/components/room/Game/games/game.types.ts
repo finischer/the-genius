@@ -14,7 +14,7 @@ export enum Games {
   MERKEN = "merken",
   SET = "set",
   DUSAGST = "duSagst",
-  REFERATBINTO = "referatBingo",
+  REFERATBINGO = "referatBingo",
 }
 
 export type TGameSettingsMap = {
@@ -25,6 +25,18 @@ export type TGameSettingsMap = {
   duSagst: TDuSagstGameState;
   referatBingo: TReferatBingoGameState;
 };
+
+// export type TGameConfig<T extends Games> = T extends Games.DUSAGST
+//   ? TDuSagstGameState
+//   : T extends Games.MERKEN
+//   ? TMerkenGameState
+//   : T extends Games.GEHEIMWOERTER
+//   ? TGeheimwörterGameState
+//   : T extends Games.SET
+//   ? TSetGameState
+//   : T extends Games.REFERATBINTO
+//   ? TReferatBingoGameState
+//   : string;
 
 export type TGameNames = "flaggen" | "merken" | "geheimwoerter" | "set" | "duSagst" | "referatBingo";
 

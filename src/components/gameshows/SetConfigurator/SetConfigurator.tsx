@@ -2,14 +2,15 @@ import { useEffect, useState } from "react";
 import { useImmer } from "use-immer";
 import QuestionFormLayout from "~/components/layout/QuestionFormLayout";
 import type { TSetQuestionItem, TSetQuestionList } from "~/components/room/Game/games/Set/set.types";
-import { useConfigurator } from "~/hooks/useGameConfigurator";
+import { Games } from "~/components/room/Game/games/game.types";
+import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";
 import CreateSetContainer from "./components/CreateSetContainer";
 import { generateNewSetQuestion } from "./helpers";
 
 export const NUM_OF_CARDS = 12;
 
 const SetConfigurator = () => {
-  const [set, setSet, { enableFurtherButton, disableFurtherButton }] = useConfigurator("set");
+  const { updateGame, set } = useGameshowConfig(Games.SET);
 
   const [questions, setQuestions] = useState<TSetQuestionList>(set.questions);
   const [questionItem, setQuestionItem] = useImmer<TSetQuestionItem>(
@@ -43,15 +44,15 @@ const SetConfigurator = () => {
   };
 
   useEffect(() => {
-    setSet((draft) => {
+    updateGame((draft) => {
       draft.questions = questions;
     });
 
-    if (questions.length <= 0) {
-      disableFurtherButton();
-    } else {
-      enableFurtherButton();
-    }
+    // if (questions.length <= 0) {
+    //   disableFurtherButton();
+    // } else {
+    //   enableFurtherButton();
+    // }
   }, [questions]);
 
   return (

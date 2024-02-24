@@ -1,5 +1,5 @@
 import { Button, Flex } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useImmer } from "use-immer";
 import { v4 as uuidv4 } from "uuid";
 import type { TGeheimwoerterQuestionItem } from "~/components/room/Game/games/Geheimwörter/geheimwörter.types";
@@ -11,6 +11,7 @@ import CodeList from "./components/CodeList";
 import type { TCodeList, TCodeListItem } from "./components/CodeList/codeList.types";
 import CreateQuestionForm from "./components/CreateQuestionForm";
 import QuestionList from "./components/QuestionList";
+import { StepperControlsContext } from "~/context/StepperControlsContext";
 
 const ALPHABET = [..."abcdefghijklmnoprstuvwxyz"];
 const DEFAULT_CODE_WORD_LIST = [
@@ -58,6 +59,7 @@ const generateCodeList = (alphabetList: string[], codeWords: string[]) => {
 };
 
 const GeheimwörterConfigurator = () => {
+  const { disableContinueButton, enableContinueButton } = useContext(StepperControlsContext);
   const { isMediumScreen } = useScreen();
 
   const { updateGame, geheimwoerter } = useGameshowConfig(Games.GEHEIMWOERTER);
@@ -105,11 +107,11 @@ const GeheimwörterConfigurator = () => {
   useEffect(() => {
     const codes = geheimwoerter.codeList.map((item) => item.category);
 
-    // if (codes.some((item) => item.length === 1) || geheimwoerter.questions.length === 0) {
-    //   disableFurtherButton();
-    // } else {
-    //   enableFurtherButton();
-    // }
+    if (codes.some((item) => item.length === 1) || geheimwoerter.questions.length === 0) {
+      disableContinueButton();
+    } else {
+      enableContinueButton();
+    }
   }, [geheimwoerter.codeList, geheimwoerter.questions]);
 
   return (

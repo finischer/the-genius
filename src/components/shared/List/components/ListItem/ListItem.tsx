@@ -4,9 +4,23 @@ import { Reorder, useDragControls, useMotionValue } from "framer-motion";
 import React from "react";
 import ActionIcon from "~/components/shared/ActionIcon";
 import { useRaisedShadow } from "~/hooks/useRaisedShadow";
-import type { IListItem, IListItemProps } from "./listItem.types";
+import type { IListItemProps } from "./listItem.types";
+import { Group } from "@mantine/core";
 
-const ListItem = <T,>({ item, editable, onDelete, onClick, selected, content }: IListItemProps<T>) => {
+const ListItem = <T,>({
+  item,
+  editable,
+  deletable,
+  onDelete,
+  onClick,
+  selected,
+  content,
+  showIndex,
+  index,
+  clickable,
+  highlight,
+  itemContent,
+}: IListItemProps<T>) => {
   const y = useMotionValue(0);
   const boxShadow = useRaisedShadow(y);
   const controls = useDragControls();
@@ -27,45 +41,55 @@ const ListItem = <T,>({ item, editable, onDelete, onClick, selected, content }: 
 
   return (
     <Reorder.Item
-      id={item.id.toString()}
+      id={item.id}
       value={item}
       dragListener={false}
       style={{ boxShadow, y, listStyle: "none", cursor: editable ? "pointer" : "auto" }}
       dragControls={controls}
-      onClick={() => handleClick(item.id.toString())}
+      onClick={() => handleClick(item.id)}
     >
       <Flex
-        bg={selected && editable ? theme.primaryColor : theme.colors.dark[5]}
-        sx={{ borderRadius: theme.radius.md }}
-        px="md"
-        py="sm"
-        justify="space-between"
+        align="center"
+        gap="md"
       >
+        {showIndex && <span>{index + 1}.</span>}
         <Flex
-          gap="md"
-          align="flex-start"
+          bg={(selected && editable) || highlight ? theme.primaryColor : theme.colors.dark[5]}
+          style={{ borderRadius: theme.radius.md, cursor: clickable ? "pointer" : "auto" }}
+          px="md"
+          py="sm"
+          w="100%"
+          justify="space-between"
         >
-          {editable && (
+          <Flex
+            gap="md"
+            align="flex-start"
+          >
+            {editable && (
+              <Flex
+                w={30}
+                justify="flex-end"
+                onPointerDown={(e) => controls.start(e)}
+                style={{ cursor: "grab" }}
+              >
+                <IconGripVertical />
+              </Flex>
+            )}
+
+            {itemContent || <span>{content}</span>}
+          </Flex>
+          {deletable && (
             <ActionIcon
               size="sm"
-              toolTip="Antwort löschen"
+              variant="subtle"
+              radius="xs"
+              toolTip="Aus Liste entfernen"
               onClick={handleDelete}
             >
               <IconX />
             </ActionIcon>
           )}
-          <span>{content}</span>
         </Flex>
-        {editable && (
-          <Flex
-            w={40}
-            justify="flex-end"
-            onPointerDown={(e) => controls.start(e)}
-            style={{ cursor: "grab" }}
-          >
-            <IconGripVertical />
-          </Flex>
-        )}
       </Flex>
     </Reorder.Item>
   );

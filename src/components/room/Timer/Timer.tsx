@@ -1,14 +1,28 @@
 import { Flex, Text, useMantineTheme } from "@mantine/core";
 import { AnimatePresence, motion } from "framer-motion";
+import { useEffect } from "react";
+import useAudio from "~/hooks/useAudio";
 import { useRoom } from "~/hooks/useRoom";
 import { animations } from "~/utils/animations";
 
 const Timer = () => {
   const theme = useMantineTheme();
   const { room } = useRoom();
+  const { triggerAudioEvent } = useAudio();
   const timerState = room.state.display.clock;
-  const secondsColor =
-    timerState.currentSeconds <= 5 ? theme.colors.red[7] : "white";
+  const secondsColor = timerState.currentSeconds <= 5 ? theme.colors.red[7] : "white";
+
+  useEffect(() => {
+    if (timerState.currentSeconds === 5) {
+      triggerAudioEvent("playSound", "warningBuzzer");
+    }
+  }, [timerState.currentSeconds]);
+
+  useEffect(() => {
+    if (!timerState.isActive) {
+      triggerAudioEvent("stopSound", "warningBuzzer");
+    }
+  }, [timerState.isActive]);
 
   return (
     <AnimatePresence>
@@ -21,7 +35,7 @@ const Timer = () => {
             p="0 1rem"
             justify="center"
             align="center"
-            sx={(theme) => ({
+            style={(theme) => ({
               borderRadius: theme.radius.sm,
               boxShadow: theme.shadows.xl,
             })}

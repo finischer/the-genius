@@ -14,6 +14,7 @@ export interface IUseUserContext {
   setUserAsPlayer: (team: Team) => void;
   isPlayer: boolean;
   isHost: boolean;
+  isAdmin: boolean;
   updateUsername: (newUsername: string) => Promise<boolean>;
   isLoading: boolean;
   hostFunction: <T extends any[]>(func: FunctionToWrap<T>) => FunctionToWrap<T>;

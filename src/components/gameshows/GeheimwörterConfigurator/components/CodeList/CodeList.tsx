@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  Flex,
-  TextInput,
-  Title,
-  useMantineTheme,
-} from "@mantine/core";
+import { Box, Button, Flex, TextInput, Title, useMantineTheme } from "@mantine/core";
 import React from "react";
 import type { ICodeListItemProps, ICodeListProps } from "./codeList.types";
 import { capitalize } from "~/utils/strings";
@@ -19,9 +12,7 @@ const CodeListItem: React.FC<ICodeListItemProps> = ({
 }) => {
   const handleWordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let newWord = e.target.value;
-    const startsWithLetter = newWord
-      .toLowerCase()
-      .startsWith(item.letter.toLowerCase());
+    const startsWithLetter = newWord.toLowerCase().startsWith(item.letter.toLowerCase());
 
     if (newWord.length === 0) {
       newWord = item.letter.toUpperCase();
@@ -35,7 +26,7 @@ const CodeListItem: React.FC<ICodeListItemProps> = ({
   const wordElement = editable ? (
     <TextInput
       variant="unstyled"
-      sx={{
+      style={{
         borderBottom: "1px solid white",
       }}
       value={item.category}
@@ -64,7 +55,7 @@ const CodeListItem: React.FC<ICodeListItemProps> = ({
       </div>
       <Flex
         w="2rem"
-        sx={{ fontWeight: "bold", textAlign: "center" }}
+        style={{ fontWeight: "bold", textAlign: "center" }}
       >
         <span>{item.letter.toUpperCase()}</span>
       </Flex>
@@ -92,11 +83,9 @@ const CodeList: React.FC<ICodeListProps> = ({
   function onWordChange(letter: string, newWord: string) {
     if (setCodeList) {
       setCodeList((draft) => {
-        const indexItem = draft.geheimwoerter.codeList.findIndex(
-          (item) => item.letter.toLowerCase() === letter
-        );
+        const indexItem = draft.codeList.findIndex((item) => item.letter.toLowerCase() === letter);
 
-        draft.geheimwoerter.codeList[indexItem] = {
+        draft.codeList[indexItem] = {
           letter,
           category: newWord || letter.toUpperCase(),
         };
@@ -116,7 +105,7 @@ const CodeList: React.FC<ICodeListProps> = ({
           direction="column"
           bg={theme.primaryColor}
           p="md"
-          sx={(theme) => ({
+          style={(theme) => ({
             borderRadius: theme.radius.md,
             boxShadow: theme.shadows.xl,
           })}

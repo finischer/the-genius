@@ -2,15 +2,20 @@ import { Badge as MantineBadge, Flex, rem, type BadgeProps } from "@mantine/core
 import { IconCrown, IconDiamond } from "@tabler/icons-react";
 import React from "react";
 import Tooltip from "../Tooltip";
+import type { UserRole } from "@prisma/client";
 
 interface IBadgeProps extends BadgeProps {
   tooltip?: string;
 }
 
-const AdminBadge = () => (
+interface IAdminBadgeProps {
+  disableTooltip?: boolean;
+}
+
+const AdminBadge: React.FC<IAdminBadgeProps> = ({ disableTooltip }) => (
   <Badge
-    color="yellow"
-    tooltip="Admin"
+    color="gold.8"
+    tooltip={disableTooltip ? undefined : "Admin"}
   >
     <IconCrown style={{ width: rem(18), height: rem(18) }} />
   </Badge>
@@ -24,6 +29,12 @@ const PremimumBadge = () => (
     <IconDiamond style={{ width: rem(18), height: rem(18) }} />
   </Badge>
 );
+
+const RoleBadge = ({ role }: { role: UserRole }) => {
+  if (role === "PREMIUM") return <PremimumBadge />;
+  if (role === "ADMIN") return <AdminBadge />;
+  return <></>;
+};
 
 const Badge: React.FC<IBadgeProps> = ({ tooltip, ...props }) => {
   return (
@@ -40,4 +51,4 @@ const Badge: React.FC<IBadgeProps> = ({ tooltip, ...props }) => {
   );
 };
 
-export { AdminBadge, PremimumBadge };
+export { AdminBadge, PremimumBadge, RoleBadge };

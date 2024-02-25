@@ -1,19 +1,20 @@
-import { type TDuSagstAnswerBoxState } from "./../components/room/Game/games/DuSagst/duSagst.types";
-import { type TExceptionReason } from "./../pages/api/exceptions/exceptions.types";
-import { type RoomViews, type Gameshow, type User } from "@prisma/client";
+import { type Gameshow, type RoomSounds, type RoomViews } from "@prisma/client";
 import { type NextApiResponse } from "next";
 import { type Server, type Socket } from "socket.io";
-import { string } from "zod";
-import type { TGameNames } from "~/components/room/Game/games/game.types";
+import type { Games } from "~/components/room/Game/games/game.types";
+import type { TSongId } from "~/components/room/MediaPlayer/mediaPlayer.types";
 import type { ICreateRoomConfig } from "~/components/shared/CreateRoomModal/createRoomModal.types";
 import type Room from "~/pages/api/classes/Room/Room";
+import type { SafedUser } from "~/server/api/routers/users";
+import { type TDuSagstAnswerBoxState } from "./../components/room/Game/games/DuSagst/duSagst.types";
+import { type TExceptionReason } from "./../pages/api/exceptions/exceptions.types";
 
 type TSocketUser = {
   id: string;
   name: string;
 };
 
-export type TUserReduced = Omit<User, "emailVerified" | "password" | "gameshows" | "createdAt" | "updatedAt">;
+export type TUserReduced = Pick<SafedUser, "id" | "name" | "email" | "image" | "role" | "username">;
 
 export interface IServerSocketData extends Socket {
   user?: TSocketUser;
@@ -47,7 +48,7 @@ export interface IClientToServerEvents {
     cb: () => void
   ) => { teamId: string; playerId: string };
   listAllRooms: (cb: (rooms: Room[]) => void) => void;
-  startGame: ({ gameIdentifier }: { gameIdentifier: TGameNames }) => void;
+  startGame: ({ gameIdentifier }: { gameIdentifier: Games }) => void;
   showAnswerBanner: ({
     answer,
     withSound,
@@ -60,7 +61,7 @@ export interface IClientToServerEvents {
   hideAnswerBanner: () => void;
   buzzer: ({ teamId, withTimer }: { teamId: string; withTimer?: boolean }) => void;
   changeView: ({ newView }: { newView: RoomViews }) => void;
-  startTimer: (seconds: number, cb: () => void) => void;
+  startTimer: (seconds: number, cb?: (() => void) | undefined) => void;
 
   // +++ TEAM EVENTS +++
   increaseGameScore: ({ teamId, step }: { teamId: string; step: number }) => void;
@@ -118,6 +119,12 @@ export interface IClientToServerEvents {
   "duSagst:showQuestion": () => void;
   "duSagst:nextQuestion": () => void;
   "duSagst:prevQuestion": () => void;
+
+  // +++ MUSIC/SOUND EVENTS +++
+  playMusic: ({ songId }: { songId: TSongId }) => void;
+  pauseMusic: () => void;
+  playSound: ({ soundId }: { soundId: keyof RoomSounds }) => void;
+  stopSound: ({ soundId }: { soundId: keyof RoomSounds }) => void;
 }
 
 export interface IServerToClientEvents {
@@ -130,6 +137,8 @@ export interface IServerToClientEvents {
   // updateAllRooms: ({ newRooms }: { newRooms: Room[] }) => void; // Currently not in use
   roomWasClosed: () => void;
   raiseException: ({ reason, msg }: { reason: TExceptionReason; msg: string }) => void;
+  playSound: ({ soundId }: { soundId: keyof RoomSounds }) => void;
+  stopSound: ({ soundId }: { soundId: keyof RoomSounds }) => void;
 }
 
 export interface TNextApiResponse extends NextApiResponse {

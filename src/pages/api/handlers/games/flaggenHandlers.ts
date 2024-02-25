@@ -6,18 +6,14 @@ import {
 } from "~/types/socket.types";
 import { roomManager } from "../../controllers/RoomManager";
 import NoRoomException from "../../exceptions/NoRoomException";
+import { Games } from "~/components/room/Game/games/game.types";
 
-const GAME_IDENTIFIER = "flaggen";
+const GAME_IDENTIFIER = Games.FLAGGEN;
 const MS_DELAY = 1000;
 
 export function flaggenHandler(
   io: Server,
-  socket: Socket<
-    IClientToServerEvents,
-    IServerToClientEvents,
-    IServerSocketData
-  > &
-    IServerSocketData
+  socket: Socket<IClientToServerEvents, IServerToClientEvents, IServerSocketData> & IServerSocketData
 ) {
   socket.on("flaggen:showFlag", () => {
     const room = roomManager.getRoom(socket.roomId);

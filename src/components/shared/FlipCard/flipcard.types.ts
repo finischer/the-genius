@@ -1,4 +1,4 @@
-import { type Sx } from "@mantine/core";
+import { type MantineStyleProp } from "@mantine/core";
 import { type Dispatch, type SetStateAction } from "react";
 
 export type TConditionalFlippedState =
@@ -16,7 +16,7 @@ export type IFlipCardProps = TConditionalFlippedState & {
   back?: React.ReactNode;
   clickable?: boolean;
   onClick?: () => void;
-  frontStyle?: Sx;
-  backStyle?: Sx;
+  frontStyle?: MantineStyleProp;
+  backStyle?: MantineStyleProp;
   setFlipped?: Dispatch<SetStateAction<boolean>>;
 };

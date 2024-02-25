@@ -1,6 +1,7 @@
 import { Box, Center, Container, Flex, Text, useMantineTheme } from "@mantine/core";
 import { useDisclosure, useNetwork } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
+import type { RoomSounds } from "@prisma/client";
 import {
   IconArrowRight,
   IconInfoSmall,
@@ -26,11 +27,13 @@ import ContainerBox from "~/components/shared/ContainerBox";
 import GameRulesModal from "~/components/shared/GameRulesModal/GameRulesModal";
 import Loader from "~/components/shared/Loader/Loader";
 import ModView from "~/components/shared/ModView";
+import NextHead from "~/components/shared/NextHead";
+import useAudio from "~/hooks/useAudio";
 import useBuzzer from "~/hooks/useBuzzer/useBuzzer";
+import useMusic from "~/hooks/useMusic";
 import useNotification from "~/hooks/useNotification";
 import { useRoom } from "~/hooks/useRoom";
 import { socket } from "~/hooks/useSocket";
-import { useUser } from "~/hooks/useUser";
 import { sizes } from "~/styles/constants";
 import { type TUserReduced } from "~/types/socket.types";
 import { animations } from "~/utils/animations";
@@ -64,16 +67,8 @@ const RoomPage = () => {
   const showCurrentGameCornerBanner = currentGame && room.state.view === "GAME" && showGame;
   const roomId = router.query.id as string;
 
-  // useEffect(() => {
-  //     // show info banner that no sounds/music are available until we have a license to use it
-  //     notifications.show({
-  //         title: "Info",
-  //         message: "Aus Lizenzgründen stehen Sounds/Musik aktuell nicht zur Verfügung",
-  //         color: "orange",
-  //         icon: <IconAlertCircle size="1rem" />,
-  //         autoClose: false,
-  //     })
-  // }, [])
+  const { play, pause, stop } = useMusic();
+  const { playAudio, audioList, stopAudio, stopAllAudio } = useAudio();
 
   useEffect(() => {
     if (session?.user) {
@@ -119,8 +114,42 @@ const RoomPage = () => {
 
     return () => {
       socket.removeAllListeners();
+      stop();
     };
   }, [session]);
+
+  const handlePlaySound = ({ soundId }: { soundId: keyof RoomSounds }) => {
+    playAudio(soundId);
+  };
+
+  const handleStopSound = ({ soundId }: { soundId: keyof RoomSounds }) => {
+    stopAudio(soundId);
+  };
+
+  useEffect(() => {
+    socket.on("playSound", handlePlaySound);
+    socket.on("stopSound", handleStopSound);
+
+    return () => {
+      socket.off("playSound", handlePlaySound);
+      socket.off("stopSound", handleStopSound);
+      stopAllAudio();
+    };
+  }, [audioList]);
+
+  // handle music
+  useEffect(() => {
+    if (!room) return;
+
+    const musicState = room.state.music;
+    if (musicState.isActive) {
+      play({ id: room.state.music.title });
+    } else {
+      pause();
+    }
+
+    return () => stop();
+  }, [room?.state.music.isActive, room?.state.music.title]);
 
   if (room === undefined) {
     return (
@@ -132,6 +161,7 @@ const RoomPage = () => {
 
   return (
     <>
+      <NextHead title={`Raum ${room.name}`} />
       {/* Modals */}
       <RoomDetailsModal
         room={room}
@@ -161,7 +191,7 @@ const RoomPage = () => {
           >
             <ActionIcon
               variant="filled"
-              toolTip="Spiele anzeigen"
+              toolTip="Mod-Panel öffnen"
             >
               <IconArrowRight onClick={modPanelDisclosure[1].open} />
             </ActionIcon>

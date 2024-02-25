@@ -5,7 +5,8 @@ import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import PageLayout from "~/components/layout";
+import PageLayout from "~/components/layout/PageLayout";
+import NextHead from "~/components/shared/NextHead";
 import useNotification from "~/hooks/useNotification";
 import type { SafedRoom } from "~/server/api/routers/rooms";
 import { api } from "~/utils/api";
@@ -64,21 +65,21 @@ const RoomsPage = () => {
       // const nameOfCurrentGame = room.games.find(g => g.identifier === room.currentGame)?.name
 
       return (
-        <tr
+        <Table.Tr
           key={room.id}
           style={{ cursor: "pointer" }}
           onClick={() => handleRoomClick(room)}
         >
-          <td>{room.name}</td>
-          <td>{room.isPrivate ? "Privat" : "Öffentlich"}</td>
-          <td>{room.modus}</td>
-          <td>
+          <Table.Td>{room.name}</Table.Td>
+          <Table.Td>{room.isPrivate ? "Privat" : "Öffentlich"}</Table.Td>
+          <Table.Td>{room.modus}</Table.Td>
+          <Table.Td>
             {room.participants.length} / {room.roomSize}
-          </td>
-          {/* <td>{nameOfCurrentGame || "Kein Spiel gestartet"}</td> */}
-          <td>{room.creator.username}</td>
-          <td>{formatTimestamp(room.createdAt.toString())} Uhr</td>
-        </tr>
+          </Table.Td>
+          {/* <Table.Td>{nameOfCurrentGame || "Kein Spiel gestartet"}</Table.Td> */}
+          <Table.Td>{room.creator.username}</Table.Td>
+          <Table.Td>{formatTimestamp(room.createdAt)}</Table.Td>
+        </Table.Tr>
       );
     }) ?? [];
 
@@ -105,6 +106,7 @@ const RoomsPage = () => {
         id: "joinRoom",
         title: "Erfolgreich",
         message: "Raum erfolgreich beigetreten",
+        loading: false,
         icon: <IconCheck size="1rem" />,
       });
     }
@@ -122,6 +124,7 @@ const RoomsPage = () => {
 
   return (
     <>
+      <NextHead title="Räume" />
       {activeRoom && (
         <Modal
           onClose={closePasswordModal}
@@ -131,7 +134,8 @@ const RoomsPage = () => {
         >
           <LoadingOverlay
             visible={isLoadingValidatePassword}
-            overlayBlur={2}
+
+            // overlayBlur={2}
           />
           <form onSubmit={handleJoinRoomWithPassword}>
             <Flex
@@ -140,7 +144,7 @@ const RoomsPage = () => {
             >
               <PasswordInput
                 label="Passwort"
-                placeholder="Super secret passwort"
+                placeholder="Super geheimes passwort"
                 required
                 {...form.getInputProps("password")}
               />
@@ -166,19 +170,19 @@ const RoomsPage = () => {
           striped
           highlightOnHover
         >
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Sichtbarkeit</th>
-              <th>Modus</th>
-              <th>Spieler</th>
-              {/* <th>Aktuelles Spiel</th> */}
-              <th>Erstellt von</th>
-              <th>Erstellt am</th>
-            </tr>
-          </thead>
+          <Table.Thead>
+            <Table.Tr>
+              <Table.Th>Name</Table.Th>
+              <Table.Th>Sichtbarkeit</Table.Th>
+              <Table.Th>Modus</Table.Th>
+              <Table.Th>Spieler</Table.Th>
+              {/* <Table.Th>Aktuelles Spiel</Table.Th> */}
+              <Table.Th>Erstellt von</Table.Th>
+              <Table.Th>Erstellt am</Table.Th>
+            </Table.Tr>
+          </Table.Thead>
 
-          <tbody>{rows}</tbody>
+          <Table.Tbody>{rows}</Table.Tbody>
         </Table>
       </PageLayout>
     </>

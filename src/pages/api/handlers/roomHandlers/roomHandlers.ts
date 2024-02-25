@@ -106,7 +106,6 @@ export function roomHandler(
     room.participants = [...room.participants, socket.user.name];
     room.update();
 
-    console.log(`user ${user.id} joined Room: ${room.id}`);
     cb(room);
   });
 
@@ -219,6 +218,7 @@ export function roomHandler(
     if (withTimer) {
       team.startScorebarTimer();
       room.update();
+
       const interval = setInterval(() => {
         if (team.scorebarTimer.seconds === 0) {
           clearInterval(interval);

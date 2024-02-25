@@ -1,15 +1,20 @@
-import { type IGameGeneralState } from "../game.types";
+import { Games, type IGameGeneralState } from "../game.types";
 import { SET_COLORS, type ISetGameState } from "./set.types";
 
 export type TSetGameState = ISetGameState & IGameGeneralState;
 
+export const SET_COLORS_MAP = {
+  red: SET_COLORS.RED,
+  blue: SET_COLORS.BLUE,
+  green: SET_COLORS.GREEN,
+};
+
 export const DEFAULT_SET_STATE: TSetGameState = {
-  identifier: "set",
+  identifier: Games.SET,
   name: "Set",
   modes: ["DUELL", "TEAM"],
   maxPoints: 7,
   scorebarMode: "circle",
-  rules: "",
   questions: [],
   openedCards: [],
   markedCards: [],
@@ -20,18 +25,19 @@ export const DEFAULT_SET_STATE: TSetGameState = {
     markedCards: false,
   },
 
-  getRules() {
-    return `
-    Vor euch seht ihr 12 Spielkarten. Auf diesen Karten seht ihr drei verschiedene Symbole: Raute, Rechteck und Oval. Diese Symbole sind entweder gefüllt, leer oder gestreift. 
-    Auf jeder Karte ist eines dieser Symbole bis zu 3 mal vertreten und das in einer von drei Farben: Rot, Grün und Blau.
-    Eure Aufgabe ist es nun unter diesen 12 Karten ein Set zu finden. Ein Set besteht immer aus exakt 3 Karten. 
-    Diese Karten müssen so gewählt sein, dass die Ausprägungen in den eben genannten Eigenschaften Form, Füllung, Farbe und Anzahl jeweils entweder auf allen Karten exakt gleich oder auf allen Karten komplett unterschiedlich sind. 
-    `;
-  },
-};
+  rules: `
+Spiel: {{ gameName }}
 
-export const SET_COLORS_MAP = {
-  red: SET_COLORS.RED,
-  blue: SET_COLORS.BLUE,
-  green: SET_COLORS.GREEN,
+### Ziel:
+Das Ziel des Speils "{{ gameName }}" ist es, unter den 12 Spielkarten ein Set zu finden. Ein Set besteht aus genau 3 Karten, die in den Eigenschaften Form, Füllung, Farbe und Anzahl entweder komplett gleich oder komplett unterschiedlich sein müssen.
+
+### Spielablauf:
+Vor euch seht ihr 12 Spielkarten. Jede Karte zeigt eines von drei verschiedenen Symbolen (Raute, Rechteck, Oval), die entweder gefüllt, leer oder gestreift sind. Zudem sind sie in einer von drei Farben (Rot, Grün, Blau) dargestellt. Jede dieser Ausprägungen kann bis zu 3-mal auf einer Karte vorkommen.
+
+Eure Aufgabe ist es, unter diesen Karten ein Set zu finden. Dies bedeutet, dass die Ausprägungen von Form, Füllung, Farbe und Anzahl auf den drei ausgewählten Karten entweder auf allen Karten exakt gleich oder auf allen Karten komplett unterschiedlich sein müssen.
+
+Wenn ihr glaubt, ein Set gefunden zu haben, buzzert ihr und habt dann 5 Sekunden Zeit, um eure Antwort zu nennen. Ist die Antwort korrekt, bekommt ihr einen Punkt. Sollte die Antwort falsch sein, bekommt der Gegner einen Punkt, und das Spiel geht mit dem nächsten Kartenstapel weiter.
+
+Das Team, das zuerst {{ maxPoints }} Punkte erreicht, gewinnt das Spiel.
+  `,
 };

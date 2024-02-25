@@ -1,15 +1,15 @@
 import { TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import React, { useEffect, useRef, useState } from "react";
-import { string } from "zod";
-import QuestionFormLayout from "~/components/Layouts/QuestionFormLayout";
-import { useConfigurator } from "~/hooks/useConfigurator";
+import { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import QuestionFormLayout from "~/components/layout/QuestionFormLayout";
 import type { TPresentationTopic } from "~/components/room/Game/games/ReferatBingo/referatBingo.types";
+import { Games } from "~/components/room/Game/games/game.types";
+import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";
 
 const ReferatBingoConfigurator = () => {
-  const [referatBingo, setReferatBingo, { enableFurtherButton, disableFurtherButton }] =
-    useConfigurator("referatBingo");
+  const { updateGame, referatBingo } = useGameshowConfig(Games.REFERATBINGO);
+
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [presentationTopics, setPresentationTopics] = useState<TPresentationTopic[]>(referatBingo.topics);
 
@@ -48,8 +48,8 @@ const ReferatBingoConfigurator = () => {
   };
 
   useEffect(() => {
-    setReferatBingo((draft) => {
-      draft.referatBingo.topics = presentationTopics;
+    updateGame((draft) => {
+      draft.topics = presentationTopics;
     });
   }, [presentationTopics]);
 

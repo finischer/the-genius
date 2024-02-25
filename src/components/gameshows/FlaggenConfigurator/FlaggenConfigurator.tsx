@@ -1,90 +1,145 @@
-import {
-  Checkbox,
-  Group,
-  Image,
-  Text,
-  TransferList,
-  type TransferListData,
-  type TransferListItemComponentProps,
-} from "@mantine/core";
-import { useEffect, useState } from "react";
+import { Flex, Group, Image, ScrollArea, Stack, Text, Title } from "@mantine/core";
+import { useContext, useEffect } from "react";
+import { useImmer } from "use-immer";
 import { COUNTRIES } from "~/components/room/Game/games/Flaggen/config";
 import type { TCountry } from "~/components/room/Game/games/Flaggen/flaggen.types";
-import { useConfigurator } from "~/hooks/useConfigurator";
+import { Games } from "~/components/room/Game/games/game.types";
+import List from "~/components/shared/List";
+import { StepperControlsContext } from "~/context/StepperControlsContext";
+import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";
 
-const availableCountries = Object.keys(COUNTRIES).map((code) => ({
-  key: code,
-  value: code,
-  label: COUNTRIES[code] as string,
+const availableCountries: TCountry[] = Object.keys(COUNTRIES).map((code) => ({
+  id: code,
+  shortCode: code,
+  country: COUNTRIES[code] as string,
 }));
 
-const transferList: TransferListData = [availableCountries, []];
-
 // TODO: Optimize performance
-const CountryItem: React.FC<TransferListItemComponentProps> = ({ data, selected }) => (
-  <Group noWrap>
-    <Checkbox
-      checked={selected}
-      onChange={() => null}
-      tabIndex={-1}
-      sx={{ pointerEvents: "none" }}
-    />
+const CountryItem = ({ country }: { country: TCountry }) => (
+  <Group>
     <Image
-      src={`https://flagcdn.com/w40/${data.value}.png`}
-      alt={data.label}
+      src={`https://flagcdn.com/w40/${country.shortCode}.png`}
+      alt={country.country}
       width={40}
     />
-    <Text>{data.label}</Text>
+    <Text>{country.country}</Text>
   </Group>
 );
 
 const FlaggenConfigurator = () => {
-  const [flaggen, setFlaggen, { enableFurtherButton, disableFurtherButton }] = useConfigurator("flaggen");
-  const [countries, setCountries] = useState(transferList);
+  const { disableContinueButton, enableContinueButton } = useContext(StepperControlsContext);
+  const { flaggen, updateGame } = useGameshowConfig(Games.FLAGGEN);
+
+  const [countries, setCountries] = useImmer(flaggen.countries);
+  const [selectedCountries, setSelectedCountries] = useImmer<TCountry[]>([]);
+
+  const notSelectedCountries = availableCountries.filter(
+    (c) => !selectedCountries.map((c) => c.shortCode).includes(c.shortCode)
+  );
 
   useEffect(() => {
-    const selectedCountries = flaggen.countries.map((c) => ({
-      key: c.shortCode,
-      value: c.shortCode,
-      label: c.country,
+    const selectedCountries: TCountry[] = flaggen.countries.map((c) => ({
+      id: c.shortCode,
+      country: c.country,
+      shortCode: c.shortCode,
     }));
-    const notSelectedCountries = availableCountries.filter(
-      (c) => !selectedCountries.map((c) => c.value).includes(c.value)
-    );
 
-    setCountries([notSelectedCountries, selectedCountries]);
+    setCountries(notSelectedCountries);
+    setSelectedCountries(selectedCountries);
   }, []);
 
   useEffect(() => {
-    const transformedCountries: TCountry[] = countries[1].map((c) => ({
-      key: c.value,
-      shortCode: c.value,
-      country: c.label,
-    }));
-
-    setFlaggen((draft) => {
-      draft.flaggen.countries = transformedCountries;
+    updateGame((draft) => {
+      draft.countries = selectedCountries;
     });
 
     // check further button state
-    if (transformedCountries.length > 0) {
-      enableFurtherButton();
+    if (selectedCountries.length > 0) {
+      enableContinueButton();
     } else {
-      disableFurtherButton();
+      disableContinueButton();
     }
-  }, [countries]);
+  }, [selectedCountries.length]);
+
+  const handleSelectCountry = (country: TCountry) => {
+    if (selectedCountries.find((c) => c.shortCode === country.shortCode)) {
+      return;
+    }
+
+    setSelectedCountries((draft) => {
+      draft.push(country);
+    });
+
+    setCountries((draft) => {
+      draft = draft.filter((c) => c.shortCode !== country.shortCode);
+    });
+  };
+
+  const handleDeselectCountry = (country: TCountry | undefined) => {
+    if (!country || !selectedCountries.find((c) => c.shortCode === country.shortCode)) {
+      return;
+    }
+
+    setSelectedCountries((draft) => {
+      draft = draft.filter((c) => c.shortCode !== country.shortCode);
+    });
+
+    setCountries((draft) => {
+      draft.push(country);
+    });
+  };
 
   return (
-    <TransferList
-      value={countries}
-      onChange={setCountries}
-      itemComponent={CountryItem}
-      searchPlaceholder="Flagge suchen ..."
-      nothingFound="Keine Flagge gefunden"
-      titles={[`Verfügbare Flaggen (${countries[0].length})`, `Ausgewählte Flaggen (${countries[1].length})`]}
-      breakpoint="sm"
-      listHeight={600}
-    />
+    <Flex
+      gap="md"
+      justify="center"
+      direction={{ base: "column", md: "row", lg: "row" }}
+    >
+      <Stack w="100%">
+        <Title order={3}>Verfügbare Flaggen</Title>
+        <ScrollArea
+          mah={800}
+          type="auto"
+        >
+          <List
+            data={countries.filter((c) => !selectedCountries.map((c) => c.shortCode).includes(c.shortCode))}
+            setData={setCountries}
+            listItem={notSelectedCountries.map((c) => (
+              <CountryItem
+                key={c.id}
+                country={c}
+              />
+            ))}
+            renderValueByKey="country"
+            onClickItem={handleSelectCountry}
+            onDeleteItem={handleDeselectCountry}
+            clickable
+          />
+        </ScrollArea>
+      </Stack>
+      <Stack w="100%">
+        <Title order={3}>Ausgewählte Flaggen</Title>
+        <ScrollArea
+          mah={800}
+          type="auto"
+        >
+          <List
+            emptyListText="Füge deine erste Flagge hinzu!"
+            data={selectedCountries}
+            setData={setSelectedCountries}
+            listItem={selectedCountries.map((c) => (
+              <CountryItem
+                key={c.id}
+                country={c}
+              />
+            ))}
+            renderValueByKey="country"
+            editable
+            deletableItems
+          />
+        </ScrollArea>
+      </Stack>
+    </Flex>
   );
 };
 

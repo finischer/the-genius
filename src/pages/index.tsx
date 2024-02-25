@@ -1,52 +1,55 @@
-import { Button, Card, Group, Text } from "@mantine/core";
+import { Box, Flex, Group } from "@mantine/core";
+import { IconCategory, IconSearch, IconUsers } from "@tabler/icons-react";
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
-import PageLayout from "~/components/layout";
-import { api } from "~/utils/api";
-
-// TODO: Create Home page
+import InfoSection from "~/components/home/InfoSection/InfoSection";
+import PageLayout from "~/components/layout/PageLayout";
+import Card from "~/components/shared/Card/Card";
+import IntroductionBanner from "~/components/shared/IntroductionBanner";
+import NextHead from "~/components/shared/NextHead";
 
 const Home: NextPage = () => {
-  const { data: rooms } = api.rooms.getAll.useQuery();
-  const router = useRouter();
-
-  const numOfRooms = rooms?.length ?? 0;
-
-  const txt = numOfRooms === 0 ? "Keine" : numOfRooms === 1 ? "Ein Raum" : `${numOfRooms ?? 0} Räume`;
+  const { push: goTo } = useRouter();
 
   return (
-    <PageLayout>
-      <Card
-        shadow="sm"
-        padding="lg"
-        radius="md"
-        withBorder
-        w="20rem"
-      >
-        <Group mb="xs">
-          <Text fw={500}>Raum beitreten</Text>
-        </Group>
-
-        {rooms && (
-          <Text
-            size="sm"
-            c="dimmed"
-          >
-            {txt} verfügbar
-          </Text>
-        )}
-
-        <Button
-          variant="light"
-          fullWidth
-          mt="md"
-          radius="md"
-          onClick={() => void router.push("/rooms")}
+    <>
+      <NextHead title="Startseite" />
+      <IntroductionBanner />
+      <PageLayout>
+        <Flex
+          gap="xl"
+          align="flex-start"
+          justify="space-between"
+          h="100%"
+          w="100%"
         >
-          Zu den Räumen
-        </Button>
-      </Card>
-    </PageLayout>
+          <Group align="flex-start">
+            <Card
+              title="Suchen"
+              Icon={IconSearch}
+              subTitle="Räume suchen"
+              onClick={() => void goTo("/rooms")}
+            />
+            <Card
+              title="Freunde"
+              Icon={IconUsers}
+              subTitle="Hinzufügen und pflegen"
+              disabled
+              onClick={() => console.log("Move to: Räume suchen")}
+            />
+            <Card
+              title="Spielshows"
+              Icon={IconCategory}
+              subTitle="Erstellen und Starten"
+              onClick={() => void goTo("/gameshows")}
+            />
+          </Group>
+          <Box h="100%">
+            <InfoSection />
+          </Box>
+        </Flex>
+      </PageLayout>
+    </>
   );
 };
 

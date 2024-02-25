@@ -34,13 +34,7 @@ export const DEFAULT_SET_FORM_STYLE: CSSProperties = {
 
 const CHECK_ICON_SIZE = 14;
 
-const SetForm: React.FC<ISetFormProps> = ({
-  editable = false,
-  card,
-  onChange,
-  onRemove,
-  removeable,
-}) => {
+const SetForm: React.FC<ISetFormProps> = ({ editable = false, card, onChange, onRemove, removeable }) => {
   const { form, color, fill, id } = card;
 
   const theme = useMantineTheme();
@@ -69,11 +63,7 @@ const SetForm: React.FC<ISetFormProps> = ({
     ),
   };
 
-  const CustomMenuItem: React.FC<ICustomMenuItem> = ({
-    selected = false,
-    children,
-    name,
-  }) => (
+  const CustomMenuItem: React.FC<ICustomMenuItem> = ({ selected = false, children, name }) => (
     <Menu.Item
       closeMenuOnClick={false}
       onClick={() => handleChangeFormData(name)}
@@ -117,8 +107,7 @@ const SetForm: React.FC<ISetFormProps> = ({
     return (
       <Flex
         h="100%"
-        sx={{
-          borderRadius: theme.radius.sm,
+        style={{
           cursor: "pointer",
           ":hover": {
             background: theme.colors.dark[0],

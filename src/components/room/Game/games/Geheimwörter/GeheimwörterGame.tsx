@@ -1,7 +1,7 @@
 import { Box, Button, Flex, SimpleGrid, useMantineTheme } from "@mantine/core";
 import { IconEye, IconEyeOff } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
-import React from "react";
+import React, { Fragment } from "react";
 import CodeList from "~/components/gameshows/GeheimwörterConfigurator/components/CodeList";
 import AnswerBanner from "~/components/room/AnswerBanner";
 import ActionIcon from "~/components/shared/ActionIcon";
@@ -11,6 +11,8 @@ import { animations } from "~/utils/animations";
 import type { IGeheimwörterGameProps } from "./geheimwörter.types";
 import ArrowActionButton from "~/components/shared/ArrowActionButton";
 import ModView from "~/components/shared/ModView";
+import useAudio from "~/hooks/useAudio";
+import { slug } from "~/utils/strings";
 
 const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
   const theme = useMantineTheme();
@@ -19,6 +21,7 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
   const showWords = game.display.words;
   const { isHost } = useUser();
   const { socket } = useSocket();
+  const { triggerAudioEvent } = useAudio();
 
   const ToggleIcon = ({ action }: { action: keyof typeof game.display }) => {
     if (game.display[action]) {
@@ -37,6 +40,7 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
   };
 
   const handleShowAnswer = () => {
+    triggerAudioEvent("playSound", "bell");
     socket.emit("geheimwoerter:showAnswer");
   };
 
@@ -68,7 +72,7 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
         direction="column"
         bg={theme.primaryColor}
         p="md"
-        sx={{ borderRadius: theme.radius.md }}
+        style={{ borderRadius: theme.radius.md }}
         opacity={showWords ? 1 : 0.4}
       >
         <SimpleGrid
@@ -76,8 +80,8 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
           verticalSpacing={0}
           spacing="md"
         >
-          {question.words.map((word) => (
-            <>
+          {question.words.map((word, index) => (
+            <Fragment key={slug([word.word, index])}>
               <span style={{ fontWeight: "bold" }}>{word.word}</span>
               {showAnswer && (
                 <span>
@@ -85,7 +89,7 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
                   <span>{word.category.slice(1)}</span>
                 </span>
               )}
-            </>
+            </Fragment>
           ))}
         </SimpleGrid>
       </Flex>
@@ -114,7 +118,7 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
     >
       <SimpleGrid
         cols={2}
-        sx={{ display: "flex", alignItems: "center" }}
+        style={{ display: "flex", alignItems: "center" }}
         w={900}
         spacing="5rem"
       >
@@ -129,9 +133,7 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
                 <ActionIcon
                   onClick={toggleCodeList}
                   size={32}
-                  toolTip={`Codelist ${
-                    game.display.codeList ? "ausblenden" : "einblenden"
-                  }`}
+                  toolTip={`Codelist ${game.display.codeList ? "ausblenden" : "einblenden"}`}
                 >
                   <ToggleIcon action="codeList" />
                 </ActionIcon>

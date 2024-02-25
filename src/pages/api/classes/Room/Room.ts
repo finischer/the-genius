@@ -1,10 +1,9 @@
 import type { GameshowMode, Prisma, Room as PrismaRoom, RoomState, RoomViews } from "@prisma/client";
-import type { TGame, TGameNames } from "~/components/room/Game/games/game.types";
-import { type TGameSettingsMap } from "~/hooks/useConfigurator/useConfigurator.types";
+import type { Games, TGame, TGameSettingsMap } from "~/components/room/Game/games/game.types";
+import { prisma } from "~/server/db";
 import { io } from "../../socket";
 import Team from "../Team/Team";
 import { type IRoomMaxPlayersTeamMap, type PrismaRoomFixed, type TRoomTeams } from "./room.types";
-import { prisma } from "~/server/db";
 
 const SECONDS_TO_ROTATE_TITLE_BANNER = 4;
 const SECONDS_TOTAL_INTRO_DURATION = 8;
@@ -93,11 +92,15 @@ export default class Room implements PrismaRoomFixed {
         title: "",
       },
       sounds: {
+        bass: false,
+        bell: false,
         buzzer: false,
-        correctAnswer: false,
-        intro: false,
         winning: false,
-        wrongAnswer: false,
+        intro: false,
+        shimmer: false,
+        typewriter: false,
+        warningBuzzer: false,
+        whoosh_1: false,
       },
       teamWithTurn: "",
     };
@@ -121,13 +124,13 @@ export default class Room implements PrismaRoomFixed {
     return Object.values(this.teams).find((t) => t.id === teamId);
   }
 
-  getGame<T extends TGameNames>(gameIdentifier: T): TGameSettingsMap[T] {
+  getGame<T extends Games>(gameIdentifier: T): TGameSettingsMap[T] {
     const games = this.games as unknown as TGame[];
     const game = games.find((g) => g.identifier === gameIdentifier) as unknown as TGameSettingsMap[T];
     return game;
   }
 
-  startGame(gameIdentifier: TGameNames) {
+  startGame(gameIdentifier: Games) {
     this.state.display.gameIntro = {
       alreadyPlayed: false,
       flippedTitleBanner: false,
@@ -137,6 +140,9 @@ export default class Room implements PrismaRoomFixed {
 
     this.currentGame = gameIdentifier;
     this.state.display.game = false;
+
+    // reset gamescores
+    Object.values(this.teams).forEach((team) => team.resetGameScore());
 
     // tbd: stop current music
     // tbd: start intro music

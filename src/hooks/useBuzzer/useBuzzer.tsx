@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { useRoom } from "../useRoom";
 import { socket } from "../useSocket";
 import { useUser } from "../useUser";
+import useAudio from "../useAudio";
 
 const useBuzzer = () => {
   const [isActive, setIsActive] = useState(true);
   const { isPlayer, team } = useUser();
   const { room } = useRoom();
+  const { triggerAudioEvent } = useAudio();
 
   useEffect(() => {
     function handleBuzzerEvent(e: KeyboardEvent) {
@@ -40,6 +42,8 @@ const useBuzzer = () => {
   const handleBuzzerClick = () => {
     if (!isPlayer || room.state.teamWithTurn || !team || !isActive) return;
     socket.emit("buzzer", { teamId: team.id, withTimer: true });
+    triggerAudioEvent("playSound", "buzzer");
+    triggerAudioEvent("playSound", "warningBuzzer");
   };
 
   return { isActive, buzzer: handleBuzzerClick, activateBuzzer, deactivateBuzzer };

@@ -1,16 +1,13 @@
-import { Button, Flex, Image, Text, useMantineTheme } from "@mantine/core";
-import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
+import { Button, Flex, Image, Text } from "@mantine/core";
 import React from "react";
+import ArrowActionButton from "~/components/shared/ArrowActionButton";
+import ModView from "~/components/shared/ModView";
 import { socket } from "~/hooks/useSocket";
 import { useUser } from "~/hooks/useUser";
 import { type IFlaggenGameProps } from "./flaggen.types";
-import ActionIcon from "~/components/shared/ActionIcon/ActionIcon";
-import ArrowActionButton from "~/components/shared/ArrowActionButton";
-import ModView from "~/components/shared/ModView";
 
 const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
   const { isHost } = useUser();
-  const theme = useMantineTheme();
   const displayFlag = game.display.country;
   const currFlag = game.countries[game.qIndex];
   const nxtBtnDisabled = game.qIndex >= game.countries.length - 1;
@@ -67,7 +64,7 @@ const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
             radius="sm"
             opacity={displayFlag ? 1 : isHost ? 0.5 : 0}
             onClick={handleFlagClick}
-            sx={{
+            style={{
               transform: `scale(${displayFlag ? "1" : "0.9"})`,
               transition: "all 500ms",
               userSelect: "none",

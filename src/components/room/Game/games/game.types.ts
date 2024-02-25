@@ -1,41 +1,44 @@
 import type { GameshowMode } from "@prisma/client";
-import { type TGameSettingsMap } from "~/hooks/useConfigurator/useConfigurator.types";
+import type { TFlaggenGameState } from "./Flaggen/config";
+import type { TMerkenGameState } from "./Merken/config";
+import type { TGeheimwörterGameState } from "./Geheimwörter/config";
+import type { TSetGameState } from "./Set/config";
+import type { TDuSagstGameState } from "./DuSagst/config";
+import type { TReferatBingoGameState } from "./ReferatBingo/config";
 
 export type TScorebarMode = "number" | "circle";
 
 export enum Games {
   FLAGGEN = "flaggen",
-  MEMORY = "memory",
   GEHEIMWOERTER = "geheimwoerter",
+  MERKEN = "merken",
   SET = "set",
   DUSAGST = "duSagst",
-  REFERATBINTO = "referatBingo",
+  REFERATBINGO = "referatBingo",
 }
 
-export type TGameNames =
-  | "flaggen"
-  | "memory"
-  | "merken"
-  | "geheimwoerter"
-  | "set"
-  | "duSagst"
-  | "referatBingo";
+export type TGameSettingsMap = {
+  flaggen: TFlaggenGameState;
+  merken: TMerkenGameState;
+  geheimwoerter: TGeheimwörterGameState;
+  set: TSetGameState;
+  duSagst: TDuSagstGameState;
+  referatBingo: TReferatBingoGameState;
+};
 
 export interface IGameGeneralState {
   name: string;
-  identifier: TGameNames;
   maxPoints: number;
   scorebarMode: TScorebarMode;
   rules: string; // just rules as string -> will generate when user clicks on 'save gameshow' button
   modes: GameshowMode[]; // for which modes was this game created
-  getRules: () => string; // function to get the current rules while config the game. Some text in rules depends on other variables in same object
 }
 
 export type TGameMap = {
-  [gameIdentifier in TGameNames]: React.ReactNode;
+  [gameIdentifier in Games]: React.ReactNode;
 };
 
-export type TGame = TGameSettingsMap[TGameNames];
+export type TGame = TGameSettingsMap[Games];
 
 // types for index.tsx (Game)
 export interface IGameProps {

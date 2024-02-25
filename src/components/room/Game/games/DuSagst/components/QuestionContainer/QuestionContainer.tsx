@@ -52,7 +52,7 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerO
       <Flex
         bg={backgroundColor}
         p="0.5rem 2rem"
-        sx={{ borderRadius: theme.radius.sm }}
+        style={{ borderRadius: theme.radius.sm }}
         align="center"
         gap="md"
         onClick={() => handleClickAnswer(index)}
@@ -117,11 +117,11 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerO
           py="1rem"
           px="2rem"
           opacity={game.display.question ? 1 : questionOpacity}
-          sx={{
+          style={{
             transition: "opacity 300ms",
           }}
         >
-          <Text align="center">{q}</Text>
+          <Text ta="center">{q}</Text>
         </ContainerBox>
       </Flex>
 
@@ -129,7 +129,7 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerO
         <Flex
           direction="column"
           gap="sm"
-          sx={{ fontWeight: "bold" }}
+          style={{ fontWeight: "bold" }}
         >
           {answerOptions.map((a, index) => {
             const showAnswer = game.display.answers.includes(index);

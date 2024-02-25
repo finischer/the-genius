@@ -8,24 +8,52 @@ datasource db {
 }
 
 model User {
-  id            String       @id @default(auto()) @map("_id") @db.ObjectId
-  name          String
-  username      String?      @unique
-  role          UserRole?    @default(USER)
-  email         String       @unique
-  emailVerified DateTime?
-  password      String?
-  image         String?
-  gameshows     Gameshow[]   @relation(name: "gameshowCreator")
-  friends       Friendship[] @relation(name: "users")
-  friendOf      Friendship[] @relation(name: "friendUsers")
-  roomsOpen     Room[]       @relation(name: "roomCreator")
-  accounts      Account[]
-  sessions      Session[]
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  username        String?      @unique
+  role            UserRole?    @default(USER)
+  email           String       @unique
+  emailVerified   DateTime?
+  isEmailVerified Boolean
+  password        String?
+  image           String?
+  gameshows       Gameshow[]   @relation(name: "gameshowCreator")
+  friends         Friendship[] @relation(name: "users")
+  friendOf        Friendship[] @relation(name: "friendUsers")
+  roomsOpen       Room[]       @relation(name: "roomCreator")
+  feedback        Feedback[]   @relation(name: "feedbackCreator")
+  accounts        Account[]
+  sessions        Session[]
+  isFirstVisit    Boolean      @default(true)
+  lastLoginAt     DateTime     @default(now())
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
 
   @@map("users")
+}
+
+model Game {
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  slug            String       @unique
+  mode            GameshowMode
+  forPremiumUsers Boolean
+  isNew           Boolean
+  rules           String
+  active          Boolean      @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("games")
+}
+
+model BetaTester {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  accessKey String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Gameshow {
@@ -33,7 +61,7 @@ model Gameshow {
   name       String
   games      Json[]
   creatorId  String   @db.ObjectId
-  user       User     @relation("gameshowCreator", fields: [creatorId], references: [id])
+  user       User     @relation("gameshowCreator", fields: [creatorId], references: [id], onDelete: Cascade)
   isFavorite Boolean  @default(false)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -74,6 +102,22 @@ model Room {
   state             RoomState
 
   @@map("rooms")
+}
+
+model Feedback {
+  id                      String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+  creator                 User     @relation("feedbackCreator", fields: [creatorId], references: [id])
+  creatorId               String   @db.ObjectId
+  comment                 String
+  ratingGeneralExperience Int
+  ratingControlModerator  Int
+  ratingDesign            Int
+  browser                 String
+  os                      String
+
+  @@map("feedbacks")
 }
 
 model Account {
@@ -179,11 +223,15 @@ type RoomDisplay {
 }
 
 type RoomSounds {
-  correctAnswer Boolean @default(false)
-  wrongAnswer   Boolean @default(false)
+  bass          Boolean @default(false)
+  bell          Boolean @default(false)
   buzzer        Boolean @default(false)
   winning       Boolean @default(false)
   intro         Boolean @default(false)
+  shimmer       Boolean @default(false)
+  typewriter    Boolean @default(false)
+  warningBuzzer Boolean @default(false)
+  whoosh_1      Boolean @default(false)
 }
 
 type RoomMusic {

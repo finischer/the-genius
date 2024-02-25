@@ -1,4 +1,4 @@
-import { Flex, SimpleGrid, Text, Title } from "@mantine/core";
+import { Flex, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import SetCard from "~/components/room/Game/games/Set/components/SetCard";
 import { findSets } from "../../helpers";
 import type { ICreateSetContainerProps } from "./createSetContainer.types";
@@ -18,39 +18,45 @@ const CreateSetContainer: React.FC<ICreateSetContainerProps> = ({ question, setQ
   ));
 
   return (
-    <Flex
-      direction="column"
-      gap="lg"
-      align="center"
-    >
-      <Title order={3}>Set erstellen</Title>
-
-      <SimpleGrid
-        cols={3}
-        spacing="md"
-        verticalSpacing="md"
-      >
-        {cardElements}
-      </SimpleGrid>
-
-      {/* Possible sets */}
-      <Flex
-        direction="column"
+    <Group justify="center">
+      <Stack
+        gap="lg"
         align="center"
       >
-        <Text color="dimmed">Mögliche Sets</Text>
-        {possibleSets.length === 0 && "Mit diesem Stapel ist kein Set möglich"}
-        {possibleSets.map((s, idx) => {
-          const cardNumbers = s.map((s) => s + 1);
+        <Title order={3}>Set erstellen</Title>
 
-          return (
-            <Flex key={idx}>
-              Set {idx + 1}: {cardNumbers.join(",")}
-            </Flex>
-          );
-        })}
-      </Flex>
-    </Flex>
+        <Group
+          align="flex-start"
+          pos="relative"
+          justify="center"
+        >
+          <SimpleGrid
+            spacing="md"
+            verticalSpacing="md"
+            cols={{ base: 1, sm: 1, lg: 3 }}
+          >
+            {cardElements}
+          </SimpleGrid>
+          {/* Possible sets */}
+          <Flex
+            direction="column"
+            align="center"
+          >
+            <Text c="dimmed">Mögliche Sets</Text>
+            {possibleSets.length === 0 && "Mit diesem Stapel ist kein Set möglich"}
+            {possibleSets.map((s, idx) => {
+              const cardNumbers = s.map((s) => s + 1);
+
+              return (
+                <Flex key={idx}>
+                  Set {idx + 1}: {cardNumbers.join(",")}
+                </Flex>
+              );
+            })}
+          </Flex>
+        </Group>
+      </Stack>
+    </Group>
   );
 };
 

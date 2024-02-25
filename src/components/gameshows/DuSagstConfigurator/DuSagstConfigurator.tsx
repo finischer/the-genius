@@ -1,11 +1,13 @@
 import { Flex, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import QuestionFormLayout from "~/components/Layouts/QuestionFormLayout";
+import QuestionFormLayout from "~/components/layout/QuestionFormLayout";
 import type { TDuSagstQuestion } from "~/components/room/Game/games/DuSagst/duSagst.types";
-import { useConfigurator } from "~/hooks/useConfigurator";
+import { Games } from "~/components/room/Game/games/game.types";
+import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";
 import type { TDuSagstFormValues } from "./duSagstConfigurator.types";
+import { StepperControlsContext } from "~/context/StepperControlsContext";
 
 const PLACEHOLDER_MAP: { [index: number]: string } = {
   0: "Cola",
@@ -15,7 +17,8 @@ const PLACEHOLDER_MAP: { [index: number]: string } = {
 };
 
 const DuSagstConfigurator = () => {
-  const [duSagst, setDuSagst, { disableFurtherButton, enableFurtherButton }] = useConfigurator("duSagst");
+  const { disableContinueButton, enableContinueButton } = useContext(StepperControlsContext);
+  const { duSagst, updateGame } = useGameshowConfig(Games.DUSAGST);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [questions, setQuestions] = useState<TDuSagstQuestion[]>(duSagst.questions);
 
@@ -107,13 +110,13 @@ const DuSagstConfigurator = () => {
 
   useEffect(() => {
     if (questions.length > 0) {
-      enableFurtherButton();
+      enableContinueButton();
     } else {
-      disableFurtherButton();
+      disableContinueButton();
     }
 
-    setDuSagst((draft) => {
-      draft.duSagst.questions = questions as unknown as TDuSagstQuestion[];
+    updateGame((draft) => {
+      draft.questions = questions as unknown as TDuSagstQuestion[];
     });
   }, [questions]);
 
@@ -129,6 +132,7 @@ const DuSagstConfigurator = () => {
       <Flex
         direction="column"
         gap="xl"
+        w="100%"
       >
         <TextInput
           ref={inputRef}

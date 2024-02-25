@@ -1,4 +1,15 @@
-import { Box, Center, Container, Flex, Stack, Text, TextInput, Title, useMantineTheme } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Center,
+  Container,
+  Flex,
+  Stack,
+  Text,
+  TextInput,
+  Title,
+  useMantineTheme,
+} from "@mantine/core";
 import SignInButton from "../SignInButton/SignInButton";
 import TheGeniusLogo from "../TheGeniusLogo";
 import LegalLinks from "../LegalLinks";

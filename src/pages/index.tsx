@@ -1,4 +1,4 @@
-import { Box, Flex, Group } from "@mantine/core";
+import { Box, Button, Flex, Group } from "@mantine/core";
 import { IconCategory, IconSearch, IconUsers } from "@tabler/icons-react";
 import { type NextPage } from "next";
 import { useRouter } from "next/router";

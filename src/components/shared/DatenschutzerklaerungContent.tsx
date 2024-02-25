@@ -81,18 +81,6 @@ const DatenschutzerklaerungContent = () => {
         Unser(e) Hoster wird bzw. werden Ihre Daten nur insoweit verarbeiten, wie dies zur Erf&uuml;llung
         seiner Leistungspflichten erforderlich ist und unsere Weisungen in Bezug auf diese Daten befolgen.
       </p>{" "}
-      <p>Wir setzen folgende(n) Hoster ein:</p>
-      <p>
-        SALESFORCE
-        <br />
-        415 Mission Street
-        <br />
-        Suite 300
-        <br />
-        San Francisco, CA
-        <br />
-        94105
-      </p>
       <h2>3. Allgemeine Hinweise und Pflicht&shy;informationen</h2>
       <h3>Datenschutz</h3>{" "}
       <p>

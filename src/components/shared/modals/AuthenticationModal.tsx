@@ -1,11 +1,11 @@
-import { Box, Center, Container, Flex, Text, TextInput, Title, useMantineTheme } from "@mantine/core";
+import { Box, Center, Container, Flex, Stack, Text, TextInput, Title, useMantineTheme } from "@mantine/core";
 import SignInButton from "../SignInButton/SignInButton";
+import TheGeniusLogo from "../TheGeniusLogo";
 
 const AuthenticationModal = () => {
   // const { showErrorNotification } = useNotification()
   // const [isLoggingIn, setIsLoggingIn] = useState(false)
   // const [type] = useToggle<"login" | "register">(['login', 'register']);
-  const theme = useMantineTheme();
   // const { mutate: register, isLoading: isRegistering } = api.users.create.useMutation({
   //     onSuccess: () => {
   //         void signIn("credentials", {
@@ -78,42 +78,47 @@ const AuthenticationModal = () => {
       size={420}
       my={40}
     >
-      <Center>
-        <Text
-          variant="gradient"
-          size="xl"
-          fw="bold"
+      <Stack align="center">
+        <TheGeniusLogo
+          height={200}
+          width={200}
+        />
+        <Center>
+          <Text
+            variant="gradient"
+            size="xl"
+            fw="bold"
+          >
+            The Genius
+          </Text>
+        </Center>
+        <Title order={2}>Willkommen zurück!</Title>
+        <Flex
+          direction="column"
+          color="green"
+          mt="md"
+          gap="md"
         >
-          The Genius
-        </Text>
-      </Center>
-      <Title order={2}>Willkommen zurück!</Title>
-      <Flex
-        direction="column"
-        color="green"
-        mt="md"
-        gap="md"
-      >
-        {/* Auth Providers SignInButtons */}
-        <SignInButton />
-        {/* Input for Beta Access Key */}
+          {/* Auth Providers SignInButtons */}
+          <SignInButton />
+          {/* Input for Beta Access Key */}
 
-        {/* <Text color="dimmed" size="sm" align="center" mt={5}>
+          {/* <Text color="dimmed" size="sm" align="center" mt={5}>
                     {type === "login" ? "Noch keinen Account? " : "Du hast bereits einen Account? "}
                     <Anchor size="sm" component="button" onClick={() => toggle()}>
                         {type === "login" ? "Registriere dich hier" : "Log dich ein"}
                     </Anchor>
-                </Text>
-
-                <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+                    </Text>
+                    
+                    <Paper withBorder shadow="md" p={30} mt={30} radius="md">
                     <form onSubmit={handleSubmit}>
-                        {type === "register" &&
-                            <TextInput
-                                label="Username"
-                                placeholder="Quizmaster9000"
-                                required {...form.getInputProps("name")}
+                    {type === "register" &&
+                    <TextInput
+                    label="Username"
+                    placeholder="Quizmaster9000"
+                    required {...form.getInputProps("name")}
                                 disabled={isRegistering}
-                            />
+                                />
 
                         }
                         <TextInput
@@ -128,9 +133,9 @@ const AuthenticationModal = () => {
                             required
                             mt="md"
                             disabled={isRegistering}
-
+                            
                             {...form.getInputProps("password")} />
-                        {type === "login" &&
+                            {type === "login" &&
                             <Group position="apart" mt="lg">
                                 <Checkbox label="Remember me" disabled {...form.getInputProps("rememberMe", { type: "checkbox" })} />
                                 <Anchor component="button" size="sm">
@@ -140,11 +145,12 @@ const AuthenticationModal = () => {
                         }
                         <Button fullWidth mt="xl" type='submit' disabled={isRegistering} loading={isLoggingIn || isRegistering}
                         >
-                            {type === "login" ? "Einloggen" : "Registrieren"}
+                        {type === "login" ? "Einloggen" : "Registrieren"}
                         </Button>
                     </form>
-                </Paper> */}
-      </Flex>
+                  </Paper> */}
+        </Flex>
+      </Stack>
     </Box>
   );
 };

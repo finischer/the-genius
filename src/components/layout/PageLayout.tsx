@@ -1,33 +1,23 @@
-import {
-  AppShell,
-  Box,
-  Burger,
-  Button,
-  Center,
-  Flex,
-  Group,
-  Modal,
-  Skeleton,
-  Text,
-  TextInput,
-  rem,
-  useMantineTheme,
-} from "@mantine/core";
+import { AppShell, Box, Burger, Button, Flex, Group, Modal, Text, TextInput } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { isMobile } from "react-device-detect";
 import useLoadingState from "~/hooks/useLoadingState/useLoadingState";
 import { useUser } from "~/hooks/useUser";
+import Navbar from "../Navbar";
 import AuthenticatedLayout from "../auth.layout";
 import Loader from "../shared/Loader";
-import Navbar from "../Navbar";
-import { useDisclosure } from "@mantine/hooks";
+import TheGeniusLogo from "../shared/TheGeniusLogo";
 
 interface IPageLayout {
   showLoader?: boolean;
   loadingMessage?: string;
   children?: React.ReactNode;
 }
+
+const LOGO_SIZE = isMobile ? 50 : 75;
 
 const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage = "Lädt ...", children }) => {
   const { data: session, status } = useSession();
@@ -102,7 +92,13 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
                 hiddenFrom="sm"
                 size="sm"
               />
-              {session.user.username && <Text>Schön dich zu sehen, {session.user.username}!</Text>}
+              <Group>
+                <TheGeniusLogo
+                  height={LOGO_SIZE}
+                  width={LOGO_SIZE}
+                />
+                {session.user.username && <Text>Schön dich zu sehen, {session.user.username}!</Text>}
+              </Group>
             </Group>
           </AppShell.Header>
           <AppShell.Navbar p="md">

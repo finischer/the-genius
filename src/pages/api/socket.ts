@@ -19,10 +19,33 @@ import { geheimwoerterHandler } from "./handlers/games/geheimwoerterHandlers";
 import { setHandler } from "./handlers/games/setHandlers";
 import { duSagstHandler } from "./handlers/games/duSagstHandlers";
 import { musicHandler } from "./handlers/musicHandlers";
-
+import { MongoClient } from "mongodb";
+import { SOCKET_IO_ADAPTER } from "~/config/database";
+import { createAdapter } from "@socket.io/mongo-adapter";
 const prisma = new PrismaClient();
 
 export let io: Server<IClientToServerEvents, IServerToClientEvents, IServerSocketData>;
+
+const setupMongoAdapter = async () => {
+  const mongoClient = new MongoClient(env.MONGODB_URI);
+
+  await mongoClient.connect();
+
+  const collection = SOCKET_IO_ADAPTER.mongodb.collection;
+
+  try {
+    await mongoClient.db().createCollection(collection, {
+      capped: true,
+      size: 1e6,
+    });
+  } catch {
+    console.log(`Collection already exists: ${collection}`);
+  }
+
+  const mongoCollection = mongoClient.db().collection(collection);
+
+  return createAdapter(mongoCollection);
+};
 
 export default async function SocketHandler(req: NextApiRequest, res: TNextApiResponse) {
   // means that socket server was already initialized
@@ -87,6 +110,10 @@ export default async function SocketHandler(req: NextApiRequest, res: TNextApiRe
     duSagstHandler(io, socket);
   };
 
+  // set up mongodb adapter
+  const mongoAdapter = await setupMongoAdapter();
+
+  io.adapter(mongoAdapter);
   io.on("connection", onConnection);
 
   res.end();

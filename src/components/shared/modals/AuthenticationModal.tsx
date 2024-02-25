@@ -1,6 +1,7 @@
 import { Box, Center, Container, Flex, Stack, Text, TextInput, Title, useMantineTheme } from "@mantine/core";
 import SignInButton from "../SignInButton/SignInButton";
 import TheGeniusLogo from "../TheGeniusLogo";
+import LegalLinks from "../LegalLinks";
 
 const AuthenticationModal = () => {
   // const { showErrorNotification } = useNotification()
@@ -74,36 +75,39 @@ const AuthenticationModal = () => {
   // })
 
   return (
-    <Box
-      size={420}
-      my={40}
+    <Stack
+      h="100%"
+      justify="center"
+      align="center"
     >
-      <Stack align="center">
-        <TheGeniusLogo
-          height={200}
-          width={200}
-        />
-        <Center>
-          <Text
-            variant="gradient"
-            size="xl"
-            fw="bold"
+      <Box
+        size={420}
+        my={40}
+      >
+        <Stack align="center">
+          <TheGeniusLogo
+            height={200}
+            width={200}
+          />
+          <Center>
+            <Text
+              variant="gradient"
+              size="xl"
+              fw="bold"
+            >
+              The Genius
+            </Text>
+          </Center>
+          <Title order={2}>Willkommen zurück!</Title>
+          <Flex
+            direction="column"
+            mt="md"
+            gap="md"
           >
-            The Genius
-          </Text>
-        </Center>
-        <Title order={2}>Willkommen zurück!</Title>
-        <Flex
-          direction="column"
-          color="green"
-          mt="md"
-          gap="md"
-        >
-          {/* Auth Providers SignInButtons */}
-          <SignInButton />
-          {/* Input for Beta Access Key */}
+            {/* Auth Providers SignInButtons */}
+            <SignInButton />
 
-          {/* <Text color="dimmed" size="sm" align="center" mt={5}>
+            {/* <Text color="dimmed" size="sm" align="center" mt={5}>
                     {type === "login" ? "Noch keinen Account? " : "Du hast bereits einen Account? "}
                     <Anchor size="sm" component="button" onClick={() => toggle()}>
                         {type === "login" ? "Registriere dich hier" : "Log dich ein"}
@@ -149,9 +153,12 @@ const AuthenticationModal = () => {
                         </Button>
                     </form>
                   </Paper> */}
-        </Flex>
-      </Stack>
-    </Box>
+          </Flex>
+        </Stack>
+      </Box>
+
+      <LegalLinks />
+    </Stack>
   );
 };
 

@@ -17,7 +17,7 @@ interface IPageLayout {
   children?: React.ReactNode;
 }
 
-const LOGO_SIZE = isMobile ? 50 : 75;
+const LOGO_SIZE = isMobile ? 45 : 75;
 
 const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage = "Lädt ...", children }) => {
   const { data: session, status } = useSession();
@@ -92,7 +92,14 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
                 hiddenFrom="sm"
                 size="sm"
               />
-              <Group>
+              <Group
+                w="90%"
+                style={{
+                  textOverflow: "ellipsis",
+                  overflow: "hidden",
+                  flexWrap: "nowrap",
+                }}
+              >
                 <TheGeniusLogo
                   height={LOGO_SIZE}
                   width={LOGO_SIZE}

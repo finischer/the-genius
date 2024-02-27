@@ -13,7 +13,7 @@ const useBuzzer = () => {
   useEffect(() => {
     function handleBuzzerEvent(e: KeyboardEvent) {
       // only listen to space
-      if (e.code === "Space") {
+      if (e.code === "Space" && document.activeElement?.tagName !== "TEXTAREA") {
         handleBuzzerClick();
       }
     }

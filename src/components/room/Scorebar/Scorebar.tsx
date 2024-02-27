@@ -3,6 +3,7 @@ import { IconExposureMinus1, IconExposurePlus1, IconTargetArrow } from "@tabler/
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 import ActionIcon from "~/components/shared/ActionIcon/ActionIcon";
+import ModView from "~/components/shared/ModView";
 import Tooltip from "~/components/shared/Tooltip";
 import useBuzzer from "~/hooks/useBuzzer/useBuzzer";
 import { useRoom } from "~/hooks/useRoom";
@@ -12,7 +13,6 @@ import { colors, sizes } from "~/styles/constants";
 import { animations } from "~/utils/animations";
 import Notefield from "../Notefield/Notefield";
 import { type IScoreCircleProps, type IScorebarProps } from "./scorebar.types";
-import ModView from "~/components/shared/ModView";
 
 const stretchAnimation = undefined;
 
@@ -122,10 +122,6 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
     socket.emit("toggleTeamActive", { teamId: team.id });
   };
 
-  const handleNotefieldChange = (playerId: string, teamId: string, newValue: string) => {
-    socket.emit("updateNotefield", { playerId, teamId, newValue });
-  };
-
   return (
     <Flex
       align="flex-end"
@@ -160,7 +156,6 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
                 <Notefield
                   disabled={p.userId !== user.id} // only this player can edit the notefield
                   value={p.states.notefield.value}
-                  onChange={(e) => handleNotefieldChange(p.id, p.teamId, e.target.value)}
                   player={p}
                   onFocus={deactivateBuzzer}
                   onBlur={activateBuzzer}

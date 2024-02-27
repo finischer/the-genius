@@ -103,8 +103,9 @@ const AuthenticationModal = () => {
           <Center>
             <Text
               variant="gradient"
-              size="xl"
+              fz={64}
               fw="bold"
+              gradient={{ from: "#8931B2", to: "#93CBF1", deg: 90 }}
             >
               The Genius
             </Text>

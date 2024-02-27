@@ -1,60 +1,63 @@
-import { Button, darken, type ButtonProps } from "@mantine/core";
-import { IconBrandDiscordFilled, IconBrandFacebookFilled, IconBrandGoogle } from "@tabler/icons-react";
-import React from "react";
+import { Button, Text, type ButtonProps, LoadingOverlay } from "@mantine/core";
+import { IconBrandDiscordFilled, IconBrandGoogle } from "@tabler/icons-react";
 import { signIn } from "next-auth/react";
+import React, { useState, type MouseEventHandler } from "react";
 import classes from "./signInButton.module.css";
 
 const DISCORD_PRIMARY_COLOR = "#7289DA";
 
-export const GoogleButton: React.FC<ButtonProps> = ({ ...props }) => {
-  const handleSignIn = () => {
-    void signIn("google");
-  };
+enum Provider {
+  GOOGLE = "google",
+  DISCORD = "discord",
+}
 
+interface ISignInButton extends ButtonProps {
+  onClick: MouseEventHandler<HTMLButtonElement>;
+}
+
+export const GoogleButton: React.FC<ISignInButton> = ({ onClick, ...props }) => {
   return (
     <Button
       className={classes.signinBtnGoogle}
       leftSection={<IconBrandGoogle />}
-      variant="filled"
-      color="gray"
-      onClick={handleSignIn}
+      variant="default"
+      onClick={onClick}
+      size="xl"
       {...props}
     />
   );
 };
 
-export function FacebookButton(props: ButtonProps) {
-  return (
-    <Button
-      leftSection={<IconBrandFacebookFilled />}
-      style={(theme) => ({
-        backgroundColor: "#4267B2",
-      })}
-      {...props}
-    />
-  );
-}
-
-export function DiscordButton(props: ButtonProps) {
-  const handleSignIn = () => {
-    void signIn("discord");
-  };
+export const DiscordButton: React.FC<ISignInButton> = ({ onClick, ...props }) => {
   return (
     <Button
       className={classes.signinBtnDiscord}
-      color={DISCORD_PRIMARY_COLOR}
       leftSection={<IconBrandDiscordFilled size="1.5rem" />}
-      onClick={handleSignIn}
+      onClick={onClick}
+      variant="default"
+      size="xl"
       {...props}
     />
   );
-}
+};
 
 const SignInButton = () => {
+  const [loading, setLoading] = useState(false);
+
+  const handleSignIn = async (provider: Provider) => {
+    setLoading(true);
+    await signIn(provider);
+  };
+
   return (
     <>
-      <GoogleButton>Mit Google fortfahren</GoogleButton>
-      <DiscordButton>Mit Discord einloggen</DiscordButton>
+      <LoadingOverlay visible={loading} />
+      <GoogleButton onClick={() => handleSignIn(Provider.GOOGLE)}>
+        <Text>Mit Google fortfahren</Text>
+      </GoogleButton>
+      <DiscordButton onClick={() => handleSignIn(Provider.DISCORD)}>
+        <Text>Mit Discord einloggen</Text>
+      </DiscordButton>
     </>
   );
 };

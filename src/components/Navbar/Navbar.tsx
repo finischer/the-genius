@@ -1,13 +1,12 @@
-import { AppShell, Box, Button, Flex, NavLink, Stack } from "@mantine/core";
+import { AppShell, Box, Flex, Group, NavLink, Stack, Text } from "@mantine/core";
+import Link from "next/link";
 import { useRouter } from "next/router";
+import pack from "package.json";
 import { useUser } from "~/hooks/useUser";
 import { AdminBadge } from "../shared/Badge/Badge";
-import { openPricingModal } from "../shared/modals/modalComponents";
-import { navbartabs } from "./navbarTabs";
 import UserCard from "../shared/UserCard/UserCard";
-import Link from "next/link";
-import { Text } from "@mantine/core";
-import pack from "package.json";
+import { navbartabs } from "./navbarTabs";
+import LegalLinks from "../shared/LegalLinks";
 
 const Navbar = () => {
   const router = useRouter();
@@ -86,6 +85,7 @@ const Navbar = () => {
           <Stack
             align="center"
             gap="xs"
+            // bg="green"
           >
             <Text
               c="dimmed"
@@ -93,6 +93,8 @@ const Navbar = () => {
             >
               The Genius Beta v{pack.version}
             </Text>
+
+            <LegalLinks />
 
             {/* <Button
               fullWidth

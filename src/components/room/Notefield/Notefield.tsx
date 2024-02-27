@@ -1,7 +1,7 @@
 import { Textarea, type TextareaProps } from "@mantine/core";
-import { useDebouncedValue } from "@mantine/hooks";
+import { useDebouncedValue, useFocusWithin } from "@mantine/hooks";
 import { motion } from "framer-motion";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useImmer } from "use-immer";
 import { socket } from "~/hooks/useSocket";
 import { useUser } from "~/hooks/useUser";
@@ -15,7 +15,6 @@ interface INotefieldProps extends TextareaProps {
 const Notefield: React.FC<INotefieldProps> = ({ player, value, ...props }) => {
   const { user } = useUser();
   const isMe = user.id === player.userId;
-
   const [textAreaValue, setTextAreaValue] = useImmer("");
   const [debouncedTxt] = useDebouncedValue(textAreaValue, 200);
 

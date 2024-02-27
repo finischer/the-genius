@@ -39,7 +39,6 @@ const ScoreCircle: React.FC<IScoreCircleProps> = ({ filled }) => (
 
 const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
   const theme = useMantineTheme();
-  const { activateBuzzer, deactivateBuzzer } = useBuzzer();
   const { room, currentGame } = useRoom();
   const { user, team: userTeam, isHost, isPlayer, setUserAsPlayer } = useUser();
 
@@ -157,8 +156,6 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
                   disabled={p.userId !== user.id} // only this player can edit the notefield
                   value={p.states.notefield.value}
                   player={p}
-                  onFocus={deactivateBuzzer}
-                  onBlur={activateBuzzer}
                 />
               )}
             </AnimatePresence>

@@ -5,6 +5,7 @@ import ModView from "~/components/shared/ModView";
 import { socket } from "~/hooks/useSocket";
 import { useUser } from "~/hooks/useUser";
 import { type IFlaggenGameProps } from "./flaggen.types";
+import classes from "./flaggen.module.css";
 
 const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
   const { isHost } = useUser();
@@ -59,22 +60,17 @@ const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
         </ModView>
         {currFlag && (
           <Image
+            className={classes.flagImg}
             src={`https://flagcdn.com/w640/${currFlag.shortCode}.png`}
             alt="Image not found"
             radius="sm"
             opacity={displayFlag ? 1 : isHost ? 0.5 : 0}
             onClick={handleFlagClick}
+            data-hostAndNoFlag={isHost && !displayFlag}
             style={{
               transform: `scale(${displayFlag ? "1" : "0.9"})`,
               transition: "all 500ms",
               userSelect: "none",
-              ":hover":
-                isHost && !displayFlag
-                  ? {
-                      cursor: isHost ? "pointer" : "auto",
-                      opacity: 0.3,
-                    }
-                  : undefined,
             }}
           />
         )}

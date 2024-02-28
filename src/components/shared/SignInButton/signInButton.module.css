@@ -1,11 +1,13 @@
 .signinBtnDiscord {
   &:hover {
-    background-color: #4f5f98;
+    color: var(--mantine-color-gray-9);
+    background-color: #7289da;
   }
 }
 
 .signinBtnGoogle {
   &:hover {
-    background-color: var(--mantine-color-gray-7);
+    color: var(--mantine-color-gray-9);
+    background-color: #f1f1f1;
   }
 }

@@ -21,6 +21,10 @@ import { useUser } from "~/hooks/useUser";
 import { GAMESHOW_MODES } from "~/styles/constants";
 import { capitalize } from "~/utils/strings";
 import { type ICreateRoomConfig, type ICreateRoomModalProps } from "./createRoomModal.types";
+import { PARTYKIT_URL } from "~/utils/env";
+import { randomId } from "@mantine/hooks";
+import { redirect } from "next/navigation";
+import { api } from "~/utils/api";
 
 const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose, gameshow }) => {
   const gameshowGames = gameshow.games as unknown as TGame[];
@@ -53,20 +57,31 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
     form.reset();
   }, [openedModal]);
 
-  const createRoom = form.onSubmit((values) => {
+  const { mutateAsync: createParty } = api.parties.create.useMutation();
+
+  const createRoom = form.onSubmit(async (values) => {
     setLoader({
       isLoading: true,
       loaderMsg: "Raum wird erstellt ...",
     });
-    // create room on server
-    socket.emit("createRoom", { user, roomConfig: values, gameshow }, (room) => {
-      setLoader({
-        isLoading: true,
-        loaderMsg: "Raum wird beigetreten ...",
-      });
-      // connect to room
-      void router.push(`/room/${room.id}`);
+
+    const id = randomId();
+
+    await createParty({
+      id,
+      config: values,
     });
+
+    void router.push(`/room/${id}`);
+
+    // socket.emit("createRoom", { user, roomConfig: values, gameshow }, (room) => {
+    //   setLoader({
+    //     isLoading: true,
+    //     loaderMsg: "Raum wird beigetreten ...",
+    //   });
+    //   // connect to room
+    //   void router.push(`/room/${room.id}`);
+    // });
   });
 
   return (

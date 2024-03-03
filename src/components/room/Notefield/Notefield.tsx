@@ -5,7 +5,7 @@ import React, { useEffect, useRef } from "react";
 import { useImmer } from "use-immer";
 import { socket } from "~/hooks/useSocket";
 import { useUser } from "~/hooks/useUser";
-import type Player from "~/pages/api/classes/Player/Player";
+import type { Player } from "~/types/gameshow.types";
 import { animations } from "~/utils/animations";
 
 interface INotefieldProps extends TextareaProps {

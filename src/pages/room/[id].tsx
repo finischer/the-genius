@@ -1,115 +1,19 @@
-import { notFound, useParams } from "next/navigation";
-import { useRouter } from "next/router";
-import React, { Suspense, useEffect } from "react";
-import { api } from "~/utils/api";
-import { PARTYKIT_HOST, PARTYKIT_URL } from "~/utils/env";
-import usePartySocket from "partysocket/react";
-import { useUser } from "~/hooks/useUser";
-import { connectToSocket, roomStore, type RoomStore } from "~/config/store";
-import { useSyncedStore } from "@syncedstore/react";
-import { Button, TextInput } from "@mantine/core";
-import { useImmer } from "use-immer";
-import type Room from "~/classes/Room";
+import { Button, Flex, Stack } from "@mantine/core";
+import { useParams } from "next/navigation";
+import { useEffect } from "react";
+import { connectToSocket } from "~/config/store";
+import SyncedRoomProvider from "~/context/SyncedRoomContext";
+import useSyncedRoom from "~/hooks/useSyncedRoom";
+import { sizes } from "~/styles/constants";
+import RoomUI from "~/ui/RoomUI";
 
 const RoomPage = () => {
-  const params = useParams();
-
-  const roomId = params?.id as string;
-
-  const { room } = useSyncedStore(roomStore) as unknown as { room: { state: Room } };
-
-  useEffect(() => {
-    if (!roomId) return;
-    connectToSocket(roomId);
-  }, [roomId]);
-
-  if (!room.state) {
-    return <div>Loading ...</div>;
-  }
-
   return (
-    <div>
-      <h2>ID: {room.state.id}</h2>
-      <h1>Name: {room.state.name}</h1>
-      <h3>Timer: {room.state.timerSeconds}</h3>
-      <TextInput
-        value={room.state.name}
-        onChange={(e) => (room.state.name = e.target.value)}
-      />
-
-      <Button onClick={() => console.log(room.state)}>Timer starten</Button>
-    </div>
+    <SyncedRoomProvider>
+      <RoomUI />
+    </SyncedRoomProvider>
   );
 };
-
-// const RoomPage = () => {
-//   const params = useParams();
-
-//   const [room, setRoom] = useImmer<Room>({
-//     name: "",
-//     password: "",
-//   });
-
-//   // if (!params?.id) return <div>Loading ...</div>;
-
-//   // const { user } = useUser();
-//   const roomId = params?.id as string;
-//   // console.log("RoomID: ", roomId);
-
-//   const socket = usePartySocket({
-//     host: PARTYKIT_HOST,
-//     room: roomId,
-//     startClosed: true,
-//     onMessage(event) {
-//       const message = JSON.parse(event.data) as Room;
-//       console.log("Message: ", message);
-//       setRoom(message);
-//     },
-//     // query: async () => ({
-//     //   username: user.username,
-//     // }),
-//   });
-
-//   const { refetch: fetchParty } = api.parties.get.useQuery(
-//     {
-//       id: roomId,
-//     },
-//     {
-//       enabled: false,
-//       onSuccess(data) {
-//         console.log("Response: ", data);
-//       },
-//     }
-//   );
-
-//   useEffect(() => {
-//     if (roomId && typeof roomId === "string") {
-//       fetchParty();
-//       socket.reconnect();
-//       console.log(socket.roomUrl);
-//     }
-//   }, [roomId]);
-
-//   useEffect(() => {
-//     if (!socket ||  !socket.OPEN) return;
-//     socket.send(JSON.stringify(room));
-//   }, [room]);
-
-//   return (
-//     <div>
-//       <h1>Raum: {room.name}</h1>
-
-//       <TextInput
-//         value={room.name}
-//         onChange={(e) => {
-//           setRoom((draft) => {
-//             draft.name = e.target.value;
-//           });
-//         }}
-//       />
-//     </div>
-//   );
-// };
 
 export default RoomPage;
 

@@ -1,16 +1,13 @@
-import { Badge, Box, Button, Container, Flex, Group, Text, useMantineTheme } from "@mantine/core";
-import { IconExposureMinus1, IconExposurePlus1, IconTargetArrow } from "@tabler/icons-react";
+import { Box, Button, Container, Flex, Text, useMantineTheme } from "@mantine/core";
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
-import ActionIcon from "~/components/shared/ActionIcon/ActionIcon";
-import ModView from "~/components/shared/ModView";
 import Tooltip from "~/components/shared/Tooltip";
-import useBuzzer from "~/hooks/useBuzzer/useBuzzer";
-import { useRoom } from "~/hooks/useRoom";
-import { socket } from "~/hooks/useSocket";
+import useSyncedRoom from "~/hooks/useSyncedRoom";
+import useTeam from "~/hooks/useTeam";
 import { useUser } from "~/hooks/useUser";
-import { colors, sizes } from "~/styles/constants";
+import { colors } from "~/styles/constants";
 import { animations } from "~/utils/animations";
+import { crateRandomUserName } from "~/utils/helpers";
 import Notefield from "../Notefield/Notefield";
 import { type IScoreCircleProps, type IScorebarProps } from "./scorebar.types";
 
@@ -39,19 +36,20 @@ const ScoreCircle: React.FC<IScoreCircleProps> = ({ filled }) => (
 
 const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
   const theme = useMantineTheme();
-  const { room, currentGame } = useRoom();
-  const { user, team: userTeam, isHost, isPlayer, setUserAsPlayer } = useUser();
+  const teamFn = useTeam();
 
-  const scoreCircles = currentGame
-    ? Array(currentGame.maxPoints)
-        .fill(null)
-        .map((_, index) => (
-          <ScoreCircle
-            key={index}
-            filled={team.gameScore > index}
-          />
-        ))
-    : undefined;
+  const { user, team: userTeam, isHost, setUserAsPlayer } = useUser();
+
+  // const scoreCircles = currentGame
+  //   ? Array(currentGame.maxPoints)
+  //       .fill(null)
+  //       .map((_, index) => (
+  //         <ScoreCircle
+  //           key={index}
+  //           filled={team.gameScore > index}
+  //         />
+  //       ))
+  //   : undefined;
 
   const scorePoints = (
     <Flex
@@ -69,16 +67,16 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
     </Flex>
   );
 
-  const scorebarPoints = currentGame?.scorebarMode === "circle" ? scoreCircles : scorePoints;
+  // const scorebarPoints = currentGame?.scorebarMode === "circle" ? scoreCircles : scorePoints;
 
-  const isTeamFull = team.players.length >= room.maxPlayersPerTeam;
+  // const isTeamFull = team.players.length >= room.maxPlayersPerTeam;
   const highlightBoxShadow =
     team.isActiveTurn || team.buzzer.isPressed ? `0px 0px 50px 50px ${HIGHLIGHT_CONTAINER_COLOR}` : "";
   const scorebarBorderRadius = theme.radius.sm;
 
-  const disableModBtns = !room.state.display.game;
-  const disableIncreaseScoreBtn = disableModBtns || (currentGame && team.gameScore >= currentGame.maxPoints);
-  const disableDecreaseScoreBtn = disableModBtns || team.gameScore <= 0;
+  // const disableModBtns = !room.state.display.game;
+  // const disableIncreaseScoreBtn = disableModBtns || (currentGame && team.gameScore >= currentGame.maxPoints);
+  // const disableDecreaseScoreBtn = disableModBtns || team.gameScore <= 0;
 
   const playerNamesWhoBuzzered = team.players
     .map((p) => {
@@ -100,26 +98,26 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
     fontSize: theme.fontSizes.lg,
   };
 
-  const joinTeam = () => {
-    if (isPlayer) return;
-    socket.emit("joinTeam", { teamId: team.id, user }, () => {
-      setUserAsPlayer(team);
-    });
-  };
+  // const joinTeam = () => {
+  //   if (isPlayer) return;
+  //   socket.emit("joinTeam", { teamId: team.id, user }, () => {
+  //     setUserAsPlayer(team);
+  //   });
+  // };
 
   const increaseGameScore = (step = 1) => {
-    if (!currentGame || team.gameScore >= currentGame?.maxPoints) return;
-    socket.emit("increaseGameScore", { teamId: team.id, step });
+    // if (!currentGame || team.gameScore >= currentGame?.maxPoints) return;
+    // socket.emit("increaseGameScore", { teamId: team.id, step });
   };
 
   const decreaseGameScore = (step = 1) => {
-    if (team.gameScore <= 0) return;
-    socket.emit("decreaseGameScore", { teamId: team.id, step });
+    // if (team.gameScore <= 0) return;
+    // socket.emit("decreaseGameScore", { teamId: team.id, step });
   };
 
-  const toggleTeamActiveState = () => {
-    socket.emit("toggleTeamActive", { teamId: team.id });
-  };
+  // const toggleTeamActiveState = () => {
+  //   socket.emit("toggleTeamActive", { teamId: team.id });
+  // };
 
   return (
     <Flex
@@ -142,7 +140,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
       </AnimatePresence>
 
       {/* Only show notefields to own team players or viewers */}
-      {(team.id === userTeam?.id || !isPlayer) && (
+      {(team.id === userTeam?.id || !teamFn.isPlayer) && (
         <Flex
           pos="absolute"
           top={-300}
@@ -151,10 +149,10 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
         >
           {team.players.map((p) => (
             <AnimatePresence key={p.id}>
-              {p.states.notefield.isActive && (
+              {p.context.notefield.isActive && (
                 <Notefield
                   disabled={p.userId !== user.id} // only this player can edit the notefield
-                  value={p.states.notefield.value}
+                  value={p.context.notefield.value}
                   player={p}
                 />
               )}
@@ -216,20 +214,30 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
             })}
           >
             <span>
-              {team.name} · ({team.players.length}/{room.maxPlayersPerTeam})
+              {team.name} · ({team.players.length}/2)
             </span>
           </Box>
-          {!isPlayer && !isHost && !isTeamFull && (
+          {!teamFn.isPlayer && !isHost && !teamFn.isTeamFull && (
             <Button
               variant="subtle"
               mb="xs"
-              onClick={joinTeam}
+              onClick={() => teamFn.joinTeam(user.id, user.username ?? crateRandomUserName(), team.id)}
             >
               Beitreten
             </Button>
           )}
 
-          <ModView>
+          {teamFn.isPlayersTeam(team.id) && (
+            <Button
+              variant="subtle"
+              mb="xs"
+              onClick={() => teamFn.leaveTeam(user.id)}
+            >
+              Team verlassen
+            </Button>
+          )}
+
+          {/* <ModView>
             <Group mb="xs">
               <ActionIcon
                 variant="outline"
@@ -243,7 +251,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
                 variant="outline"
                 toolTip="Score -1"
                 disabled={disableDecreaseScoreBtn}
-                onClick={() => decreaseGameScore()}
+                onClick={decreaseGameScore}
               >
                 <IconExposureMinus1 size={sizes.icon.s} />
               </ActionIcon>
@@ -251,7 +259,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
                 variant="outline"
                 toolTip="Score +1"
                 disabled={disableIncreaseScoreBtn}
-                onClick={() => increaseGameScore()}
+                onClick={increaseGameScore}
               >
                 <IconExposurePlus1 size={sizes.icon.s} />
               </ActionIcon>
@@ -272,7 +280,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
                 ))}
               </Flex>
             </Group>
-          </ModView>
+          </ModView> */}
         </Flex>
 
         <Flex
@@ -318,7 +326,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
           </Box>
 
           {/* Score circles */}
-          {room.state.display.game && (
+          {/* {room.display.game && (
             <Flex
               w="100%"
               h="100%"
@@ -327,7 +335,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
             >
               {scorebarPoints}
             </Flex>
-          )}
+          )} */}
         </Flex>
       </Flex>
 

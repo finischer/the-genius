@@ -27,7 +27,7 @@ import { redirect } from "next/navigation";
 import { api } from "~/utils/api";
 import Room from "~/classes/Room";
 import { useSyncedStore } from "@syncedstore/react";
-import { roomStore } from "~/config/store";
+import { initRoom, roomStore } from "~/config/store";
 
 const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose, gameshow }) => {
   const gameshowGames = gameshow.games as unknown as TGame[];
@@ -70,18 +70,17 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
       loaderMsg: "Raum wird erstellt ...",
     });
 
-    const id = randomId();
+    const room = initRoom(values.name, values.password);
 
-    const room = new Room(values.name, values.password, user.id, id);
-
+    console.log("Room: ", room);
     store.room.state = room;
 
     await createParty({
-      id,
+      id: room.id,
       config: values,
     });
 
-    void router.push(`/room/${id}`);
+    void router.push(`/room/${room.id}`);
 
     // socket.emit("createRoom", { user, roomConfig: values, gameshow }, (room) => {
     //   setLoader({

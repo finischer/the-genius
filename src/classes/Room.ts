@@ -51,13 +51,13 @@ export default class Room {
     // this.state = room.state;
   }
 
-  startTimer() {
-    if (this.interval) {
-      clearInterval(this.interval);
-    }
+  // startTimer() {
+  //   if (this.interval) {
+  //     clearInterval(this.interval);
+  //   }
 
-    this.interval = setInterval(() => {
-      roomStore.room.state.timerSeconds += 1;
-    }, 1000);
-  }
+  //   this.interval = setInterval(() => {
+  //     roomStore.room.state.timerSeconds += 1;
+  //   }, 1000);
+  // }
 }

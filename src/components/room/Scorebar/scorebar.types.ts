@@ -1,4 +1,4 @@
-import type { Team } from "@prisma/client";
+import type { Team } from "~/types/gameshow.types";
 
 export interface IScoreCircleProps {
   filled: boolean;

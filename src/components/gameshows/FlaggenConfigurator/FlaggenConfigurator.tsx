@@ -3,7 +3,7 @@ import { useContext, useEffect } from "react";
 import { useImmer } from "use-immer";
 import { COUNTRIES } from "~/components/room/Game/games/Flaggen/config";
 import type { TCountry } from "~/components/room/Game/games/Flaggen/flaggen.types";
-import { Games } from "~/components/room/Game/games/game.types";
+import { Game } from "~/components/room/Game/games/game.types";
 import List from "~/components/shared/List";
 import { StepperControlsContext } from "~/context/StepperControlsContext";
 import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";
@@ -28,7 +28,7 @@ const CountryItem = ({ country }: { country: TCountry }) => (
 
 const FlaggenConfigurator = () => {
   const { disableContinueButton, enableContinueButton } = useContext(StepperControlsContext);
-  const { flaggen, updateGame } = useGameshowConfig(Games.FLAGGEN);
+  const { flaggen, updateGame } = useGameshowConfig(Game.FLAGGEN);
 
   const [countries, setCountries] = useImmer(flaggen.countries);
   const [selectedCountries, setSelectedCountries] = useImmer<TCountry[]>([]);

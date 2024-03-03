@@ -15,14 +15,22 @@ export const initRoom = (name: string, password: string, games: TGame[], creator
   },
   games,
   context: {
+    currentGame: null,
     view: RoomView.EMPTY,
     answerState: {
       answer: "",
       isAnswerDisplayed: false,
     },
+    gameIntro: {
+      alreadyPlayed: false,
+      flippedTitleBanner: false,
+      milliseconds: 0,
+    },
     display: {
       confetti: false,
       roomTimer: false,
+      gameIntro: false,
+      game: false,
     },
   },
 });

@@ -1,7 +1,7 @@
 import type { Game } from "@prisma/client";
 import { type Dispatch } from "react";
 import type { Updater } from "use-immer";
-import type { Games } from "~/components/room/Game/games/game.types";
+import type { Game } from "~/components/room/Game/games/game.types";
 
 export interface IGamesPickerProps {
   selectedGames: Game[];
@@ -9,7 +9,7 @@ export interface IGamesPickerProps {
 }
 
 export type TTransferListItem = {
-  value: Games;
+  value: Game;
   label: string;
 };
 

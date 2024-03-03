@@ -1,4 +1,4 @@
-import type { Games } from "../game.types";
+import type { Game } from "../game.types";
 import type { TDuSagstGameState } from "./config";
 import type { IListItem } from "~/components/shared/List/components/ListItem/listItem.types";
 
@@ -36,7 +36,7 @@ export type TDuSagstAnswer = {
 };
 
 export interface IDuSagstState {
-  identifier: Games.DUSAGST;
+  identifier: Game.DUSAGST;
   questions: TDuSagstQuestion[];
   qIndex: number;
   timeToThinkSeconds: number;

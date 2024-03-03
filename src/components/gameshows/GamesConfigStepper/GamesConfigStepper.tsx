@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { createContext, useEffect, useState } from "react";
 import { useImmer } from "use-immer";
-import { Games, type TGame } from "~/components/room/Game/games/game.types";
+import { Game, type TGame } from "~/components/room/Game/games/game.types";
 import GamesPicker from "~/components/shared/GamesPicker";
 import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";
 import type { TGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig.types";
@@ -34,7 +34,7 @@ const getAlreadySelectedGames = (games: TGame[], availableGames: Game[]) => {
 
 const GamesConfigStepper = () => {
   const { gameshow, updateGameshowMetadata, updateGameList, availableGames } = useGameshowConfig(
-    Games.DUSAGST
+    Game.DUSAGST
   );
   const [selectedGames, setSelectedGames] = useImmer<Game[]>(
     getAlreadySelectedGames(gameshow.games, availableGames)
@@ -204,7 +204,7 @@ const GamesConfigStepper = () => {
                   <Title order={2}>Einstellungen - {game.name}</Title>
                 </Flex>
                 <Box mt="xl">
-                  <GameConfig gameSlug={game.slug as Games} />
+                  <GameConfig gameSlug={game.slug} />
                 </Box>
               </Stepper.Step>
             );

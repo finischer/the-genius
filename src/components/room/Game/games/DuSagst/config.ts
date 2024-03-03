@@ -1,4 +1,4 @@
-import { Games, type IGameGeneralState } from "../game.types";
+import { Game, type IGameGeneralState } from "../game.types";
 import type { IDuSagstState, TDuSagstAnswerBoxState, TDuSagstTeamState } from "./duSagst.types";
 import { v4 as uuidv4 } from "uuid";
 
@@ -20,7 +20,7 @@ const createDefaultTeamState = (): TDuSagstTeamState => ({
 export const DUSAGST_TIME_TO_THINK_SECONDS = 30;
 
 export const DEFAULT_DUSAGST_STATE: TDuSagstGameState = {
-  identifier: Games.DUSAGST,
+  identifier: Game.DUSAGST,
   name: "Du Sagst...",
   modes: ["TEAM"],
   maxPoints: 6,

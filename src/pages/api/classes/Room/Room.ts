@@ -1,5 +1,5 @@
 import type { GameshowMode, Prisma, Room as PrismaRoom, RoomState, RoomViews } from "@prisma/client";
-import type { Games, TGame, TGameSettingsMap } from "~/components/room/Game/games/game.types";
+import type { Game, TGame, TGameSettingsMap } from "~/components/room/Game/games/game.types";
 import { prisma } from "~/server/db";
 import { io } from "../../socket";
 import Team from "../Team/Team";
@@ -124,13 +124,13 @@ export default class Room implements PrismaRoomFixed {
     return Object.values(this.teams).find((t) => t.id === teamId);
   }
 
-  getGame<T extends Games>(gameIdentifier: T): TGameSettingsMap[T] {
+  getGame<T extends Game>(gameIdentifier: T): TGameSettingsMap[T] {
     const games = this.games as unknown as TGame[];
     const game = games.find((g) => g.identifier === gameIdentifier) as unknown as TGameSettingsMap[T];
     return game;
   }
 
-  startGame(gameIdentifier: Games) {
+  startGame(gameIdentifier: Game) {
     this.state.display.gameIntro = {
       alreadyPlayed: false,
       flippedTitleBanner: false,

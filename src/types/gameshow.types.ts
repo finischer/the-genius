@@ -1,5 +1,5 @@
 import type { BuzzerState, ScorebarTimerState, TeamAvatarImage } from "@prisma/client";
-import type { TGame } from "~/components/room/Game/games/game.types";
+import type { Game, TGame } from "~/components/room/Game/games/game.types";
 
 export enum RoomView {
   EMPTY = "empty",
@@ -30,11 +30,19 @@ export type Room = {
     teamTwo: Team;
   };
   context: {
+    currentGame: Game | null;
     view: RoomView;
     answerState: RoomAnswerState;
+    gameIntro: {
+      alreadyPlayed: boolean;
+      flippedTitleBanner: boolean;
+      milliseconds: number;
+    };
     display: {
+      gameIntro: boolean;
       confetti: boolean;
       roomTimer: boolean;
+      game: boolean;
     };
   };
   games: TGame[];

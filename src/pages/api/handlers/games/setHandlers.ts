@@ -6,9 +6,9 @@ import {
 } from "~/types/socket.types";
 import { roomManager } from "../../controllers/RoomManager";
 import NoRoomException from "../../exceptions/NoRoomException";
-import { Games } from "~/components/room/Game/games/game.types";
+import { Game } from "~/components/room/Game/games/game.types";
 
-const GAME_IDENTIFIER = Games.SET;
+const GAME_IDENTIFIER = Game.SET;
 
 export function setHandler(
   io: Server,

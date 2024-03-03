@@ -6,9 +6,11 @@ import { RoomView } from "~/types/gameshow.types";
 import Scoreboard from "./Scoreboard/Scoreboard";
 import { animations } from "~/utils/animations";
 import { ScoreboardColor } from "./Scoreboard/scoreboard.types";
+import Game from "./Game";
 
 const RoomBody = () => {
   const room = useSyncedRoom();
+
   return (
     <Flex
       h="100%"
@@ -17,6 +19,9 @@ const RoomBody = () => {
     >
       {/* {currentGame && room.state.view === "GAME" && <Game game={currentGame} />} */}
       <AnimatePresence>
+        {room.context.view === RoomView.GAME && room.context.currentGame && (
+          <Game gameName={room.context.currentGame} />
+        )}
         {room.context.view === RoomView.SCOREBOARD && (
           <motion.div {...animations.fadeInOut}>
             <Flex

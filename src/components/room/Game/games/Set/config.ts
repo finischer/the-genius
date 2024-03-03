@@ -1,4 +1,4 @@
-import { Games, type IGameGeneralState } from "../game.types";
+import { Game, type IGameGeneralState } from "../game.types";
 import { SET_COLORS, type ISetGameState } from "./set.types";
 
 export type TSetGameState = ISetGameState & IGameGeneralState;
@@ -10,7 +10,7 @@ export const SET_COLORS_MAP = {
 };
 
 export const DEFAULT_SET_STATE: TSetGameState = {
-  identifier: Games.SET,
+  identifier: Game.SET,
   name: "Set",
   modes: ["DUELL", "TEAM"],
   maxPoints: 7,

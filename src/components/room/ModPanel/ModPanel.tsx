@@ -14,7 +14,7 @@ import useLoadingState from "~/hooks/useLoadingState/useLoadingState";
 import useNotification from "~/hooks/useNotification";
 import { useRoom } from "~/hooks/useRoom";
 import { socket } from "~/hooks/useSocket";
-import type { Games, TGame } from "../Game/games/game.types";
+import type { Game, TGame } from "../Game/games/game.types";
 import MediaPlayer from "../MediaPlayer";
 import { type IModPanelProps } from "./modPanel.types";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
@@ -81,7 +81,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
         <Button
           {...btnVariantDefault}
           // disabled={btnDisabled}
-          onClick={() => startGame(g.identifier)}
+          onClick={() => startGame(g)}
           w="100%"
         >
           {g.name}
@@ -103,10 +103,12 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
     );
   });
 
-  const startGame = (gameIdentifier: Games) => {
-    hideAnswer();
-    socket.emit("startGame", { gameIdentifier });
-    triggerAudioEvent("playSound", "intro");
+  const startGame = (game: TGame) => {
+    // hideAnswer();
+    // triggerAudioEvent("playSound", "intro");
+
+    room.context.currentGame = game.identifier;
+    room.context.view = RoomView.GAME;
   };
 
   const changeView = (newView: RoomView) => {

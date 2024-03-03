@@ -1,4 +1,4 @@
-import { Games, type IGameGeneralState } from "../game.types";
+import { Game, type IGameGeneralState } from "../game.types";
 import type { IReferatBingoState, TReferatBingoNotefieldState } from "./referatBingo.types";
 
 export type TReferatBingoGameState = IReferatBingoState & IGameGeneralState;
@@ -12,7 +12,7 @@ const DEFAULT_NOTEFIELD_STATE: TReferatBingoNotefieldState = {
 };
 
 export const DEFAULT_REFERAT_BINGO_STATE: TReferatBingoGameState = {
-  identifier: Games.REFERATBINGO,
+  identifier: Game.REFERATBINGO,
   name: "Referat Bingo",
   modes: ["TEAM"],
   maxPoints: 999,

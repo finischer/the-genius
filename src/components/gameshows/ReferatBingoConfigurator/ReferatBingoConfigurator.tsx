@@ -4,11 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import QuestionFormLayout from "~/components/layout/QuestionFormLayout";
 import type { TPresentationTopic } from "~/components/room/Game/games/ReferatBingo/referatBingo.types";
-import { Games } from "~/components/room/Game/games/game.types";
+import { Game } from "~/components/room/Game/games/game.types";
 import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";
 
 const ReferatBingoConfigurator = () => {
-  const { updateGame, referatBingo } = useGameshowConfig(Games.REFERATBINGO);
+  const { updateGame, referatBingo } = useGameshowConfig(Game.REFERATBINGO);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [presentationTopics, setPresentationTopics] = useState<TPresentationTopic[]>(referatBingo.topics);

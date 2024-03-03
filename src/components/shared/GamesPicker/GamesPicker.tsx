@@ -5,7 +5,7 @@ import { IconInfoSquareRounded, IconUser, IconUsers } from "@tabler/icons-react"
 import React from "react";
 import GameDetailsModal from "~/components/gameshows/GameDetailsModal";
 import { GAME_STATE_MAP } from "~/components/room/Game/games/game.constants";
-import type { Games } from "~/components/room/Game/games/game.types";
+import type { Game } from "~/components/room/Game/games/game.types";
 import { api } from "~/utils/api";
 import List from "../List";
 import Paper from "../Paper";
@@ -26,7 +26,7 @@ const GamesPicker: React.FC<IGamesPickerProps> = ({ selectedGames, setSelectedGa
     const alreadySelected = selectedGames.find((g) => g.id === game.id) ? true : false;
     const [gameRulesOpened, { open: openGameDetails, close: closeGameDetails }] = useDisclosure(false);
 
-    const defaultGameState = GAME_STATE_MAP[game.slug as Games];
+    const defaultGameState = GAME_STATE_MAP[game.slug as Game];
 
     return (
       <>

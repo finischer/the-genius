@@ -1,5 +1,5 @@
 import type { Game } from "@prisma/client";
-import type { Games, TGame, TGameSettingsMap } from "~/components/room/Game/games/game.types";
+import type { Game, TGame, TGameSettingsMap } from "~/components/room/Game/games/game.types";
 
 export type TGameshowConfig = {
   name: string;
@@ -8,13 +8,13 @@ export type TGameshowConfig = {
 
 export type TGameshowConfigKeys = Omit<TGameshowConfig, "games">;
 
-export type GameConfigReturn<T extends Games, V> = V extends undefined
+export type GameConfigReturn<T extends Game, V> = V extends undefined
   ? Record<string, never>
   : {
       [key in T]: TGameSettingsMap[T];
     };
 
-export type IUseGameshowConfigReturn<T extends Games, V> = GameConfigReturn<T, V> & {
+export type IUseGameshowConfigReturn<T extends Game, V> = GameConfigReturn<T, V> & {
   gameshow: TGameshowConfig;
   updateGameshowMetadata: (updateFn: (config: TGameshowConfigKeys) => void) => void;
   updateGameList: (newGameList: Game[]) => void;
@@ -23,4 +23,4 @@ export type IUseGameshowConfigReturn<T extends Games, V> = GameConfigReturn<T, V
   updateGame: T extends undefined ? undefined : (updateFn: (config: TGameSettingsMap[T]) => void) => void;
 };
 
-export type TGameConfigUpdateFn<T extends Games> = (updateFn: (draft: TGameSettingsMap[T]) => void) => void;
+export type TGameConfigUpdateFn<T extends Game> = (updateFn: (draft: TGameSettingsMap[T]) => void) => void;

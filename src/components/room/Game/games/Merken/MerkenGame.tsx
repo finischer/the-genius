@@ -8,19 +8,28 @@ import ModView from "~/components/shared/ModView";
 import useAudio from "~/hooks/useAudio";
 
 const MerkenGame: React.FC<IMerkenGameProps> = ({ game }) => {
-  const { isHost } = useUser();
+  const { isHost, hostFunction } = useUser();
   const isStartButtonDisabled = game.timerState.isActive;
   const { triggerAudioEvent } = useAudio();
 
-  const handleStartGame = () => {
-    if (!isHost || isStartButtonDisabled) return; // to make sure not start the game unintentionally
-    socket.emit("merken:startGame");
-  };
+  const handleStartGame = hostFunction(() => {
+    if (isStartButtonDisabled) return;
+    game.allCardsFlipped = true;
 
-  const handleCardClick = (index: number) => {
-    triggerAudioEvent("playSound", "whoosh_1");
-    socket.emit("merken:flipCard", { cardIndex: index });
-  };
+    // TODO: Start room timer
+  });
+
+  const handleCardClick = hostFunction((index: number) => {
+    // TODO: Play sound
+    //   triggerAudioEvent("playSound", "whoosh_1");
+
+    if (game.openCards.includes(index)) {
+      const newOpenCards = game.openCards.filter((card) => card !== index);
+      game.openCards = newOpenCards;
+    } else {
+      game.openCards.push(index);
+    }
+  });
 
   return (
     <Flex

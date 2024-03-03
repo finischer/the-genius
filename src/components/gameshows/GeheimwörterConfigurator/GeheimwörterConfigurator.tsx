@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { useImmer } from "use-immer";
 import { v4 as uuidv4 } from "uuid";
 import type { TGeheimwoerterQuestionItem } from "~/components/room/Game/games/Geheimwörter/geheimwörter.types";
-import { Games } from "~/components/room/Game/games/game.types";
+import { Game } from "~/components/room/Game/games/game.types";
 import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";
 import { useScreen } from "~/hooks/useScreen";
 import type { TQuestionFormMode } from "../types";
@@ -62,7 +62,7 @@ const GeheimwörterConfigurator = () => {
   const { disableContinueButton, enableContinueButton } = useContext(StepperControlsContext);
   const { isMediumScreen } = useScreen();
 
-  const { updateGame, geheimwoerter } = useGameshowConfig(Games.GEHEIMWOERTER);
+  const { updateGame, geheimwoerter } = useGameshowConfig(Game.GEHEIMWOERTER);
   const [codeListEditable, setCodeListEditable] = useState(false);
   const [questionList, setQuestionList] = useState<TGeheimwoerterQuestionItem[]>(geheimwoerter.questions);
   const [questionItem, setQuestionItem] = useImmer<TGeheimwoerterQuestionItem>({

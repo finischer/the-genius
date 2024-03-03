@@ -2,7 +2,7 @@ import type { RoomViews } from "@prisma/client";
 import { filterArray } from "@syncedstore/core";
 import { useSyncedStore } from "@syncedstore/react";
 import React, { useState } from "react";
-import type { Games } from "~/components/room/Game/games/game.types";
+import type { Game } from "~/components/room/Game/games/game.types";
 import { initPlayer, roomStore } from "~/config/store";
 import type { Room } from "~/types/gameshow.types";
 
@@ -15,7 +15,7 @@ export const SyncedRoomContext = React.createContext<SyncedRoomContextProps | un
 const SyncedRoomProvider = ({ children }: { children: React.ReactNode }) => {
   const { room } = useSyncedStore(roomStore) as unknown as { room: { state: Room } };
 
-  const startGame = (gameIdentifier: Games) => {};
+  const startGame = (gameIdentifier: Game) => {};
 
   const changeView = (newView: RoomViews) => {};
 

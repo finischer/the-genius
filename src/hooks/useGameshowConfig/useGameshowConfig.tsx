@@ -1,11 +1,11 @@
 import type { Game } from "@prisma/client";
 import { useContext } from "react";
 import { GAME_STATE_MAP } from "~/components/room/Game/games/game.constants";
-import { Games, type TGame, type TGameSettingsMap } from "~/components/room/Game/games/game.types";
+import { Game, type TGame, type TGameSettingsMap } from "~/components/room/Game/games/game.types";
 import { GameConfigContext } from "~/context/GameConfigProvider";
 import type { IUseGameshowConfigReturn, TGameshowConfigKeys } from "./useGameshowConfig.types";
 
-const useGameshowConfig = <T extends Games>(gameName: T) => {
+const useGameshowConfig = <T extends Game>(gameName: T) => {
   const gameConfigContext = useContext(GameConfigContext);
 
   if (gameConfigContext === undefined) {
@@ -48,7 +48,7 @@ const useGameshowConfig = <T extends Games>(gameName: T) => {
       if (game) {
         newGames.push(game);
       } else {
-        newGames.push(GAME_STATE_MAP[gId as Games]);
+        newGames.push(GAME_STATE_MAP[gId as Game]);
       }
     });
 

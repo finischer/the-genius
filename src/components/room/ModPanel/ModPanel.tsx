@@ -17,6 +17,8 @@ import { socket } from "~/hooks/useSocket";
 import type { Games, TGame } from "../Game/games/game.types";
 import MediaPlayer from "../MediaPlayer";
 import { type IModPanelProps } from "./modPanel.types";
+import useSyncedRoom from "~/hooks/useSyncedRoom";
+import { RoomView } from "~/types/gameshow.types";
 
 const TIMER_SECONDS = 10;
 
@@ -33,7 +35,8 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
   const [openedGameRules, { open: openGameRules, close: closeGameRules }] = useDisclosure();
   const [clickedGame, setClickedGame] = useState<TGame>();
 
-  const { room, currentGame } = useRoom();
+  const room = useSyncedRoom();
+
   const [isOpen, { close: closeModPanel }] = disclosure;
   const btnVariantDefault: ButtonProps = { variant: "default" };
   const titleOrder = 3;
@@ -44,7 +47,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
   const isOneScorebarTimerActive = teamArray.filter((t) => t.scorebarTimer.isActive).length > 0;
 
   const allPlayers = teamArray.map((t) => t.players).flat();
-  const atLeastOneNotefieldIsActive = allPlayers.filter((p) => p.states.notefield.isActive).length > 0;
+  const atLeastOneNotefieldIsActive = allPlayers.filter((p) => p.context.notefield.isActive).length > 0;
 
   const { triggerAudioEvent } = useAudio();
 
@@ -71,17 +74,18 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
   };
 
   const gameBtns = room.games.map((g) => {
-    const btnDisabled = g.identifier === currentGame?.identifier && room.state.view === "GAME";
+    // const btnDisabled = g.identifier === currentGame?.identifier && room.state.view === "GAME";
 
     return (
       <Button.Group key={g.identifier}>
         <Button
           {...btnVariantDefault}
-          disabled={btnDisabled}
+          // disabled={btnDisabled}
           onClick={() => startGame(g.identifier)}
           w="100%"
         >
-          {g.name} {btnDisabled && "(Läuft gerade)"}
+          {g.name}
+          {/* {g.name} {btnDisabled && "(Läuft gerade)"} */}
         </Button>
 
         <Tooltip
@@ -105,9 +109,9 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
     triggerAudioEvent("playSound", "intro");
   };
 
-  const changeView = (newView: RoomViews) => {
+  const changeView = (newView: RoomView) => {
     hideAnswer();
-    socket.emit("changeView", { newView });
+    room.context.view = newView;
   };
 
   const closeRoom = () => {
@@ -205,13 +209,13 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                   <Button.Group orientation="vertical">
                     <Button
                       {...btnVariantDefault}
-                      onClick={() => changeView("EMPTY")}
+                      onClick={() => changeView(RoomView.EMPTY)}
                     >
                       Leer
                     </Button>
                     <Button
                       {...btnVariantDefault}
-                      onClick={() => changeView("SCOREBOARD")}
+                      onClick={() => changeView(RoomView.SCOREBOARD)}
                     >
                       Scoreboard
                     </Button>
@@ -228,7 +232,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                     <Button
                       {...btnVariantDefault}
                       onClick={handleStartTimer}
-                      disabled={room.state.display.clock.isActive}
+                      // disabled={room.state.display.clock.isActive}
                     >
                       {TIMER_SECONDS}s Timer starten
                     </Button>
@@ -248,7 +252,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                     <Button
                       {...btnVariantDefault}
                       onClick={hideAnswer}
-                      disabled={!room.state.answerState.showAnswer}
+                      // disabled={!room.state.answerState.showAnswer}
                     >
                       Antwort ausblenden
                     </Button>

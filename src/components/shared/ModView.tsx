@@ -1,10 +1,14 @@
 import React from "react";
+import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { useUser } from "~/hooks/useUser";
 
 const ModView = ({ children }: { children: React.ReactNode }) => {
-  const { isHost } = useUser();
+  const { user } = useUser();
+  const room = useSyncedRoom();
 
-  if (!isHost) return <></>;
+  const isModerator = user.id === room.creatorId;
+
+  if (!isModerator) return <></>;
 
   return <>{children}</>;
 };

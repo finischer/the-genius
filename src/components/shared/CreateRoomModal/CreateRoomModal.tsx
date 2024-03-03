@@ -70,7 +70,7 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
       loaderMsg: "Raum wird erstellt ...",
     });
 
-    const room = initRoom(values.name, values.password);
+    const room = initRoom(values.name, values.password, gameshow.games as TGame[], user.id);
 
     console.log("Room: ", room);
     store.room.state = room;

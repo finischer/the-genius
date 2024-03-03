@@ -1,14 +1,20 @@
+import { useSyncedStore } from "@syncedstore/react";
 import { useContext } from "react";
+import { roomStore } from "~/config/store";
 import { SyncedRoomContext } from "~/context/SyncedRoomContext";
+import type { Room } from "~/types/gameshow.types";
 
 const useSyncedRoom = () => {
-  const context = useContext(SyncedRoomContext);
+  const { room } = useSyncedStore(roomStore) as unknown as { room: { state: Room } };
 
-  if (context === undefined) {
-    throw Error("useSyncedRoom must be used within SyncedRoomProvider");
-  }
+  // if (context === undefined) {
+  //   throw Error("useSyncedRoom must be used within SyncedRoomProvider");
+  // }
 
-  return context;
+  return {
+    ...room.state,
+    isLoaded: !!room.state?.id,
+  };
 };
 
 export default useSyncedRoom;

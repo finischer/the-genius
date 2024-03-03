@@ -1,23 +1,31 @@
 import { randomId } from "@mantine/hooks";
-import type { BuzzerState, ScorebarTimerState, TeamAvatarImage } from "@prisma/client";
 import { getYjsValue, syncedStore } from "@syncedstore/core";
 import { WebsocketProvider } from "y-partykit/provider";
-import type { TRoomTeams } from "~/pages/api/classes/Room/room.types";
-import type { Player, Room, Team } from "~/types/gameshow.types";
+import type { TGame } from "~/components/room/Game/games/game.types";
+import { RoomView, type Player, type Room, type Team } from "~/types/gameshow.types";
 
-export const initRoom = (name: string, password: string): Room => {
-  return {
-    id: randomId(),
-    name,
-    password,
-    teams: {
-      teamOne: initTeam("Team 1"),
-      teamTwo: initTeam("Team 2"),
+export const initRoom = (name: string, password: string, games: TGame[], creatorId: string): Room => ({
+  id: randomId(),
+  creatorId,
+  name,
+  password,
+  teams: {
+    teamOne: initTeam("Team 1"),
+    teamTwo: initTeam("Team 2"),
+  },
+  games,
+  context: {
+    view: RoomView.EMPTY,
+    answerState: {
+      answer: "",
+      isAnswerDisplayed: false,
     },
-    counter: 0,
-    intervalId: null,
-  };
-};
+    display: {
+      confetti: false,
+      roomTimer: false,
+    },
+  },
+});
 
 export const initTeam = (name: string): Team => ({
   id: randomId(),

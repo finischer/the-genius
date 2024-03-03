@@ -1,8 +1,17 @@
-import { Button } from "@mantine/core";
+import { Box, Button } from "@mantine/core";
 import { Flex, Stack } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { IconArrowRight } from "@tabler/icons-react";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
+import ModPanel from "~/components/room/ModPanel";
+import RoomBody from "~/components/room/RoomBody";
+import RoomFooter from "~/components/room/RoomFooter";
+import RoomHeader from "~/components/room/RoomHeader";
 import Scorebar from "~/components/room/Scorebar";
+import ActionIcon from "~/components/shared/ActionIcon";
+import GamesJSON from "~/components/shared/GamesJSON";
+import ModView from "~/components/shared/ModView";
 import { connectToSocket } from "~/config/store";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { useUser } from "~/hooks/useUser";
@@ -14,6 +23,7 @@ const RoomUI = () => {
   const roomId = params?.id as string;
 
   const room = useSyncedRoom();
+  const modPanelDisclosure = useDisclosure(false);
 
   useEffect(() => {
     if (!roomId) return;
@@ -33,41 +43,29 @@ const RoomUI = () => {
     >
       <Flex
         h="100%"
-        align="center"
-        justify="center"
+        // align="center"
+        // justify="center"
         direction="column"
       >
-        {/* <Button onClick={() => room.joinTeam(user.id, room.teams.teamOne.id)}>Join Team 1</Button>
-        <Button onClick={() => room.leaveTeam(user.id)}>Leave Team 1</Button>
-        <h1>Team 1: {room.teams.teamOne.name}</h1>
-        <h3>Spieler: </h3>
-        {room.teams.teamOne.players.map((player) => (
-          <pre key={player.id}>
-            <code>{JSON.stringify(player, null, 2)}</code>
-          </pre>
-        ))} */}
-
-        {/* Footer View */}
-        <Flex
-          justify="space-between"
-          align="flex-end"
-        >
-          <Scorebar
-            team={room.teams.teamOne}
-            timerPosition="right"
-          />
-          {/* <AnswerBanner
-             answer={room.state.answerState.answer}
-             size="l"
-             showAnswer={room.state.answerState.showAnswer}
-             mx="xl"
-           /> */}
-          <Scorebar
-            team={room.teams.teamTwo}
-            timerPosition="left"
-          />
-        </Flex>
+        <ModView>
+          <Box
+            pos="absolute"
+            bottom="50%"
+          >
+            <ActionIcon
+              variant="filled"
+              toolTip="Mod-Panel öffnen"
+            >
+              <IconArrowRight onClick={modPanelDisclosure[1].open} />
+            </ActionIcon>
+          </Box>
+          <ModPanel disclosure={modPanelDisclosure} />
+        </ModView>
+        <RoomHeader />
+        <RoomBody />
+        <RoomFooter />
       </Flex>
+      <GamesJSON games={room.games} />
     </Flex>
   );
 };

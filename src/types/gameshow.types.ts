@@ -1,4 +1,11 @@
 import type { BuzzerState, ScorebarTimerState, TeamAvatarImage } from "@prisma/client";
+import type { TGame } from "~/components/room/Game/games/game.types";
+
+export enum RoomView {
+  EMPTY = "empty",
+  SCOREBOARD = "scoreboard",
+  GAME = "game",
+}
 
 export type Team = {
   id: string;
@@ -15,14 +22,22 @@ export type Team = {
 
 export type Room = {
   id: string;
+  creatorId: string;
   name: string;
   password: string;
   teams: {
     teamOne: Team;
     teamTwo: Team;
   };
-  counter: number;
-  intervalId: NodeJS.Timer | null;
+  context: {
+    view: RoomView;
+    answerState: RoomAnswerState;
+    display: {
+      confetti: boolean;
+      roomTimer: boolean;
+    };
+  };
+  games: TGame[];
 };
 
 export type Player = {
@@ -38,4 +53,9 @@ export type Player = {
 export type NoteFieldState = {
   isActive: boolean;
   value: "";
+};
+
+export type RoomAnswerState = {
+  isAnswerDisplayed: boolean;
+  answer: string;
 };

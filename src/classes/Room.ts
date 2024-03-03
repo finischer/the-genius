@@ -21,7 +21,7 @@ export default class Room {
   timerSeconds: number;
   //   createdAt: Date;
   //   updatedAt: Date;
-  //   games: TGame[];
+  // games: TGame[];
   //   defaultGameStates: Prisma.JsonValue[];
   //   teams: TRoomTeams;
   //   state: RoomState;

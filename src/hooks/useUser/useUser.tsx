@@ -7,20 +7,22 @@ import useNotification from "../useNotification";
 import { useRoom } from "../useRoom";
 import { type IUseUserContext, type IUseUserProvider } from "./useUser.types";
 import type { FunctionToWrap } from "~/types/types";
+import useSyncedRoom from "../useSyncedRoom";
 
 const UserContext = createContext<IUseUserContext | undefined>(undefined);
 
 const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
   const { data: session, update: updateSession } = useSession();
-  const { room } = useRoom();
+  // const { room } = useRoom();
+  const room = useSyncedRoom();
   const [user, setUser] = useState<TUserReduced>(initUser());
   const [team, setTeam] = useState<Team | undefined>(undefined);
   const isPlayer = team !== undefined;
-  const [isHost, setIsHost] = useState(false);
   const { showErrorNotification, showSuccessNotification } = useNotification();
   const { mutateAsync: checkUsername, isLoading } = api.users.isUsernameInUse.useMutation();
 
   const isAdmin = user.role === "ADMIN";
+  const isHost = room.creatorId === user.id;
 
   function initUser() {
     const user: TUserReduced = {
@@ -35,19 +37,19 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
     return user;
   }
 
-  function initTeam() {
-    const teamArray = Object.values(room?.teams);
-    const teamPlayers = teamArray.map((t) => t.players).flat(); // all players in one array
-    const player = teamPlayers.find((p) => p.userId === user.id); // find the user in player array
+  // function initTeam() {
+  //   const teamArray = Object.values(room?.teams);
+  //   const teamPlayers = teamArray.map((t) => t.players).flat(); // all players in one array
+  //   const player = teamPlayers.find((p) => p.userId === user.id); // find the user in player array
 
-    if (player) {
-      // if user is a player, join team
-      const team = teamArray.find((t) => t.id === player.teamId);
-      setTeam(team);
-    } else {
-      setTeam(undefined);
-    }
-  }
+  //   if (player) {
+  //     // if user is a player, join team
+  //     const team = teamArray.find((t) => t.id === player.teamId);
+  //     setTeam(team);
+  //   } else {
+  //     setTeam(undefined);
+  //   }
+  // }
 
   async function updateUsername(newUsername: string) {
     if (newUsername === user.username) return true;
@@ -79,19 +81,19 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
     setUser(initUser());
   }, [session]);
 
-  useEffect(() => {
-    if (room) {
-      initTeam();
-    }
-  }, [room, user]);
+  // useEffect(() => {
+  //   if (room) {
+  //     initTeam();
+  //   }
+  // }, [room, user]);
 
-  useEffect(() => {
-    if (room && room.creatorId === user?.id) {
-      setIsHost(true);
-    } else {
-      setIsHost(false);
-    }
-  }, [room?.id]);
+  // useEffect(() => {
+  //   if (room && room.creatorId === user?.id) {
+  //     setIsHost(true);
+  //   } else {
+  //     setIsHost(false);
+  //   }
+  // }, [room?.id]);
 
   const setUserAsPlayer = (team: Team) => {
     setTeam(team);

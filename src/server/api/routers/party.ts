@@ -11,6 +11,7 @@ export const partyRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
+      console.log("Fetch room: ", input.id);
       const req = await fetch(`${PARTYKIT_URL}/party/${input.id}`, {
         method: "GET",
         next: {

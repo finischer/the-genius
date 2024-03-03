@@ -1,5 +1,9 @@
 import type * as Party from "partykit/server";
-import type Room from "~/pages/api/classes/Room";
+
+export type Room = {
+  name: string;
+  password: string;
+};
 
 export default class Server implements Party.Server {
   constructor(readonly partyRoom: Party.Room) {}
@@ -12,6 +16,7 @@ export default class Server implements Party.Server {
     if (req.method === "POST") {
       const room = (await req.json()) as Room;
       this.room = room;
+      this.saveRoom();
     }
 
     if (this.room) {
@@ -33,24 +38,30 @@ export default class Server implements Party.Server {
   url: ${new URL(ctx.request.url).pathname}`
     );
 
-    const url = new URL(ctx.request.url);
+    // const url = new URL(ctx.request.url);
 
-    const username = url.searchParams.get("username");
+    // const username = url.searchParams.get("username");
 
-    this.partyRoom.broadcast(`${username} joined the room`, [conn.id]);
+    // this.partyRoom.broadcast(`${username} joined the room`, [conn.id]);
     // let's send a message to the connection
-    conn.send("hello from server");
   }
 
   onMessage(message: string, sender: Party.Connection) {
-    // let's log the message
-    console.log(`connection ${sender.id} sent message: ${message}`);
-    // as well as broadcast it to all the other connections in the room...
-    this.partyRoom.broadcast(
-      `${sender.id}: ${message}`,
-      // ...except for the connection it came from
-      [sender.id]
-    );
+    if (!this.room) return;
+
+    this.room = JSON.parse(message) as unknown as Room;
+    this.partyRoom.broadcast(JSON.stringify(this.room));
+    this.saveRoom();
+  }
+
+  async onStart() {
+    this.room = await this.partyRoom.storage.get<Room>("room");
+  }
+
+  async saveRoom() {
+    if (this.room) {
+      await this.partyRoom.storage.put<Room>("room", this.room);
+    }
   }
 }
 

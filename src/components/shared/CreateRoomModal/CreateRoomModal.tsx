@@ -25,6 +25,9 @@ import { PARTYKIT_URL } from "~/utils/env";
 import { randomId } from "@mantine/hooks";
 import { redirect } from "next/navigation";
 import { api } from "~/utils/api";
+import Room from "~/classes/Room";
+import { useSyncedStore } from "@syncedstore/react";
+import { roomStore } from "~/config/store";
 
 const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose, gameshow }) => {
   const gameshowGames = gameshow.games as unknown as TGame[];
@@ -47,6 +50,8 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
   const { user } = useUser();
   const router = useRouter();
 
+  const store = useSyncedStore(roomStore);
+
   const selectData: SegmentedControlItem[] = GAMESHOW_MODES.map((m) => ({
     value: m,
     label: capitalize(m),
@@ -66,6 +71,10 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
     });
 
     const id = randomId();
+
+    const room = new Room(values.name, values.password, user.id, id);
+
+    store.room.state = room;
 
     await createParty({
       id,

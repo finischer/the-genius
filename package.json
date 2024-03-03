@@ -32,6 +32,8 @@
     "@next-auth/prisma-adapter": "^1.0.5",
     "@prisma/client": "^4.11.0",
     "@socket.io/admin-ui": "^0.5.1",
+    "@syncedstore/core": "^0.6.0",
+    "@syncedstore/react": "^0.6.0",
     "@t3-oss/env-nextjs": "^0.2.1",
     "@tabler/icons-react": "^2.44.0",
     "@tanstack/react-query": "^4.28.0",
@@ -57,6 +59,7 @@
     "next-auth": "^4.24.5",
     "next-seo": "^6.4.0",
     "nodemailer": "^6.9.1",
+    "partysocket": "1.0.0",
     "react": "18.2.0",
     "react-animations": "^1.0.0",
     "react-card-flip": "^1.2.0",
@@ -70,8 +73,10 @@
     "use-immer": "^0.9.0",
     "use-sound": "^4.0.1",
     "uuid": "^9.0.0",
-    "zod": "^3.21.4",
-    "partysocket": "1.0.0"
+    "y-partykit": "^0.0.25",
+    "y-webrtc": "^10.3.0",
+    "yjs": "^13.6.14",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
@@ -89,14 +94,14 @@
     "@typescript-eslint/parser": "^5.62.0",
     "eslint": "^8.36.0",
     "eslint-config-next": "^13.2.4",
+    "partykit": "0.0.96",
     "postcss": "^8.4.32",
     "postcss-preset-mantine": "^1.12.2",
     "postcss-simple-vars": "^7.0.1",
     "prettier": "^2.8.8",
     "prettier-plugin-tailwindcss": "^0.2.8",
     "prisma": "^4.11.0",
-    "typescript": "^5.3.3",
-    "partykit": "0.0.96"
+    "typescript": "^5.3.3"
   },
   "ct3aMetadata": {
     "initVersion": "7.12.1"

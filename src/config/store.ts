@@ -17,6 +17,13 @@ export const initRoom = (name: string, password: string, games: TGame[], creator
   context: {
     currentGame: null,
     view: RoomView.EMPTY,
+    header: {
+      timer: {
+        id: null,
+        active: false,
+        currSeconds: 0,
+      },
+    },
     answerState: {
       answer: "",
       isAnswerDisplayed: false,

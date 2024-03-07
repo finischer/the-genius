@@ -20,6 +20,12 @@ export type Team = {
   isActiveTurn: boolean;
 };
 
+export type TimerState = {
+  id: NodeJS.Timer | null;
+  active: boolean;
+  currSeconds: number;
+};
+
 export type Room = {
   id: string;
   creatorId: string;
@@ -33,6 +39,9 @@ export type Room = {
     currentGame: Game | null;
     view: RoomView;
     answerState: RoomAnswerState;
+    header: {
+      timer: TimerState;
+    };
     gameIntro: {
       alreadyPlayed: boolean;
       flippedTitleBanner: boolean;

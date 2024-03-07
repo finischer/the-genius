@@ -1,11 +1,10 @@
-import React from "react";
-import { type IMerkenGameProps } from "./merken.types";
-import MerkenPlayground from "./components/MerkenPlayground/MerkenPlayground";
 import { Button, Flex } from "@mantine/core";
-import { socket } from "~/hooks/useSocket";
-import { useUser } from "~/hooks/useUser";
+import React from "react";
 import ModView from "~/components/shared/ModView";
 import useAudio from "~/hooks/useAudio";
+import { useUser } from "~/hooks/useUser";
+import MerkenPlayground from "./components/MerkenPlayground/MerkenPlayground";
+import { type IMerkenGameProps } from "./merken.types";
 
 const MerkenGame: React.FC<IMerkenGameProps> = ({ game }) => {
   const { isHost, hostFunction } = useUser();

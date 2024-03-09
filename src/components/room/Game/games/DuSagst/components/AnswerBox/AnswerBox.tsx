@@ -30,7 +30,7 @@ const AnswerBox: React.FC<AnswerBoxProps> = ({ selectedAnswer, playerName, playe
   const description = boxState.answerTheQuestion ? "Beantwortet die Frage" : "Schätzt Teampartner ein"; // TODO: Replace 'Teampartner' with actually playername
 
   const handleShowAnswerBox = () => {
-    socket.emit("duSagst:showAnswerBox", { boxId: boxState.id });
+    boxState.showAnswer = true;
   };
 
   return (

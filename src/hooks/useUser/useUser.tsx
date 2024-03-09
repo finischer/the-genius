@@ -13,11 +13,14 @@ const UserContext = createContext<IUseUserContext | undefined>(undefined);
 
 const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
   const { data: session, update: updateSession } = useSession();
-  // const { room } = useRoom();
+
   const room = useSyncedRoom();
   const [user, setUser] = useState<TUserReduced>(initUser());
   const [team, setTeam] = useState<Team | undefined>(undefined);
   const isPlayer = team !== undefined;
+
+  const player = getPlayer();
+
   const { showErrorNotification, showSuccessNotification } = useNotification();
   const { mutateAsync: checkUsername, isLoading } = api.users.isUsernameInUse.useMutation();
 
@@ -35,6 +38,13 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
     };
 
     return user;
+  }
+
+  function getPlayer() {
+    const teams = Object.values(room.teams); // TODO: init player correctly
+    const players = teams.map((team) => team.players).flat();
+
+    return players.find((player) => player.userId === user.id);
   }
 
   // function initTeam() {
@@ -104,6 +114,7 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
       value={{
         user,
         team,
+        player,
         setUser,
         setUserAsPlayer,
         isPlayer,

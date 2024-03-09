@@ -1,3 +1,4 @@
+import { TimerType } from "~/types/gameshow.types";
 import { Game, type IGameGeneralState } from "../game.types";
 import type { IDuSagstState, TDuSagstAnswerBoxState, TDuSagstTeamState } from "./duSagst.types";
 import { v4 as uuidv4 } from "uuid";
@@ -28,6 +29,12 @@ export const DEFAULT_DUSAGST_STATE: TDuSagstGameState = {
   qIndex: 0,
   questions: [],
   timeToThinkSeconds: DUSAGST_TIME_TO_THINK_SECONDS,
+  timer: {
+    id: null,
+    active: false,
+    currSeconds: 0,
+    initSeconds: DUSAGST_TIME_TO_THINK_SECONDS,
+  },
   teamStates: {
     t1: createDefaultTeamState(),
     t2: createDefaultTeamState(),

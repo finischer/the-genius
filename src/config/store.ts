@@ -2,7 +2,7 @@ import { randomId } from "@mantine/hooks";
 import { getYjsValue, syncedStore } from "@syncedstore/core";
 import { WebsocketProvider } from "y-partykit/provider";
 import type { TGame } from "~/components/room/Game/games/game.types";
-import { RoomView, type Player, type Room, type Team } from "~/types/gameshow.types";
+import { RoomView, type Player, type Room, type Team, TimerType } from "~/types/gameshow.types";
 
 export const initRoom = (name: string, password: string, games: TGame[], creatorId: string): Room => ({
   id: randomId(),
@@ -22,6 +22,7 @@ export const initRoom = (name: string, password: string, games: TGame[], creator
         id: null,
         active: false,
         currSeconds: 0,
+        initSeconds: 0,
       },
     },
     answerState: {
@@ -70,6 +71,9 @@ export const initPlayer = (userId: string, username: string, teamId: string): Pl
     notefield: {
       isActive: false,
       value: "",
+    },
+    duSagst: {
+      answer: -1,
     },
   },
 });

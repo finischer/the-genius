@@ -24,13 +24,17 @@ import useSyncedRoom from "~/hooks/useSyncedRoom";
 const Game: React.FC<IGameProps> = ({ gameName }) => {
   const room = useSyncedRoom();
 
-  const game = room.games.find((game) => game.name === gameName) as TGame;
+  const game = room.games.find((game) => game.identifier === gameName);
 
-  const introState = room.context.gameIntro;
-  const showGame = room.context.display.game;
-  const gameNumber = room.games.findIndex((g) => g.identifier === game.identifier) + 1;
+  if (!game) {
+    return <div>Loading ...</div>;
+  }
 
-  const [mountIntroContainer, setMountIntroContainer] = useState(true);
+  // const introState = room.context.gameIntro;
+  // const showGame = room.context.display.game;
+  // const gameNumber = room.games.findIndex((g) => g.identifier === game.identifier) + 1;
+
+  // const [mountIntroContainer, setMountIntroContainer] = useState(true);
 
   // const [scope, animate] = useAnimate();
 

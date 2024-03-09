@@ -44,7 +44,10 @@ const GamesJSON = ({ games }: { games: TGame[] }) => {
         </Box>
         <Text>Spiele: </Text>
         {games.map((game) => (
-          <GameCard game={game} />
+          <GameCard
+            key={game.identifier}
+            game={game}
+          />
         ))}
       </Stack>
     </ScrollArea>

@@ -1,16 +1,19 @@
 import { Button, Flex, Text, useMantineTheme } from "@mantine/core";
+import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
+import ActionIcon from "~/components/shared/ActionIcon";
 import ContainerBox from "~/components/shared/ContainerBox";
 import ModView from "~/components/shared/ModView";
-import { useRoom } from "~/hooks/useRoom";
 import { socket } from "~/hooks/useSocket";
+import useSyncedRoom from "~/hooks/useSyncedRoom";
+import useTimer from "~/hooks/useTimer";
 import { useUser } from "~/hooks/useUser";
+import { TimerType } from "~/types/gameshow.types";
+import { goToNextQuestion, goToPreviousQuestion } from "~/utils/helpers";
 import { type TDuSagstGameState } from "../../config";
 import { ANSWER_BACKGROUND_COLORS, ANSWER_SELECT_MAP, DEFAULT_ANSWER_OPTION } from "../../duSagst.constants";
 import type { TDuSagstAnswer } from "../../duSagst.types";
-import ActionIcon from "~/components/shared/ActionIcon";
-import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
 
 interface QuestionContainerProps {
   question: string;
@@ -23,20 +26,21 @@ interface AnswerRowProps {
   answer: string;
 }
 
-const allPlayersHasSubmitted = (teams: TDuSagstGameState["teamStates"]): boolean => {
-  const boxes = Object.values(teams).flatMap((team) => team.boxStates);
-  return boxes.every((box) => box.submitted);
-};
-
 const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerOptions, game }) => {
-  const { isPlayer, isHost, hostFunction } = useUser();
-  const { room } = useRoom();
+  const { isPlayer, isHost, hostFunction, player } = useUser();
+  const room = useSyncedRoom();
+  const {
+    startTimer,
+    stopTimer,
+    active: isTimerActive,
+  } = useTimer(room.context.header.timer, TimerType.COUNTDOWN, game.timeToThinkSeconds);
+  const allBoxes = Object.values(game.teamStates).flatMap((team) => team.boxStates);
+
   const theme = useMantineTheme();
   const q = question.endsWith("?") ? question : question + "?";
-  const allAnswersSubmitted = allPlayersHasSubmitted(game.teamStates);
+  const allAnswersSubmitted = allBoxes.every((box) => box.submitted);
   const isAnswerClickable = isPlayer && !allAnswersSubmitted;
   const allAnswersShown = answerOptions.length === game.display.answers.length;
-  const isTimerActive = room.state.display.clock.isActive;
   const isPrevBtnDisabled = isTimerActive || game.qIndex <= 0;
   const isNxtBtnDisabled = isTimerActive || game.qIndex >= game.questions.length - 1;
   const showQuestion = game.display.question;
@@ -64,30 +68,46 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerO
   };
 
   const handleStartTimer = hostFunction(() => {
-    socket.emit("duSagst:startTimer", game.timeToThinkSeconds, () => {
-      socket.emit("duSagst:submitAnswers");
+    unsubmitAllAnswers();
+
+    startTimer(() => {
+      submitAllAnswers();
     });
   });
 
+  const submitAllAnswers = () => {
+    allBoxes.forEach((box) => (box.submitted = true));
+  };
+
+  const unsubmitAllAnswers = () => {
+    allBoxes.forEach((box) => (box.submitted = false));
+  };
+
   const handleShowAnswer = hostFunction((answerIndex: number) => {
-    socket.emit("duSagst:showAnswer", answerIndex);
+    game.display.answers.push(answerIndex);
   });
 
   const handleClickAnswer = (answerIndex: number) => {
-    if (!isPlayer || allAnswersSubmitted) return;
-    socket.emit("duSagst:clickAnswer", { answerIndex });
+    if (!player || allAnswersSubmitted) return;
+
+    player.context.duSagst.answer = answerIndex;
   };
 
   const handleShowQuestion = hostFunction(() => {
     socket.emit("duSagst:showQuestion");
+    game.display.question = true;
   });
 
   const handleNextQuestion = hostFunction(() => {
-    socket.emit("duSagst:nextQuestion");
+    goToNextQuestion(game.questions, game.qIndex, (newIndex) => {
+      game.qIndex = newIndex;
+    });
   });
 
   const handlePrevQuestion = hostFunction(() => {
-    socket.emit("duSagst:prevQuestion");
+    goToPreviousQuestion(game.qIndex, (newIndex) => {
+      game.qIndex = newIndex;
+    });
   });
 
   return (
@@ -174,7 +194,7 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerO
             >
               <Button
                 mt="xl"
-                disabled={isTimerActive || !allAnswersShown}
+                // disabled={isTimerActive || !allAnswersShown}
                 onClick={handleStartTimer}
               >
                 Timer starten

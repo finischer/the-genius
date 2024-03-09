@@ -1,4 +1,4 @@
-import type { Game } from "@prisma/client";
+import type { Game as PrismaGame } from "@prisma/client";
 import { useContext } from "react";
 import { GAME_STATE_MAP } from "~/components/room/Game/games/game.constants";
 import { Game, type TGame, type TGameSettingsMap } from "~/components/room/Game/games/game.types";
@@ -37,7 +37,7 @@ const useGameshowConfig = <T extends Game>(gameName: T) => {
     });
   };
 
-  const updateGameList = (newGameList: Game[]) => {
+  const updateGameList = (newGameList: PrismaGame[]) => {
     const gameIdentifiers = newGameList.map((g) => g.slug);
 
     const newGames: TGame[] = [];

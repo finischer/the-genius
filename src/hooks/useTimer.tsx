@@ -1,13 +1,17 @@
 import { useEffect } from "react";
-import type { TimerState } from "~/types/gameshow.types";
+import { TimerType, type TimerState } from "~/types/gameshow.types";
 
 /**
  * A custom React hook for managing a timer.
  *
  * @param timer - The timer state object containing timer-related data.
+ * @param type - Type of timer. Can be a COUNTDOWN or a STOPWATCH
+ * @param initSeconds - Initial seconds before timer starts. Default is 0
  * @returns An object containing functions to control the timer and its current state.
  */
-const useTimer = (timer: TimerState) => {
+const useTimer = (timer: TimerState, type: TimerType = TimerType.STOPWATCH, initSeconds: number = 0) => {
+  const isCountdown = type === TimerType.COUNTDOWN;
+
   useEffect(() => {
     if (!timer.active) {
       clearTimer();
@@ -25,11 +29,35 @@ const useTimer = (timer: TimerState) => {
   };
 
   /**
-   * Starts the timer.
+   * Starts the timer. Resets the timer before it starts.
    */
-  const startTimer = () => {
+  const startTimer = (cb?: () => void) => {
+    stopTimer();
+    continueTimer(cb);
+  };
+
+  /**
+   * Continues the timer after timer was stopped. It won't be reset when executes this functions. Otherwise when you execute the 'startTimer' function.
+   */
+  const continueTimer = (cb?: () => void) => {
     const timerId = setInterval(() => {
-      timer.currSeconds += 1;
+      if (isCountdown) {
+        // check if countdown is done
+        if (timer.currSeconds === 0) {
+          stopTimer();
+
+          if (cb) {
+            // execute callback function
+            cb();
+          }
+
+          return;
+        }
+
+        timer.currSeconds -= 1;
+      } else {
+        timer.currSeconds += 1;
+      }
     }, 1000);
 
     timer.id = timerId;
@@ -49,7 +77,7 @@ const useTimer = (timer: TimerState) => {
    * Resets the timer.
    */
   const resetTimer = () => {
-    timer.currSeconds = 0;
+    timer.currSeconds = initSeconds;
   };
 
   /**
@@ -65,6 +93,7 @@ const useTimer = (timer: TimerState) => {
     stopTimer,
     pauseTimer,
     resetTimer,
+    continueTimer,
     active: timer.active,
   };
 };

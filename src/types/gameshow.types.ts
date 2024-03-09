@@ -7,6 +7,11 @@ export enum RoomView {
   GAME = "game",
 }
 
+export enum TimerType {
+  COUNTDOWN = "countdown",
+  STOPWATCH = "stopwatch",
+}
+
 export type Team = {
   id: string;
   name: string;
@@ -24,6 +29,7 @@ export type TimerState = {
   id: NodeJS.Timer | null;
   active: boolean;
   currSeconds: number;
+  initSeconds: number;
 };
 
 export type Room = {
@@ -35,6 +41,7 @@ export type Room = {
     teamOne: Team;
     teamTwo: Team;
   };
+  games: TGame[];
   context: {
     currentGame: Game | null;
     view: RoomView;
@@ -54,7 +61,6 @@ export type Room = {
       game: boolean;
     };
   };
-  games: TGame[];
 };
 
 export type Player = {
@@ -64,6 +70,9 @@ export type Player = {
   teamId: string;
   context: {
     notefield: NoteFieldState;
+    duSagst: {
+      answer: number;
+    };
   };
 };
 

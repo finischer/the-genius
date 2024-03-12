@@ -20,7 +20,7 @@ const RoomBody = () => {
       {/* {currentGame && room.state.view === "GAME" && <Game game={currentGame} />} */}
       <AnimatePresence>
         {room.context.view === RoomView.GAME && room.context.currentGame && (
-          <Game gameName={room.context.currentGame} />
+          <Game gameName={room.context.currentGame.identifier} />
         )}
         {room.context.view === RoomView.SCOREBOARD && (
           <motion.div {...animations.fadeInOut}>

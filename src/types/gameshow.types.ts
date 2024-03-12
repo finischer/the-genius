@@ -1,3 +1,4 @@
+import type { TableElementProps } from "@mantine/core/lib/components/Table/Table.components";
 import type { BuzzerState, ScorebarTimerState, TeamAvatarImage } from "@prisma/client";
 import type { Game, TGame } from "~/components/room/Game/games/game.types";
 
@@ -43,7 +44,7 @@ export type Room = {
   };
   games: TGame[];
   context: {
-    currentGame: Game | null;
+    currentGame: TGame | null;
     view: RoomView;
     answerState: RoomAnswerState;
     header: {

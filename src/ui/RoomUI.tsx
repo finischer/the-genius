@@ -62,7 +62,7 @@ const RoomUI = () => {
         <RoomBody />
         <RoomFooter />
       </Flex>
-      <GamesJSON games={room.games} />
+      {/* <GamesJSON games={room.games} /> */}
     </Flex>
   );
 };

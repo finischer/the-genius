@@ -1,13 +1,12 @@
-import type { Team } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { createContext, useContext, useEffect, useState } from "react";
+import type { Player, Team } from "~/types/gameshow.types";
 import { type TUserReduced } from "~/types/socket.types";
+import type { FunctionToWrap } from "~/types/types";
 import { api } from "~/utils/api";
 import useNotification from "../useNotification";
-import { useRoom } from "../useRoom";
-import { type IUseUserContext, type IUseUserProvider } from "./useUser.types";
-import type { FunctionToWrap } from "~/types/types";
 import useSyncedRoom from "../useSyncedRoom";
+import { type IUseUserContext, type IUseUserProvider } from "./useUser.types";
 
 const UserContext = createContext<IUseUserContext | undefined>(undefined);
 
@@ -16,10 +15,12 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
 
   const room = useSyncedRoom();
   const [user, setUser] = useState<TUserReduced>(initUser());
-  const [team, setTeam] = useState<Team | undefined>(undefined);
 
   const player = getPlayer();
   const isPlayer = !!player;
+
+  const team = getTeam();
+  const isInTeam = !!team;
 
   const { showErrorNotification, showSuccessNotification } = useNotification();
   const { mutateAsync: checkUsername, isLoading } = api.users.isUsernameInUse.useMutation();
@@ -43,25 +44,19 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
   function getPlayer() {
     if (!room || !room.teams) return;
 
-    const teams = Object.values(room.teams); // TODO: init player correctly
+    const teams = Object.values(room.teams);
     const players = teams.map((team) => team.players).flat();
 
     return players.find((player) => player.userId === user.id);
   }
 
-  // function initTeam() {
-  //   const teamArray = Object.values(room?.teams);
-  //   const teamPlayers = teamArray.map((t) => t.players).flat(); // all players in one array
-  //   const player = teamPlayers.find((p) => p.userId === user.id); // find the user in player array
+  function getTeam() {
+    if (!room || !room.teams || !isPlayer) return;
 
-  //   if (player) {
-  //     // if user is a player, join team
-  //     const team = teamArray.find((t) => t.id === player.teamId);
-  //     setTeam(team);
-  //   } else {
-  //     setTeam(undefined);
-  //   }
-  // }
+    const team = Object.values(room.teams).find((team) => team.id === player.teamId);
+
+    return team;
+  }
 
   async function updateUsername(newUsername: string) {
     if (newUsername === user.username) return true;
@@ -89,42 +84,33 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
     return (...args: T) => func(...args);
   }
 
+  function playerFunction(func: (team: Team, player: Player) => void): () => void {
+    if (!isPlayer) return () => null;
+
+    if (!team) return () => null;
+
+    return () => func(team, player);
+  }
+
   useEffect(() => {
     setUser(initUser());
   }, [session]);
-
-  // useEffect(() => {
-  //   if (room) {
-  //     initTeam();
-  //   }
-  // }, [room, user]);
-
-  // useEffect(() => {
-  //   if (room && room.creatorId === user?.id) {
-  //     setIsHost(true);
-  //   } else {
-  //     setIsHost(false);
-  //   }
-  // }, [room?.id]);
-
-  const setUserAsPlayer = (team: Team) => {
-    setTeam(team);
-  };
 
   return (
     <UserContext.Provider
       value={{
         user,
         team,
+        isInTeam,
         player,
         setUser,
-        setUserAsPlayer,
         isPlayer,
         isHost,
         isAdmin,
         updateUsername,
         isLoading,
         hostFunction,
+        playerFunction,
       }}
     >
       {children}

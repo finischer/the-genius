@@ -3,11 +3,14 @@ import { useRoom } from "../useRoom";
 import { socket } from "../useSocket";
 import { useUser } from "../useUser";
 import useAudio from "../useAudio";
+import useSyncedRoom from "../useSyncedRoom";
 
 const useBuzzer = () => {
   const [isActive, setIsActive] = useState(true);
-  const { isPlayer, team } = useUser();
-  const { room } = useRoom();
+  const { isPlayer, playerFunction, player } = useUser();
+  const room = useSyncedRoom();
+  const wasAlreadyBuzzered = Object.values(room.teams).some((team) => team.isActiveTurn);
+
   const { triggerAudioEvent } = useAudio();
 
   useEffect(() => {
@@ -39,12 +42,15 @@ const useBuzzer = () => {
     setIsActive(true);
   };
 
-  const handleBuzzerClick = () => {
-    if (!isPlayer || room.state.teamWithTurn || !team || !isActive) return;
-    socket.emit("buzzer", { teamId: team.id, withTimer: true });
-    triggerAudioEvent("playSound", "buzzer");
-    triggerAudioEvent("playSound", "warningBuzzer");
-  };
+  const handleBuzzerClick = playerFunction((team, player) => {
+    if (!isPlayer || wasAlreadyBuzzered || !isActive) return;
+    // socket.emit("buzzer", { teamId: team.id, withTimer: true });
+    // triggerAudioEvent("playSound", "buzzer");
+    // triggerAudioEvent("playSound", "warningBuzzer");
+    team.isActiveTurn = true;
+    team.buzzer.isPressed = true;
+    team.buzzer.playersBuzzered.push(player.id);
+  });
 
   return { isActive, buzzer: handleBuzzerClick, activateBuzzer, deactivateBuzzer };
 };

@@ -18,7 +18,8 @@ import type { Game, TGame } from "../Game/games/game.types";
 import MediaPlayer from "../MediaPlayer";
 import { type IModPanelProps } from "./modPanel.types";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
-import { RoomView } from "~/types/gameshow.types";
+import { RoomView, TimerType } from "~/types/gameshow.types";
+import useTimer from "~/hooks/useTimer";
 
 const TIMER_SECONDS = 10;
 
@@ -36,6 +37,12 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
   const [clickedGame, setClickedGame] = useState<TGame>();
 
   const room = useSyncedRoom();
+
+  const { startTimer, active: isTimerActive } = useTimer(
+    room.context.header.timer,
+    TimerType.COUNTDOWN,
+    TIMER_SECONDS
+  );
 
   const [isOpen, { close: closeModPanel }] = disclosure;
   const btnVariantDefault: ButtonProps = { variant: "default" };
@@ -57,7 +64,6 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
   };
 
   const releaseBuzzer = () => {
-    // socket.emit("releaseBuzzer");
     Object.values(room.teams).forEach((team) => {
       team.isActiveTurn = false;
       team.buzzer.isPressed = false;
@@ -66,38 +72,32 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
   };
 
   const hideAnswer = () => {
-    // socket.emit("hideAnswerBanner");
     room.context.answerState.isAnswerDisplayed = false;
     room.context.answerState.answer = "";
   };
 
   const toggleNotefields = () => {
     // TODO: handle if one notefield is not active and other ones are active
-    // socket.emit("toggleNotefields");
     const allPlayers = Object.values(room.teams)
       .map((team) => team.players)
       .flat();
     allPlayers.forEach((player) => (player.context.notefield.isActive = !player.context.notefield.isActive));
   };
 
-  const handleStartTimer = () => {
-    // socket.emit("startTimer", TIMER_SECONDS);
-    // TODO: Implement function
-  };
-
   const gameBtns = room.games.map((g) => {
-    // const btnDisabled = g.identifier === currentGame?.identifier && room.state.view === "GAME";
+    const btnDisabled =
+      g.identifier === room.context.currentGame.identifier && room.context.view === RoomView.GAME;
 
     return (
       <Button.Group key={g.identifier}>
         <Button
           {...btnVariantDefault}
-          // disabled={btnDisabled}
+          disabled={btnDisabled}
           onClick={() => startGame(g)}
           w="100%"
         >
-          {g.name}
-          {/* {g.name} {btnDisabled && "(Läuft gerade)"} */}
+          {/* {g.name} */}
+          {g.name} {btnDisabled && "(Läuft gerade)"}
         </Button>
 
         <Tooltip
@@ -119,7 +119,12 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
     // hideAnswer();
     // triggerAudioEvent("playSound", "intro");
 
-    room.context.currentGame = game.identifier;
+    room.context.currentGame.identifier = game.identifier;
+    room.context.currentGame.name = game.name;
+    room.context.currentGame.maxPoints = game.maxPoints;
+    room.context.currentGame.scorebarMode = game.scorebarMode;
+
+    // room.context.currentGame.name = game.name;
     room.context.view = RoomView.GAME;
   };
 
@@ -245,8 +250,8 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                   <Button.Group orientation="vertical">
                     <Button
                       {...btnVariantDefault}
-                      onClick={handleStartTimer}
-                      // disabled={room.state.display.clock.isActive}
+                      onClick={() => startTimer()}
+                      disabled={isTimerActive}
                     >
                       {TIMER_SECONDS}s Timer starten
                     </Button>
@@ -266,7 +271,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                     <Button
                       {...btnVariantDefault}
                       onClick={hideAnswer}
-                      // disabled={!room.state.answerState.showAnswer}
+                      disabled={!room.context.answerState.isAnswerDisplayed}
                     >
                       Antwort ausblenden
                     </Button>

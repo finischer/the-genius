@@ -18,13 +18,14 @@ const AnswerBox: React.FC<AnswerBoxProps> = ({ selectedAnswer, playerName, playe
   const isAnswerEmpty = selectedAnswer < 0 || selectedAnswer > 3;
 
   const theme = useMantineTheme();
-  const { user, isPlayer, isHost } = useUser();
+  const { user, isPlayer, isHost, player } = useUser();
 
   const { color, label } = ANSWER_SELECT_MAP[selectedAnswer] ?? DEFAULT_ANSWER_OPTION;
   const backgroundColor = ANSWER_BACKGROUND_COLORS[color];
   const labelSize = isAnswerEmpty ? "2rem" : "7rem";
 
-  const showAnswerBox = playerId === user.id || !isPlayer || boxState.showAnswer;
+  const showAnswerBox = playerId === player?.userId || !isPlayer || boxState.showAnswer;
+
   const defaultOpacity = !boxState.showAnswer && isHost ? 0.7 : 1;
 
   const description = boxState.answerTheQuestion ? "Beantwortet die Frage" : "Schätzt Teampartner ein"; // TODO: Replace 'Teampartner' with actually playername

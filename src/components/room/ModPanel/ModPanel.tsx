@@ -57,20 +57,32 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
   };
 
   const releaseBuzzer = () => {
-    socket.emit("releaseBuzzer");
+    // socket.emit("releaseBuzzer");
+    Object.values(room.teams).forEach((team) => {
+      team.isActiveTurn = false;
+      team.buzzer.isPressed = false;
+      team.buzzer.playersBuzzered = [];
+    });
   };
 
   const hideAnswer = () => {
-    socket.emit("hideAnswerBanner");
+    // socket.emit("hideAnswerBanner");
+    room.context.answerState.isAnswerDisplayed = false;
+    room.context.answerState.answer = "";
   };
 
   const toggleNotefields = () => {
     // TODO: handle if one notefield is not active and other ones are active
-    socket.emit("toggleNotefields");
+    // socket.emit("toggleNotefields");
+    const allPlayers = Object.values(room.teams)
+      .map((team) => team.players)
+      .flat();
+    allPlayers.forEach((player) => (player.context.notefield.isActive = !player.context.notefield.isActive));
   };
 
   const handleStartTimer = () => {
-    socket.emit("startTimer", TIMER_SECONDS);
+    // socket.emit("startTimer", TIMER_SECONDS);
+    // TODO: Implement function
   };
 
   const gameBtns = room.games.map((g) => {

@@ -1,5 +1,4 @@
-import { Box, Button } from "@mantine/core";
-import { Flex, Stack } from "@mantine/core";
+import { Box, Flex } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconArrowRight } from "@tabler/icons-react";
 import { useParams } from "next/navigation";
@@ -8,13 +7,11 @@ import ModPanel from "~/components/room/ModPanel";
 import RoomBody from "~/components/room/RoomBody";
 import RoomFooter from "~/components/room/RoomFooter";
 import RoomHeader from "~/components/room/RoomHeader";
-import Scorebar from "~/components/room/Scorebar";
 import ActionIcon from "~/components/shared/ActionIcon";
 import GamesJSON from "~/components/shared/GamesJSON";
 import ModView from "~/components/shared/ModView";
 import { connectToSocket } from "~/config/store";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
-import { useUser } from "~/hooks/useUser";
 import { sizes } from "~/styles/constants";
 
 const RoomUI = () => {

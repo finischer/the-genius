@@ -78,7 +78,7 @@ export type Player = {
 
 export type NoteFieldState = {
   isActive: boolean;
-  value: "";
+  value: string;
 };
 
 export type RoomAnswerState = {

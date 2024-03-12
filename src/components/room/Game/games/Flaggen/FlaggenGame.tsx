@@ -2,37 +2,55 @@ import { Button, Flex, Image, Text } from "@mantine/core";
 import React from "react";
 import ArrowActionButton from "~/components/shared/ArrowActionButton";
 import ModView from "~/components/shared/ModView";
-import { socket } from "~/hooks/useSocket";
+import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { useUser } from "~/hooks/useUser";
-import { type IFlaggenGameProps } from "./flaggen.types";
+import { goToNextQuestion, goToPreviousQuestion, sleep } from "~/utils/helpers";
 import classes from "./flaggen.module.css";
+import { type IFlaggenGameProps } from "./flaggen.types";
 
 const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
-  const { isHost } = useUser();
+  const room = useSyncedRoom();
+  const { isHost, hostFunction } = useUser();
   const displayFlag = game.display.country;
   const currFlag = game.countries[game.qIndex];
   const nxtBtnDisabled = game.qIndex >= game.countries.length - 1;
   const prevBtnDisabled = game.qIndex <= 0;
 
-  const handleFlagClick = () => {
-    if (!isHost || displayFlag) return;
-    socket.emit("flaggen:showFlag");
+  const handleFlagClick = hostFunction(() => {
+    if (displayFlag) return;
+    game.display.country = true;
+  });
+
+  const prepareQuestion = async () => {
+    game.display.answer = false;
+    game.display.country = false;
+    room.context.answerState.answer = "";
+    room.context.answerState.isAnswerDisplayed = false;
+    if (displayFlag) {
+      await sleep(800);
+    }
   };
 
-  const handleNextFlagClick = () => {
-    socket.emit("hideAnswerBanner");
-    socket.emit("flaggen:nextFlag");
-  };
+  const handleNextFlagClick = hostFunction(async () => {
+    await prepareQuestion();
+    goToNextQuestion(game.countries, game.qIndex, (newIndex) => {
+      game.qIndex = newIndex;
+    });
+  });
 
-  const handlePrevFlagClick = () => {
-    socket.emit("hideAnswerBanner");
-    socket.emit("flaggen:prevFlag");
-  };
+  const handlePrevFlagClick = hostFunction(async () => {
+    await prepareQuestion();
+    goToPreviousQuestion(game.qIndex, (newIndex) => {
+      game.qIndex = newIndex;
+    });
+  });
 
-  const handleShowAnswerClick = () => {
+  const handleShowAnswerClick = hostFunction(() => {
     if (!currFlag?.country) return;
-    socket.emit("showAnswerBanner", { answer: currFlag?.country });
-  };
+    game.display.answer = true;
+    room.context.answerState.answer = currFlag.country;
+    room.context.answerState.isAnswerDisplayed = true;
+  });
 
   return (
     <Flex

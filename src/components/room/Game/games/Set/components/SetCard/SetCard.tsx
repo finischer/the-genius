@@ -11,11 +11,11 @@ import classes from "./setCard.module.css";
 const cardVariants = {
   selected: {
     rotateY: 180,
-    transition: { duration: 0.3 },
+    transition: { duration: 0.6 },
   },
   notSelected: (i: number) => ({
     rotateY: 0,
-    transition: { duration: 0.3 },
+    transition: { duration: 0.6 },
   }),
 };
 

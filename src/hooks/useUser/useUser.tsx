@@ -17,9 +17,9 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
   const room = useSyncedRoom();
   const [user, setUser] = useState<TUserReduced>(initUser());
   const [team, setTeam] = useState<Team | undefined>(undefined);
-  const isPlayer = team !== undefined;
 
   const player = getPlayer();
+  const isPlayer = !!player;
 
   const { showErrorNotification, showSuccessNotification } = useNotification();
   const { mutateAsync: checkUsername, isLoading } = api.users.isUsernameInUse.useMutation();
@@ -41,6 +41,8 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
   }
 
   function getPlayer() {
+    if (!room || !room.teams) return;
+
     const teams = Object.values(room.teams); // TODO: init player correctly
     const players = teams.map((team) => team.players).flat();
 

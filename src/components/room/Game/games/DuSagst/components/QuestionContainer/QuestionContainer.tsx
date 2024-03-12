@@ -94,17 +94,28 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({ question, answerO
   };
 
   const handleShowQuestion = hostFunction(() => {
-    socket.emit("duSagst:showQuestion");
+    // socket.emit("duSagst:showQuestion");
     game.display.question = true;
   });
 
+  const prepareQuestion = () => {
+    game.display.answers = [];
+    game.display.question = false;
+    allBoxes.forEach((box) => {
+      box.showAnswer = false;
+      box.answerIndex = -1;
+    });
+  };
+
   const handleNextQuestion = hostFunction(() => {
+    prepareQuestion();
     goToNextQuestion(game.questions, game.qIndex, (newIndex) => {
       game.qIndex = newIndex;
     });
   });
 
   const handlePrevQuestion = hostFunction(() => {
+    prepareQuestion();
     goToPreviousQuestion(game.qIndex, (newIndex) => {
       game.qIndex = newIndex;
     });

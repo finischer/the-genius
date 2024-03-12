@@ -38,7 +38,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
   const theme = useMantineTheme();
   const teamFn = useTeam();
 
-  const { user, team: userTeam, isHost, setUserAsPlayer } = useUser();
+  const { user, team: userTeam, isHost, player } = useUser();
 
   // const scoreCircles = currentGame
   //   ? Array(currentGame.maxPoints)
@@ -140,7 +140,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
       </AnimatePresence>
 
       {/* Only show notefields to own team players or viewers */}
-      {(team.id === userTeam?.id || !teamFn.isPlayer) && (
+      {(player?.teamId === team.id || !teamFn.isPlayer) && (
         <Flex
           pos="absolute"
           top={-300}

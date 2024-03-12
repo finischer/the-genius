@@ -23,3 +23,7 @@ export const goToPreviousQuestion = (currIndex: number, cb: (newQuestionIndex: n
 
   cb(currIndex - 1);
 };
+
+export function sleep(milliseconds: number) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}

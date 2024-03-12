@@ -13,13 +13,14 @@ import ArrowActionButton from "~/components/shared/ArrowActionButton";
 import ModView from "~/components/shared/ModView";
 import useAudio from "~/hooks/useAudio";
 import { slug } from "~/utils/strings";
+import { goToNextQuestion, goToPreviousQuestion, sleep } from "~/utils/helpers";
 
 const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
   const theme = useMantineTheme();
   const question = game.questions[game.qIndex];
   const showAnswer = game.display.answer;
   const showWords = game.display.words;
-  const { isHost } = useUser();
+  const { isHost, hostFunction } = useUser();
   const { socket } = useSocket();
   const { triggerAudioEvent } = useAudio();
 
@@ -31,26 +32,43 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
     return <IconEye size={32} />;
   };
 
-  const toggleCodeList = () => {
-    socket.emit("geheimwoerter:toggleCodeList");
-  };
+  const toggleCodeList = hostFunction(() => {
+    // socket.emit("geheimwoerter:toggleCodeList");
+    game.display.codeList = !game.display.codeList;
+  });
 
-  const toggleWords = () => {
+  const toggleWords = hostFunction(() => {
     socket.emit("geheimwoerter:toggleWords");
-  };
+    game.display.words = !game.display.words;
+  });
 
-  const handleShowAnswer = () => {
+  const handleShowAnswer = hostFunction(() => {
     triggerAudioEvent("playSound", "bell");
-    socket.emit("geheimwoerter:showAnswer");
+    // socket.emit("geheimwoerter:showAnswer");
+    game.display.answer = true;
+  });
+
+  const prepareQuestion = async () => {
+    game.display.words = false;
+    if (showAnswer) {
+      await sleep(200);
+    }
+    game.display.answer = false;
   };
 
-  const handleNextQuestion = () => {
-    socket.emit("geheimwoerter:nextQuestion");
-  };
+  const handleNextQuestion = hostFunction(async () => {
+    await prepareQuestion();
+    goToNextQuestion(game.questions, game.qIndex, (newIndex) => {
+      game.qIndex = newIndex;
+    });
+  });
 
-  const handlePrevQuestion = () => {
-    socket.emit("geheimwoerter:prevQuestion");
-  };
+  const handlePrevQuestion = hostFunction(async () => {
+    await prepareQuestion();
+    goToPreviousQuestion(game.qIndex, (newIndex) => {
+      game.qIndex = newIndex;
+    });
+  });
 
   if (!question) return <></>;
 

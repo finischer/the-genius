@@ -23,12 +23,14 @@ const GamesJSON = ({ games }: { games: TGame[] }) => {
 
   return (
     <ScrollArea
-      bg="textDimmed"
       p="md"
       w={600}
       pos="absolute"
       h="100%"
       right={10}
+      // style={{
+      //   transform: "scale(0.6)",
+      // }}
     >
       <Stack>
         <Text>Raum State:</Text>

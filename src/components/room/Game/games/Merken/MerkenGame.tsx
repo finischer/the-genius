@@ -5,17 +5,29 @@ import useAudio from "~/hooks/useAudio";
 import { useUser } from "~/hooks/useUser";
 import MerkenPlayground from "./components/MerkenPlayground/MerkenPlayground";
 import { type IMerkenGameProps } from "./merken.types";
+import useTimer from "~/hooks/useTimer";
+import { useRoom } from "~/hooks/useRoom";
+import useSyncedRoom from "~/hooks/useSyncedRoom";
+import { TimerType } from "~/types/gameshow.types";
+import { getYjsValue } from "@syncedstore/core";
 
 const MerkenGame: React.FC<IMerkenGameProps> = ({ game }) => {
   const { isHost, hostFunction } = useUser();
-  const isStartButtonDisabled = game.timerState.isActive;
   const { triggerAudioEvent } = useAudio();
+  const room = useSyncedRoom();
+  const { startTimer, active: isTimerActive } = useTimer(
+    room.context.header.timer,
+    TimerType.COUNTDOWN,
+    game.timerState.timeToThinkSeconds
+  );
 
   const handleStartGame = hostFunction(() => {
-    if (isStartButtonDisabled) return;
+    if (isTimerActive) return;
     game.allCardsFlipped = true;
 
-    // TODO: Start room timer
+    startTimer(() => {
+      game.allCardsFlipped = false;
+    });
   });
 
   const handleCardClick = hostFunction((index: number) => {
@@ -45,7 +57,7 @@ const MerkenGame: React.FC<IMerkenGameProps> = ({ game }) => {
       <ModView>
         <Button
           onClick={handleStartGame}
-          disabled={isStartButtonDisabled}
+          disabled={isTimerActive}
         >
           Spiel starten
         </Button>

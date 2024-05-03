@@ -1,5 +1,5 @@
 import { randomId } from "@mantine/hooks";
-import { getYjsValue, syncedStore } from "@syncedstore/core";
+import { SyncedMap, Y, getYjsValue, syncedStore } from "@syncedstore/core";
 import { WebsocketProvider } from "y-partykit/provider";
 import type { TGame } from "~/components/room/Game/games/game.types";
 import { RoomView, type Player, type Room, type Team, TimerType } from "~/types/gameshow.types";
@@ -88,5 +88,10 @@ export const roomStore = syncedStore({
 
 export const connectToSocket = (roomId: string) => {
   if (!roomId) return;
-  new WebsocketProvider("wss://yjs.threepointone.partykit.dev/party", roomId, getYjsValue(roomStore) as any); // sync via partykit
+
+  return new WebsocketProvider(
+    "wss://yjs.threepointone.partykit.dev/party",
+    roomId,
+    getYjsValue(roomStore) as any
+  ); // sync via partykit
 };

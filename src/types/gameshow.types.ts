@@ -1,6 +1,7 @@
-import type { TableElementProps } from "@mantine/core/lib/components/Table/Table.components";
 import type { BuzzerState, ScorebarTimerState, TeamAvatarImage } from "@prisma/client";
-import type { Game, TGame } from "~/components/room/Game/games/game.types";
+import type { TGame } from "~/components/room/Game/games/game.types";
+import type { SyncedMap, Y } from "@syncedstore/core";
+import type { YDocMap } from "./types";
 
 export enum RoomView {
   EMPTY = "empty",

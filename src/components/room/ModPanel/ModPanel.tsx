@@ -2,7 +2,6 @@ import { Accordion, Button, Drawer, Flex, ScrollArea, Text, Title, type ButtonPr
 import { useDisclosure, useLocalStorage } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
-import type { RoomViews } from "@prisma/client";
 import { IconCheck, IconQuestionMark } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -12,14 +11,14 @@ import { LOCAL_STORAGE_KEYS } from "~/config/localStorage";
 import useAudio from "~/hooks/useAudio";
 import useLoadingState from "~/hooks/useLoadingState/useLoadingState";
 import useNotification from "~/hooks/useNotification";
-import { useRoom } from "~/hooks/useRoom";
 import { socket } from "~/hooks/useSocket";
-import type { Game, TGame } from "../Game/games/game.types";
+import useSyncedRoom from "~/hooks/useSyncedRoom";
+import useTimer from "~/hooks/useTimer";
+import { RoomView, TimerType } from "~/types/gameshow.types";
+import { assignObjectKeyByKey } from "~/utils/helpers";
+import type { TGame } from "../Game/games/game.types";
 import MediaPlayer from "../MediaPlayer";
 import { type IModPanelProps } from "./modPanel.types";
-import useSyncedRoom from "~/hooks/useSyncedRoom";
-import { RoomView, TimerType } from "~/types/gameshow.types";
-import useTimer from "~/hooks/useTimer";
 
 const TIMER_SECONDS = 10;
 
@@ -86,7 +85,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
 
   const gameBtns = room.games.map((g) => {
     const btnDisabled =
-      g.identifier === room.context.currentGame.identifier && room.context.view === RoomView.GAME;
+      g.identifier === room.context.currentGame?.identifier && room.context.view === RoomView.GAME;
 
     return (
       <Button.Group key={g.identifier}>
@@ -118,13 +117,10 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
   const startGame = (game: TGame) => {
     // hideAnswer();
     // triggerAudioEvent("playSound", "intro");
-
-    room.context.currentGame.identifier = game.identifier;
-    room.context.currentGame.name = game.name;
-    room.context.currentGame.maxPoints = game.maxPoints;
-    room.context.currentGame.scorebarMode = game.scorebarMode;
-
-    // room.context.currentGame.name = game.name;
+    assignObjectKeyByKey(
+      game as unknown as Record<string, unknown>,
+      room.context.currentGame as unknown as Record<string, unknown>
+    );
     room.context.view = RoomView.GAME;
   };
 

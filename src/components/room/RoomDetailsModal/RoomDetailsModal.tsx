@@ -32,10 +32,10 @@ const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClo
           message: "Du verlässt jetzt den Raum",
           loading: true,
         });
-        socket.emit("leaveRoom", { roomId });
         // initUser();
         const routeDone = await router.push("/rooms/");
         if (routeDone) {
+          // TODO: leave player from team if user was a player
           notifications.update({
             id: "leaveRoom",
             title: "Erfolgreich",

@@ -14,6 +14,7 @@ const useSyncedRoom = () => {
   return {
     ...room.state,
     isLoaded: !!room.state?.id,
+    isClosed: room.state?.context.isClosed ?? false,
   };
 };
 

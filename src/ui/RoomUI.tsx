@@ -1,8 +1,12 @@
 import { Box, Flex } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { notifications } from "@mantine/notifications";
+import { IconCheck } from "@tabler/icons-react";
 import { IconArrowRight } from "@tabler/icons-react";
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { WebsocketProvider } from "y-partykit/provider";
 import ModPanel from "~/components/room/ModPanel";
 import RoomBody from "~/components/room/RoomBody";
 import RoomFooter from "~/components/room/RoomFooter";
@@ -18,6 +22,7 @@ const RoomUI = () => {
   const params = useParams();
 
   const roomId = params?.id as string;
+  const router = useRouter();
 
   const room = useSyncedRoom();
   const modPanelDisclosure = useDisclosure(false);
@@ -26,6 +31,20 @@ const RoomUI = () => {
     if (!roomId) return;
     connectToSocket(roomId);
   }, [roomId]);
+
+  useEffect(() => {
+    if (room.isClosed) {
+      void router.push("/rooms");
+
+      notifications.update({
+        id: "closeRoom",
+        title: "Raum geschlossen",
+        message: "Der Raum wurde vom Moderator geschlossen.",
+        loading: false,
+        icon: <IconCheck size="1rem" />,
+      });
+    }
+  }, [room.isClosed]);
 
   if (!room.isLoaded) {
     return <div>Loading ...</div>;

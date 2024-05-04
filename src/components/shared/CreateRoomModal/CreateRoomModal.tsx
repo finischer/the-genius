@@ -72,7 +72,6 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
 
     const room = initRoom(values.name, values.password, gameshow.games as TGame[], user.id);
 
-    console.log("Room: ", room);
     store.room.state = room;
 
     // await createParty({

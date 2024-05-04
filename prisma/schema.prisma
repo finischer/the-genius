@@ -269,7 +269,8 @@ type PlayerDuSagstSharedState {
 }
 
 type BuzzerState {
-  isPressed       Boolean  @default(false)
+  isLocked        Boolean  @default(false) // if true, the buzzer is locked and no player can buzz
+  isPressed       Boolean  @default(false) // if true, the buzzer is pressed
   playersBuzzered String[]
 }
 

@@ -1,7 +1,5 @@
-import type { BuzzerState, ScorebarTimerState, TeamAvatarImage } from "@prisma/client";
+import type { BuzzerState, TeamAvatarImage } from "@prisma/client";
 import type { TGame } from "~/components/room/Game/games/game.types";
-import type { SyncedMap, Y } from "@syncedstore/core";
-import type { YDocMap } from "./types";
 
 export enum RoomView {
   EMPTY = "empty",
@@ -45,6 +43,7 @@ export type Room = {
   };
   games: TGame[];
   context: {
+    isClosed: boolean;
     currentGame: TGame | null;
     view: RoomView;
     answerState: RoomAnswerState;

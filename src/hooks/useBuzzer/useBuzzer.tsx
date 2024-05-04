@@ -6,6 +6,8 @@ import useAudio from "../useAudio";
 import useSyncedRoom from "../useSyncedRoom";
 import useTimer from "../useTimer";
 import { TimerType } from "~/types/gameshow.types";
+import { roomConfig } from "~/config/room.config";
+import useNotification from "../useNotification";
 
 const useBuzzer = () => {
   const [isActive, setIsActive] = useState(true);
@@ -16,6 +18,7 @@ const useBuzzer = () => {
   const team = Object.values(room.teams).find((team) => team.players.some((p) => p.id === player?.id));
 
   const { triggerAudioEvent } = useAudio();
+  const { showInfoNotification } = useNotification();
 
   const { startTimer } = useTimer(
     team?.scorebarTimer ?? {
@@ -25,7 +28,7 @@ const useBuzzer = () => {
       initSeconds: 5,
     },
     TimerType.COUNTDOWN,
-    5
+    roomConfig.timeAfterBuzzerPressedSeconds
   );
 
   useEffect(() => {
@@ -57,8 +60,29 @@ const useBuzzer = () => {
     setIsActive(true);
   };
 
+  const lockAllBuzzers = () => {
+    const teams = Object.values(room.teams);
+    teams.forEach((team) => {
+      team.buzzer.isLocked = true;
+      team.buzzer.isPressed = false;
+      team.buzzer.playersBuzzered = [];
+    });
+  };
+
+  const unlockAllBuzzers = () => {
+    const teams = Object.values(room.teams);
+    teams.forEach((team) => {
+      team.buzzer.isLocked = false;
+    });
+  };
+
   const handleBuzzerClick = ({ withTimer }: { withTimer: boolean }) =>
     playerFunction((team, player) => {
+      if (team.buzzer.isLocked) {
+        showInfoNotification({ message: "Buzzer ist gesperrt!" });
+        return;
+      }
+
       if (wasAlreadyBuzzered || !isActive) return;
 
       team.isActiveTurn = true;
@@ -69,7 +93,17 @@ const useBuzzer = () => {
       }
     });
 
-  return { isActive, buzzer: handleBuzzerClick, activateBuzzer, deactivateBuzzer };
+  const areAllBuzzersLocked = Object.values(room.teams).every((team) => team.buzzer.isLocked);
+
+  return {
+    isActive,
+    buzzer: handleBuzzerClick,
+    activateBuzzer,
+    deactivateBuzzer,
+    lockAllBuzzers,
+    unlockAllBuzzers,
+    areAllBuzzersLocked,
+  };
 };
 
 export default useBuzzer;

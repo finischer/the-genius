@@ -8,22 +8,21 @@ import React, { useState } from "react";
 import GameDetailsModal from "~/components/gameshows/GameDetailsModal";
 import Tooltip from "~/components/shared/Tooltip/Tooltip";
 import { LOCAL_STORAGE_KEYS } from "~/config/localStorage";
+import { roomConfig } from "~/config/room.config";
 import useAudio from "~/hooks/useAudio";
+import useBuzzer from "~/hooks/useBuzzer";
 import useLoadingState from "~/hooks/useLoadingState/useLoadingState";
+import useNotefield from "~/hooks/useNotefield";
 import useNotification from "~/hooks/useNotification";
-import { socket } from "~/hooks/useSocket";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import useTimer from "~/hooks/useTimer";
 import { RoomView, TimerType } from "~/types/gameshow.types";
 import { assignObjectKeyByKey } from "~/utils/helpers";
 import type { TGame } from "../Game/games/game.types";
-import MediaPlayer from "../MediaPlayer";
 import { type IModPanelProps } from "./modPanel.types";
 
-const TIMER_SECONDS = 10;
-
 const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
-  const { showErrorNotification } = useNotification();
+  const { showErrorNotification, showInfoNotification } = useNotification();
   const router = useRouter();
   const { pageIsLoading } = useLoadingState();
   const [openedItems, setOpenedItems] = useLocalStorage<string[]>({
@@ -31,16 +30,20 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
     defaultValue: [],
   });
 
+  const { lockAllBuzzers, unlockAllBuzzers, areAllBuzzersLocked } = useBuzzer();
+
   // for game rules
   const [openedGameRules, { open: openGameRules, close: closeGameRules }] = useDisclosure();
   const [clickedGame, setClickedGame] = useState<TGame>();
 
   const room = useSyncedRoom();
+  const { triggerAudioEvent } = useAudio();
+  const { disableAllNotefields, toggleNotefields } = useNotefield();
 
   const { startTimer, active: isTimerActive } = useTimer(
     room.context.header.timer,
     TimerType.COUNTDOWN,
-    TIMER_SECONDS
+    roomConfig.modPanel.actions.timerSeconds
   );
 
   const [isOpen, { close: closeModPanel }] = disclosure;
@@ -50,12 +53,10 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
   const teamArray = Object.values(room.teams);
 
   const buzzerPressed = teamArray.filter((t) => t.isActiveTurn || t.buzzer.isPressed).length > 0;
-  const isOneScorebarTimerActive = teamArray.filter((t) => t.scorebarTimer.isActive).length > 0;
+  const isOneScorebarTimerActive = teamArray.filter((t) => t.scorebarTimer.active).length > 0;
 
   const allPlayers = teamArray.map((t) => t.players).flat();
   const atLeastOneNotefieldIsActive = allPlayers.filter((p) => p.context.notefield.isActive).length > 0;
-
-  const { triggerAudioEvent } = useAudio();
 
   const handleOpenGameRules = (game: TGame) => {
     setClickedGame(game);
@@ -63,6 +64,8 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
   };
 
   const releaseBuzzer = () => {
+    unlockAllBuzzers();
+
     Object.values(room.teams).forEach((team) => {
       team.isActiveTurn = false;
       team.buzzer.isPressed = false;
@@ -73,14 +76,6 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
   const hideAnswer = () => {
     room.context.answerState.isAnswerDisplayed = false;
     room.context.answerState.answer = "";
-  };
-
-  const toggleNotefields = () => {
-    // TODO: handle if one notefield is not active and other ones are active
-    const allPlayers = Object.values(room.teams)
-      .map((team) => team.players)
-      .flat();
-    allPlayers.forEach((player) => (player.context.notefield.isActive = !player.context.notefield.isActive));
   };
 
   const gameBtns = room.games.map((g) => {
@@ -126,6 +121,9 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
 
   const changeView = (newView: RoomView) => {
     hideAnswer();
+    lockAllBuzzers();
+    disableAllNotefields();
+
     room.context.view = newView;
   };
 
@@ -148,27 +146,27 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
           loading: true,
         });
 
-        socket.emit("closeRoom", { roomId: room.id }, async ({ closeSuccessful }) => {
-          if (closeSuccessful) {
-            const routeDone = await router.push("/rooms");
+        room.context.isClosed = true;
 
-            if (routeDone) {
-              notifications.update({
-                id: "closeRoom",
-                title: "Erfolgreich",
-                message: "Raum wurde erfolgreich geschlossen",
-                loading: false,
-                icon: <IconCheck size="1rem" />,
-              });
-            }
-          } else {
-            showErrorNotification({
-              message: "Raum konnte nicht geschlossen werden",
-            });
-          }
+        notifications.update({
+          id: "closeRoom",
+          title: "Erfolgreich",
+          message: "Raum wurde erfolgreich geschlossen",
+          loading: false,
+          icon: <IconCheck size="1rem" />,
         });
       },
     });
+  };
+
+  const toggleBuzzerLockState = () => {
+    if (areAllBuzzersLocked) {
+      unlockAllBuzzers();
+      showInfoNotification({ message: "Alle Buzzer entsperrt" });
+    } else {
+      lockAllBuzzers();
+      showInfoNotification({ message: "Alle Buzzer gesperrt" });
+    }
   };
 
   return (
@@ -249,7 +247,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                       onClick={() => startTimer()}
                       disabled={isTimerActive}
                     >
-                      {TIMER_SECONDS}s Timer starten
+                      {roomConfig.modPanel.actions.timerSeconds}s Timer starten
                     </Button>
                     <Button
                       {...btnVariantDefault}
@@ -263,6 +261,13 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                       disabled={!buzzerPressed || isOneScorebarTimerActive}
                     >
                       Alle Buzzer freigeben
+                    </Button>
+                    <Button
+                      {...btnVariantDefault}
+                      onClick={toggleBuzzerLockState}
+                      disabled={isOneScorebarTimerActive}
+                    >
+                      Alle Buzzer {areAllBuzzersLocked ? "entsperren" : "sperren"}
                     </Button>
                     <Button
                       {...btnVariantDefault}
@@ -290,18 +295,21 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                     <Button
                       {...btnVariantDefault}
                       onClick={() => triggerAudioEvent("playSound", "bell")}
+                      disabled
                     >
                       Korrekte Antwort
                     </Button>
                     <Button
                       {...btnVariantDefault}
                       onClick={() => triggerAudioEvent("playSound", "bass")}
+                      disabled
                     >
                       Falsche Antwort
                     </Button>
                     <Button
                       {...btnVariantDefault}
                       onClick={() => triggerAudioEvent("playSound", "winning")}
+                      disabled
                     >
                       Winner Sound
                     </Button>
@@ -327,7 +335,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
               </Accordion.Item>
             </Accordion>
 
-            <MediaPlayer />
+            {/* <MediaPlayer /> */}
           </Flex>
         </Flex>
       </Drawer>

@@ -31,6 +31,13 @@ export const roomsRouter = createTRPCRouter({
         },
       });
 
+      if (!room) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Der Raum existiert nicht",
+        });
+      }
+
       return {
         createdAt: room.createdAt,
         id: room.id,
@@ -50,6 +57,28 @@ export const roomsRouter = createTRPCRouter({
       return {
         exists: !!room,
         roomId: input.roomId,
+      };
+    }),
+  removeActiveRoom: protectedProcedure
+    .input(z.object({ roomId: z.string() }))
+    .output(
+      z.object({
+        id: z.string(),
+        roomId: z.string(),
+        deletedAt: z.date(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const room = await ctx.prisma.activeRooms.delete({
+        where: {
+          roomId: input.roomId,
+        },
+      });
+
+      return {
+        id: room.id,
+        roomId: room.roomId,
+        deletedAt: new Date(),
       };
     }),
   getAll: protectedProcedure.output(z.array(safedRoomSchema)).query(async ({ ctx }) => {

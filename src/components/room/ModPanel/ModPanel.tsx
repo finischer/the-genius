@@ -20,8 +20,11 @@ import { RoomView, TimerType } from "~/types/gameshow.types";
 import { assignObjectKeyByKey } from "~/utils/helpers";
 import type { TGame } from "../Game/games/game.types";
 import { type IModPanelProps } from "./modPanel.types";
+import { api } from "~/utils/api";
 
 const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
+  const { mutateAsync: removeActiveRoom } = api.rooms.removeActiveRoom.useMutation();
+
   const { showErrorNotification, showInfoNotification } = useNotification();
   const router = useRouter();
   const { pageIsLoading } = useLoadingState();
@@ -139,12 +142,21 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
       ),
       labels: { confirm: "Ja", cancel: "Nein" },
       confirmProps: { color: "red" },
-      onConfirm: () => {
+      onConfirm: async () => {
         notifications.show({
           id: "closeRoom",
           message: "Raum wird geschlossen",
           loading: true,
         });
+
+        const deletedRoom = await removeActiveRoom({ roomId: room.id });
+
+        if (!deletedRoom) {
+          showErrorNotification({
+            message: "Raum konnte nicht geschlossen werden",
+          });
+          return;
+        }
 
         room.context.isClosed = true;
 

@@ -28,6 +28,7 @@ import { api } from "~/utils/api";
 import Room from "~/classes/Room";
 import { useSyncedStore } from "@syncedstore/react";
 import { connectToSocket, initRoom, roomStore } from "~/config/store";
+import useNotification from "~/hooks/useNotification";
 
 const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose, gameshow }) => {
   const gameshowGames = gameshow.games as unknown as TGame[];
@@ -49,6 +50,7 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
 
   const { user } = useUser();
   const router = useRouter();
+  const { handleZodError, showErrorNotification } = useNotification();
 
   const store = useSyncedStore(roomStore);
 
@@ -63,6 +65,10 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
   }, [openedModal]);
 
   const { mutateAsync: createParty } = api.parties.create.useMutation();
+  const { mutateAsync: createRoomInDb } = api.rooms.addRoom.useMutation({
+    onError: (error) =>
+      handleZodError(error.data?.zodError, error.message ?? "Raum konnte nicht erstellt werden"),
+  });
 
   const createRoom = form.onSubmit(async (values) => {
     setLoader({
@@ -73,6 +79,18 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
     const room = initRoom(values.name, values.password, gameshow.games as TGame[], user.id);
 
     store.room.state = room;
+
+    const dbRoom = await createRoomInDb({
+      id: room.id,
+    });
+
+    if (!dbRoom) {
+      showErrorNotification({
+        title: "Fehler",
+        message: "Raum konnte nicht erstellt werden",
+      });
+      return;
+    }
 
     // await createParty({
     //   id: room.id,

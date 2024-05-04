@@ -1,18 +1,15 @@
 import { Box, Flex } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
-import { IconCheck } from "@tabler/icons-react";
-import { IconArrowRight } from "@tabler/icons-react";
+import { IconArrowRight, IconCheck } from "@tabler/icons-react";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { WebsocketProvider } from "y-partykit/provider";
+import { useEffect } from "react";
 import ModPanel from "~/components/room/ModPanel";
 import RoomBody from "~/components/room/RoomBody";
 import RoomFooter from "~/components/room/RoomFooter";
 import RoomHeader from "~/components/room/RoomHeader";
 import ActionIcon from "~/components/shared/ActionIcon";
-import GamesJSON from "~/components/shared/GamesJSON";
 import ModView from "~/components/shared/ModView";
 import { connectToSocket } from "~/config/store";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
@@ -26,18 +23,11 @@ const RoomUI = () => {
 
   const room = useSyncedRoom();
   const modPanelDisclosure = useDisclosure(false);
-  const [wsProvider, setWsProvider] = useState<WebsocketProvider | undefined>();
 
   useEffect(() => {
     if (!roomId) return;
-    const provider = connectToSocket(roomId);
-    setWsProvider(provider);
+    connectToSocket(roomId);
   }, [roomId]);
-
-  useEffect(() => {
-    console.log("BC Connected: ", wsProvider?.bcconnected);
-    console.log("WS Connected: ", wsProvider?.wsconnected);
-  }, [wsProvider]);
 
   useEffect(() => {
     if (room.isClosed) {

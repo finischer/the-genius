@@ -203,6 +203,42 @@ import { formatTimestamp } from "~/utils/dates";
 // };
 
 const RoomsPage = () => {
+  const [inputValue, setInputValue] = useState("");
+  const router = useRouter();
+  const { showErrorNotification, handleZodError } = useNotification();
+
+  const { refetch: isRoomActive } = api.rooms.roomExists.useQuery(
+    { roomId: inputValue },
+    {
+      enabled: false,
+      onError: (error) => {
+        handleZodError(error.data?.zodError, error.message ?? "Ein Fehler ist aufgetreten");
+      },
+    }
+  );
+
+  const enterRoom = async () => {
+    const { data } = await isRoomActive();
+
+    if (!data) {
+      showErrorNotification({
+        title: "Fehler",
+        message: "Ein Fehler ist aufgetreten",
+      });
+      return;
+    }
+
+    if (!data.exists) {
+      showErrorNotification({
+        title: "Raum existiert nicht",
+        message: "Der Raum mit der ID existiert nicht",
+      });
+      return;
+    }
+
+    void router.push("/room/" + data.roomId);
+  };
+
   return (
     <PageLayout>
       <NextHead title="Raum beitreten" />
@@ -212,10 +248,13 @@ const RoomsPage = () => {
           <TextInput
             size="lg"
             label="Raum-ID"
+            value={inputValue}
+            onChange={(event) => setInputValue(event.currentTarget.value)}
           />
           <ActionIcon
             size="xl"
             toolTip="Raum beitreten"
+            onClick={enterRoom}
           >
             <IconDoorEnter size="2.25rem" />
           </ActionIcon>

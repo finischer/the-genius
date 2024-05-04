@@ -2,13 +2,12 @@ import { Button, CopyButton, Flex, Modal, Table, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconCopy } from "@tabler/icons-react";
+import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
 import React from "react";
-import useLoadingState from "~/hooks/useLoadingState/useLoadingState";
-import { socket } from "~/hooks/useSocket";
-import { type IRoomDetailsModalProps } from "./roomDetailsModal.types";
 import ActionIcon from "~/components/shared/ActionIcon";
-import { usePathname } from "next/navigation";
+import useLoadingState from "~/hooks/useLoadingState/useLoadingState";
+import { type IRoomDetailsModalProps } from "./roomDetailsModal.types";
 
 const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClose, room }) => {
   const { pageIsLoading } = useLoadingState();

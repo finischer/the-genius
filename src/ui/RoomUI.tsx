@@ -26,11 +26,18 @@ const RoomUI = () => {
 
   const room = useSyncedRoom();
   const modPanelDisclosure = useDisclosure(false);
+  const [wsProvider, setWsProvider] = useState<WebsocketProvider | undefined>();
 
   useEffect(() => {
     if (!roomId) return;
-    connectToSocket(roomId);
+    const provider = connectToSocket(roomId);
+    setWsProvider(provider);
   }, [roomId]);
+
+  useEffect(() => {
+    console.log("BC Connected: ", wsProvider?.bcconnected);
+    console.log("WS Connected: ", wsProvider?.wsconnected);
+  }, [wsProvider]);
 
   useEffect(() => {
     if (room.isClosed) {

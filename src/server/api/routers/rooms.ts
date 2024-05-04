@@ -2,7 +2,7 @@ import { GameshowMode } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import bcrypt from "bcrypt";
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
 
 export const safedRoomSchema = z.object({
   id: z.string(),
@@ -21,27 +21,56 @@ export const safedRoomSchema = z.object({
 export type SafedRoom = z.infer<typeof safedRoomSchema>;
 
 export const roomsRouter = createTRPCRouter({
-  getAll: protectedProcedure
-    .output(z.array(safedRoomSchema))
-    .query(async ({ ctx }) => {
-      const rooms = await ctx.prisma.room.findMany({
-        include: {
-          creator: {
-            select: {
-              username: true,
-            },
-          },
+  addRoom: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .output(z.object({ createdAt: z.date(), roomId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const room = await ctx.prisma.activeRooms.create({
+        data: {
+          roomId: input.id,
         },
       });
 
-      // check if user is the room creator
-      const roomsWithIsCreatorField = rooms.map((room) => ({
-        ...room,
-        isCreator: room.creatorId === ctx.session.user.id,
-      }));
-
-      return roomsWithIsCreatorField;
+      return {
+        createdAt: room.createdAt,
+        id: room.id,
+        roomId: room.roomId,
+      };
     }),
+  roomExists: publicProcedure
+    .input(z.object({ roomId: z.string() }))
+    .output(z.object({ exists: z.boolean(), roomId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const room = await ctx.prisma.activeRooms.findUnique({
+        where: {
+          roomId: input.roomId,
+        },
+      });
+
+      return {
+        exists: !!room,
+        roomId: input.roomId,
+      };
+    }),
+  getAll: protectedProcedure.output(z.array(safedRoomSchema)).query(async ({ ctx }) => {
+    const rooms = await ctx.prisma.room.findMany({
+      include: {
+        creator: {
+          select: {
+            username: true,
+          },
+        },
+      },
+    });
+
+    // check if user is the room creator
+    const roomsWithIsCreatorField = rooms.map((room) => ({
+      ...room,
+      isCreator: room.creatorId === ctx.session.user.id,
+    }));
+
+    return roomsWithIsCreatorField;
+  }),
   validatePassword: protectedProcedure
     .input(
       z.object({
@@ -77,10 +106,7 @@ export const roomsRouter = createTRPCRouter({
         });
       }
 
-      const isValidPassword = await bcrypt.compare(
-        input.password,
-        room.password
-      );
+      const isValidPassword = await bcrypt.compare(input.password, room.password);
 
       const res = {
         roomId: room.id,

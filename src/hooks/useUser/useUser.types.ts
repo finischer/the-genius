@@ -19,5 +19,5 @@ export interface IUseUserContext {
   updateUsername: (newUsername: string) => Promise<boolean>;
   isLoading: boolean;
   hostFunction: <T extends any[]>(func: FunctionToWrap<T>) => FunctionToWrap<T>;
-  playerFunction: (func: (team: Team, player: Player) => void) => () => void;
+  playerFunction: (func: (team: Team, player: Player) => void) => void;
 }

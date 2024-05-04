@@ -4,6 +4,8 @@ import { socket } from "../useSocket";
 import { useUser } from "../useUser";
 import useAudio from "../useAudio";
 import useSyncedRoom from "../useSyncedRoom";
+import useTimer from "../useTimer";
+import { TimerType } from "~/types/gameshow.types";
 
 const useBuzzer = () => {
   const [isActive, setIsActive] = useState(true);
@@ -11,13 +13,26 @@ const useBuzzer = () => {
   const room = useSyncedRoom();
   const wasAlreadyBuzzered = Object.values(room.teams).some((team) => team.isActiveTurn);
 
+  const team = Object.values(room.teams).find((team) => team.players.some((p) => p.id === player?.id));
+
   const { triggerAudioEvent } = useAudio();
 
+  const { startTimer } = useTimer(
+    team?.scorebarTimer ?? {
+      id: null,
+      active: false,
+      currSeconds: 0,
+      initSeconds: 5,
+    },
+    TimerType.COUNTDOWN,
+    5
+  );
+
   useEffect(() => {
-    function handleBuzzerEvent(e: KeyboardEvent) {
+    function handleBuzzerEvent(e: KeyboardEvent, withTimer: boolean = true) {
       // only listen to space
       if (e.code === "Space" && document.activeElement?.tagName !== "TEXTAREA") {
-        handleBuzzerClick();
+        handleBuzzerClick({ withTimer: true });
       }
     }
 
@@ -42,15 +57,17 @@ const useBuzzer = () => {
     setIsActive(true);
   };
 
-  const handleBuzzerClick = playerFunction((team, player) => {
-    if (!isPlayer || wasAlreadyBuzzered || !isActive) return;
-    // socket.emit("buzzer", { teamId: team.id, withTimer: true });
-    // triggerAudioEvent("playSound", "buzzer");
-    // triggerAudioEvent("playSound", "warningBuzzer");
-    team.isActiveTurn = true;
-    team.buzzer.isPressed = true;
-    team.buzzer.playersBuzzered.push(player.id);
-  });
+  const handleBuzzerClick = ({ withTimer }: { withTimer: boolean }) =>
+    playerFunction((team, player) => {
+      if (wasAlreadyBuzzered || !isActive) return;
+
+      team.isActiveTurn = true;
+      team.buzzer.isPressed = true;
+      team.buzzer.playersBuzzered.push(player.id);
+      if (withTimer) {
+        startTimer();
+      }
+    });
 
   return { isActive, buzzer: handleBuzzerClick, activateBuzzer, deactivateBuzzer };
 };

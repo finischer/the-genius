@@ -2,14 +2,12 @@ import { Button, Flex } from "@mantine/core";
 import React from "react";
 import ModView from "~/components/shared/ModView";
 import useAudio from "~/hooks/useAudio";
+import useSyncedRoom from "~/hooks/useSyncedRoom";
+import useTimer from "~/hooks/useTimer";
 import { useUser } from "~/hooks/useUser";
+import { TimerType } from "~/types/gameshow.types";
 import MerkenPlayground from "./components/MerkenPlayground/MerkenPlayground";
 import { type IMerkenGameProps } from "./merken.types";
-import useTimer from "~/hooks/useTimer";
-import { useRoom } from "~/hooks/useRoom";
-import useSyncedRoom from "~/hooks/useSyncedRoom";
-import { TimerType } from "~/types/gameshow.types";
-import { getYjsValue } from "@syncedstore/core";
 
 const MerkenGame: React.FC<IMerkenGameProps> = ({ game }) => {
   const { isHost, hostFunction } = useUser();

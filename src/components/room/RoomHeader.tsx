@@ -44,7 +44,7 @@ const RoomHeader = () => {
               top={0}
               contentCentered
               withShadow
-              onClick={buzzer}
+              onClick={() => buzzer({ withTimer: true })}
             >
               <Text>{currGame.name}</Text>
             </ContainerBox>

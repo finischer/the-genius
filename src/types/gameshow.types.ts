@@ -23,7 +23,7 @@ export type Team = {
   avatarImageList: TeamAvatarImage[];
   players: Player[];
   buzzer: BuzzerState;
-  scorebarTimer: ScorebarTimerState;
+  scorebarTimer: TimerState;
   isActiveTurn: boolean;
 };
 

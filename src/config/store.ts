@@ -57,8 +57,10 @@ export const initTeam = (name: string): Team => ({
   isActiveTurn: false,
   players: [],
   scorebarTimer: {
-    isActive: false,
-    seconds: 5,
+    id: null,
+    currSeconds: 0,
+    initSeconds: 5,
+    active: false,
   },
 });
 

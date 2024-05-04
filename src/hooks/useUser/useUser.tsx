@@ -7,6 +7,7 @@ import { api } from "~/utils/api";
 import useNotification from "../useNotification";
 import useSyncedRoom from "../useSyncedRoom";
 import { type IUseUserContext, type IUseUserProvider } from "./useUser.types";
+import { getYjsValue } from "@syncedstore/core";
 
 const UserContext = createContext<IUseUserContext | undefined>(undefined);
 
@@ -84,12 +85,10 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
     return (...args: T) => func(...args);
   }
 
-  function playerFunction(func: (team: Team, player: Player) => void): () => void {
-    if (!isPlayer) return () => null;
+  function playerFunction(func: (team: Team, player: Player) => void): void {
+    if (!isPlayer || !team) return;
 
-    if (!team) return () => null;
-
-    return () => func(team, player);
+    func(team, player);
   }
 
   useEffect(() => {

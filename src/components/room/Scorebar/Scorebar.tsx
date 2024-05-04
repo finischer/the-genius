@@ -84,7 +84,8 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
 
   const disableModBtns = room.context.view !== RoomView.GAME;
   const disableIncreaseScoreBtn =
-    disableModBtns || (room.context.currentGame && team.gameScore >= room.context.currentGame.maxPoints);
+    disableModBtns ||
+    (room.context.currentGame ? team.gameScore >= room.context.currentGame.maxPoints : true);
   const disableDecreaseScoreBtn = disableModBtns || team.gameScore <= 0;
 
   const playerNamesWhoBuzzered = team.players
@@ -138,13 +139,13 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
     >
       {/* Left Scorbar timer */}
       <AnimatePresence>
-        {timerPosition === "left" && team.scorebarTimer.isActive && (
+        {timerPosition === "left" && team.scorebarTimer.active && (
           <motion.div {...animations.fadeInOut}>
             <Container
               bg={theme.primaryColor}
               style={scorebarTimerStyle}
             >
-              {team.scorebarTimer.seconds}
+              {team.scorebarTimer.currSeconds}
             </Container>
           </motion.div>
         )}
@@ -252,7 +253,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
             <Group mb="xs">
               <ActionIcon
                 variant="outline"
-                disabled={team.scorebarTimer.isActive}
+                disabled={team.scorebarTimer.active}
                 toolTip={highlightBoxShadow ? "Buzzer freigeben" : `${team.name} an der Reihe sein lassen`}
                 onClick={toggleTeamActiveState}
               >
@@ -352,13 +353,13 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
 
       {/* Right scorbar timer */}
       <AnimatePresence>
-        {timerPosition === "right" && team.scorebarTimer.isActive && (
+        {timerPosition === "right" && team.scorebarTimer.active && (
           <motion.div {...animations.fadeInOut}>
             <Container
               bg={theme.primaryColor}
               style={scorebarTimerStyle}
             >
-              {team.scorebarTimer.seconds}
+              {team.scorebarTimer.currSeconds}
             </Container>
           </motion.div>
         )}

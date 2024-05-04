@@ -182,11 +182,11 @@ export default RoomPage;
 //     <>
 //       <NextHead title={`Raum ${room.name}`} />
 //       {/* Modals */}
-//       <RoomDetailsModal
-//         room={room}
-//         openedModal={openedRoomDetails}
-//         onClose={closeRoomDetails}
-//       />
+// <RoomDetailsModal
+//   room={room}
+//   openedModal={openedRoomDetails}
+//   onClose={closeRoomDetails}
+// />
 //       {currentGame && (
 //         <GameRulesModal
 //           gameName={currentGame.name}

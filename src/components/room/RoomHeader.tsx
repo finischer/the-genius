@@ -6,11 +6,16 @@ import useSyncedRoom from "~/hooks/useSyncedRoom";
 import ContainerBox from "../shared/ContainerBox";
 import { RoomView } from "~/types/gameshow.types";
 import useBuzzer from "~/hooks/useBuzzer";
+import { IconShare } from "@tabler/icons-react";
+import ActionIcon from "../shared/ActionIcon";
+import { useDisclosure } from "@mantine/hooks";
+import RoomDetailsModal from "./RoomDetailsModal";
 
 const RoomHeader = () => {
   const { buzzer } = useBuzzer();
   const room = useSyncedRoom();
   const theme = useMantineTheme();
+  const [openedRoomDetails, { open: openRoomDetails, close: closeRoomDetails }] = useDisclosure(false);
 
   const currGame = room.context.currentGame;
 
@@ -22,6 +27,23 @@ const RoomHeader = () => {
       w="100%"
       pos="relative"
     >
+      <RoomDetailsModal
+        room={room}
+        openedModal={openedRoomDetails}
+        onClose={closeRoomDetails}
+      />
+
+      <ActionIcon
+        color={theme.primaryColor}
+        size="xl"
+        radius="xl"
+        variant="filled"
+        onClick={openRoomDetails}
+        toolTip="Teilen"
+      >
+        <IconShare size="1.5rem" />
+      </ActionIcon>
+
       <Flex
         w="100%"
         justify="center"

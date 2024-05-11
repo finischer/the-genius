@@ -1,4 +1,5 @@
-import type { BuzzerState, TeamAvatarImage } from "@prisma/client";
+import { signOut } from "next-auth/react";
+import type { BuzzerState, RoomMusic, RoomSounds, TeamAvatarImage } from "@prisma/client";
 import type { TGame } from "~/components/room/Game/games/game.types";
 
 export enum RoomView {
@@ -49,6 +50,10 @@ export type Room = {
     answerState: RoomAnswerState;
     header: {
       timer: TimerState;
+    };
+    audio: {
+      sounds: RoomSounds;
+      music: RoomMusic;
     };
     gameIntro: {
       alreadyPlayed: boolean;

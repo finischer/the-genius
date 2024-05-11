@@ -1,3 +1,5 @@
+import { getYjsValue } from "@syncedstore/core";
+
 export const crateRandomUserName = () => {
   const randomID = Math.floor(Math.random() * 1000);
 
@@ -37,4 +39,10 @@ export const assignObjectKeyByKey = (source: Record<string, unknown>, target: Re
       target[key] = value;
     }
   }
+};
+
+export const displayObject = (obj: Object) => {
+  const value = getYjsValue(obj)?.toJSON();
+  console.log({ value });
+  return value;
 };

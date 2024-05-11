@@ -1,5 +1,5 @@
 .flagImg {
-  &[data-hostAndNoFlag="true"]:hover {
+  &[data-hostandnoflag="true"]:hover {
     cursor: pointer;
     opacity: 0.3 !important;
   }

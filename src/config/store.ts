@@ -4,6 +4,9 @@ import { WebsocketProvider } from "y-partykit/provider";
 import type { TGame } from "~/components/room/Game/games/game.types";
 import { RoomView, type Player, type Room, type Team } from "~/types/gameshow.types";
 import { roomConfig } from "./room.config";
+import { musicHandler } from "~/pages/api/handlers/musicHandlers";
+import type { RoomSounds } from "@prisma/client";
+import type { isAscii } from "buffer";
 
 export const initRoom = (name: string, password: string, games: TGame[], creatorId: string): Room => ({
   id: randomId(),
@@ -25,6 +28,13 @@ export const initRoom = (name: string, password: string, games: TGame[], creator
         active: false,
         currSeconds: 0,
         initSeconds: 0,
+      },
+    },
+    audio: {
+      sounds: {} as RoomSounds,
+      music: {
+        isActive: false,
+        title: "",
       },
     },
     answerState: {

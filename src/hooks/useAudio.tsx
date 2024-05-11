@@ -2,6 +2,8 @@ import type { RoomSounds } from "@prisma/client";
 import path from "path";
 import { useEffect, useState } from "react";
 import { socket } from "./useSocket";
+import useSyncedRoom from "./useSyncedRoom";
+import { assignObjectKeyByKey, displayObject } from "~/utils/helpers";
 
 type TSoundId = keyof RoomSounds;
 
@@ -40,6 +42,7 @@ function audioIsPlaying(audio: HTMLAudioElement) {
 }
 
 const useAudio = () => {
+  const room = useSyncedRoom();
   const [audioList, setAudioList] = useState<TAudioSound[]>([]);
 
   useEffect(() => {
@@ -68,7 +71,15 @@ const useAudio = () => {
   }
 
   function triggerAudioEvent(event: TAudioEvent, soundId: TSoundId) {
-    socket.emit(event, { soundId });
+    if (event === "playSound") {
+      assignObjectKeyByKey(
+        {
+          ...room.context.audio.sounds,
+          [soundId]: true,
+        },
+        room.context.audio.sounds
+      );
+    }
   }
 
   function stopAllAudio() {

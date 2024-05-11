@@ -1,6 +1,7 @@
 import { Box, Flex } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
+import type { RoomSounds } from "@prisma/client";
 import { IconArrowRight, IconCheck } from "@tabler/icons-react";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/router";
@@ -12,16 +13,20 @@ import RoomHeader from "~/components/room/RoomHeader";
 import ActionIcon from "~/components/shared/ActionIcon";
 import ModView from "~/components/shared/ModView";
 import { connectToSocket } from "~/config/store";
+import useAudio from "~/hooks/useAudio";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { sizes } from "~/styles/constants";
+import { displayObject } from "~/utils/helpers";
 
 const RoomUI = () => {
   const params = useParams();
+  const { playAudio } = useAudio();
 
   const roomId = params?.id as string;
   const router = useRouter();
 
   const room = useSyncedRoom();
+  const sounds = room.context?.audio.sounds ?? [];
   const modPanelDisclosure = useDisclosure(false);
 
   useEffect(() => {
@@ -42,6 +47,15 @@ const RoomUI = () => {
       });
     }
   }, [room.isClosed]);
+
+  useEffect(() => {
+    for (const [key, sound] of Object.entries(sounds)) {
+      if (sound) {
+        playAudio(key as unknown as keyof RoomSounds);
+        sounds[key as unknown as keyof RoomSounds] = false;
+      }
+    }
+  }, [Object.values(sounds)]);
 
   if (!room.isLoaded) {
     return <div>Loading ...</div>;

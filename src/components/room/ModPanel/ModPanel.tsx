@@ -113,13 +113,16 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
   });
 
   const startGame = (game: TGame) => {
-    // hideAnswer();
-    // triggerAudioEvent("playSound", "intro");
+    hideAnswer();
     assignObjectKeyByKey(
       game as unknown as Record<string, unknown>,
       room.context.currentGame as unknown as Record<string, unknown>
     );
     room.context.view = RoomView.GAME;
+    room.context.display.game = false;
+    setTimeout(() => {
+      room.context.display.gameIntro = true;
+    }, 500);
   };
 
   const changeView = (newView: RoomView) => {

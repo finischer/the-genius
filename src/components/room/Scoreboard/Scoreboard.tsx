@@ -44,13 +44,13 @@ const Scoreboard: React.FC<IScoreboardProps> = ({ team, color }) => {
 
   const increaseScore = () => {
     if (team.totalScore >= minNumOfGamesToWin) return;
-    // triggerAudioEvent("playSound", "shimmer");
+    triggerAudioEvent("playSound", "shimmer");
     team.totalScore += 1;
   };
 
   const decreaseScore = () => {
     if (team.totalScore <= 0) return;
-    // triggerAudioEvent("playSound", "shimmer");
+    triggerAudioEvent("playSound", "shimmer");
     team.totalScore -= 1;
   };
 

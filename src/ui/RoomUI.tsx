@@ -14,6 +14,7 @@ import ActionIcon from "~/components/shared/ActionIcon";
 import ModView from "~/components/shared/ModView";
 import { connectToSocket } from "~/config/store";
 import useAudio from "~/hooks/useAudio";
+import useMusic from "~/hooks/useMusic";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { sizes } from "~/styles/constants";
 import { displayObject } from "~/utils/helpers";
@@ -21,12 +22,17 @@ import { displayObject } from "~/utils/helpers";
 const RoomUI = () => {
   const params = useParams();
   const { playAudio } = useAudio();
+  const { play: playMusic, stop: stopMusic, pause: pauseMusic } = useMusic();
 
   const roomId = params?.id as string;
   const router = useRouter();
 
   const room = useSyncedRoom();
   const sounds = room.context?.audio.sounds ?? [];
+  const musicState = room.context?.audio.music ?? {
+    isActive: false,
+    title: "lightsDisappear",
+  };
   const modPanelDisclosure = useDisclosure(false);
 
   useEffect(() => {
@@ -48,6 +54,7 @@ const RoomUI = () => {
     }
   }, [room.isClosed]);
 
+  // Handle Sound Effects
   useEffect(() => {
     for (const [key, sound] of Object.entries(sounds)) {
       if (sound) {
@@ -56,6 +63,19 @@ const RoomUI = () => {
       }
     }
   }, [Object.values(sounds)]);
+
+  // Handle Music
+  useEffect(() => {
+    if (!room) return;
+
+    if (musicState.isActive) {
+      playMusic({ id: musicState.title });
+    } else {
+      pauseMusic();
+    }
+
+    return () => stopMusic();
+  }, [musicState.isActive, musicState.title]);
 
   if (!room.isLoaded) {
     return <div>Loading ...</div>;

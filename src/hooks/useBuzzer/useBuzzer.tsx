@@ -8,12 +8,12 @@ import useTimer from "../useTimer";
 import { TimerType } from "~/types/gameshow.types";
 import { roomConfig } from "~/config/room.config";
 import useNotification from "../useNotification";
+import { displayObject } from "~/utils/helpers";
 
 const useBuzzer = () => {
   const [isActive, setIsActive] = useState(true);
   const { isPlayer, playerFunction, player } = useUser();
   const room = useSyncedRoom();
-  const wasAlreadyBuzzered = Object.values(room.teams).some((team) => team.isActiveTurn);
 
   const team = Object.values(room.teams).find((team) => team.players.some((p) => p.id === player?.id));
 
@@ -83,12 +83,15 @@ const useBuzzer = () => {
         return;
       }
 
+      const wasAlreadyBuzzered = Object.values(room.teams).some((team) => team.isActiveTurn);
       if (wasAlreadyBuzzered || !isActive) return;
+      triggerAudioEvent("playSound", "buzzer");
 
       team.isActiveTurn = true;
       team.buzzer.isPressed = true;
       team.buzzer.playersBuzzered.push(player.id);
       if (withTimer) {
+        triggerAudioEvent("playSound", "warningBuzzer");
         startTimer();
       }
     });

@@ -2,9 +2,7 @@ import { Flex, Text, useMantineTheme } from "@mantine/core";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect } from "react";
 import useAudio from "~/hooks/useAudio";
-import { useRoom } from "~/hooks/useRoom";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
-import useTimer from "~/hooks/useTimer";
 import { animations } from "~/utils/animations";
 
 const Timer = () => {

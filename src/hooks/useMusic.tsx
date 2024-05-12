@@ -2,6 +2,7 @@ import useSound from "use-sound";
 import type { TMusicSpriteMap, TSongId, TSongMap } from "~/components/room/MediaPlayer/mediaPlayer.types";
 import { useRoom } from "./useRoom";
 import { socket } from "./useSocket";
+import useSyncedRoom from "./useSyncedRoom";
 
 const songInformationMap: TSongMap = {
   violation: {
@@ -31,9 +32,12 @@ const musicSprite: TMusicSpriteMap = {
 };
 
 const useMusic = () => {
-  const { room } = useRoom();
+  const room = useSyncedRoom();
 
-  const musicState = room?.state.music;
+  const musicState = room.context?.audio.music ?? {
+    isActive: false,
+    title: "lightsDisappear",
+  };
   const musicTitle: TSongId = (musicState?.title as TSongId) || "lightsDisappear";
 
   const songInfo = songInformationMap[musicTitle];
@@ -46,11 +50,14 @@ const useMusic = () => {
   });
 
   const emitPlayMusic = ({ songId }: { songId: TSongId }) => {
-    socket.emit("playMusic", { songId });
+    // socket.emit("playMusic", { songId });
+    musicState.isActive = true;
+    musicState.title = songId;
   };
 
   const emitPauseMusic = () => {
-    socket.emit("pauseMusic");
+    // socket.emit("pauseMusic");
+    musicState.isActive = false;
   };
 
   const playNextSong = () => {

@@ -8,6 +8,8 @@ import useNotification from "../useNotification";
 import useSyncedRoom from "../useSyncedRoom";
 import { type IUseUserContext, type IUseUserProvider } from "./useUser.types";
 import { getYjsValue } from "@syncedstore/core";
+import { createRandomUserName } from "~/utils/helpers";
+import { randomId } from "@mantine/hooks";
 
 const UserContext = createContext<IUseUserContext | undefined>(undefined);
 
@@ -31,12 +33,12 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
 
   function initUser() {
     const user: TUserReduced = {
-      id: session?.user.id || "",
-      name: session?.user.name || "",
+      id: session?.user.id || randomId(),
+      name: session?.user.name || createRandomUserName(),
       email: session?.user.email || "",
       image: session?.user.image || null,
-      role: session?.user.role || "USER",
-      username: session?.user.username || "NOT_FOUND",
+      role: session?.user.role || "GUEST",
+      username: session?.user.username || createRandomUserName(),
     };
 
     return user;

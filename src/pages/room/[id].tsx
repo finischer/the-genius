@@ -1,15 +1,42 @@
-import { Button, Flex, Stack } from "@mantine/core";
+import { Button, Flex, Input, Modal, Stack, type ModalProps } from "@mantine/core";
+import { UserRole } from "@prisma/client";
+import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState, type FC } from "react";
 import { connectToSocket } from "~/config/store";
 import SyncedRoomProvider from "~/context/SyncedRoomContext";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
+import { useUser } from "~/hooks/useUser";
 import { sizes } from "~/styles/constants";
 import RoomUI from "~/ui/RoomUI";
 
 const RoomPage = () => {
+  const { user, setUser } = useUser();
+  const { status } = useSession();
+
+  const showUserInputModal = user.role === UserRole.GUEST && status !== "loading";
+
+  const UserInputModal: FC<ModalProps> = (props) => {
+    const [username, setUsername] = useState("");
+
+    return (
+      <Modal {...props}>
+        <Input
+          onChange={(e) => setUsername(e.target.value)}
+          value={username}
+        />
+        <Button onClick={() => setUser({ ...user, username, role: UserRole.USER })}>Speichern</Button>
+      </Modal>
+    );
+  };
+
   return (
     <SyncedRoomProvider>
+      <UserInputModal
+        opened={showUserInputModal}
+        onClose={() => console.log("Close")}
+        title="Bitte gib einen Usernamen ein"
+      />
       <RoomUI />
     </SyncedRoomProvider>
   );

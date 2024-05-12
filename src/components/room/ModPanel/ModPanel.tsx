@@ -21,6 +21,7 @@ import { assignObjectKeyByKey } from "~/utils/helpers";
 import type { TGame } from "../Game/games/game.types";
 import { type IModPanelProps } from "./modPanel.types";
 import { api } from "~/utils/api";
+import MediaPlayer from "../MediaPlayer";
 
 const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
   const { mutateAsync: removeActiveRoom } = api.rooms.removeActiveRoom.useMutation();
@@ -310,21 +311,18 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                     <Button
                       {...btnVariantDefault}
                       onClick={() => triggerAudioEvent("playSound", "bell")}
-                      disabled
                     >
                       Korrekte Antwort
                     </Button>
                     <Button
                       {...btnVariantDefault}
                       onClick={() => triggerAudioEvent("playSound", "bass")}
-                      disabled
                     >
                       Falsche Antwort
                     </Button>
                     <Button
                       {...btnVariantDefault}
                       onClick={() => triggerAudioEvent("playSound", "winning")}
-                      disabled
                     >
                       Winner Sound
                     </Button>
@@ -350,7 +348,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
               </Accordion.Item>
             </Accordion>
 
-            {/* <MediaPlayer /> */}
+            <MediaPlayer />
           </Flex>
         </Flex>
       </Drawer>

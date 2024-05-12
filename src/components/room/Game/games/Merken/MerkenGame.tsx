@@ -30,7 +30,7 @@ const MerkenGame: React.FC<IMerkenGameProps> = ({ game }) => {
 
   const handleCardClick = hostFunction((index: number) => {
     // TODO: Play sound
-    //   triggerAudioEvent("playSound", "whoosh_1");
+    triggerAudioEvent("playSound", "whoosh_1");
 
     if (game.openCards.includes(index)) {
       const newOpenCards = game.openCards.filter((card) => card !== index);

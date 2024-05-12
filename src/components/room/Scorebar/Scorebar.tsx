@@ -7,7 +7,7 @@ import useTeam from "~/hooks/useTeam";
 import { useUser } from "~/hooks/useUser";
 import { colors, sizes } from "~/styles/constants";
 import { animations } from "~/utils/animations";
-import { crateRandomUserName } from "~/utils/helpers";
+import { createRandomUserName, displayObject } from "~/utils/helpers";
 import Notefield from "../Notefield/Notefield";
 import { type IScoreCircleProps, type IScorebarProps } from "./scorebar.types";
 import ModView from "~/components/shared/ModView";
@@ -233,7 +233,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
             <Button
               variant="subtle"
               mb="xs"
-              onClick={() => teamFn.joinTeam(user.id, user.username ?? crateRandomUserName(), team.id)}
+              onClick={() => teamFn.joinTeam(user.id, user.username ?? createRandomUserName(), team.id)}
             >
               Beitreten
             </Button>

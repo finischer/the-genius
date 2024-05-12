@@ -1,9 +1,8 @@
 import type { RoomViews } from "@prisma/client";
-import { filterArray } from "@syncedstore/core";
 import { useSyncedStore } from "@syncedstore/react";
-import React, { useState } from "react";
+import React from "react";
 import type { Game } from "~/components/room/Game/games/game.types";
-import { initPlayer, roomStore } from "~/config/store";
+import { roomStore } from "~/config/store";
 import type { Room } from "~/types/gameshow.types";
 
 interface SyncedRoomContextProps extends Room {

@@ -1,14 +1,14 @@
-import { Button, Flex, Input, Modal, Stack, type ModalProps } from "@mantine/core";
+import { Button, Modal, TextInput, type ModalProps } from "@mantine/core";
+import { useForm } from "@mantine/form";
 import { UserRole } from "@prisma/client";
 import { useSession } from "next-auth/react";
-import { useParams } from "next/navigation";
-import { useEffect, useState, type FC } from "react";
-import { connectToSocket } from "~/config/store";
+import { type FC } from "react";
 import SyncedRoomProvider from "~/context/SyncedRoomContext";
-import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { useUser } from "~/hooks/useUser";
-import { sizes } from "~/styles/constants";
 import RoomUI from "~/ui/RoomUI";
+
+const MIN_USERNAME_LENGTH = 3;
+const MAX_USERNAME_LENGTH = 20;
 
 const RoomPage = () => {
   const { user, setUser } = useUser();
@@ -17,15 +17,42 @@ const RoomPage = () => {
   const showUserInputModal = user.role === UserRole.GUEST && status !== "loading";
 
   const UserInputModal: FC<ModalProps> = (props) => {
-    const [username, setUsername] = useState("");
+    const form = useForm({
+      initialValues: { username: "" },
+      validate: {
+        username: (value) => {
+          if (value.length < MIN_USERNAME_LENGTH) {
+            return `Username muss mindestens ${MIN_USERNAME_LENGTH} Zeichen lang sein`;
+          }
+
+          if (value.length > MAX_USERNAME_LENGTH) {
+            return `Username darf maximal ${MAX_USERNAME_LENGTH} Zeichen lang sein`;
+          }
+
+          return null;
+        },
+      },
+    });
 
     return (
       <Modal {...props}>
-        <Input
-          onChange={(e) => setUsername(e.target.value)}
-          value={username}
-        />
-        <Button onClick={() => setUser({ ...user, username, role: UserRole.USER })}>Speichern</Button>
+        <form
+          onSubmit={form.onSubmit((values) =>
+            setUser({ ...user, username: values.username, role: UserRole.USER })
+          )}
+        >
+          <TextInput
+            withAsterisk
+            label="Username"
+            {...form.getInputProps("username")}
+          />
+          <Button
+            type="submit"
+            mt="md"
+          >
+            Beitreten
+          </Button>
+        </form>
       </Modal>
     );
   };
@@ -35,7 +62,8 @@ const RoomPage = () => {
       <UserInputModal
         opened={showUserInputModal}
         onClose={() => console.log("Close")}
-        title="Bitte gib einen Usernamen ein"
+        title="Wie willst du genannt werden?"
+        withCloseButton={false}
       />
       <RoomUI />
     </SyncedRoomProvider>

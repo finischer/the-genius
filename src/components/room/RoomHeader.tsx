@@ -19,7 +19,7 @@ const RoomHeader = () => {
 
   const currGame = room.context.currentGame;
 
-  const showCurrGameBanner = room.context.view == RoomView.GAME && !!currGame;
+  const showCurrGameBanner = room.context.view == RoomView.GAME && !!currGame && room.context.display.game;
 
   return (
     <Box
@@ -59,7 +59,7 @@ const RoomHeader = () => {
           <motion.div {...animations.fadeInOut}>
             <ContainerBox
               px="xl"
-              py="md"
+              py="sm"
               bg={theme.primaryColor}
               pos="absolute"
               right={0}

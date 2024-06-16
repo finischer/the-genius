@@ -29,7 +29,7 @@ export const DEFAULT_SET_STATE: TSetGameState = {
 Spiel: {{ gameName }}
 
 ### Ziel:
-Das Ziel des Speils "{{ gameName }}" ist es, unter den 12 Spielkarten ein Set zu finden. Ein Set besteht aus genau 3 Karten, die in den Eigenschaften Form, Füllung, Farbe und Anzahl entweder komplett gleich oder komplett unterschiedlich sein müssen.
+Das Ziel des Spiels "{{ gameName }}" ist es, unter den 12 Spielkarten ein Set zu finden. Ein Set besteht aus genau 3 Karten, die in den Eigenschaften Form, Füllung, Farbe und Anzahl entweder komplett gleich oder komplett unterschiedlich sein müssen.
 
 ### Spielablauf:
 Vor euch seht ihr 12 Spielkarten. Jede Karte zeigt eines von drei verschiedenen Symbolen (Raute, Rechteck, Oval), die entweder gefüllt, leer oder gestreift sind. Zudem sind sie in einer von drei Farben (Rot, Grün, Blau) dargestellt. Jede dieser Ausprägungen kann bis zu 3-mal auf einer Karte vorkommen.

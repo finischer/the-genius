@@ -1,4 +1,14 @@
-import { Box, Button, Container, Flex, Group, Text, useMantineTheme } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Container,
+  Flex,
+  Group,
+  Menu,
+  Text,
+  UnstyledButton,
+  useMantineTheme,
+} from "@mantine/core";
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 import Tooltip from "~/components/shared/Tooltip";
@@ -12,9 +22,13 @@ import Notefield from "../Notefield/Notefield";
 import { type IScoreCircleProps, type IScorebarProps } from "./scorebar.types";
 import ModView from "~/components/shared/ModView";
 import ActionIcon from "~/components/shared/ActionIcon";
-import { IconExposureMinus1, IconExposurePlus1, IconTargetArrow } from "@tabler/icons-react";
+import { IconExposureMinus1, IconExposurePlus1, IconSearch, IconTargetArrow } from "@tabler/icons-react";
 import { Badge } from "@mantine/core";
 import { RoomView } from "~/types/gameshow.types";
+import { IconSettings } from "@tabler/icons-react";
+import { IconMessageCircle } from "@tabler/icons-react";
+import { IconPhoto } from "@tabler/icons-react";
+import { rem } from "@mantine/core";
 
 const stretchAnimation = undefined;
 
@@ -206,29 +220,53 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
           gap="lg"
           align="flex-end"
         >
-          <Box
-            bg={theme.primaryColor}
-            style={() => ({
-              minWidth: "20%",
-              maxWidth: "50%",
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              padding: "0.25rem 1rem",
-              borderRadius: `${scorebarBorderRadius} ${scorebarBorderRadius} 0 0`,
-              fontWeight: "bolder",
-              overflow: "hidden",
-              span: {
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              },
-            })}
-          >
-            <span>
-              {team.name} · ({team.players.length}/2)
-            </span>
-          </Box>
+          <Menu disabled={!isHost}>
+            <Menu.Target>
+              <UnstyledButton
+                bg={theme.primaryColor}
+                disabled={!isHost}
+                style={() => ({
+                  minWidth: "20%",
+                  maxWidth: "50%",
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "0.25rem 1rem",
+                  borderRadius: `${scorebarBorderRadius} ${scorebarBorderRadius} 0 0`,
+                  fontWeight: "bolder",
+                  overflow: "hidden",
+                  cursor: isHost ? "pointer" : "auto",
+                  span: {
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  },
+                })}
+              >
+                <span>
+                  {team.name} · ({team.players.length}/2)
+                </span>
+              </UnstyledButton>
+            </Menu.Target>
+            <ModView>
+              <Menu.Dropdown>
+                <Menu.Label>Optionen</Menu.Label>
+                <Menu.Item
+                  leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}
+                  disabled
+                >
+                  Team umbenennen
+                </Menu.Item>
+                <Menu.Item
+                  leftSection={<IconMessageCircle style={{ width: rem(14), height: rem(14) }} />}
+                  disabled
+                >
+                  Spieler entfernen
+                </Menu.Item>
+                <Menu.Item disabled>Team zurücksetzen</Menu.Item>
+              </Menu.Dropdown>
+            </ModView>
+          </Menu>
           {!teamFn.isPlayer && !isHost && !teamFn.isTeamFull && (
             <Button
               variant="subtle"

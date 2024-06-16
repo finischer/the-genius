@@ -1,4 +1,14 @@
-import { Accordion, Button, Drawer, Flex, ScrollArea, Text, Title, type ButtonProps } from "@mantine/core";
+import {
+  Accordion,
+  Button,
+  Drawer,
+  Flex,
+  Group,
+  ScrollArea,
+  Text,
+  Title,
+  type ButtonProps,
+} from "@mantine/core";
 import { useDisclosure, useLocalStorage } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";

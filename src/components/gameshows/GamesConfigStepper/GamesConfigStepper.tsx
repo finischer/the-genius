@@ -1,6 +1,6 @@
 import type { StepperStepProps } from "@mantine/core";
 import { Box, Center, Flex, Stepper, TextInput, Title } from "@mantine/core";
-import type { Game } from "@prisma/client";
+import type { Game as PrismaGame } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { createContext, useEffect, useState } from "react";
@@ -18,8 +18,8 @@ import { StepperControlsContext } from "~/context/StepperControlsContext";
 
 const NUM_OF_DEFAULT_STEPS = 2;
 
-const getAlreadySelectedGames = (games: TGame[], availableGames: Game[]) => {
-  const alreadySelected: Game[] = [];
+const getAlreadySelectedGames = (games: TGame[], availableGames: PrismaGame[]) => {
+  const alreadySelected: PrismaGame[] = [];
 
   games.forEach((g) => {
     const game = availableGames.find((availableGame) => availableGame.slug === g.identifier);
@@ -36,7 +36,7 @@ const GamesConfigStepper = () => {
   const { gameshow, updateGameshowMetadata, updateGameList, availableGames } = useGameshowConfig(
     Game.DUSAGST
   );
-  const [selectedGames, setSelectedGames] = useImmer<Game[]>(
+  const [selectedGames, setSelectedGames] = useImmer<PrismaGame[]>(
     getAlreadySelectedGames(gameshow.games, availableGames)
   );
 
@@ -204,7 +204,7 @@ const GamesConfigStepper = () => {
                   <Title order={2}>Einstellungen - {game.name}</Title>
                 </Flex>
                 <Box mt="xl">
-                  <GameConfig gameSlug={game.slug} />
+                  <GameConfig gameSlug={game.slug as Game} />
                 </Box>
               </Stepper.Step>
             );

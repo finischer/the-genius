@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { socket } from "./useSocket";
 import useSyncedRoom from "./useSyncedRoom";
 import { assignObjectKeyByKey, displayObject } from "~/utils/helpers";
+import useSettings from "./useSettings/useSettings";
 
 type TSoundId = keyof RoomSounds;
 
@@ -43,6 +44,7 @@ function audioIsPlaying(audio: HTMLAudioElement) {
 
 const useAudio = () => {
   const room = useSyncedRoom();
+  const { settings } = useSettings();
   const [audioList, setAudioList] = useState<TAudioSound[]>([]);
 
   useEffect(() => {
@@ -56,6 +58,13 @@ const useAudio = () => {
 
     return () => setAudioList([]);
   }, []);
+
+  // update volume if user change volume settings for sound effects
+  useEffect(() => {
+    audioList.forEach((a) => {
+      a.audio.volume = settings.volume.soundEffects / 100;
+    });
+  }, [settings.volume.soundEffects]);
 
   function playAudio(soundId: TSoundId) {
     const elem = audioList.find((a) => a.id === soundId);

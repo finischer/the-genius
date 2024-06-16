@@ -3,6 +3,7 @@ import type { TMusicSpriteMap, TSongId, TSongMap } from "~/components/room/Media
 import { useRoom } from "./useRoom";
 import { socket } from "./useSocket";
 import useSyncedRoom from "./useSyncedRoom";
+import useSettings from "./useSettings/useSettings";
 
 const songInformationMap: TSongMap = {
   violation: {
@@ -33,6 +34,7 @@ const musicSprite: TMusicSpriteMap = {
 
 const useMusic = () => {
   const room = useSyncedRoom();
+  const { settings } = useSettings();
 
   const musicState = room.context?.audio.music ?? {
     isActive: false,
@@ -47,6 +49,7 @@ const useMusic = () => {
     sprite: musicSprite,
     loop: true,
     interrupt: true,
+    volume: settings.volume.music / 100,
   });
 
   const emitPlayMusic = ({ songId }: { songId: TSongId }) => {

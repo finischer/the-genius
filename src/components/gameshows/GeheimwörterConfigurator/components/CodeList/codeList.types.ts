@@ -1,4 +1,4 @@
-import type { Games } from "~/components/room/Game/games/game.types";
+import type { Game } from "~/components/room/Game/games/game.types";
 import type { TGameConfigUpdateFn } from "~/hooks/useGameshowConfig/useGameshowConfig.types";
 
 export type TCodeListItem = {
@@ -10,7 +10,7 @@ export type TCodeList = TCodeListItem[];
 
 export interface ICodeListProps {
   codeList: TCodeList;
-  setCodeList?: TGameConfigUpdateFn<Games.GEHEIMWOERTER>;
+  setCodeList?: TGameConfigUpdateFn<Game.GEHEIMWOERTER>;
   editable?: boolean;
   showTitle?: boolean;
 }

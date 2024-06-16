@@ -2,17 +2,21 @@ import { Button, CopyButton, Flex, Modal, Table, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconCopy } from "@tabler/icons-react";
+import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
 import React from "react";
-import useLoadingState from "~/hooks/useLoadingState/useLoadingState";
-import { socket } from "~/hooks/useSocket";
-import { type IRoomDetailsModalProps } from "./roomDetailsModal.types";
 import ActionIcon from "~/components/shared/ActionIcon";
+import useLoadingState from "~/hooks/useLoadingState/useLoadingState";
+import { type IRoomDetailsModalProps } from "./roomDetailsModal.types";
 
 const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClose, room }) => {
   const { pageIsLoading } = useLoadingState();
   const router = useRouter();
+  const pathname = usePathname();
+
   const roomId = router.query.id as string;
+
+  const fullUrl = `${window.location.origin}${pathname}`;
 
   const leaveRoom = () => {
     modals.openConfirmModal({
@@ -27,10 +31,10 @@ const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClo
           message: "Du verlässt jetzt den Raum",
           loading: true,
         });
-        socket.emit("leaveRoom", { roomId });
         // initUser();
         const routeDone = await router.push("/rooms/");
         if (routeDone) {
+          // TODO: leave player from team if user was a player
           notifications.update({
             id: "leaveRoom",
             title: "Erfolgreich",
@@ -49,6 +53,7 @@ const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClo
       onClose={onClose}
       title="Rauminformationen"
       centered
+      size="xl"
     >
       <Flex
         direction="column"
@@ -86,21 +91,36 @@ const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClo
               <td>Name:</td>
               <td>{room.name}</td>
             </tr>
-            {/* <tr>
-                            <td>Erstellt von:</td>
-                            <td>{room.creatorId || "-"}</td>
-                        </tr> */}
-            <tr>
-              <td>Modus:</td>
-              <td>{room.modus}</td>
-            </tr>
             <tr>
               <td>Anzahl Spiele:</td>
               <td>{room.games.length}</td>
             </tr>
+
             <tr>
-              <td>Sichtbarkeit:</td>
-              <td>{room.isPrivate ? "Privat" : "Öffentlich"}</td>
+              <td>Link zum teilen:</td>
+              <td>{fullUrl}</td>
+              <td>
+                <CopyButton
+                  timeout={2000}
+                  value={fullUrl}
+                >
+                  {({ copied, copy }) =>
+                    copied ? (
+                      <IconCheck size="1.5rem" />
+                    ) : (
+                      <ActionIcon
+                        variant="subtle"
+                        toolTip="ID kopieren"
+                        c="dark.1"
+                        size="1.5rem"
+                        onClick={copy}
+                      >
+                        <IconCopy />
+                      </ActionIcon>
+                    )
+                  }
+                </CopyButton>
+              </td>
             </tr>
           </tbody>
         </Table>

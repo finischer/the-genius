@@ -21,6 +21,14 @@ import { useUser } from "~/hooks/useUser";
 import { GAMESHOW_MODES } from "~/styles/constants";
 import { capitalize } from "~/utils/strings";
 import { type ICreateRoomConfig, type ICreateRoomModalProps } from "./createRoomModal.types";
+import { PARTYKIT_URL } from "~/utils/env";
+import { randomId } from "@mantine/hooks";
+import { redirect } from "next/navigation";
+import { api } from "~/utils/api";
+import Room from "~/classes/Room";
+import { useSyncedStore } from "@syncedstore/react";
+import { connectToSocket, initRoom, roomStore } from "~/config/store";
+import useNotification from "~/hooks/useNotification";
 
 const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose, gameshow }) => {
   const gameshowGames = gameshow.games as unknown as TGame[];
@@ -42,6 +50,9 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
 
   const { user } = useUser();
   const router = useRouter();
+  const { handleZodError, showErrorNotification } = useNotification();
+
+  const store = useSyncedStore(roomStore);
 
   const selectData: SegmentedControlItem[] = GAMESHOW_MODES.map((m) => ({
     value: m,
@@ -53,20 +64,49 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
     form.reset();
   }, [openedModal]);
 
-  const createRoom = form.onSubmit((values) => {
+  const { mutateAsync: createParty } = api.parties.create.useMutation();
+  const { mutateAsync: createRoomInDb } = api.rooms.addRoom.useMutation({
+    onError: (error) =>
+      handleZodError(error.data?.zodError, error.message ?? "Raum konnte nicht erstellt werden"),
+  });
+
+  const createRoom = form.onSubmit(async (values) => {
     setLoader({
       isLoading: true,
       loaderMsg: "Raum wird erstellt ...",
     });
-    // create room on server
-    socket.emit("createRoom", { user, roomConfig: values, gameshow }, (room) => {
-      setLoader({
-        isLoading: true,
-        loaderMsg: "Raum wird beigetreten ...",
-      });
-      // connect to room
-      void router.push(`/room/${room.id}`);
+
+    const room = initRoom(values.name, values.password, gameshow.games as TGame[], user.id);
+
+    store.room.state = room;
+
+    const dbRoom = await createRoomInDb({
+      id: room.id,
     });
+
+    if (!dbRoom) {
+      showErrorNotification({
+        title: "Fehler",
+        message: "Raum konnte nicht erstellt werden",
+      });
+      return;
+    }
+
+    // await createParty({
+    //   id: room.id,
+    //   config: values,
+    // });
+
+    void router.push(`/room/${room.id}`);
+
+    // socket.emit("createRoom", { user, roomConfig: values, gameshow }, (room) => {
+    //   setLoader({
+    //     isLoading: true,
+    //     loaderMsg: "Raum wird beigetreten ...",
+    //   });
+    //   // connect to room
+    //   void router.push(`/room/${room.id}`);
+    // });
   });
 
   return (

@@ -1,11 +1,11 @@
-import { Games } from "./../game.types";
+import { Game } from "./../game.types";
 import { type IGameGeneralState } from "../game.types";
 import { type IFlaggenState } from "./flaggen.types";
 
 export type TFlaggenGameState = IFlaggenState & IGameGeneralState;
 
 export const DEFAULT_FLAGGEN_STATE: TFlaggenGameState = {
-  identifier: Games.FLAGGEN,
+  identifier: Game.FLAGGEN,
   modes: ["DUELL", "TEAM"],
   maxPoints: 7,
   name: "Flaggen",

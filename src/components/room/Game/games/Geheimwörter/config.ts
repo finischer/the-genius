@@ -1,10 +1,10 @@
-import { Games, type IGameGeneralState } from "../game.types";
+import { Game, type IGameGeneralState } from "../game.types";
 import type { IGeheimwörterState } from "./geheimwörter.types";
 
 export type TGeheimwörterGameState = IGeheimwörterState & IGameGeneralState;
 
 export const DEFAULT_GEHEIMWOERTER_STATE: TGeheimwörterGameState = {
-  identifier: Games.GEHEIMWOERTER,
+  identifier: Game.GEHEIMWOERTER,
   name: "Geheimwörter",
   modes: ["DUELL", "TEAM"],
   maxPoints: 7,

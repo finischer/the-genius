@@ -41,8 +41,8 @@ export const assignObjectKeyByKey = (source: Record<string, unknown>, target: Re
   }
 };
 
-export const displayObject = (obj: Object) => {
-  const value = getYjsValue(obj)?.toJSON();
+export const displayObject = (obj: object) => {
+  const value = getYjsValue(obj)?.toJSON() as object;
   console.log(value);
   return value;
 };

@@ -72,6 +72,7 @@ export function teamHandler(
 
     team.isActiveTurn = !team.isActiveTurn;
     team.buzzer = {
+      ...team.buzzer,
       isPressed: false,
       playersBuzzered: [],
     };

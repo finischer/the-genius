@@ -32,7 +32,7 @@ const useBuzzer = () => {
   );
 
   useEffect(() => {
-    function handleBuzzerEvent(e: KeyboardEvent, withTimer: boolean = true) {
+    function handleBuzzerEvent(e: KeyboardEvent, withTimer = true) {
       // only listen to space
       if (e.code === "Space" && document.activeElement?.tagName !== "TEXTAREA") {
         handleBuzzerClick({ withTimer: true });

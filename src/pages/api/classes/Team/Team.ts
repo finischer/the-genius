@@ -44,6 +44,7 @@ export default class Team implements PrismaTeam {
       avatarImage: "",
       avatarImageList: [],
       buzzer: {
+        isLocked: false,
         isPressed: false,
         playersBuzzered: [],
       },

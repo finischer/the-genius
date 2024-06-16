@@ -1,5 +1,5 @@
-import { type PaperProps, Paper as MantinePaper, UnstyledButton, Box } from "@mantine/core";
-import React, { type FC, type ReactNode } from "react";
+import { Paper as MantinePaper, UnstyledButton, type PaperProps } from "@mantine/core";
+import { type FC, type ReactNode } from "react";
 import classes from "./paper.module.css";
 
 interface IPaperProps extends PaperProps {

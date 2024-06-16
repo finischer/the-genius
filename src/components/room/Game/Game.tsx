@@ -28,19 +28,9 @@ const SECONDS_DELAY_BEFORE_GAME_DISPLAYS = 2;
 const Game: React.FC<IGameProps> = ({ gameName }) => {
   const room = useSyncedRoom();
   const { triggerAudioEvent } = useAudio();
+  const [scope, animate] = useAnimate();
 
   const game = room.games.find((game) => game.identifier === gameName);
-
-  if (!game) {
-    return <div>Loading ...</div>;
-  }
-
-  const introState = room.context.gameIntro;
-  const introIsPlaying = room.context.display.gameIntro;
-  const showGame = room.context.display.game;
-  const gameNumber = room.games.findIndex((g) => g.identifier === game.identifier) + 1;
-
-  const [scope, animate] = useAnimate();
 
   const introAnimation = async () => {
     const sequence = [
@@ -59,19 +49,6 @@ const Game: React.FC<IGameProps> = ({ gameName }) => {
     // await animate(scope.current, { scale: 1.4 }, { duration: 6 });
     // await animate(scope.current, { scale: 0 }, { duration: 0.5 });
   };
-
-  function getGame(identifier: GameEnum) {
-    const GAME_MAP: TGameMap = {
-      flaggen: <FlaggenGame game={game as TFlaggenGameState} />,
-      merken: <MerkenGame game={game as TMerkenGameState} />,
-      geheimwoerter: <GeheimwörterGame game={game as TGeheimwörterGameState} />,
-      set: <SetGame game={game as TSetGameState} />,
-      duSagst: <DuSagstGame game={game as TDuSagstGameState} />,
-      referatBingo: <ReferatBingoGame game={game as TReferatBingoGameState} />,
-    };
-
-    return GAME_MAP[identifier];
-  }
 
   useEffect(() => {
     if (introIsPlaying) {
@@ -98,6 +75,28 @@ const Game: React.FC<IGameProps> = ({ gameName }) => {
       }, SECONDS_TOTAL_INTRO_DURATION * 1000);
     }
   }, [room.context.display.gameIntro]);
+
+  if (!game) {
+    return <div>Loading ...</div>;
+  }
+
+  const introState = room.context.gameIntro;
+  const introIsPlaying = room.context.display.gameIntro;
+  const showGame = room.context.display.game;
+  const gameNumber = room.games.findIndex((g) => g.identifier === game.identifier) + 1;
+
+  function getGame(identifier: GameEnum) {
+    const GAME_MAP: TGameMap = {
+      flaggen: <FlaggenGame game={game as TFlaggenGameState} />,
+      merken: <MerkenGame game={game as TMerkenGameState} />,
+      geheimwoerter: <GeheimwörterGame game={game as TGeheimwörterGameState} />,
+      set: <SetGame game={game as TSetGameState} />,
+      duSagst: <DuSagstGame game={game as TDuSagstGameState} />,
+      referatBingo: <ReferatBingoGame game={game as TReferatBingoGameState} />,
+    };
+
+    return GAME_MAP[identifier];
+  }
 
   return (
     <>

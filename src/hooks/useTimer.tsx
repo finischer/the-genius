@@ -9,7 +9,7 @@ import { TimerType, type TimerState } from "~/types/gameshow.types";
  * @param initSeconds - Initial seconds before timer starts. Default is 0
  * @returns An object containing functions to control the timer and its current state.
  */
-const useTimer = (timer: TimerState, type: TimerType = TimerType.STOPWATCH, initSeconds: number = 0) => {
+const useTimer = (timer: TimerState, type: TimerType = TimerType.STOPWATCH, initSeconds = 0) => {
   const isCountdown = type === TimerType.COUNTDOWN;
 
   useEffect(() => {

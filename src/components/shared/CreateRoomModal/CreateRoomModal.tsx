@@ -64,7 +64,7 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
     form.reset();
   }, [openedModal]);
 
-  const { mutateAsync: createParty } = api.parties.create.useMutation();
+  // const { mutateAsync: createParty } = api.parties.create.useMutation();
   const { mutateAsync: createRoomInDb } = api.rooms.addRoom.useMutation({
     onError: (error) =>
       handleZodError(error.data?.zodError, error.message ?? "Raum konnte nicht erstellt werden"),

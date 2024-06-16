@@ -209,6 +209,7 @@ export default class Room implements PrismaRoomFixed {
     Object.values(this.teams).forEach((t) => {
       t.isActiveTurn = false;
       t.buzzer = {
+        isLocked: false,
         isPressed: false,
         playersBuzzered: [],
       };

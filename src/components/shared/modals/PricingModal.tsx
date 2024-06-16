@@ -1,6 +1,6 @@
-import React from "react";
-import { Box, Button, Divider, Flex, Group, Modal, Stack, Text, Title, useMantineTheme } from "@mantine/core";
+import { Text, useMantineTheme } from "@mantine/core";
 import type { ContextModalProps } from "@mantine/modals";
+import React from "react";
 
 const PricingModal: React.FC<ContextModalProps<any>> = () => {
   const theme = useMantineTheme();

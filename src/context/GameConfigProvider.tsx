@@ -1,12 +1,12 @@
-import { Children, createContext, useEffect, type FC, type ReactNode, useState } from "react";
+import type { Game as PrismaGame } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
+import { createContext, type FC, type ReactNode } from "react";
+import { useImmer, type Updater } from "use-immer";
+import type { TGame } from "~/components/room/Game/games/game.types";
+import type { TGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig.types";
+import useNotification from "~/hooks/useNotification";
 import type { TApiActions } from "~/server/api/api.types";
 import { api } from "~/utils/api";
-import type { Game } from "@prisma/client";
-import type { Game, TGame, TGameSettingsMap } from "~/components/room/Game/games/game.types";
-import useNotification from "~/hooks/useNotification";
-import type { TGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig.types";
-import { useImmer, type Updater } from "use-immer";
 
 interface IGameConfigProviderProps {
   children: ReactNode;
@@ -15,8 +15,8 @@ interface IGameConfigProviderProps {
 export interface IGameConfigContextProps {
   gameshow: TGameshowConfig;
   setGameshow: Updater<TGameshowConfig>;
-  availableGames: Game[];
-  setAvailableGames: Updater<Game[]>;
+  availableGames: PrismaGame[];
+  setAvailableGames: Updater<PrismaGame[]>;
 }
 
 const GameConfigContext = createContext<IGameConfigContextProps | undefined>(undefined);
@@ -33,7 +33,7 @@ const GameConfigProvider: FC<IGameConfigProviderProps> = ({ children }) => {
   const gameshowId = searchParams.get("gameshowId");
   const action: TApiActions = (searchParams.get("action") as TApiActions) ?? "create";
 
-  const [availableGames, setAvailableGames] = useImmer<Game[]>([]);
+  const [availableGames, setAvailableGames] = useImmer<PrismaGame[]>([]);
   const [gameshow, setGameshow] = useImmer<TGameshowConfig>(DEFAULT_GAMESHOW_CONFIG);
 
   // api
@@ -71,4 +71,4 @@ const GameConfigProvider: FC<IGameConfigProviderProps> = ({ children }) => {
   );
 };
 
-export { GameConfigProvider, GameConfigContext };
+export { GameConfigContext, GameConfigProvider };

@@ -1,4 +1,3 @@
-import type { TimerState } from "~/types/gameshow.types";
 import type { Game } from "../game.types";
 import { type TMerkenGameState } from "./config";
 

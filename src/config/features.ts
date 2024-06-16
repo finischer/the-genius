@@ -7,6 +7,9 @@ type TFeaturesMap = {
 };
 
 export const FEATURES: TFeaturesMap = {
+  GUEST: {
+    maxNumGameshows: 0,
+  },
   USER: {
     maxNumGameshows: 3,
   },

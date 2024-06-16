@@ -1,6 +1,6 @@
 import { Button, Group, Stack, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import type { Game } from "@prisma/client";
+import type { Game as PrismaGame } from "@prisma/client";
 import { IconInfoSquareRounded, IconUser, IconUsers } from "@tabler/icons-react";
 import React from "react";
 import GameDetailsModal from "~/components/gameshows/GameDetailsModal";
@@ -16,13 +16,13 @@ import { type IGamesPickerProps } from "./gamesPicker.types";
 const GamesPicker: React.FC<IGamesPickerProps> = ({ selectedGames, setSelectedGames }) => {
   const { data: games, isLoading } = api.games.getAll.useQuery();
 
-  const handleSelectGame = (game: Game) => {
+  const handleSelectGame = (game: PrismaGame) => {
     setSelectedGames((draft) => {
       draft.push(game);
     });
   };
 
-  const GameCard = ({ game }: { game: Game }) => {
+  const GameCard = ({ game }: { game: PrismaGame }) => {
     const alreadySelected = selectedGames.find((g) => g.id === game.id) ? true : false;
     const [gameRulesOpened, { open: openGameDetails, close: closeGameDetails }] = useDisclosure(false);
 

@@ -1,12 +1,10 @@
 import { randomId } from "@mantine/hooks";
-import { getYjsValue, syncedStore } from "@syncedstore/core";
+import type { RoomSounds } from "@prisma/client";
+import { Y, getYjsValue, syncedStore } from "@syncedstore/core";
 import { WebsocketProvider } from "y-partykit/provider";
 import type { TGame } from "~/components/room/Game/games/game.types";
 import { RoomView, type Player, type Room, type Team } from "~/types/gameshow.types";
 import { roomConfig } from "./room.config";
-import { musicHandler } from "~/pages/api/handlers/musicHandlers";
-import type { RoomSounds } from "@prisma/client";
-import type { isAscii } from "buffer";
 
 export const initRoom = (name: string, password: string, games: TGame[], creatorId: string): Room => ({
   id: randomId(),
@@ -107,6 +105,6 @@ export const connectToSocket = (roomId: string) => {
   return new WebsocketProvider(
     "wss://yjs.threepointone.partykit.dev/party",
     roomId,
-    getYjsValue(roomStore) as any
+    getYjsValue(roomStore) as Y.Doc
   ); // sync via partykit
 };

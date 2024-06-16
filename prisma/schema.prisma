@@ -104,6 +104,15 @@ model Room {
   @@map("rooms")
 }
 
+model ActiveRooms {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  roomId    String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("activeRooms")
+}
+
 model Feedback {
   id                      String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt               DateTime @default(now())
@@ -165,6 +174,7 @@ enum UserRole {
   USER
   ADMIN
   PREMIUM
+  GUEST
 }
 
 enum GameshowMode {
@@ -269,7 +279,8 @@ type PlayerDuSagstSharedState {
 }
 
 type BuzzerState {
-  isPressed       Boolean  @default(false)
+  isLocked        Boolean  @default(false) // if true, the buzzer is locked and no player can buzz
+  isPressed       Boolean  @default(false) // if true, the buzzer is pressed
   playersBuzzered String[]
 }
 

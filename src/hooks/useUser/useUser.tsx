@@ -1,52 +1,64 @@
-import type { Team } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { createContext, useContext, useEffect, useState } from "react";
+import type { Player, Team } from "~/types/gameshow.types";
 import { type TUserReduced } from "~/types/socket.types";
+import type { FunctionToWrap } from "~/types/types";
 import { api } from "~/utils/api";
 import useNotification from "../useNotification";
-import { useRoom } from "../useRoom";
+import useSyncedRoom from "../useSyncedRoom";
 import { type IUseUserContext, type IUseUserProvider } from "./useUser.types";
-import type { FunctionToWrap } from "~/types/types";
+import { getYjsValue } from "@syncedstore/core";
+import { createRandomUserName } from "~/utils/helpers";
+import { randomId } from "@mantine/hooks";
 
 const UserContext = createContext<IUseUserContext | undefined>(undefined);
 
 const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
   const { data: session, update: updateSession } = useSession();
-  const { room } = useRoom();
+
+  const room = useSyncedRoom();
   const [user, setUser] = useState<TUserReduced>(initUser());
-  const [team, setTeam] = useState<Team | undefined>(undefined);
-  const isPlayer = team !== undefined;
-  const [isHost, setIsHost] = useState(false);
+
+  const player = getPlayer();
+  const isPlayer = !!player;
+
+  const team = getTeam();
+  const isInTeam = !!team;
+
   const { showErrorNotification, showSuccessNotification } = useNotification();
   const { mutateAsync: checkUsername, isLoading } = api.users.isUsernameInUse.useMutation();
 
   const isAdmin = user.role === "ADMIN";
+  const isHost = room.creatorId === user.id;
 
   function initUser() {
     const user: TUserReduced = {
-      id: session?.user.id || "",
-      name: session?.user.name || "",
+      id: session?.user.id || randomId(),
+      name: session?.user.name || createRandomUserName(),
       email: session?.user.email || "",
       image: session?.user.image || null,
-      role: session?.user.role || "USER",
-      username: session?.user.username || "NOT_FOUND",
+      role: session?.user.role || "GUEST",
+      username: session?.user.username || createRandomUserName(),
     };
 
     return user;
   }
 
-  function initTeam() {
-    const teamArray = Object.values(room?.teams);
-    const teamPlayers = teamArray.map((t) => t.players).flat(); // all players in one array
-    const player = teamPlayers.find((p) => p.userId === user.id); // find the user in player array
+  function getPlayer() {
+    if (!room || !room.teams) return;
 
-    if (player) {
-      // if user is a player, join team
-      const team = teamArray.find((t) => t.id === player.teamId);
-      setTeam(team);
-    } else {
-      setTeam(undefined);
-    }
+    const teams = Object.values(room.teams);
+    const players = teams.map((team) => team.players).flat();
+
+    return players.find((player) => player.userId === user.id);
+  }
+
+  function getTeam() {
+    if (!room || !room.teams || !isPlayer) return;
+
+    const team = Object.values(room.teams).find((team) => team.id === player.teamId);
+
+    return team;
   }
 
   async function updateUsername(newUsername: string) {
@@ -75,41 +87,31 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
     return (...args: T) => func(...args);
   }
 
+  function playerFunction(func: (team: Team, player: Player) => void): void {
+    if (!isPlayer || !team) return;
+
+    func(team, player);
+  }
+
   useEffect(() => {
     setUser(initUser());
   }, [session]);
-
-  useEffect(() => {
-    if (room) {
-      initTeam();
-    }
-  }, [room, user]);
-
-  useEffect(() => {
-    if (room && room.creatorId === user?.id) {
-      setIsHost(true);
-    } else {
-      setIsHost(false);
-    }
-  }, [room?.id]);
-
-  const setUserAsPlayer = (team: Team) => {
-    setTeam(team);
-  };
 
   return (
     <UserContext.Provider
       value={{
         user,
         team,
+        isInTeam,
+        player,
         setUser,
-        setUserAsPlayer,
         isPlayer,
         isHost,
         isAdmin,
         updateUsername,
         isLoading,
         hostFunction,
+        playerFunction,
       }}
     >
       {children}

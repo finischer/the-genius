@@ -1,7 +1,7 @@
 import { type Gameshow, type RoomSounds, type RoomViews } from "@prisma/client";
 import { type NextApiResponse } from "next";
 import { type Server, type Socket } from "socket.io";
-import type { Games } from "~/components/room/Game/games/game.types";
+import type { Game } from "~/components/room/Game/games/game.types";
 import type { TSongId } from "~/components/room/MediaPlayer/mediaPlayer.types";
 import type { ICreateRoomConfig } from "~/components/shared/CreateRoomModal/createRoomModal.types";
 import type Room from "~/pages/api/classes/Room/Room";
@@ -48,7 +48,7 @@ export interface IClientToServerEvents {
     cb: () => void
   ) => { teamId: string; playerId: string };
   listAllRooms: (cb: (rooms: Room[]) => void) => void;
-  startGame: ({ gameIdentifier }: { gameIdentifier: Games }) => void;
+  startGame: ({ gameIdentifier }: { gameIdentifier: Game }) => void;
   showAnswerBanner: ({
     answer,
     withSound,

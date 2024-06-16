@@ -8,7 +8,7 @@ import type { TReferatBingoGameState } from "./ReferatBingo/config";
 
 export type TScorebarMode = "number" | "circle";
 
-export enum Games {
+export enum Game {
   FLAGGEN = "flaggen",
   GEHEIMWOERTER = "geheimwoerter",
   MERKEN = "merken",
@@ -35,12 +35,12 @@ export interface IGameGeneralState {
 }
 
 export type TGameMap = {
-  [gameIdentifier in Games]: React.ReactNode;
+  [gameIdentifier in Game]: React.ReactNode;
 };
 
-export type TGame = TGameSettingsMap[Games];
+export type TGame = TGameSettingsMap[Game];
 
 // types for index.tsx (Game)
 export interface IGameProps {
-  game: TGame;
+  gameName: Game;
 }

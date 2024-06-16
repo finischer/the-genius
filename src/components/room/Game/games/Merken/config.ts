@@ -1,10 +1,10 @@
-import { Games, type IGameGeneralState } from "../game.types";
+import { Game, type IGameGeneralState } from "../game.types";
 import { type IMerkenState } from "./merken.types";
 
 export type TMerkenGameState = IMerkenState & IGameGeneralState;
 
 export const DEFAULT_MERKEN_STATE: TMerkenGameState = {
-  identifier: Games.MERKEN,
+  identifier: Game.MERKEN,
   name: "Merken",
   modes: ["DUELL", "TEAM"],
   maxPoints: 7,

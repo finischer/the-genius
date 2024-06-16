@@ -6,9 +6,9 @@ import {
 } from "~/types/socket.types";
 import { roomManager } from "../../controllers/RoomManager";
 import NoRoomException from "../../exceptions/NoRoomException";
-import { Games } from "~/components/room/Game/games/game.types";
+import { Game } from "~/components/room/Game/games/game.types";
 
-const GAME_IDENTIFIER = Games.MERKEN;
+const GAME_IDENTIFIER = Game.MERKEN;
 
 export function merkenHandler(
   io: Server,

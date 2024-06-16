@@ -54,7 +54,12 @@ const IntroductionBanner = () => {
           Solltest du Anmerkungen, Verbesserungsvorschläge oder Bugs gefunden haben, kannst du jederzeit
           Feedback einreichen. Über den Reiter &quot;Feedback&quot; in der linken Navigationsleiste, gelangst
           du zum Feedback-Formular. Alternativ kannst du auch eine Mail an{" "}
-          <Text fs="italic">support@the-genius.de</Text>
+          <Text
+            component="span"
+            fs="italic"
+          >
+            support@the-genius.de
+          </Text>
           schreiben
         </Text>
 

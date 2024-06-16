@@ -1,8 +1,8 @@
 import { Flex } from "@mantine/core";
 import { AnimatePresence, motion, useAnimate } from "framer-motion";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import FlipCard from "~/components/shared/FlipCard/FlipCard";
-import { useRoom } from "~/hooks/useRoom";
+import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { animations } from "~/utils/animations";
 import DuSagstGame from "./games/DuSagst/DuSagstGame";
 import type { TDuSagstGameState } from "./games/DuSagst/config";
@@ -16,28 +16,51 @@ import ReferatBingoGame from "./games/ReferatBingo/ReferatBingoGame";
 import type { TReferatBingoGameState } from "./games/ReferatBingo/config";
 import SetGame from "./games/Set/SetGame";
 import type { TSetGameState } from "./games/Set/config";
-import { Games, type IGameProps, type TGameMap } from "./games/game.types";
+import { Game as GameEnum, type IGameProps, type TGameMap } from "./games/game.types";
+import useAudio from "~/hooks/useAudio";
+
+const SECONDS_TO_ROTATE_TITLE_BANNER = 4;
+const SECONDS_TOTAL_INTRO_DURATION = 8;
+const SECONDS_DELAY_BEFORE_GAME_DISPLAYS = 2;
 
 // Wrapper for the games
 // Handles also the intro sequence
-const Game: React.FC<IGameProps> = ({ game }) => {
-  const { room } = useRoom();
+const Game: React.FC<IGameProps> = ({ gameName }) => {
+  const room = useSyncedRoom();
+  const { triggerAudioEvent } = useAudio();
 
-  const introState = room.state.display.gameIntro;
-  const showGame = room.state.display.game;
+  const game = room.games.find((game) => game.identifier === gameName);
+
+  if (!game) {
+    return <div>Loading ...</div>;
+  }
+
+  const introState = room.context.gameIntro;
+  const introIsPlaying = room.context.display.gameIntro;
+  const showGame = room.context.display.game;
   const gameNumber = room.games.findIndex((g) => g.identifier === game.identifier) + 1;
-
-  const [mountIntroContainer, setMountIntroContainer] = useState(true);
 
   const [scope, animate] = useAnimate();
 
   const introAnimation = async () => {
-    await animate(scope.current, { scale: 1 }, { duration: 0.5, delay: 0.5 });
-    await animate(scope.current, { scale: 1.4 }, { duration: 6 });
-    await animate(scope.current, { scale: 0 }, { duration: 0.5 });
+    const sequence = [
+      [scope.current, { scale: 1 }, { duration: 0.5, delay: 0.5 }],
+      [scope.current, { scale: 1.4 }, { duration: 6 }],
+      [scope.current, { scale: 0 }, { duration: 0.5 }],
+    ];
+
+    // @ts-expect-error
+    await animate(sequence);
+    // await animate(
+    //   scope.current,
+    //   { scale: 1 },
+    //   { duration: 0.5, delay: 0.5, onUpdate: (latest) => console.log("Latest: ", latest) }
+    // );
+    // await animate(scope.current, { scale: 1.4 }, { duration: 6 });
+    // await animate(scope.current, { scale: 0 }, { duration: 0.5 });
   };
 
-  function getGame(identifier: Games) {
+  function getGame(identifier: GameEnum) {
     const GAME_MAP: TGameMap = {
       flaggen: <FlaggenGame game={game as TFlaggenGameState} />,
       merken: <MerkenGame game={game as TMerkenGameState} />,
@@ -51,27 +74,44 @@ const Game: React.FC<IGameProps> = ({ game }) => {
   }
 
   useEffect(() => {
-    if (introState.alreadyPlayed && !showGame) {
-      setTimeout(() => {
-        setMountIntroContainer(false);
-      }, 1000);
-    } else if (showGame) {
-      setMountIntroContainer(false);
-    } else {
-      setMountIntroContainer(true);
+    if (introIsPlaying) {
+      triggerAudioEvent("playSound", "intro");
+      room.context.display.game = false;
+
+      introState.alreadyPlayed = false;
+      introState.flippedTitleBanner = false;
+      introState.milliseconds = 0;
+
       void introAnimation();
+
+      setTimeout(() => {
+        introState.flippedTitleBanner = true;
+      }, SECONDS_TO_ROTATE_TITLE_BANNER * 1000);
+
+      setTimeout(() => {
+        introState.alreadyPlayed = true;
+
+        setTimeout(() => {
+          room.context.display.game = true;
+          room.context.display.gameIntro = false;
+        }, SECONDS_DELAY_BEFORE_GAME_DISPLAYS * 1000);
+      }, SECONDS_TOTAL_INTRO_DURATION * 1000);
     }
-  }, [introState.alreadyPlayed, showGame]);
+  }, [room.context.display.gameIntro]);
 
   return (
     <>
       <AnimatePresence>
-        {showGame && <motion.div {...animations.fadeInOut}>{getGame(game.identifier)}</motion.div>}
+        {showGame && !introIsPlaying && (
+          <motion.div {...animations.fadeInOut}>{getGame(game.identifier)}</motion.div>
+        )}
       </AnimatePresence>
-
+      {/* <AnimatePresence>
+        <motion.div {...animations.fadeInOut}>{getGame(game.identifier)}</motion.div>
+      </AnimatePresence> */}
       <motion.div
         ref={scope}
-        hidden={!mountIntroContainer || showGame}
+        hidden={!introIsPlaying || showGame}
         initial={{ scale: 0 }}
       >
         <Flex

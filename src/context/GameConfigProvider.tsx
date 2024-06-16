@@ -3,7 +3,7 @@ import { useSearchParams } from "next/navigation";
 import type { TApiActions } from "~/server/api/api.types";
 import { api } from "~/utils/api";
 import type { Game } from "@prisma/client";
-import type { Games, TGame, TGameSettingsMap } from "~/components/room/Game/games/game.types";
+import type { Game, TGame, TGameSettingsMap } from "~/components/room/Game/games/game.types";
 import useNotification from "~/hooks/useNotification";
 import type { TGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig.types";
 import { useImmer, type Updater } from "use-immer";

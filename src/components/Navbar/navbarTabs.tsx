@@ -18,7 +18,7 @@ export const navbartabs: INavbarTabs = {
       leftSection: <IconHome size={DEFAULT_ICON_SIZE} />,
     },
     {
-      label: "Räume",
+      label: "Raum beitreten",
       href: "/rooms",
       leftSection: <IconDoor size={DEFAULT_ICON_SIZE} />,
     },

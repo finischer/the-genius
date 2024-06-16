@@ -1,27 +1,42 @@
-import { Accordion, Button, Drawer, Flex, ScrollArea, Text, Title, type ButtonProps } from "@mantine/core";
+import {
+  Accordion,
+  Button,
+  Drawer,
+  Flex,
+  Group,
+  ScrollArea,
+  Text,
+  Title,
+  type ButtonProps,
+} from "@mantine/core";
 import { useDisclosure, useLocalStorage } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
-import type { RoomViews } from "@prisma/client";
 import { IconCheck, IconQuestionMark } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import GameDetailsModal from "~/components/gameshows/GameDetailsModal";
 import Tooltip from "~/components/shared/Tooltip/Tooltip";
 import { LOCAL_STORAGE_KEYS } from "~/config/localStorage";
+import { roomConfig } from "~/config/room.config";
 import useAudio from "~/hooks/useAudio";
+import useBuzzer from "~/hooks/useBuzzer";
 import useLoadingState from "~/hooks/useLoadingState/useLoadingState";
+import useNotefield from "~/hooks/useNotefield";
 import useNotification from "~/hooks/useNotification";
-import { useRoom } from "~/hooks/useRoom";
-import { socket } from "~/hooks/useSocket";
-import type { Games, TGame } from "../Game/games/game.types";
-import MediaPlayer from "../MediaPlayer";
+import useSyncedRoom from "~/hooks/useSyncedRoom";
+import useTimer from "~/hooks/useTimer";
+import { RoomView, TimerType } from "~/types/gameshow.types";
+import { assignObjectKeyByKey } from "~/utils/helpers";
+import type { TGame } from "../Game/games/game.types";
 import { type IModPanelProps } from "./modPanel.types";
-
-const TIMER_SECONDS = 10;
+import { api } from "~/utils/api";
+import MediaPlayer from "../MediaPlayer";
 
 const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
-  const { showErrorNotification } = useNotification();
+  const { mutateAsync: removeActiveRoom } = api.rooms.removeActiveRoom.useMutation();
+
+  const { showErrorNotification, showInfoNotification } = useNotification();
   const router = useRouter();
   const { pageIsLoading } = useLoadingState();
   const [openedItems, setOpenedItems] = useLocalStorage<string[]>({
@@ -29,11 +44,22 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
     defaultValue: [],
   });
 
+  const { lockAllBuzzers, unlockAllBuzzers, areAllBuzzersLocked } = useBuzzer();
+
   // for game rules
   const [openedGameRules, { open: openGameRules, close: closeGameRules }] = useDisclosure();
   const [clickedGame, setClickedGame] = useState<TGame>();
 
-  const { room, currentGame } = useRoom();
+  const room = useSyncedRoom();
+  const { triggerAudioEvent } = useAudio();
+  const { disableAllNotefields, toggleNotefields } = useNotefield();
+
+  const { startTimer, active: isTimerActive } = useTimer(
+    room.context.header.timer,
+    TimerType.COUNTDOWN,
+    roomConfig.modPanel.actions.timerSeconds
+  );
+
   const [isOpen, { close: closeModPanel }] = disclosure;
   const btnVariantDefault: ButtonProps = { variant: "default" };
   const titleOrder = 3;
@@ -41,12 +67,10 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
   const teamArray = Object.values(room.teams);
 
   const buzzerPressed = teamArray.filter((t) => t.isActiveTurn || t.buzzer.isPressed).length > 0;
-  const isOneScorebarTimerActive = teamArray.filter((t) => t.scorebarTimer.isActive).length > 0;
+  const isOneScorebarTimerActive = teamArray.filter((t) => t.scorebarTimer.active).length > 0;
 
   const allPlayers = teamArray.map((t) => t.players).flat();
-  const atLeastOneNotefieldIsActive = allPlayers.filter((p) => p.states.notefield.isActive).length > 0;
-
-  const { triggerAudioEvent } = useAudio();
+  const atLeastOneNotefieldIsActive = allPlayers.filter((p) => p.context.notefield.isActive).length > 0;
 
   const handleOpenGameRules = (game: TGame) => {
     setClickedGame(game);
@@ -54,33 +78,33 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
   };
 
   const releaseBuzzer = () => {
-    socket.emit("releaseBuzzer");
+    unlockAllBuzzers();
+
+    Object.values(room.teams).forEach((team) => {
+      team.isActiveTurn = false;
+      team.buzzer.isPressed = false;
+      team.buzzer.playersBuzzered = [];
+    });
   };
 
   const hideAnswer = () => {
-    socket.emit("hideAnswerBanner");
-  };
-
-  const toggleNotefields = () => {
-    // TODO: handle if one notefield is not active and other ones are active
-    socket.emit("toggleNotefields");
-  };
-
-  const handleStartTimer = () => {
-    socket.emit("startTimer", TIMER_SECONDS);
+    room.context.answerState.isAnswerDisplayed = false;
+    room.context.answerState.answer = "";
   };
 
   const gameBtns = room.games.map((g) => {
-    const btnDisabled = g.identifier === currentGame?.identifier && room.state.view === "GAME";
+    const btnDisabled =
+      g.identifier === room.context.currentGame?.identifier && room.context.view === RoomView.GAME;
 
     return (
       <Button.Group key={g.identifier}>
         <Button
           {...btnVariantDefault}
           disabled={btnDisabled}
-          onClick={() => startGame(g.identifier)}
+          onClick={() => startGame(g)}
           w="100%"
         >
+          {/* {g.name} */}
           {g.name} {btnDisabled && "(Läuft gerade)"}
         </Button>
 
@@ -99,15 +123,25 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
     );
   });
 
-  const startGame = (gameIdentifier: Games) => {
+  const startGame = (game: TGame) => {
     hideAnswer();
-    socket.emit("startGame", { gameIdentifier });
-    triggerAudioEvent("playSound", "intro");
+    assignObjectKeyByKey(
+      game as unknown as Record<string, unknown>,
+      room.context.currentGame as unknown as Record<string, unknown>
+    );
+    room.context.view = RoomView.GAME;
+    room.context.display.game = false;
+    setTimeout(() => {
+      room.context.display.gameIntro = true;
+    }, 500);
   };
 
-  const changeView = (newView: RoomViews) => {
+  const changeView = (newView: RoomView) => {
     hideAnswer();
-    socket.emit("changeView", { newView });
+    lockAllBuzzers();
+    disableAllNotefields();
+
+    room.context.view = newView;
   };
 
   const closeRoom = () => {
@@ -122,34 +156,43 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
       ),
       labels: { confirm: "Ja", cancel: "Nein" },
       confirmProps: { color: "red" },
-      onConfirm: () => {
+      onConfirm: async () => {
         notifications.show({
           id: "closeRoom",
           message: "Raum wird geschlossen",
           loading: true,
         });
 
-        socket.emit("closeRoom", { roomId: room.id }, async ({ closeSuccessful }) => {
-          if (closeSuccessful) {
-            const routeDone = await router.push("/rooms");
+        const deletedRoom = await removeActiveRoom({ roomId: room.id });
 
-            if (routeDone) {
-              notifications.update({
-                id: "closeRoom",
-                title: "Erfolgreich",
-                message: "Raum wurde erfolgreich geschlossen",
-                loading: false,
-                icon: <IconCheck size="1rem" />,
-              });
-            }
-          } else {
-            showErrorNotification({
-              message: "Raum konnte nicht geschlossen werden",
-            });
-          }
+        if (!deletedRoom) {
+          showErrorNotification({
+            message: "Raum konnte nicht geschlossen werden",
+          });
+          return;
+        }
+
+        room.context.isClosed = true;
+
+        notifications.update({
+          id: "closeRoom",
+          title: "Erfolgreich",
+          message: "Raum wurde erfolgreich geschlossen",
+          loading: false,
+          icon: <IconCheck size="1rem" />,
         });
       },
     });
+  };
+
+  const toggleBuzzerLockState = () => {
+    if (areAllBuzzersLocked) {
+      unlockAllBuzzers();
+      showInfoNotification({ message: "Alle Buzzer entsperrt" });
+    } else {
+      lockAllBuzzers();
+      showInfoNotification({ message: "Alle Buzzer gesperrt" });
+    }
   };
 
   return (
@@ -205,13 +248,13 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                   <Button.Group orientation="vertical">
                     <Button
                       {...btnVariantDefault}
-                      onClick={() => changeView("EMPTY")}
+                      onClick={() => changeView(RoomView.EMPTY)}
                     >
                       Leer
                     </Button>
                     <Button
                       {...btnVariantDefault}
-                      onClick={() => changeView("SCOREBOARD")}
+                      onClick={() => changeView(RoomView.SCOREBOARD)}
                     >
                       Scoreboard
                     </Button>
@@ -227,10 +270,10 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                   <Button.Group orientation="vertical">
                     <Button
                       {...btnVariantDefault}
-                      onClick={handleStartTimer}
-                      disabled={room.state.display.clock.isActive}
+                      onClick={() => startTimer()}
+                      disabled={isTimerActive}
                     >
-                      {TIMER_SECONDS}s Timer starten
+                      {roomConfig.modPanel.actions.timerSeconds}s Timer starten
                     </Button>
                     <Button
                       {...btnVariantDefault}
@@ -247,8 +290,15 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                     </Button>
                     <Button
                       {...btnVariantDefault}
+                      onClick={toggleBuzzerLockState}
+                      disabled={isOneScorebarTimerActive}
+                    >
+                      Alle Buzzer {areAllBuzzersLocked ? "entsperren" : "sperren"}
+                    </Button>
+                    <Button
+                      {...btnVariantDefault}
                       onClick={hideAnswer}
-                      disabled={!room.state.answerState.showAnswer}
+                      disabled={!room.context.answerState.isAnswerDisplayed}
                     >
                       Antwort ausblenden
                     </Button>

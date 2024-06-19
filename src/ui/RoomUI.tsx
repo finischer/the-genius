@@ -15,6 +15,7 @@ import ModView from "~/components/shared/ModView";
 import { connectToSocket } from "~/config/store";
 import useAudio from "~/hooks/useAudio";
 import useMusic from "~/hooks/useMusic";
+import useSettings from "~/hooks/useSettings/useSettings";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { sizes } from "~/styles/constants";
 import { displayObject } from "~/utils/helpers";
@@ -23,6 +24,7 @@ const RoomUI = () => {
   const params = useParams();
   const { playAudio } = useAudio();
   const { play: playMusic, stop: stopMusic, pause: pauseMusic } = useMusic();
+  const { settings } = useSettings();
 
   const roomId = params?.id as string;
   const router = useRouter();
@@ -75,7 +77,7 @@ const RoomUI = () => {
     }
 
     return () => stopMusic();
-  }, [musicState.isActive, musicState.title]);
+  }, [musicState.isActive, musicState.title, settings.volume.music]);
 
   if (!room.isLoaded) {
     return <div>Loading ...</div>;

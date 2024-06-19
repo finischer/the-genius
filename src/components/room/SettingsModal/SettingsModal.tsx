@@ -42,6 +42,7 @@ const SettingsModal: React.FC<ISettingsModalProps> = ({ openedModal, onClose }) 
         <Text>Lautstärke (Musik)</Text>
         <Slider
           color={primaryColor}
+          disabled
           value={settings.volume.music}
           onChange={(value) => updateSettings({ ...settings, volume: { ...settings.volume, music: value } })}
           marks={[

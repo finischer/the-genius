@@ -49,6 +49,7 @@ const useMusic = () => {
     sprite: musicSprite,
     loop: true,
     interrupt: true,
+    // volume: 0.5,
     volume: settings.volume.music / 100,
   });
 

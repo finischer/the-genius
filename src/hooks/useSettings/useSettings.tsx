@@ -20,7 +20,7 @@ const useSettings = () => {
     defaultValue: {
       volume: {
         soundEffects: 75,
-        music: 75,
+        music: 50,
       },
     },
   });

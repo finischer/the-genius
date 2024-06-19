@@ -2,33 +2,28 @@ import {
   Button,
   Checkbox,
   Flex,
+  Input,
   Modal,
   NumberInput,
-  Select,
+  SegmentedControl,
   Text,
   TextInput,
-  SegmentedControl,
   type SegmentedControlItem,
-  Input,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { GameshowMode } from "@prisma/client";
+import { useSyncedStore } from "@syncedstore/react";
+import bcrypt from "bcrypt";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import type { TGame } from "~/components/room/Game/games/game.types";
-import { socket } from "~/hooks/useSocket";
+import { initRoom, roomStore } from "~/config/store";
+import useNotification from "~/hooks/useNotification";
 import { useUser } from "~/hooks/useUser";
 import { GAMESHOW_MODES } from "~/styles/constants";
+import { api } from "~/utils/api";
 import { capitalize } from "~/utils/strings";
 import { type ICreateRoomConfig, type ICreateRoomModalProps } from "./createRoomModal.types";
-import { PARTYKIT_URL } from "~/utils/env";
-import { randomId } from "@mantine/hooks";
-import { redirect } from "next/navigation";
-import { api } from "~/utils/api";
-import Room from "~/classes/Room";
-import { useSyncedStore } from "@syncedstore/react";
-import { connectToSocket, initRoom, roomStore } from "~/config/store";
-import useNotification from "~/hooks/useNotification";
 
 const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose, gameshow }) => {
   const gameshowGames = gameshow.games as unknown as TGame[];
@@ -150,7 +145,7 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
               im Team gespielt werden muss.
             </Text>
           )}
-          <Checkbox
+          {/* <Checkbox
             label="Privater Raum"
             {...form.getInputProps("isPrivate", { type: "checkbox" })}
           />
@@ -161,7 +156,7 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
               required
               {...form.getInputProps("password")}
             />
-          )}
+          )} */}
 
           <NumberInput
             label="Anzahl Spiele"

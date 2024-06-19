@@ -71,8 +71,7 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
       loaderMsg: "Raum wird erstellt ...",
     });
 
-    const hashedPassword = await bcrypt.hash(values.password, 10);
-    const room = initRoom(values.name, hashedPassword, gameshow.games as TGame[], user.id);
+    const room = initRoom(values.name, values.password, gameshow.games as TGame[], user.id);
 
     store.room.state = room;
 
@@ -146,7 +145,7 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
               im Team gespielt werden muss.
             </Text>
           )}
-          <Checkbox
+          {/* <Checkbox
             label="Privater Raum"
             {...form.getInputProps("isPrivate", { type: "checkbox" })}
           />
@@ -157,7 +156,7 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
               required
               {...form.getInputProps("password")}
             />
-          )}
+          )} */}
 
           <NumberInput
             label="Anzahl Spiele"

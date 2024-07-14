@@ -1,0 +1,24 @@
+name: ESLint
+
+on:
+  push:
+    branches:
+      - development
+  pull_request:
+    branches:
+      - development
+      - staging
+    types:
+      - closed
+
+jobs:
+  eslint:
+    name: Lint code base
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run Linter
+        run: npm run lint

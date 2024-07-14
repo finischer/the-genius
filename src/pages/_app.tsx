@@ -17,6 +17,7 @@ import "@mantine/notifications/styles.css";
 
 import "~/styles/globals.css";
 import { api } from "~/utils/api";
+import BuyMeACoffeeWidget from "~/components/shared/BuyMeACoffeeWidget";
 
 const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { session, ...pageProps } }) => {
   return (

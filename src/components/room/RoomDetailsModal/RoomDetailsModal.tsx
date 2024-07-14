@@ -8,6 +8,8 @@ import React from "react";
 import ActionIcon from "~/components/shared/ActionIcon";
 import useLoadingState from "~/hooks/useLoadingState/useLoadingState";
 import { type IRoomDetailsModalProps } from "./roomDetailsModal.types";
+import { BuyMeACoffeeButton } from "~/components/shared/BuyMeACoffeeButton";
+import { Center } from "@mantine/core";
 
 const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClose, room }) => {
   const { pageIsLoading } = useLoadingState();
@@ -125,8 +127,12 @@ const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClo
           </tbody>
         </Table>
 
+        <Center>
+          <BuyMeACoffeeButton />
+        </Center>
+
         <Button
-          variant="subtle"
+          // variant=""
           onClick={leaveRoom}
           loading={pageIsLoading}
         >

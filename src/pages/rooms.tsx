@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import PageLayout from "~/components/layout/PageLayout";
 import ActionIcon from "~/components/shared/ActionIcon";
+import { BuyMeACoffeeButton } from "~/components/shared/BuyMeACoffeeButton";
 import NextHead from "~/components/shared/NextHead";
 import useNotification from "~/hooks/useNotification";
 import { api } from "~/utils/api";
@@ -225,7 +226,6 @@ const RoomsPage = () => {
   return (
     <PageLayout>
       <NextHead title="Raum beitreten" />
-
       <Center>
         <Stack align="center">
           <TextInput

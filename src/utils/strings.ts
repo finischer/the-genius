@@ -13,3 +13,7 @@ export function slug(str: string | number | (string | number)[]) {
 
   return _.kebabCase(tmp.toString());
 }
+
+export function this_function_will_test_the_linter() {
+  console.log("Hello Github Actions");
+}

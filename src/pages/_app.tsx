@@ -1,6 +1,8 @@
 import { MantineProvider } from "@mantine/core";
+import "@mantine/core/styles.css";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
+import "@mantine/notifications/styles.css";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { DefaultSeo } from "next-seo";
@@ -12,8 +14,6 @@ import { RoomProvider } from "~/hooks/useRoom";
 import { SocketProvider } from "~/hooks/useSocket";
 import { UserProvider } from "~/hooks/useUser";
 import { THEME, cssResolver } from "~/styles/constants";
-import "@mantine/core/styles.css";
-import "@mantine/notifications/styles.css";
 
 import "~/styles/globals.css";
 import { api } from "~/utils/api";

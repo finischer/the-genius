@@ -1,17 +1,17 @@
 import { Box, Flex, Group, Text, useMantineTheme } from "@mantine/core";
-import Timer from "./Timer";
-import { AnimatePresence, motion } from "framer-motion";
-import { animations } from "~/utils/animations";
-import useSyncedRoom from "~/hooks/useSyncedRoom";
-import ContainerBox from "../shared/ContainerBox";
-import { RoomView } from "~/types/gameshow.types";
-import useBuzzer from "~/hooks/useBuzzer";
-import { IconSettings, IconShare } from "@tabler/icons-react";
-import ActionIcon from "../shared/ActionIcon";
 import { useDisclosure } from "@mantine/hooks";
+import { IconSettings, IconShare } from "@tabler/icons-react";
+import { AnimatePresence, motion } from "framer-motion";
+import useBuzzer from "~/hooks/useBuzzer";
+import useSettings from "~/hooks/useSettings/useSettings";
+import useSyncedRoom from "~/hooks/useSyncedRoom";
+import { RoomView } from "~/types/gameshow.types";
+import { animations } from "~/utils/animations";
+import ActionIcon from "../shared/ActionIcon";
+import ContainerBox from "../shared/ContainerBox";
 import RoomDetailsModal from "./RoomDetailsModal";
 import SettingsModal from "./SettingsModal/SettingsModal";
-import useSettings from "~/hooks/useSettings/useSettings";
+import Timer from "./Timer";
 
 const RoomHeader = () => {
   const { buzzer } = useBuzzer();

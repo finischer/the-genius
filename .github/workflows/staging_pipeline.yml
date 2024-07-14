@@ -3,10 +3,10 @@ name: ESLint
 on:
   push:
     branches:
-      - development
+      - dev
   pull_request:
     branches:
-      - development
+      - dev
       - staging
     types:
       - closed

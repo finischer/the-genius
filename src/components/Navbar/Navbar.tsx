@@ -7,6 +7,7 @@ import { AdminBadge } from "../shared/Badge/Badge";
 import UserCard from "../shared/UserCard/UserCard";
 import { navbartabs } from "./navbarTabs";
 import LegalLinks from "../shared/LegalLinks";
+import { BuyMeACoffeeButton } from "../shared/BuyMeACoffeeButton";
 
 const Navbar = () => {
   const router = useRouter();
@@ -87,6 +88,7 @@ const Navbar = () => {
             gap="xs"
             // bg="green"
           >
+            <BuyMeACoffeeButton />
             <Text
               c="dimmed"
               fz="xs"

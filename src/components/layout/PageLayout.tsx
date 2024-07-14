@@ -10,8 +10,6 @@ import Navbar from "../Navbar";
 import AuthenticatedLayout from "../auth.layout";
 import Loader from "../shared/Loader";
 import TheGeniusLogo from "../shared/TheGeniusLogo";
-import BuyMeACoffeeWidget from "../shared/BuyMeACoffeeWidget";
-import Script from "next/script";
 
 interface IPageLayout {
   showLoader?: boolean;
@@ -42,7 +40,6 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
   if (status === "authenticated") {
     return (
       <AuthenticatedLayout>
-        {/* Buy me a coffee widget */}
         <Modal
           opened={!session.user.username}
           title="Zeig den Leuten, wer du bist"

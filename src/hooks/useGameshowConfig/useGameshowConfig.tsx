@@ -1,9 +1,16 @@
 import type { Game as PrismaGame } from "@prisma/client";
 import { useContext } from "react";
 import { GAME_STATE_MAP } from "~/components/room/Game/games/game.constants";
-import { Game, type TGame, type TGameSettingsMap } from "~/components/room/Game/games/game.types";
+import {
+  type Game,
+  type TGame,
+  type TGameSettingsMap
+} from "~/components/room/Game/games/game.types";
 import { GameConfigContext } from "~/context/GameConfigProvider";
-import type { IUseGameshowConfigReturn, TGameshowConfigKeys } from "./useGameshowConfig.types";
+import type {
+  IUseGameshowConfigReturn,
+  TGameshowConfigKeys
+} from "./useGameshowConfig.types";
 
 const useGameshowConfig = <T extends Game>(gameName: T) => {
   const gameConfigContext = useContext(GameConfigContext);
@@ -17,7 +24,9 @@ const useGameshowConfig = <T extends Game>(gameName: T) => {
   const updateGame = (updateFn: (config: TGameSettingsMap[T]) => void) => {
     if (!gameName) return;
 
-    const gameIndex = gameshow.games.findIndex((g) => g.identifier === gameName);
+    const gameIndex = gameshow.games.findIndex(
+      (g) => g.identifier === gameName
+    );
 
     if (gameIndex === -1) {
       console.error("Could not find game: ", gameName);
@@ -30,7 +39,9 @@ const useGameshowConfig = <T extends Game>(gameName: T) => {
     });
   };
 
-  const updateGameshowMetadata = (updateFn: (config: TGameshowConfigKeys) => void) => {
+  const updateGameshowMetadata = (
+    updateFn: (config: TGameshowConfigKeys) => void
+  ) => {
     setGameshow((draft) => {
       // Rufe die übergebene Update-Funktion mit der aktuellen Spielkonfiguration auf
       updateFn(draft);
@@ -64,8 +75,10 @@ const useGameshowConfig = <T extends Game>(gameName: T) => {
     updateGameList,
     availableGames,
     ...(gameName && {
-      [gameName]: gameshow.games.find((g) => g.identifier === gameName) ?? GAME_STATE_MAP[gameName],
-    }),
+      [gameName]:
+        gameshow.games.find((g) => g.identifier === gameName) ??
+        GAME_STATE_MAP[gameName]
+    })
   } as IUseGameshowConfigReturn<T, typeof gameName>;
 };
 

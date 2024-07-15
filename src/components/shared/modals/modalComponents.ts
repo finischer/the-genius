@@ -1,13 +1,12 @@
-import type { OpenContextModal } from "@mantine/modals/lib/context";
+import { modals as modalsContext } from "@mantine/modals";
 import ChangeRoleModal from "./ChangeRoleModal";
 import PricingModal from "./PricingModal";
 import UserDetailsModal from "./UserDetailsModal";
-import { modals as modalsContext } from "@mantine/modals";
 
 export const modals = {
   userDetails: UserDetailsModal,
   changeRole: ChangeRoleModal,
-  pricing: PricingModal,
+  pricing: PricingModal
 };
 
 // export const pricingModalContextPayload: OpenContextModal<any> & { modal: "pricing" } = {
@@ -20,6 +19,6 @@ export const openPricingModal = () => {
   modalsContext.openContextModal({
     modal: "pricing",
     size: "50vw",
-    innerProps: {},
+    innerProps: {}
   });
 };

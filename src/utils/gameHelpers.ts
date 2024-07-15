@@ -7,7 +7,7 @@ export function getFormattedGameRules(game: TGame) {
     gameName: game.name,
     maxPoints: game.maxPoints,
     "maxPoints.equalOne": game.maxPoints === 1,
-    modes: game.modes,
+    modes: game.modes
   };
 
   let gameData = {};
@@ -18,13 +18,13 @@ export function getFormattedGameRules(game: TGame) {
     case Game.DUSAGST:
       gameData = {
         "timeToThinkSeconds.equalOne": game.timeToThinkSeconds === 1,
-        timeToThinkSeconds: game.timeToThinkSeconds,
+        timeToThinkSeconds: game.timeToThinkSeconds
       };
       break;
     case Game.MERKEN:
       gameData = {
         "timeToThinkSeconds.equalOne": game.timerState.timeToThinkSeconds === 1,
-        timeToThinkSeconds: game.timerState.timeToThinkSeconds,
+        timeToThinkSeconds: game.timerState.timeToThinkSeconds
       };
     default:
       break;
@@ -32,7 +32,7 @@ export function getFormattedGameRules(game: TGame) {
 
   const data = {
     ...metadata,
-    ...gameData,
+    ...gameData
   };
 
   const template = Handlebars.compile(rules);

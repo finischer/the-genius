@@ -4,7 +4,7 @@ import {
   IconHome,
   IconMessageReport,
   IconTestPipe,
-  IconUser,
+  IconUser
 } from "@tabler/icons-react";
 import type { INavbarTabs } from "~/components/Navbar/navbar.types";
 
@@ -15,45 +15,45 @@ export const navbartabs: INavbarTabs = {
     {
       label: "Home",
       href: "/",
-      leftSection: <IconHome size={DEFAULT_ICON_SIZE} />,
+      leftSection: <IconHome size={DEFAULT_ICON_SIZE} />
     },
     {
       label: "Raum beitreten",
       href: "/rooms",
-      leftSection: <IconDoor size={DEFAULT_ICON_SIZE} />,
+      leftSection: <IconDoor size={DEFAULT_ICON_SIZE} />
     },
     {
       label: "Meine Spielshows",
       href: "/gameshows",
       description: "Starte oder erstelle deine eigene Spielshow",
-      leftSection: <IconCategory size={DEFAULT_ICON_SIZE} />,
+      leftSection: <IconCategory size={DEFAULT_ICON_SIZE} />
     },
     {
       label: "Feedback",
       href: "/feedback",
       description: "Gib uns dein Feedback und mache TheGenius besser",
-      leftSection: <IconMessageReport size={DEFAULT_ICON_SIZE} />,
-    },
+      leftSection: <IconMessageReport size={DEFAULT_ICON_SIZE} />
+    }
   ],
   admin: [
     {
       label: "User Feedback",
       href: "/admin/feedbacks",
       description: "Feedback der User, während der Beta Phase",
-      leftSection: <IconMessageReport size={DEFAULT_ICON_SIZE} />,
+      leftSection: <IconMessageReport size={DEFAULT_ICON_SIZE} />
     },
     {
       label: "Users",
       href: "/admin/users",
       description: "Verwalte die User von TheGenius",
-      leftSection: <IconUser size={DEFAULT_ICON_SIZE} />,
+      leftSection: <IconUser size={DEFAULT_ICON_SIZE} />
     },
     {
       label: "Betatester",
       href: "/admin/betauser",
       description: "Füge neue Betatester hinzu",
       leftSection: <IconTestPipe size={DEFAULT_ICON_SIZE} />,
-      disabled: true,
-    },
-  ],
+      disabled: true
+    }
+  ]
 };

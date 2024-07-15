@@ -1,13 +1,13 @@
-import { AppShell, Box, Flex, Group, NavLink, Stack, Text } from "@mantine/core";
+import { AppShell, Box, Flex, NavLink, Stack, Text } from "@mantine/core";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import pack from "package.json";
 import { useUser } from "~/hooks/useUser";
 import { AdminBadge } from "../shared/Badge/Badge";
+import { BuyMeACoffeeButton } from "../shared/BuyMeACoffeeButton";
+import LegalLinks from "../shared/LegalLinks";
 import UserCard from "../shared/UserCard/UserCard";
 import { navbartabs } from "./navbarTabs";
-import LegalLinks from "../shared/LegalLinks";
-import { BuyMeACoffeeButton } from "../shared/BuyMeACoffeeButton";
 
 const Navbar = () => {
   const router = useRouter();
@@ -31,22 +31,19 @@ const Navbar = () => {
       active={isActive(tab.href)}
       onClick={() => goTo(tab.href)}
       style={(theme) => ({
-        borderRadius: theme.radius.xs,
+        borderRadius: theme.radius.xs
       })}
     />
   ));
 
   const adminTabsElements = navbartabs.admin.map((tab) => (
-    <Box
-      pos="relative"
-      key={tab.href}
-    >
+    <Box pos="relative" key={tab.href}>
       <Box
         pos="absolute"
         right={-10}
         top={-10}
         style={{
-          rotate: "20deg",
+          rotate: "20deg"
         }}
       >
         <AdminBadge disableTooltip />
@@ -57,7 +54,7 @@ const Navbar = () => {
         active={isActive(tab.href)}
         onClick={() => goTo(tab.href)}
         style={(theme) => ({
-          borderRadius: theme.radius.xs,
+          borderRadius: theme.radius.xs
         })}
       />
     </Box>
@@ -67,16 +64,8 @@ const Navbar = () => {
     <AppShell.Navbar p="sm">
       <AppShell.Section grow>
         {/* General Navbar Links */}
-        <Flex
-          direction="column"
-          justify="space-between"
-          h="100%"
-          pb="md"
-        >
-          <Flex
-            gap="sm"
-            direction="column"
-          >
+        <Flex direction="column" justify="space-between" h="100%" pb="md">
+          <Flex gap="sm" direction="column">
             {normalTabsElements}
 
             {/* Admin Navbar Links */}
@@ -89,10 +78,7 @@ const Navbar = () => {
             // bg="green"
           >
             <BuyMeACoffeeButton />
-            <Text
-              c="dimmed"
-              fz="xs"
-            >
+            <Text c="dimmed" fz="xs">
               The Genius Beta v{pack.version}
             </Text>
 

@@ -11,12 +11,14 @@ import { type IRoomDetailsModalProps } from "./roomDetailsModal.types";
 import { BuyMeACoffeeButton } from "~/components/shared/BuyMeACoffeeButton";
 import { Center } from "@mantine/core";
 
-const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClose, room }) => {
+const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({
+  openedModal,
+  onClose,
+  room
+}) => {
   const { pageIsLoading } = useLoadingState();
   const router = useRouter();
   const pathname = usePathname();
-
-  const roomId = router.query.id as string;
 
   const fullUrl = `${window.location.origin}${pathname}`;
 
@@ -31,7 +33,7 @@ const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClo
           id: "leaveRoom",
           title: "Raum verlassen",
           message: "Du verlässt jetzt den Raum",
-          loading: true,
+          loading: true
         });
         // initUser();
         const routeDone = await router.push("/rooms/");
@@ -42,10 +44,10 @@ const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClo
             title: "Erfolgreich",
             message: "Raum erfolgreich verlassen",
             loading: false,
-            icon: <IconCheck size="1rem" />,
+            icon: <IconCheck size="1rem" />
           });
         }
-      },
+      }
     });
   };
 
@@ -57,20 +59,20 @@ const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClo
       centered
       size="xl"
     >
-      <Flex
-        direction="column"
-        gap="xl"
-      >
+      <Flex direction="column" gap="xl">
         <Table>
           <tbody>
             <tr>
               <td>Raum-ID:</td>
               <td>{room.id}</td>
-              <td style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <CopyButton
-                  timeout={2000}
-                  value={room.id}
-                >
+              <td
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}
+              >
+                <CopyButton timeout={2000} value={room.id}>
                   {({ copied, copy }) =>
                     copied ? (
                       <IconCheck size="1.5rem" />
@@ -102,10 +104,7 @@ const RoomDetailsModal: React.FC<IRoomDetailsModalProps> = ({ openedModal, onClo
               <td>Link zum teilen:</td>
               <td>{fullUrl}</td>
               <td>
-                <CopyButton
-                  timeout={2000}
-                  value={fullUrl}
-                >
+                <CopyButton timeout={2000} value={fullUrl}>
                   {({ copied, copy }) =>
                     copied ? (
                       <IconCheck size="1.5rem" />

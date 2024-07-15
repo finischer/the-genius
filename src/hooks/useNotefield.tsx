@@ -21,7 +21,10 @@ const useNotefield = () => {
 
   const toggleNotefields = () => {
     // TODO: handle if one notefield is not active and other ones are active
-    players.forEach((player) => (player.context.notefield.isActive = !player.context.notefield.isActive));
+    players.forEach(
+      (player) =>
+        (player.context.notefield.isActive = !player.context.notefield.isActive)
+    );
   };
 
   return { enableAllNotefields, disableAllNotefields, toggleNotefields };

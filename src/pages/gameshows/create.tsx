@@ -5,7 +5,7 @@ import { GameConfigProvider } from "~/context/GameConfigProvider";
 
 export const DEFAULT_GAMESHOW_CONFIG = {
   name: "",
-  games: [],
+  games: []
 };
 
 const CreateGameshowPage = () => {

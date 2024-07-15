@@ -6,7 +6,7 @@ export type TSetGameState = ISetGameState & IGameGeneralState;
 export const SET_COLORS_MAP = {
   red: SET_COLORS.RED,
   blue: SET_COLORS.BLUE,
-  green: SET_COLORS.GREEN,
+  green: SET_COLORS.GREEN
 };
 
 export const DEFAULT_SET_STATE: TSetGameState = {
@@ -22,7 +22,7 @@ export const DEFAULT_SET_STATE: TSetGameState = {
   qIndex: 0,
   display: {
     cards: false,
-    markedCards: false,
+    markedCards: false
   },
 
   rules: `
@@ -39,5 +39,5 @@ Eure Aufgabe ist es, unter diesen Karten ein Set zu finden. Dies bedeutet, dass 
 Wenn ihr glaubt, ein Set gefunden zu haben, buzzert ihr und habt dann 5 Sekunden Zeit, um eure Antwort zu nennen. Ist die Antwort korrekt, bekommt ihr einen Punkt. Sollte die Antwort falsch sein, bekommt der Gegner einen Punkt, und das Spiel geht mit dem nächsten Kartenstapel weiter.
 
 Das Team, das zuerst {{ maxPoints }} Punkte erreicht, gewinnt das Spiel.
-  `,
+  `
 };

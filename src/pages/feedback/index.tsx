@@ -1,4 +1,13 @@
-import { Button, Center, Divider, Flex, Rating, Text, Textarea, Title, rem } from "@mantine/core";
+import {
+  Button,
+  Center,
+  Divider,
+  Flex,
+  Rating,
+  Text,
+  Textarea,
+  Title
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useOs } from "@mantine/hooks";
 import React from "react";
@@ -15,12 +24,15 @@ interface IFeedbackFormValues {
   comment: string;
 }
 
-const FormSection = ({ children, title }: { children: React.ReactNode; title?: string }) => {
+const FormSection = ({
+  children,
+  title
+}: {
+  children: React.ReactNode;
+  title?: string;
+}) => {
   return (
-    <Flex
-      direction="column"
-      gap="md"
-    >
+    <Flex direction="column" gap="md">
       {title && <Title order={6}>{title}</Title>}
       {children}
       <Divider />
@@ -34,33 +46,35 @@ const FeedbackPage = () => {
       ratingGeneralExperience: 0,
       ratingControlModerator: 0,
       ratingDesign: 0,
-      comment: "",
-    },
+      comment: ""
+    }
   });
 
-  const { showSuccessNotification, showErrorNotification, handleZodError } = useNotification();
+  const { showSuccessNotification, handleZodError } = useNotification();
   const os = useOs();
 
-  const { mutate: pushFeedbackToDatabase, isLoading } = api.feedbacks.create.useMutation({
-    onSuccess: () => {
-      showSuccessNotification({
-        message: "Dein Feedback wurde erfolgreich gesendet",
-      });
-      form.reset();
-    },
-    onError: (error) => {
-      handleZodError(
-        error.data?.zodError,
-        error.message ?? "Dein Feedback konnte nicht erfolgreich ermittelt werden"
-      );
-    },
-  });
+  const { mutate: pushFeedbackToDatabase, isLoading } =
+    api.feedbacks.create.useMutation({
+      onSuccess: () => {
+        showSuccessNotification({
+          message: "Dein Feedback wurde erfolgreich gesendet"
+        });
+        form.reset();
+      },
+      onError: (error) => {
+        handleZodError(
+          error.data?.zodError,
+          error.message ??
+            "Dein Feedback konnte nicht erfolgreich ermittelt werden"
+        );
+      }
+    });
 
   const sendFeedback = form.onSubmit(() => {
     pushFeedbackToDatabase({
       ...form.values,
       browser: browserName,
-      os,
+      os
     });
   });
 
@@ -68,16 +82,9 @@ const FeedbackPage = () => {
     <PageLayout>
       <form onSubmit={sendFeedback}>
         <Center>
-          <Flex
-            direction="column"
-            gap="xl"
-          >
+          <Flex direction="column" gap="xl">
             <FormSection title="Wie würdest du deinen Gesamteindruck von TheGenius beschreiben?">
-              <Flex
-                gap="md"
-                justify="space-between"
-                align="center"
-              >
+              <Flex gap="md" justify="space-between" align="center">
                 <Text>Sehr schlecht</Text>
                 <Rating
                   size="xl"
@@ -88,11 +95,7 @@ const FeedbackPage = () => {
             </FormSection>
 
             <FormSection title="Wie kommst du mit der Steuerung als Moderator zurecht?">
-              <Flex
-                gap="md"
-                justify="space-between"
-                align="center"
-              >
+              <Flex gap="md" justify="space-between" align="center">
                 <Text>Sehr schlecht</Text>
                 <Rating
                   size="xl"
@@ -103,16 +106,9 @@ const FeedbackPage = () => {
             </FormSection>
 
             <FormSection title="Wie findest du das Design von TheGenius?">
-              <Flex
-                gap="md"
-                justify="space-between"
-                align="center"
-              >
+              <Flex gap="md" justify="space-between" align="center">
                 <Text>Sehr schlecht</Text>
-                <Rating
-                  size="xl"
-                  {...form.getInputProps("ratingDesign")}
-                />
+                <Rating size="xl" {...form.getInputProps("ratingDesign")} />
                 <Text>Sehr gut</Text>
               </Flex>
             </FormSection>
@@ -130,10 +126,7 @@ const FeedbackPage = () => {
               </span>
             </FormSection>
 
-            <Button
-              type="submit"
-              loading={isLoading}
-            >
+            <Button type="submit" loading={isLoading}>
               Feedback senden
             </Button>
           </Flex>

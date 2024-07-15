@@ -1,4 +1,8 @@
-import type { PlayerSharedState, PlayerStates, Player as PrismaPlayer } from "@prisma/client";
+import type {
+  PlayerSharedState,
+  PlayerStates,
+  Player as PrismaPlayer
+} from "@prisma/client";
 import { ObjectId } from "bson";
 import type { TPlayer } from "./player.types";
 
@@ -18,13 +22,13 @@ export default class Player implements PrismaPlayer {
     this.states = {
       notefield: {
         isActive: false,
-        value: "",
-      },
+        value: ""
+      }
     };
     this.shared = {
       duSagst: {
-        answer: -1,
-      },
+        answer: -1
+      }
     };
   }
 }

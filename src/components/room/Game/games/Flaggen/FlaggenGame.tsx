@@ -53,21 +53,13 @@ const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
   });
 
   return (
-    <Flex
-      direction="column"
-      gap="md"
-      align="center"
-    >
+    <Flex direction="column" gap="md" align="center">
       <ModView>
         <Text>
           Flagge {game.qIndex + 1} / {game.countries.length}
         </Text>
       </ModView>
-      <Flex
-        gap="4rem"
-        align="center"
-        pos="relative"
-      >
+      <Flex gap="4rem" align="center" pos="relative">
         <ModView>
           <ArrowActionButton
             arrowDirection="left"
@@ -88,7 +80,7 @@ const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
             style={{
               transform: `scale(${displayFlag ? "1" : "0.9"})`,
               transition: "all 500ms",
-              userSelect: "none",
+              userSelect: "none"
             }}
           />
         )}
@@ -102,12 +94,7 @@ const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
         </ModView>
       </Flex>
       <ModView>
-        <Flex
-          gap="lg"
-          direction="column"
-          align="center"
-          justify="center"
-        >
+        <Flex gap="lg" direction="column" align="center" justify="center">
           <Text>Antwort: {currFlag?.country}</Text>
 
           <Button onClick={handleShowAnswerClick}>Antwort aufdecken</Button>

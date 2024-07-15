@@ -5,7 +5,6 @@ import React from "react";
 import ActionIcon from "~/components/shared/ActionIcon";
 import { useRaisedShadow } from "~/hooks/useRaisedShadow";
 import type { IListItemProps } from "./listItem.types";
-import { Group } from "@mantine/core";
 
 const ListItem = <T,>({
   item,
@@ -19,7 +18,7 @@ const ListItem = <T,>({
   index,
   clickable,
   highlight,
-  itemContent,
+  itemContent
 }: IListItemProps<T>) => {
   const y = useMotionValue(0);
   const boxShadow = useRaisedShadow(y);
@@ -44,27 +43,33 @@ const ListItem = <T,>({
       id={item.id}
       value={item}
       dragListener={false}
-      style={{ boxShadow, y, listStyle: "none", cursor: editable ? "pointer" : "auto" }}
+      style={{
+        boxShadow,
+        y,
+        listStyle: "none",
+        cursor: editable ? "pointer" : "auto"
+      }}
       dragControls={controls}
       onClick={() => handleClick(item.id)}
     >
-      <Flex
-        align="center"
-        gap="md"
-      >
+      <Flex align="center" gap="md">
         {showIndex && <span>{index + 1}.</span>}
         <Flex
-          bg={(selected && editable) || highlight ? theme.primaryColor : theme.colors.dark[5]}
-          style={{ borderRadius: theme.radius.md, cursor: clickable ? "pointer" : "auto" }}
+          bg={
+            (selected && editable) || highlight
+              ? theme.primaryColor
+              : theme.colors.dark[5]
+          }
+          style={{
+            borderRadius: theme.radius.md,
+            cursor: clickable ? "pointer" : "auto"
+          }}
           px="md"
           py="sm"
           w="100%"
           justify="space-between"
         >
-          <Flex
-            gap="md"
-            align="flex-start"
-          >
+          <Flex gap="md" align="flex-start">
             {editable && (
               <Flex
                 w={30}

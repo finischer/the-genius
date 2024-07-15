@@ -6,8 +6,8 @@ import { prisma } from "../db";
 export async function updateLoginTimestamp(userId: string) {
   const userExists = await prisma.user.findUnique({
     where: {
-      id: userId,
-    },
+      id: userId
+    }
   });
 
   if (!userExists) return false;
@@ -15,15 +15,17 @@ export async function updateLoginTimestamp(userId: string) {
   try {
     const res = await prisma.user.update({
       where: {
-        id: userId,
+        id: userId
       },
       data: {
-        lastLoginAt: new Date(),
-      },
+        lastLoginAt: new Date()
+      }
     });
 
     return res;
   } catch {
-    console.info(`Login timestamp will not be updated. It is the first login for User ${userId}`);
+    console.info(
+      `Login timestamp will not be updated. It is the first login for User ${userId}`
+    );
   }
 }

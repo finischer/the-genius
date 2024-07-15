@@ -4,16 +4,8 @@ import { type ILoaderProps } from "./loader.types";
 
 const Loader: React.FC<ILoaderProps> = ({ message = undefined }) => {
   return (
-    <Flex
-      justify="center"
-      align="center"
-      h="100%"
-    >
-      <Flex
-        direction="column"
-        gap="sm"
-        align="center"
-      >
+    <Flex justify="center" align="center" h="100%">
+      <Flex direction="column" gap="sm" align="center">
         <MantineLoader />
         {message && <Text>{message}</Text>}
       </Flex>

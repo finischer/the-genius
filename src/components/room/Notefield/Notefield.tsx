@@ -8,7 +8,7 @@ interface INotefieldProps extends TextareaProps {
   player: Player;
 }
 
-const Notefield: React.FC<INotefieldProps> = ({ player, value, ...props }) => {
+const Notefield: React.FC<INotefieldProps> = ({ player, ...props }) => {
   const handleValueChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     player.context.notefield.value = e.target.value;
   };

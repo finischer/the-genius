@@ -7,7 +7,11 @@ import React from "react";
 import useNotification from "~/hooks/useNotification";
 import { api } from "~/utils/api";
 import { RoleBadge } from "../Badge/Badge";
-import { IconChevronRight, IconLogout, IconSettings } from "@tabler/icons-react";
+import {
+  IconChevronRight,
+  IconLogout,
+  IconSettings
+} from "@tabler/icons-react";
 import classes from "./userCard.module.css";
 
 const UserCard = () => {
@@ -24,7 +28,7 @@ const UserCard = () => {
     void router.push(data.url);
     showSuccessNotification({
       title: "Logout erfolgreich",
-      message: "Ich hoffe, wir sehen uns bald wieder 👋",
+      message: "Ich hoffe, wir sehen uns bald wieder 👋"
     });
   };
 
@@ -33,10 +37,7 @@ const UserCard = () => {
   };
 
   return (
-    <Menu
-      shadow="md"
-      width={200}
-    >
+    <Menu shadow="md" width={200}>
       <Menu.Target>
         <Box className={classes.userCard}>
           <UnstyledButton
@@ -46,34 +47,19 @@ const UserCard = () => {
               width: "100%",
               padding: theme.spacing.xs,
               borderRadius: theme.radius.sm,
-              color: colorScheme === "dark" ? theme.white : theme.black,
+              color: colorScheme === "dark" ? theme.white : theme.black
             }}
           >
-            <Flex
-              gap="md"
-              align="center"
-            >
-              <Avatar
-                src={session?.user.image}
-                radius="xl"
-              />
+            <Flex gap="md" align="center">
+              <Avatar src={session?.user.image} radius="xl" />
               <Box style={{ flex: 1 }}>
-                <Flex
-                  align="flex-start"
-                  gap="md"
-                >
+                <Flex align="flex-start" gap="md">
                   <RoleBadge role={user?.role ?? "USER"} />
-                  <Text
-                    size="sm"
-                    fw={500}
-                  >
+                  <Text size="sm" fw={500}>
                     {session?.user.name}
                   </Text>
                 </Flex>
-                <Text
-                  c="dimmed"
-                  size="xs"
-                >
+                <Text c="dimmed" size="xs">
                   {session?.user.email}
                 </Text>
               </Box>

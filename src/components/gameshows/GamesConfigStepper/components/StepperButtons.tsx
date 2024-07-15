@@ -1,10 +1,7 @@
 import type { ActionIconProps } from "@mantine/core";
-import { ActionIcon, Button } from "@mantine/core";
-import { Group, type ButtonProps } from "@mantine/core";
+import { ActionIcon, Button, Group, type ButtonProps } from "@mantine/core";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
-import { useSearchParams } from "next/navigation";
-import React, { type FC } from "react";
-import type { TApiActions } from "~/server/api/api.types";
+import { type FC } from "react";
 
 interface IStepperButtonsProps {
   onClickLeftButton?: () => void;
@@ -25,15 +22,10 @@ const StepperButtons: FC<IStepperButtonsProps> = ({
   rightButtonProps,
   saveButtonProps,
   isLastStep,
-  disabledButtons = false,
+  disabledButtons = false
 }) => {
   return (
-    <Group
-      mt="xl"
-      pos="fixed"
-      bottom={20}
-      right={20}
-    >
+    <Group mt="xl" pos="fixed" bottom={20} right={20}>
       <ActionIcon
         variant="default"
         onClick={onClickLeftButton}

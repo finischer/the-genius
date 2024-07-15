@@ -5,7 +5,6 @@ import { useImmer, type Updater } from "use-immer";
 import type { TGame } from "~/components/room/Game/games/game.types";
 import type { TGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig.types";
 import useNotification from "~/hooks/useNotification";
-import type { TApiActions } from "~/server/api/api.types";
 import { api } from "~/utils/api";
 
 interface IGameConfigProviderProps {
@@ -19,11 +18,13 @@ export interface IGameConfigContextProps {
   setAvailableGames: Updater<PrismaGame[]>;
 }
 
-const GameConfigContext = createContext<IGameConfigContextProps | undefined>(undefined);
+const GameConfigContext = createContext<IGameConfigContextProps | undefined>(
+  undefined
+);
 
 const DEFAULT_GAMESHOW_CONFIG = {
   name: "",
-  games: [],
+  games: []
 };
 
 const GameConfigProvider: FC<IGameConfigProviderProps> = ({ children }) => {
@@ -31,25 +32,23 @@ const GameConfigProvider: FC<IGameConfigProviderProps> = ({ children }) => {
   const { handleZodError } = useNotification();
 
   const gameshowId = searchParams.get("gameshowId");
-  const action: TApiActions = (searchParams.get("action") as TApiActions) ?? "create";
+  // const action: TApiActions = (searchParams.get("action") as TApiActions) ?? "create";
 
   const [availableGames, setAvailableGames] = useImmer<PrismaGame[]>([]);
-  const [gameshow, setGameshow] = useImmer<TGameshowConfig>(DEFAULT_GAMESHOW_CONFIG);
+  const [gameshow, setGameshow] = useImmer<TGameshowConfig>(
+    DEFAULT_GAMESHOW_CONFIG
+  );
 
   // api
-  const {
-    refetch: fetchAvailableGames,
-    isLoading: isLoadingAllAvailableGames,
-    isFetching: isFetchingAvailableGames,
-  } = api.games.getAll.useQuery(undefined, {
+  api.games.getAll.useQuery(undefined, {
     enabled: true,
     onError: (error) => handleZodError(error.data?.zodError, error.message),
     onSuccess(data) {
       setAvailableGames(data);
-    },
+    }
   });
 
-  const { refetch: fetchGameshow, isFetching: isFetchingGameshow } = api.gameshows.getById.useQuery(
+  api.gameshows.getById.useQuery(
     { gameshowId: gameshowId ?? "" },
     {
       enabled: !!gameshowId,
@@ -57,15 +56,17 @@ const GameConfigProvider: FC<IGameConfigProviderProps> = ({ children }) => {
       onSuccess(data) {
         const gameshowConfig: TGameshowConfig = {
           name: data.name,
-          games: data.games as TGame[],
+          games: data.games as TGame[]
         };
         setGameshow(gameshowConfig);
-      },
+      }
     }
   );
 
   return (
-    <GameConfigContext.Provider value={{ gameshow, setGameshow, availableGames, setAvailableGames }}>
+    <GameConfigContext.Provider
+      value={{ gameshow, setGameshow, availableGames, setAvailableGames }}
+    >
       {children}
     </GameConfigContext.Provider>
   );

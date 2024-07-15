@@ -18,7 +18,10 @@ export const goToNextQuestion = (
   cb(currIndex + 1);
 };
 
-export const goToPreviousQuestion = (currIndex: number, cb: (newQuestionIndex: number) => void) => {
+export const goToPreviousQuestion = (
+  currIndex: number,
+  cb: (newQuestionIndex: number) => void
+) => {
   if (currIndex <= 0) {
     return;
   }
@@ -30,11 +33,17 @@ export function sleep(milliseconds: number) {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
 
-export const assignObjectKeyByKey = (source: Record<string, unknown>, target: Record<string, unknown>) => {
+export const assignObjectKeyByKey = (
+  source: Record<string, unknown>,
+  target: Record<string, unknown>
+) => {
   for (const [key, value] of Object.entries(source)) {
     if (typeof value === "object" && value !== null) {
       target[key] = {};
-      assignObjectKeyByKey(value as Record<string, unknown>, target[key] as Record<string, unknown>);
+      assignObjectKeyByKey(
+        value as Record<string, unknown>,
+        target[key] as Record<string, unknown>
+      );
     } else {
       target[key] = value;
     }

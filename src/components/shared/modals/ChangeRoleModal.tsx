@@ -10,13 +10,22 @@ interface IChangeRoleModalProps {
   userId: string;
 }
 
-const ChangeRoleModal: React.FC<ContextModalProps<IChangeRoleModalProps>> = ({ id, innerProps, context }) => {
-  const { showSuccessNotification, handleZodError, showInfoNotification } = useNotification();
+const ChangeRoleModal: React.FC<ContextModalProps<IChangeRoleModalProps>> = ({
+  id,
+  innerProps,
+  context
+}) => {
+  const { showSuccessNotification, handleZodError, showInfoNotification } =
+    useNotification();
   const { mutate: updateRole } = api.users.updateUserRole.useMutation({
-    onSuccess: () => showSuccessNotification({ message: "Rolle wurde erfolgreich geändert" }),
+    onSuccess: () =>
+      showSuccessNotification({ message: "Rolle wurde erfolgreich geändert" }),
     onError: (error) => {
-      handleZodError(error.data?.zodError, error.message ?? "Die Rolle konnte nicht geändert werden");
-    },
+      handleZodError(
+        error.data?.zodError,
+        error.message ?? "Die Rolle konnte nicht geändert werden"
+      );
+    }
   });
 
   const { role, userId } = innerProps;
@@ -27,13 +36,14 @@ const ChangeRoleModal: React.FC<ContextModalProps<IChangeRoleModalProps>> = ({ i
   const handleChangeRole = () => {
     if (!selectedRole) {
       return showInfoNotification({
-        message: "Die aktuelle Rolle konnte nicht abgerufen werden und kann daher nicht geändert werden.",
+        message:
+          "Die aktuelle Rolle konnte nicht abgerufen werden und kann daher nicht geändert werden."
       });
     }
 
     updateRole({
       userId,
-      newRole: selectedRole,
+      newRole: selectedRole
     });
 
     context.closeModal(id);

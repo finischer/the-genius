@@ -1,9 +1,23 @@
-import type { GameshowMode, Prisma, Room as PrismaRoom, RoomState, RoomViews } from "@prisma/client";
-import type { Game, TGame, TGameSettingsMap } from "~/components/room/Game/games/game.types";
+import type {
+  GameshowMode,
+  Prisma,
+  Room as PrismaRoom,
+  RoomState,
+  RoomViews
+} from "@prisma/client";
+import type {
+  Game,
+  TGame,
+  TGameSettingsMap
+} from "~/components/room/Game/games/game.types";
 import { prisma } from "~/server/db";
 import { io } from "../../socket";
 import Team from "../Team/Team";
-import { type IRoomMaxPlayersTeamMap, type PrismaRoomFixed, type TRoomTeams } from "./room.types";
+import {
+  type IRoomMaxPlayersTeamMap,
+  type PrismaRoomFixed,
+  type TRoomTeams
+} from "./room.types";
 
 const SECONDS_TO_ROTATE_TITLE_BANNER = 4;
 const SECONDS_TOTAL_INTRO_DURATION = 8;
@@ -47,7 +61,7 @@ export default class Room implements PrismaRoomFixed {
     this.defaultGameStates = room.defaultGameStates;
     this.teams = {
       teamOne: new Team(room.teams.teamOne),
-      teamTwo: new Team(room.teams.teamTwo),
+      teamTwo: new Team(room.teams.teamTwo)
     };
     this.state = room.state;
   }
@@ -55,7 +69,7 @@ export default class Room implements PrismaRoomFixed {
   static getMaxPlayersPerTeam(modus: GameshowMode) {
     const map: IRoomMaxPlayersTeamMap = {
       DUELL: NUM_PLAYERS_DUELL,
-      TEAM: NUM_PLAYERS_TEAM,
+      TEAM: NUM_PLAYERS_TEAM
     };
 
     return map[modus];
@@ -66,7 +80,7 @@ export default class Room implements PrismaRoomFixed {
       answerState: {
         showAnswer: false,
         answer: "",
-        withSound: false,
+        withSound: false
       },
       currentView: "",
       display: {
@@ -74,22 +88,22 @@ export default class Room implements PrismaRoomFixed {
           isActive: false,
           currentSeconds: 0,
           to: 0,
-          variant: "COUNTDOWN",
+          variant: "COUNTDOWN"
         },
         confetti: false,
         game: false,
         gameIntro: {
           alreadyPlayed: false,
           flippedTitleBanner: false,
-          milliseconds: 0,
+          milliseconds: 0
         },
-        notefields: false,
+        notefields: false
       },
       view: "EMPTY",
       gameshowStarted: false,
       music: {
         isActive: false,
-        title: "",
+        title: ""
       },
       sounds: {
         bass: false,
@@ -100,9 +114,9 @@ export default class Room implements PrismaRoomFixed {
         shimmer: false,
         typewriter: false,
         warningBuzzer: false,
-        whoosh_1: false,
+        whoosh_1: false
       },
-      teamWithTurn: "",
+      teamWithTurn: ""
     };
   }
 
@@ -112,7 +126,7 @@ export default class Room implements PrismaRoomFixed {
       if (player)
         return {
           teamIdentifier,
-          ...player,
+          ...player
         };
     }
 
@@ -126,7 +140,9 @@ export default class Room implements PrismaRoomFixed {
 
   getGame<T extends Game>(gameIdentifier: T): TGameSettingsMap[T] {
     const games = this.games as unknown as TGame[];
-    const game = games.find((g) => g.identifier === gameIdentifier) as unknown as TGameSettingsMap[T];
+    const game = games.find(
+      (g) => g.identifier === gameIdentifier
+    ) as unknown as TGameSettingsMap[T];
     return game;
   }
 
@@ -134,7 +150,7 @@ export default class Room implements PrismaRoomFixed {
     this.state.display.gameIntro = {
       alreadyPlayed: false,
       flippedTitleBanner: false,
-      milliseconds: 0,
+      milliseconds: 0
     };
     this.state.view = "GAME";
 
@@ -211,7 +227,7 @@ export default class Room implements PrismaRoomFixed {
       t.buzzer = {
         isLocked: false,
         isPressed: false,
-        playersBuzzered: [],
+        playersBuzzered: []
       };
     });
   }
@@ -228,12 +244,12 @@ export default class Room implements PrismaRoomFixed {
     // update room state in db
     void prisma.room.update({
       where: {
-        id: this.id,
+        id: this.id
       },
       data: {
         teams: this.teams,
-        state: this.state,
-      },
+        state: this.state
+      }
     });
 
     // DEPRECATED

@@ -3,7 +3,6 @@ import { useDisclosure } from "@mantine/hooks";
 import { IconSettings, IconShare } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
 import useBuzzer from "~/hooks/useBuzzer";
-import useSettings from "~/hooks/useSettings/useSettings";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { RoomView } from "~/types/gameshow.types";
 import { animations } from "~/utils/animations";
@@ -17,12 +16,18 @@ const RoomHeader = () => {
   const { buzzer } = useBuzzer();
   const room = useSyncedRoom();
   const theme = useMantineTheme();
-  const [openedRoomDetails, { open: openRoomDetails, close: closeRoomDetails }] = useDisclosure(false);
-  const [openedSettings, { open: openSettings, close: closeSettings }] = useDisclosure(false);
-  const { settings } = useSettings();
+  const [
+    openedRoomDetails,
+    { open: openRoomDetails, close: closeRoomDetails }
+  ] = useDisclosure(false);
+  const [openedSettings, { open: openSettings, close: closeSettings }] =
+    useDisclosure(false);
   const currGame = room.context.currentGame;
 
-  const showCurrGameBanner = room.context.view == RoomView.GAME && !!currGame && room.context.display.game;
+  const showCurrGameBanner =
+    room.context.view == RoomView.GAME &&
+    !!currGame &&
+    room.context.display.game;
 
   const ShareButton = () => (
     <ActionIcon
@@ -53,33 +58,21 @@ const RoomHeader = () => {
   };
 
   return (
-    <Box
-      h={125}
-      w="100%"
-      pos="relative"
-    >
+    <Box h={125} w="100%" pos="relative">
       <RoomDetailsModal
         room={room}
         openedModal={openedRoomDetails}
         onClose={closeRoomDetails}
       />
 
-      <SettingsModal
-        openedModal={openedSettings}
-        onClose={closeSettings}
-      />
+      <SettingsModal openedModal={openedSettings} onClose={closeSettings} />
 
       <Group>
         <ShareButton />
         <SettingsButton />
       </Group>
 
-      <Flex
-        w="100%"
-        justify="center"
-        pos="absolute"
-        top={0}
-      >
+      <Flex w="100%" justify="center" pos="absolute" top={0}>
         <Timer />
       </Flex>
 

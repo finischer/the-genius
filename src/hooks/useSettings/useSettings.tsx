@@ -10,9 +10,11 @@ type IUserSettings = {
 };
 
 const useSettings = () => {
-  const [primaryColor, setPrimaryColor] = useLocalStorage<keyof MantineThemeColors>({
+  const [primaryColor, setPrimaryColor] = useLocalStorage<
+    keyof MantineThemeColors
+  >({
     key: LOCAL_STORAGE_KEYS.PRIMARY_COLOR,
-    defaultValue: "brand",
+    defaultValue: "brand"
   });
 
   const [settings, setSettings] = useLocalStorage<IUserSettings>({
@@ -20,16 +22,21 @@ const useSettings = () => {
     defaultValue: {
       volume: {
         soundEffects: 75,
-        music: 50,
-      },
-    },
+        music: 50
+      }
+    }
   });
 
   const updatePrimaryColor = (newColor: keyof MantineThemeColors) => {
     setPrimaryColor(newColor);
   };
 
-  return { primaryColor, updatePrimaryColor, settings, updateSettings: setSettings };
+  return {
+    primaryColor,
+    updatePrimaryColor,
+    settings,
+    updateSettings: setSettings
+  };
 };
 
 export default useSettings;

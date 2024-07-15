@@ -1,6 +1,13 @@
 import { generateColors } from "@mantine/colors-generator";
 import type { CSSVariablesResolver } from "@mantine/core";
-import { ActionIcon, Paper, createTheme, rem, type MantineColorsTuple, Modal } from "@mantine/core";
+import {
+  ActionIcon,
+  Modal,
+  Paper,
+  createTheme,
+  rem,
+  type MantineColorsTuple
+} from "@mantine/core";
 import { GameshowMode } from "@prisma/client";
 
 export const sizes = {
@@ -10,8 +17,8 @@ export const sizes = {
   icon: {
     s: 18,
     m: 24,
-    xl: 30,
-  },
+    xl: 30
+  }
 };
 
 export const spacing = {
@@ -22,7 +29,7 @@ export const spacing = {
   md: sizes.base * 4, // 16
   l: sizes.base * 5, // 20
   xl: sizes.base * 6, // 24
-  xxl: sizes.base * 7, // 28
+  xxl: sizes.base * 7 // 28
 };
 
 export const colors = {
@@ -32,12 +39,12 @@ export const colors = {
   textDimmed: "#839BAF",
   textDark: "#181F25",
   brand: "#8931B2",
-  gold: "#F6BD60",
+  gold: "#F6BD60"
 };
 
-export const GAMESHOW_MODES: GameshowMode[] = Object.values(GameshowMode).filter((mode) =>
-  isNaN(Number(mode))
-);
+export const GAMESHOW_MODES: GameshowMode[] = Object.values(
+  GameshowMode
+).filter((mode) => isNaN(Number(mode)));
 
 function createMantineColor(color: string): MantineColorsTuple {
   return generateColors(color);
@@ -53,31 +60,31 @@ export const THEME = createTheme({
     Paper: Paper.extend({
       defaultProps: {
         py: rem(16),
-        px: rem(16),
-      },
+        px: rem(16)
+      }
     }),
     ActionIcon: ActionIcon.extend({
       defaultProps: {
         c: "white",
-        radius: "xs",
-      },
+        radius: "xs"
+      }
     }),
     Modal: Modal.extend({
       styles: {
         header: {
           width: "100%",
           top: -20,
-          borderRadius: 0,
-        },
-      },
-    }),
+          borderRadius: 0
+        }
+      }
+    })
   },
   radius: {
     xs: rem(4),
     sm: rem(8),
     md: rem(12),
     lg: rem(16),
-    xl: rem(20),
+    xl: rem(20)
   },
   colors: {
     success: createMantineColor(colors.success),
@@ -85,42 +92,42 @@ export const THEME = createTheme({
     textDimmed: createMantineColor(colors.textDimmed),
     textDark: createMantineColor(colors.textDark),
     gold: createMantineColor(colors.gold),
-    brand: createMantineColor(colors.brand),
+    brand: createMantineColor(colors.brand)
   },
   breakpoints: {
     xs: "30em",
     sm: "48em",
     md: "64em",
     lg: "74em",
-    xl: "90em",
+    xl: "90em"
   },
   spacing: {
     xs: rem(6),
     sm: rem(12),
     md: rem(18),
     lg: rem(24),
-    xl: rem(32),
+    xl: rem(32)
   },
   fontSizes: {
     xs: rem(14),
     sm: rem(16),
     md: rem(18),
     lg: rem(28),
-    xl: rem(38),
+    xl: rem(38)
   },
   defaultGradient: {
     from: "brand.9",
     to: "brand.4",
-    deg: 45,
-  },
+    deg: 45
+  }
 });
 
-export const cssResolver: CSSVariablesResolver = (theme) => ({
+export const cssResolver: CSSVariablesResolver = (_) => ({
   variables: {},
   light: {
     // "--mantine-color-gray-filled": theme.colors,
   },
   dark: {
     // "--mantine-color-primary-filled": theme.colors.primary[9],
-  },
+  }
 });

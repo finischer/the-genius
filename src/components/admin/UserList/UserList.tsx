@@ -1,4 +1,13 @@
-import { Avatar, Center, Checkbox, Group, Menu, Table, Text, rem } from "@mantine/core";
+import {
+  Avatar,
+  Center,
+  Checkbox,
+  Group,
+  Menu,
+  Table,
+  Text,
+  rem
+} from "@mantine/core";
 import type { User } from "@prisma/client";
 import {
   IconArrowsExchange2,
@@ -6,7 +15,7 @@ import {
   IconDots,
   IconInfoCircle,
   IconSettings,
-  IconTrash,
+  IconTrash
 } from "@tabler/icons-react";
 import React, { useState } from "react";
 import ActionIcon from "~/components/shared/ActionIcon";
@@ -29,8 +38,8 @@ const ActionMenu = ({ user }: { user: User }) => {
       h: "100%",
       bg: "blue",
       innerProps: {
-        user,
-      },
+        user
+      }
     });
 
   const openChangeRoleModal = () => {
@@ -40,8 +49,8 @@ const ActionMenu = ({ user }: { user: User }) => {
       title: `Rolle von "${user.username ?? NOT_FOUND_LITERAL}" ändern`,
       innerProps: {
         userId: user.id,
-        role: user.role,
-      },
+        role: user.role
+      }
     });
   };
 
@@ -71,27 +80,17 @@ const ActionMenu = ({ user }: { user: User }) => {
         >
           Rolle wechseln
         </Menu.Item>
-        <Menu.Item
-          leftSection={<IconSettings size={14} />}
-          disabled
-        >
+        <Menu.Item leftSection={<IconSettings size={14} />} disabled>
           Bearbeiten
         </Menu.Item>
 
         <Menu.Divider />
 
         <Menu.Label>Danger zone</Menu.Label>
-        <Menu.Item
-          leftSection={<IconBan size={14} />}
-          disabled
-        >
+        <Menu.Item leftSection={<IconBan size={14} />} disabled>
           User bannen
         </Menu.Item>
-        <Menu.Item
-          color="red"
-          leftSection={<IconTrash size={14} />}
-          disabled
-        >
+        <Menu.Item color="red" leftSection={<IconTrash size={14} />} disabled>
           User löschen
         </Menu.Item>
       </Menu.Dropdown>
@@ -104,32 +103,26 @@ const UserList: React.FC<IUserListProps> = ({ users }) => {
 
   const toggleRow = (id: string) =>
     setSelection((current) =>
-      current.includes(id) ? current.filter((item) => item !== id) : [...current, id]
+      current.includes(id)
+        ? current.filter((item) => item !== id)
+        : [...current, id]
     );
   const toggleAll = () =>
-    setSelection((current) => (current.length === users.length ? [] : users.map((item) => item.id)));
+    setSelection((current) =>
+      current.length === users.length ? [] : users.map((item) => item.id)
+    );
 
   const rows = users.map((user) => {
     const selected = selection.includes(user.id);
     return (
       <tr key={user.id}>
         <td>
-          <Checkbox
-            checked={selection.includes(user.id)}
-            onChange={() => toggleRow(user.id)}
-          />
+          <Checkbox checked={selected} onChange={() => toggleRow(user.id)} />
         </td>
         <td>
           <Group gap="sm">
-            <Avatar
-              size={26}
-              src={user.image}
-              radius={26}
-            />
-            <Text
-              size="sm"
-              fw={500}
-            >
+            <Avatar size={26} src={user.image} radius={26} />
+            <Text size="sm" fw={500}>
               {user.username}
             </Text>
           </Group>
@@ -158,7 +151,9 @@ const UserList: React.FC<IUserListProps> = ({ users }) => {
             <Checkbox
               onChange={toggleAll}
               checked={selection.length === users.length}
-              indeterminate={selection.length > 0 && selection.length !== users.length}
+              indeterminate={
+                selection.length > 0 && selection.length !== users.length
+              }
             />
           </th>
           <th>User</th>

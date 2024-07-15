@@ -1,28 +1,33 @@
-import { Container, Text, useMantineTheme, type MantineStyleProp, UnstyledButton } from "@mantine/core";
+import {
+  Container,
+  Text,
+  useMantineTheme,
+  type MantineStyleProp
+} from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import ActionIcon from "~/components/shared/ActionIcon";
 import { useUser } from "~/hooks/useUser";
 import type { TSetCard, TSetGameMarkedCardsState } from "../../set.types";
 import SetForm from "../SetForm";
-import type { ISetCardProps } from "./setCard.types";
 import classes from "./setCard.module.css";
+import type { ISetCardProps } from "./setCard.types";
 
 const cardVariants = {
   selected: {
     rotateY: 180,
-    transition: { duration: 0.6 },
+    transition: { duration: 0.6 }
   },
-  notSelected: (i: number) => ({
+  notSelected: () => ({
     rotateY: 0,
-    transition: { duration: 0.6 },
-  }),
+    transition: { duration: 0.6 }
+  })
 };
 
 const BORDER_COLOR_MAP: { [key in TSetGameMarkedCardsState]: string } = {
   correct: "green",
   wrong: "red",
-  marked: "orange",
+  marked: "orange"
 };
 
 const SetCard: React.FC<ISetCardProps> = ({
@@ -33,7 +38,7 @@ const SetCard: React.FC<ISetCardProps> = ({
   isFlipped = false,
   marked = false,
   markerState = "marked",
-  onClick = () => null,
+  onClick = () => null
 }) => {
   const { isHost } = useUser();
   const theme = useMantineTheme();
@@ -47,7 +52,7 @@ const SetCard: React.FC<ISetCardProps> = ({
     display: "flex",
     borderRadius: theme.radius.md,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "center"
   };
 
   // const formElements =  card.forms.map(formItem => <SetForm onChange={onChangeForm} onRemove={removeFormFromCard} key={formItem.id} editable={editable} formItem={formItem} removeable={card.forms.length > 1} />)
@@ -95,12 +100,7 @@ const SetCard: React.FC<ISetCardProps> = ({
 
   const FrontContent = () => (
     <Container style={cardStyle}>
-      <Text
-        pos="absolute"
-        fw="bold"
-        size="2rem"
-        c="dark"
-      >
+      <Text pos="absolute" fw="bold" size="2rem" c="dark">
         {index + 1}
       </Text>
     </Container>
@@ -112,30 +112,17 @@ const SetCard: React.FC<ISetCardProps> = ({
         ...cardStyle,
         transform: "scale(-1, 1)",
         cursor: isHost && markerState === "marked" ? "pointer" : "auto",
-        position: "relative",
+        position: "relative"
       }}
     >
-      <Container
-        pos="absolute"
-        top={10}
-        left={10}
-        p={0}
-      >
-        <Text
-          c="dimmed"
-          fw="bold"
-          fz="md"
-        >
+      <Container pos="absolute" top={10} left={10} p={0}>
+        <Text c="dimmed" fw="bold" fz="md">
           {index + 1}
         </Text>
       </Container>
       {formElements}
       {editable && formElements.length < 3 && (
-        <ActionIcon
-          variant="default"
-          ml="md"
-          onClick={addFormToCard}
-        >
+        <ActionIcon variant="default" ml="md" onClick={addFormToCard}>
           <IconPlus />
         </ActionIcon>
       )}
@@ -152,7 +139,7 @@ const SetCard: React.FC<ISetCardProps> = ({
       style={{
         borderRadius: theme.radius.xl,
         border: `6px solid ${marked ? borderColor : "transparent"}`,
-        position: "relative",
+        position: "relative"
       }}
     >
       {!isFlipped ? <FrontContent /> : <BackContent />}

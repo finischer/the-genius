@@ -18,7 +18,11 @@ const useTeam = () => {
    * @param teamId - The unique ID of the team the user wants to join.
    * @returns The ID of the team the user joined, or undefined if the user is already in a team or the team does not exist.
    */
-  const joinTeam = (userId: string, username: string, teamId: string): string | undefined => {
+  const joinTeam = (
+    userId: string,
+    username: string,
+    teamId: string
+  ): string | undefined => {
     if (getTeamOfUser(userId)) {
       console.log("User is already in a team");
       return;
@@ -74,7 +78,9 @@ const useTeam = () => {
    */
   function getTeamOfUser(userId: string): Team | undefined {
     const teamList = Object.values(room.teams);
-    return teamList.find((team) => team.players.flatMap((player) => player.userId).includes(userId));
+    return teamList.find((team) =>
+      team.players.flatMap((player) => player.userId).includes(userId)
+    );
   }
 
   /**
@@ -117,9 +123,9 @@ const useTeam = () => {
   return {
     joinTeam,
     leaveTeam,
-    isTeamFull: !!getTeamOfUser(user.id),
-    isPlayer: !!getTeamOfUser(user.id),
-    isPlayersTeam,
+    isTeamFull: isTeamFull,
+    isPlayer: isPlayer,
+    isPlayersTeam
   };
 };
 

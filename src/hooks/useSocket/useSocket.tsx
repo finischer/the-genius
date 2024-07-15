@@ -1,18 +1,28 @@
 import { createContext, useContext } from "react";
 import { type Socket, io } from "socket.io-client";
-import { type IUseSocketContext, type IUseSocketProvider } from "./useSocket.types";
-import { type IClientToServerEvents, type IServerToClientEvents } from "~/types/socket.types";
+import {
+  type IUseSocketContext,
+  type IUseSocketProvider
+} from "./useSocket.types";
+import {
+  type IClientToServerEvents,
+  type IServerToClientEvents
+} from "~/types/socket.types";
 
 const SocketContext = createContext<IUseSocketContext | undefined>(undefined);
 
 const socket: Socket<IServerToClientEvents, IClientToServerEvents> = io({
   path: "/api/socket/",
   closeOnBeforeunload: false,
-  withCredentials: true,
+  withCredentials: true
 });
 
 const SocketProvider: React.FC<IUseSocketProvider> = ({ children }) => {
-  return <SocketContext.Provider value={{ socket }}>{children}</SocketContext.Provider>;
+  return (
+    <SocketContext.Provider value={{ socket }}>
+      {children}
+    </SocketContext.Provider>
+  );
 };
 
 const useSocket = () => {

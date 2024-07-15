@@ -12,5 +12,5 @@ export const GAME_STATE_MAP: TGameSettingsMap = {
   geheimwoerter: DEFAULT_GEHEIMWOERTER_STATE,
   set: DEFAULT_SET_STATE,
   duSagst: DEFAULT_DUSAGST_STATE,
-  referatBingo: DEFAULT_REFERAT_BINGO_STATE,
+  referatBingo: DEFAULT_REFERAT_BINGO_STATE
 };

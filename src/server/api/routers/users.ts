@@ -2,7 +2,11 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { UserRole, type User } from "@prisma/client";
-import { adminProcedure, createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import {
+  adminProcedure,
+  createTRPCRouter,
+  protectedProcedure
+} from "~/server/api/trpc";
 
 export const safedUserSchema = z.object({
   id: z.string(),
@@ -11,7 +15,7 @@ export const safedUserSchema = z.object({
   image: z.string().nullable(),
   email: z.string(),
   role: z.nativeEnum(UserRole).nullable(),
-  isFirstVisit: z.boolean(),
+  isFirstVisit: z.boolean()
 });
 
 export type SafedUser = z.infer<typeof safedUserSchema>;
@@ -20,7 +24,10 @@ type UserPropertiesUpdatebaleByAdmin = Pick<
   User,
   "email" | "image" | "name" | "password" | "role" | "username"
 >; // only these properties can be updated by admins
-type UserPropertiesUpdatebaleByUser = Pick<User, "email" | "image" | "password" | "lastLoginAt">; // only these properties can be updated by admins
+type UserPropertiesUpdatebaleByUser = Pick<
+  User,
+  "email" | "image" | "password" | "lastLoginAt"
+>; // only these properties can be updated by admins
 
 export const usersRouter = createTRPCRouter({
   getAll: adminProcedure.query(async ({ ctx }) => {
@@ -28,29 +35,39 @@ export const usersRouter = createTRPCRouter({
     return userList;
   }),
   updateUserByAdmin: adminProcedure
-    .input(z.object({ id: z.string(), data: z.custom<UserPropertiesUpdatebaleByAdmin>() }))
+    .input(
+      z.object({
+        id: z.string(),
+        data: z.custom<UserPropertiesUpdatebaleByAdmin>()
+      })
+    )
     .mutation(async ({ ctx, input }) => {
       const user = await ctx.prisma.user.update({
         where: {
-          id: input.id,
+          id: input.id
         },
         data: {
-          ...input.data,
-        },
+          ...input.data
+        }
       });
 
       return user;
     }),
   updateUser: protectedProcedure
-    .input(z.object({ id: z.string(), data: z.custom<UserPropertiesUpdatebaleByUser>() }))
+    .input(
+      z.object({
+        id: z.string(),
+        data: z.custom<UserPropertiesUpdatebaleByUser>()
+      })
+    )
     .mutation(async ({ ctx, input }) => {
       const user = await ctx.prisma.user.update({
         where: {
-          id: input.id,
+          id: input.id
         },
         data: {
-          ...input.data,
-        },
+          ...input.data
+        }
       });
 
       return user;
@@ -113,8 +130,8 @@ export const usersRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const user = await ctx.prisma.user.findUnique({
         where: {
-          username: input.username,
-        },
+          username: input.username
+        }
       });
 
       if (user) {
@@ -126,63 +143,65 @@ export const usersRouter = createTRPCRouter({
   me: protectedProcedure.output(safedUserSchema).query(async ({ ctx }) => {
     const user = await ctx.prisma.user.findUnique({
       where: {
-        id: ctx.session.user.id,
-      },
+        id: ctx.session.user.id
+      }
     });
 
     if (!user) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "User not found",
+        message: "User not found"
       });
     }
 
     return user;
   }),
-  updateFirstVisit: protectedProcedure.output(safedUserSchema).mutation(async ({ ctx }) => {
-    const user = await ctx.prisma.user.update({
-      where: {
-        id: ctx.session.user.id,
-      },
-      data: {
-        isFirstVisit: false,
-      },
-    });
-
-    if (!user) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "User not found",
-      });
-    }
-
-    return user;
-  }),
-  updateUserRole: protectedProcedure
+  updateFirstVisit: protectedProcedure
     .output(safedUserSchema)
-    .input(
-      z.object({
-        userId: z.string(),
-        newRole: z.nativeEnum(UserRole),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ ctx }) => {
       const user = await ctx.prisma.user.update({
         where: {
-          id: input.userId,
+          id: ctx.session.user.id
         },
         data: {
-          role: input.newRole,
-        },
+          isFirstVisit: false
+        }
       });
 
       if (!user) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "User not found",
+          message: "User not found"
         });
       }
 
       return user;
     }),
+  updateUserRole: protectedProcedure
+    .output(safedUserSchema)
+    .input(
+      z.object({
+        userId: z.string(),
+        newRole: z.nativeEnum(UserRole)
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.update({
+        where: {
+          id: input.userId
+        },
+        data: {
+          role: input.newRole
+        }
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found"
+        });
+      }
+
+      return user;
+    })
 });

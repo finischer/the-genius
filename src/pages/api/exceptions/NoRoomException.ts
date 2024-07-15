@@ -2,7 +2,7 @@ import { type Socket } from "socket.io";
 import type {
   IClientToServerEvents,
   IServerSocketData,
-  IServerToClientEvents,
+  IServerToClientEvents
 } from "~/types/socket.types";
 
 export default class NoRoomException {
@@ -16,7 +16,7 @@ export default class NoRoomException {
   ) {
     socket.emit("raiseException", {
       reason: "noRoomException",
-      msg: "This room does not exist anymore",
+      msg: "This room does not exist anymore"
     });
     console.error(`Room '${socket.roomId ?? "NO_ROOM_ID_FOUND"}' not found`);
   }

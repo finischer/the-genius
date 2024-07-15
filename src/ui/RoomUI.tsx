@@ -18,7 +18,6 @@ import useMusic from "~/hooks/useMusic";
 import useSettings from "~/hooks/useSettings/useSettings";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { sizes } from "~/styles/constants";
-import { displayObject } from "~/utils/helpers";
 
 const RoomUI = () => {
   const params = useParams();
@@ -33,7 +32,7 @@ const RoomUI = () => {
   const sounds = room.context?.audio.sounds ?? [];
   const musicState = room.context?.audio.music ?? {
     isActive: false,
-    title: "lightsDisappear",
+    title: "lightsDisappear"
   };
   const modPanelDisclosure = useDisclosure(false);
 
@@ -51,7 +50,7 @@ const RoomUI = () => {
         title: "Raum geschlossen",
         message: "Der Raum wurde vom Moderator geschlossen.",
         loading: false,
-        icon: <IconCheck size="1rem" />,
+        icon: <IconCheck size="1rem" />
       });
     }
   }, [room.isClosed]);
@@ -84,12 +83,7 @@ const RoomUI = () => {
   }
 
   return (
-    <Flex
-      h="100vh"
-      p={sizes.padding}
-      pos="relative"
-      direction="column"
-    >
+    <Flex h="100vh" p={sizes.padding} pos="relative" direction="column">
       <Flex
         h="100%"
         // align="center"
@@ -97,14 +91,8 @@ const RoomUI = () => {
         direction="column"
       >
         <ModView>
-          <Box
-            pos="absolute"
-            bottom="50%"
-          >
-            <ActionIcon
-              variant="filled"
-              toolTip="Mod-Panel öffnen"
-            >
+          <Box pos="absolute" bottom="50%">
+            <ActionIcon variant="filled" toolTip="Mod-Panel öffnen">
               <IconArrowRight onClick={modPanelDisclosure[1].open} />
             </ActionIcon>
           </Box>

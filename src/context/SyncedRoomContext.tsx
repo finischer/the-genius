@@ -7,10 +7,14 @@ interface SyncedRoomContextProps extends Room {
   isLoaded: boolean;
 }
 
-export const SyncedRoomContext = React.createContext<SyncedRoomContextProps | undefined>(undefined);
+export const SyncedRoomContext = React.createContext<
+  SyncedRoomContextProps | undefined
+>(undefined);
 
 const SyncedRoomProvider = ({ children }: { children: React.ReactNode }) => {
-  const { room } = useSyncedStore(roomStore) as unknown as { room: { state: Room } };
+  const { room } = useSyncedStore(roomStore) as unknown as {
+    room: { state: Room };
+  };
 
   // const startGame = (gameIdentifier: Game) => {};
 
@@ -20,7 +24,7 @@ const SyncedRoomProvider = ({ children }: { children: React.ReactNode }) => {
     <SyncedRoomContext.Provider
       value={{
         ...room.state,
-        isLoaded: !!room.state?.id,
+        isLoaded: !!room.state?.id
       }}
     >
       {children}

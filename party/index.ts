@@ -35,7 +35,7 @@ export default class Server implements Party.Server {
       `Connected:
   id: ${conn.id}
   room: ${this.partyRoom.id}
-  url: ${new URL(ctx.request.url).pathname}`
+  url: ${new URL(ctx.request.url).pathname}`,
     );
 
     // const url = new URL(ctx.request.url);

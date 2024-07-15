@@ -1,6 +1,6 @@
 export const fadeInOutVariant = {
   visible: { opacity: 1 },
-  hidden: { opacity: 0 },
+  hidden: { opacity: 0 }
 };
 
 export const animations = {
@@ -8,6 +8,6 @@ export const animations = {
     initial: "hidden",
     animate: "visible",
     exit: "hidden",
-    variants: fadeInOutVariant,
-  },
+    variants: fadeInOutVariant
+  }
 };

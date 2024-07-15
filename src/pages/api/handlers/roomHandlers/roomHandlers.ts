@@ -5,7 +5,7 @@ import { prisma } from "~/server/db";
 import {
   type IClientToServerEvents,
   type IServerSocketData,
-  type IServerToClientEvents,
+  type IServerToClientEvents
 } from "~/types/socket.types";
 import Room from "../../classes/Room/Room";
 import Team, { SCOREBAR_TIMER_SECONDS } from "../../classes/Team/Team";
@@ -17,7 +17,12 @@ const DISCONNECTING_TIMEOUT_MS = 5000;
 
 export function roomHandler(
   io: Server,
-  socket: Socket<IClientToServerEvents, IServerToClientEvents, IServerSocketData> & IServerSocketData
+  socket: Socket<
+    IClientToServerEvents,
+    IServerToClientEvents,
+    IServerSocketData
+  > &
+    IServerSocketData
 ) {
   socket.on("listAllRooms", (cb) => {
     const rooms = roomManager.getRoomsAsArray();
@@ -29,7 +34,7 @@ export function roomHandler(
 
     const teams: RoomTeams = {
       teamOne: Team.createTeam("Team 1"),
-      teamTwo: Team.createTeam("Team 2"),
+      teamTwo: Team.createTeam("Team 2")
     };
 
     // push room to database to make rooms available for users that are not in the room
@@ -37,9 +42,9 @@ export function roomHandler(
       include: {
         creator: {
           select: {
-            name: true,
-          },
-        },
+            name: true
+          }
+        }
       },
       data: {
         name,
@@ -50,12 +55,12 @@ export function roomHandler(
         password: await bcrypt.hash(password, 10),
         creator: {
           connect: {
-            id: user.id,
-          },
+            id: user.id
+          }
         },
         maxPlayersPerTeam: Room.getMaxPlayersPerTeam(modus),
-        state: Room.createDefaultRoomState(),
-      },
+        state: Room.createDefaultRoomState()
+      }
     });
 
     // create room for gameshow
@@ -75,8 +80,8 @@ export function roomHandler(
       // Remove also in database
       const dbRoom = await prisma.room.delete({
         where: {
-          id: roomId,
-        },
+          id: roomId
+        }
       });
 
       if (!dbRoom) {
@@ -98,7 +103,7 @@ export function roomHandler(
 
     socket.user = {
       id: user.id,
-      name: user.username ?? "",
+      name: user.username ?? ""
     };
     socket.roomId = roomId;
     await socket.join(roomId);
@@ -114,7 +119,9 @@ export function roomHandler(
       const room = roomManager.getRoom(roomId);
       if (!room) return new NoRoomException(socket);
 
-      room.participants = room.participants.filter((p) => p !== socket.user?.name);
+      room.participants = room.participants.filter(
+        (p) => p !== socket.user?.name
+      );
       room.update();
 
       if (socket.teamId && socket.user) {
@@ -170,7 +177,9 @@ export function roomHandler(
     const allPlayers = Object.values(room.teams)
       .map((t) => t.players)
       .flat();
-    allPlayers.forEach((p) => (p.states.notefield.isActive = !p.states.notefield.isActive));
+    allPlayers.forEach(
+      (p) => (p.states.notefield.isActive = !p.states.notefield.isActive)
+    );
     room.update();
   });
 
@@ -213,7 +222,7 @@ export function roomHandler(
     team.buzzer = {
       ...team.buzzer,
       isPressed: true,
-      playersBuzzered: [...team.buzzer.playersBuzzered, socket.user?.id || ""],
+      playersBuzzered: [...team.buzzer.playersBuzzered, socket.user?.id || ""]
     };
 
     if (withTimer) {
@@ -248,15 +257,21 @@ export function roomHandler(
     room.startTimer(seconds, cb);
   });
 
-  socket.on("disconnecting", (reason) => {
+  socket.on("disconnecting", () => {
     const room = roomManager.getRoom(socket.roomId);
     if (!room) return new NoRoomException(socket);
 
-    const timeout = setTimeout(async () => {
+    setTimeout(async () => {
       // clearTimeout(timeout);
-      const allSockets = (await io.in(room.id).fetchSockets()) as unknown as IServerSocketData[];
+      const allSockets = (await io
+        .in(room.id)
+        .fetchSockets()) as unknown as IServerSocketData[];
 
-      const isClientReconnected = allSockets.find((s) => s.user?.id === socket.user?.id) ? true : false;
+      const isClientReconnected = allSockets.find(
+        (s) => s.user?.id === socket.user?.id
+      )
+        ? true
+        : false;
 
       if (isClientReconnected) return;
 

@@ -11,14 +11,17 @@ export const env = createEnv({
   server: {
     MONGODB_URI: z.string().url(),
     NODE_ENV: environments,
-    NEXTAUTH_SECRET: process.env.NODE_ENV === "production" ? z.string().min(1) : z.string().min(1).optional(),
+    NEXTAUTH_SECRET:
+      process.env.NODE_ENV === "production"
+        ? z.string().min(1)
+        : z.string().min(1).optional(),
     GOOGLE_CLIENT_ID: z.string(),
     GOOGLE_CLIENT_SECRET: z.string(),
     DISCORD_CLIENT_ID: z.string(),
     DISCORD_CLIENT_SECRET: z.string(),
     SOCKET_IO_ADMIN_USERNAME: z.string().min(1),
     SOCKET_IO_ADMIN_PASSWORD: z.string().min(1),
-    WEBSITE_URL: z.string().min(1),
+    WEBSITE_URL: z.string().min(1)
   },
 
   /**
@@ -29,8 +32,10 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_THE_GENIUS_ENV: z.string().min(1),
     NEXT_PUBLIC_GTAG_ID:
-      process.env.NEXT_PUBLIC_GTAG_ID === "production" ? z.string().min(1) : z.string().min(1).optional(),
-    NEXT_PUBLIC_PARTYKIT_HOST: z.string().min(1),
+      process.env.NEXT_PUBLIC_GTAG_ID === "production"
+        ? z.string().min(1)
+        : z.string().min(1).optional(),
+    NEXT_PUBLIC_PARTYKIT_HOST: z.string().min(1)
   },
 
   /**
@@ -50,6 +55,6 @@ export const env = createEnv({
     WEBSITE_URL: process.env.WEBSITE_URL,
     NEXT_PUBLIC_THE_GENIUS_ENV: process.env.NEXT_PUBLIC_THE_GENIUS_ENV,
     NEXT_PUBLIC_GTAG_ID: process.env.NEXT_PUBLIC_GTAG_ID,
-    NEXT_PUBLIC_PARTYKIT_HOST: process.env.NEXT_PUBLIC_PARTYKIT_HOST,
-  },
+    NEXT_PUBLIC_PARTYKIT_HOST: process.env.NEXT_PUBLIC_PARTYKIT_HOST
+  }
 });

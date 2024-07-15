@@ -14,7 +14,7 @@ const withAdminAuth = <P extends object>(Component: NextPage) => {
     useEffect(() => {
       if (!isAdmin) {
         showErrorNotification({
-          message: "Du darfst auf diese Seite nicht zugreifen",
+          message: "Du darfst auf diese Seite nicht zugreifen"
         });
         void router.push("/");
       }

@@ -1,5 +1,5 @@
 export const TheGeniusConfig = {
   socialMedia: {
-    buyMeACoffee: "https://www.buymeacoffee.com/niklasfischer",
-  },
+    buyMeACoffee: "https://www.buymeacoffee.com/niklasfischer"
+  }
 };

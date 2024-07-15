@@ -1,11 +1,14 @@
 import { Box, Button, Flex, Text, useMantineTheme } from "@mantine/core";
 import React from "react";
 import ModView from "~/components/shared/ModView";
-import { socket } from "~/hooks/useSocket";
-import { useUser } from "~/hooks/useUser";
-import { ANSWER_BACKGROUND_COLORS, ANSWER_SELECT_MAP, DEFAULT_ANSWER_OPTION } from "../../duSagst.constants";
-import type { TDuSagstAnswerBoxState } from "../../duSagst.types";
 import Tooltip from "~/components/shared/Tooltip";
+import { useUser } from "~/hooks/useUser";
+import {
+  ANSWER_BACKGROUND_COLORS,
+  ANSWER_SELECT_MAP,
+  DEFAULT_ANSWER_OPTION
+} from "../../duSagst.constants";
+import type { TDuSagstAnswerBoxState } from "../../duSagst.types";
 
 interface AnswerBoxProps {
   playerId: string;
@@ -14,37 +17,42 @@ interface AnswerBoxProps {
   boxState: TDuSagstAnswerBoxState;
 }
 
-const AnswerBox: React.FC<AnswerBoxProps> = ({ selectedAnswer, playerName, playerId, boxState }) => {
+const AnswerBox: React.FC<AnswerBoxProps> = ({
+  selectedAnswer,
+  playerName,
+  playerId,
+  boxState
+}) => {
   const isAnswerEmpty = selectedAnswer < 0 || selectedAnswer > 3;
 
   const theme = useMantineTheme();
-  const { user, isPlayer, isHost, player } = useUser();
+  const { isPlayer, isHost, player } = useUser();
 
-  const { color, label } = ANSWER_SELECT_MAP[selectedAnswer] ?? DEFAULT_ANSWER_OPTION;
+  const { color, label } =
+    ANSWER_SELECT_MAP[selectedAnswer] ?? DEFAULT_ANSWER_OPTION;
   const backgroundColor = ANSWER_BACKGROUND_COLORS[color];
   const labelSize = isAnswerEmpty ? "2rem" : "7rem";
 
-  const showAnswerBox = playerId === player?.userId || !isPlayer || boxState.showAnswer;
+  const showAnswerBox =
+    playerId === player?.userId || !isPlayer || boxState.showAnswer;
 
   const defaultOpacity = !boxState.showAnswer && isHost ? 0.7 : 1;
 
-  const description = boxState.answerTheQuestion ? "Beantwortet die Frage" : "Schätzt Teampartner ein"; // TODO: Replace 'Teampartner' with actually playername
+  const description = boxState.answerTheQuestion
+    ? "Beantwortet die Frage"
+    : "Schätzt Teampartner ein"; // TODO: Replace 'Teampartner' with actually playername
 
   const handleShowAnswerBox = () => {
     boxState.showAnswer = true;
   };
 
   return (
-    <Flex
-      direction="column"
-      pos="relative"
-      w="14rem"
-    >
+    <Flex direction="column" pos="relative" w="14rem">
       <Flex
         direction="column"
         opacity={showAnswerBox ? defaultOpacity : 0}
         style={{
-          transition: "opacity 300ms",
+          transition: "opacity 300ms"
         }}
       >
         <Box
@@ -56,14 +64,14 @@ const AnswerBox: React.FC<AnswerBoxProps> = ({ selectedAnswer, playerName, playe
             borderRadius: theme.radius.sm,
             borderBottomLeftRadius: 0,
             borderBottomRightRadius: 0,
-            whiteSpace: "nowrap",
+            whiteSpace: "nowrap"
           }}
         >
           <Tooltip label={playerName}>
             <Text
               style={{
                 overflow: "hidden",
-                textOverflow: "ellipsis",
+                textOverflow: "ellipsis"
               }}
             >
               {playerName}
@@ -81,22 +89,15 @@ const AnswerBox: React.FC<AnswerBoxProps> = ({ selectedAnswer, playerName, playe
             borderColor: isAnswerEmpty ? theme.colors.dark[4] : "transparent",
             borderStyle: "solid",
             borderTopLeftRadius: 0,
-            transition: "background 300ms",
+            transition: "background 300ms"
           }}
         >
-          <Text
-            size={labelSize}
-            ta="center"
-          >
+          <Text size={labelSize} ta="center">
             {label}
           </Text>
         </Flex>
 
-        <Text
-          ta="center"
-          my="md"
-          w="100%"
-        >
+        <Text ta="center" my="md" w="100%">
           {description}
         </Text>
       </Flex>

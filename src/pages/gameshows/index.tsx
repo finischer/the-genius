@@ -9,7 +9,7 @@ import {
   IconPlus,
   IconStar,
   IconStarFilled,
-  IconTrash,
+  IconTrash
 } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -27,7 +27,7 @@ const MENU_ICON_SIZE = 14;
 
 const ActionMenu = ({
   gameshow,
-  onDeleteGameshow,
+  onDeleteGameshow
 }: {
   gameshow: Gameshow;
   onDeleteGameshow: (gameshowId: string) => void;
@@ -41,20 +41,26 @@ const ActionMenu = ({
 
   const openDeleteConfirmModal = () =>
     modals.openConfirmModal({
-      title: <Text>Möchtest du wirklich die Spielshow &quot;{gameshow.name}&quot; löschen?</Text>,
+      title: (
+        <Text>
+          Möchtest du wirklich die Spielshow &quot;{gameshow.name}&quot;
+          löschen?
+        </Text>
+      ),
       centered: true,
       children: (
         <Text size="sm">
-          Diese Aktion ist unwiderruflich und führt dazu, dass alle Daten und Einstellungen der Spielshow
-          dauerhaft entfernt werden. Bist du sicher, dass Du fortfahren möchtest?
+          Diese Aktion ist unwiderruflich und führt dazu, dass alle Daten und
+          Einstellungen der Spielshow dauerhaft entfernt werden. Bist du sicher,
+          dass Du fortfahren möchtest?
         </Text>
       ),
       labels: {
         confirm: "Spielshow löschen",
-        cancel: "Abbrechen",
+        cancel: "Abbrechen"
       },
       confirmProps: { color: "red" },
-      onConfirm: () => onDeleteGameshow(gameshow.id),
+      onConfirm: () => onDeleteGameshow(gameshow.id)
     });
 
   const handleEditGameshow = () => {
@@ -62,7 +68,9 @@ const ActionMenu = ({
     searchParams.set("gameshowId", gameshow.id);
     searchParams.set("action", "update");
 
-    void router.push(`/gameshows/create?gameshowId=${gameshow.id}&action=update`);
+    void router.push(
+      `/gameshows/create?gameshowId=${gameshow.id}&action=update`
+    );
   };
 
   return (
@@ -80,10 +88,7 @@ const ActionMenu = ({
         >
           Bearbeiten
         </Menu.Item>
-        <Menu.Item
-          disabled
-          leftSection={StarIcon}
-        >
+        <Menu.Item disabled leftSection={StarIcon}>
           Als Favorit {gameshow.isFavorite ? "entfernen" : "hinzufügen"}
         </Menu.Item>
         <Menu.Item
@@ -108,23 +113,30 @@ const GameshowsPage = () => {
   const {
     data: gameshows,
     isLoading,
-    refetch: refetchGameshows,
+    refetch: refetchGameshows
   } = api.gameshows.getAllByCreatorId.useQuery();
   const { mutate: deleteGameshow } = api.gameshows.delete.useMutation({
     onSuccess: () => {
       showSuccessNotification({
-        message: "Spielshow wurde erfolgreich gelöscht",
+        message: "Spielshow wurde erfolgreich gelöscht"
       });
       void refetchGameshows();
     },
     onError: (error) => {
-      handleZodError(error.data?.zodError, error.message ?? "Spielshow konnte nicht gelöscht werden");
-    },
+      handleZodError(
+        error.data?.zodError,
+        error.message ?? "Spielshow konnte nicht gelöscht werden"
+      );
+    }
   });
 
-  const [openedCreateRoomModal, { open: openCreateRoomModal, close: closeCreateRoomModal }] =
-    useDisclosure(false);
-  const [activeGameshow, setActiveGameshow] = useState<SafedGameshow | undefined>(undefined);
+  const [
+    openedCreateRoomModal,
+    { open: openCreateRoomModal, close: closeCreateRoomModal }
+  ] = useDisclosure(false);
+  const [activeGameshow, setActiveGameshow] = useState<
+    SafedGameshow | undefined
+  >(undefined);
 
   const subtitleText =
     gameshows?.length === 0
@@ -193,10 +205,7 @@ const GameshowsPage = () => {
             gameshow={activeGameshow}
           />
         )}
-        <Flex
-          gap="md"
-          align="center"
-        >
+        <Flex gap="md" align="center">
           <Title order={2}>Meine Spielshows</Title>
           <ActionIcon
             toolTip="Spielshow erstellen"
@@ -209,10 +218,7 @@ const GameshowsPage = () => {
           </ActionIcon>
         </Flex>
         <Text c="dimmed">{subtitleText}</Text>
-        <Table
-          verticalSpacing="md"
-          striped
-        >
+        <Table verticalSpacing="md" striped>
           <Table.Thead>
             <Table.Tr>
               <Table.Th>Name</Table.Th>

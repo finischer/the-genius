@@ -1,10 +1,8 @@
-import { CheckIcon, ColorSwatch, Flex, Group, Text, Tooltip, rem, useMantineTheme } from "@mantine/core";
-import useSettings from "~/hooks/useSettings/useSettings";
-import { capitalize } from "~/utils/strings";
+import { Flex } from "@mantine/core";
 
 const GeneralSettingsSection = () => {
-  const { updatePrimaryColor, primaryColor } = useSettings();
-  const theme = useMantineTheme();
+  // const { updatePrimaryColor, primaryColor } = useSettings();
+  // const theme = useMantineTheme();
 
   // const swatches = Object.keys(theme.colors)
   //   .slice(2)
@@ -30,10 +28,7 @@ const GeneralSettingsSection = () => {
   //   });
   return (
     <Flex direction="column">
-      <Flex
-        gap={4}
-        direction="column"
-      >
+      <Flex gap={4} direction="column">
         {/* <Text fz="sm">Akzentfarbe</Text> */}
         {/* <Group>{swatches}</Group> */}
       </Flex>

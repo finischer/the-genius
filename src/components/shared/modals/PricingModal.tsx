@@ -1,10 +1,10 @@
-import { Text, useMantineTheme } from "@mantine/core";
+import { Text } from "@mantine/core";
 import type { ContextModalProps } from "@mantine/modals";
 import React from "react";
 
 const PricingModal: React.FC<ContextModalProps<any>> = () => {
-  const theme = useMantineTheme();
-  return <Text>PricingModal</Text>
+  // const theme = useMantineTheme();
+  return <Text>PricingModal</Text>;
   // return (
   //   <Flex
   //     style={{ zIndex: 50 }}

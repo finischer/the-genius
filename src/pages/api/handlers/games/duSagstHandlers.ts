@@ -1,18 +1,15 @@
 import { type Server, type Socket } from "socket.io";
-import type {
-  IDuSagstState,
-  TDuSagstAnswerBoxState,
-} from "~/components/room/Game/games/DuSagst/duSagst.types";
+import type { TDuSagstGameState } from "~/components/room/Game/games/DuSagst/config";
+import type { TDuSagstAnswerBoxState } from "~/components/room/Game/games/DuSagst/duSagst.types";
+import { Game } from "~/components/room/Game/games/game.types";
 import {
   type IClientToServerEvents,
   type IServerSocketData,
-  type IServerToClientEvents,
+  type IServerToClientEvents
 } from "~/types/socket.types";
 import { roomManager } from "../../controllers/RoomManager";
 import NoRoomException from "../../exceptions/NoRoomException";
 import { getRoomAndTeam } from "../helpers";
-import type { TDuSagstGameState } from "~/components/room/Game/games/DuSagst/config";
-import { Game } from "~/components/room/Game/games/game.types";
 
 const GAME_IDENTIFIER = Game.DUSAGST;
 
@@ -20,7 +17,10 @@ function getAllBoxes(game: TDuSagstGameState): TDuSagstAnswerBoxState[] {
   return Object.values(game.teamStates).flatMap((i) => i.boxStates);
 }
 
-function getBoxStateById(game: TDuSagstGameState, boxId: string): TDuSagstAnswerBoxState | undefined {
+function getBoxStateById(
+  game: TDuSagstGameState,
+  boxId: string
+): TDuSagstAnswerBoxState | undefined {
   return getAllBoxes(game).find((box) => box.id === boxId);
 }
 
@@ -37,7 +37,12 @@ function prepareStateForNewQuestion(game: TDuSagstGameState) {
 
 export function duSagstHandler(
   io: Server,
-  socket: Socket<IClientToServerEvents, IServerToClientEvents, IServerSocketData> & IServerSocketData
+  socket: Socket<
+    IClientToServerEvents,
+    IServerToClientEvents,
+    IServerSocketData
+  > &
+    IServerSocketData
 ) {
   socket.on("duSagst:showAnswer", (answerIndex: number) => {
     const room = roomManager.getRoom(socket.roomId);

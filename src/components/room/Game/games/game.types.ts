@@ -14,7 +14,7 @@ export enum Game {
   MERKEN = "merken",
   SET = "set",
   DUSAGST = "duSagst",
-  REFERATBINGO = "referatBingo",
+  REFERATBINGO = "referatBingo"
 }
 
 export type TGameSettingsMap = {

@@ -11,13 +11,15 @@ const ReferatBingoConfigurator = () => {
   const { updateGame, referatBingo } = useGameshowConfig(Game.REFERATBINGO);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [presentationTopics, setPresentationTopics] = useState<TPresentationTopic[]>(referatBingo.topics);
+  const [presentationTopics, setPresentationTopics] = useState<
+    TPresentationTopic[]
+  >(referatBingo.topics);
 
   const form = useForm<TPresentationTopic>({
     initialValues: {
       id: uuidv4(),
-      topic: "",
-    },
+      topic: ""
+    }
   });
 
   const handleSubmit = form.onSubmit((newTopic) => {

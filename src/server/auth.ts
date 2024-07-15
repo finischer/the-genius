@@ -1,6 +1,10 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { type GetServerSidePropsContext } from "next";
-import { getServerSession, type DefaultSession, type NextAuthOptions } from "next-auth";
+import {
+  getServerSession,
+  type DefaultSession,
+  type NextAuthOptions
+} from "next-auth";
 
 import { type UserRole } from "@prisma/client";
 import { prisma } from "~/server/db";
@@ -53,20 +57,20 @@ export const authOptions: NextAuthOptions = {
     session: sessionCallback,
     redirect: ({ baseUrl }) => {
       return baseUrl;
-    },
+    }
   },
   adapter: PrismaAdapter(prisma),
   providers: [GoogleProvider, DiscordProvider],
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/auth/signin",
-    error: "/auth/error",
+    error: "/auth/error"
   },
   session: {
-    strategy: "database",
+    strategy: "database"
   },
   // Enable debug messages in the console if you are having problems
-  debug: process.env.NODE_ENV === "development",
+  debug: process.env.NODE_ENV === "development"
 };
 
 /**

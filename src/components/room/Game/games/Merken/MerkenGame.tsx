@@ -41,10 +41,7 @@ const MerkenGame: React.FC<IMerkenGameProps> = ({ game }) => {
   });
 
   return (
-    <Flex
-      direction="column"
-      gap="lg"
-    >
+    <Flex direction="column" gap="lg">
       <MerkenPlayground
         cards={game.cards}
         openCards={game.openCards}
@@ -53,10 +50,7 @@ const MerkenGame: React.FC<IMerkenGameProps> = ({ game }) => {
         onCardClick={handleCardClick}
       />
       <ModView>
-        <Button
-          onClick={handleStartGame}
-          disabled={isTimerActive}
-        >
+        <Button onClick={handleStartGame} disabled={isTimerActive}>
           Spiel starten
         </Button>
       </ModView>

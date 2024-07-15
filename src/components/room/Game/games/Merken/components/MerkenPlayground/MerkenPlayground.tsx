@@ -10,7 +10,7 @@ const MerkenPlayground: React.FC<IMerkenPlaygroundProps> = ({
   openCards = [],
   clickable = false,
   allCardsFlipped = false,
-  onCardClick,
+  onCardClick
 }) => {
   const defaultCardStyle: MantineStyleProp = {
     height: "5rem",
@@ -20,14 +20,20 @@ const MerkenPlayground: React.FC<IMerkenPlaygroundProps> = ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    userSelect: "none",
+    userSelect: "none"
   };
 
   const FrontContent = ({ content }: { content: number }) => {
     return <Text size="1.5rem">{content}</Text>;
   };
 
-  const BackContent = ({ content, index }: { content: string; index: number }) => {
+  const BackContent = ({
+    content,
+    index
+  }: {
+    content: string;
+    index: number;
+  }) => {
     return (
       <Box>
         <span
@@ -37,18 +43,13 @@ const MerkenPlayground: React.FC<IMerkenPlaygroundProps> = ({
             left: "0.5rem",
             fontSize: "1rem",
             fontWeight: "500",
-            opacity: 0.7,
+            opacity: 0.7
           }}
         >
           {index + 1}
         </span>
         <Center>
-          <Image
-            src={content}
-            alt={index.toString()}
-            width={48}
-            height={48}
-          />
+          <Image src={content} alt={index.toString()} width={48} height={48} />
         </Center>
       </Box>
     );
@@ -63,17 +64,12 @@ const MerkenPlayground: React.FC<IMerkenPlaygroundProps> = ({
           clickable={clickable}
           onClick={() => onCardClick && onCardClick(idx)}
           front={<FrontContent content={idx + 1} />}
-          back={
-            <BackContent
-              index={idx}
-              content={elem}
-            />
-          }
+          back={<BackContent index={idx} content={elem} />}
           frontStyle={{
-            ...defaultCardStyle,
+            ...defaultCardStyle
           }}
           backStyle={{
-            ...defaultCardStyle,
+            ...defaultCardStyle
           }}
         />
       ))}

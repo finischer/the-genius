@@ -103,21 +103,15 @@ const SetGame: React.FC<ISetGameProps> = ({ game }) => {
   );
 
   return (
-    <Flex
-      gap="xl"
-      pos="relative"
-    >
+    <Flex gap="xl" pos="relative">
       {/* Left content */}
-      <Flex
-        direction="column"
-        gap="sm"
-      >
+      <Flex direction="column" gap="sm">
         <SimpleGrid
           cols={3}
           verticalSpacing="xs"
           spacing="xs"
           style={{
-            perspective: "100rem",
+            perspective: "100rem"
           }}
         >
           {currQuestion?.cards.map((card, idx) => {
@@ -129,7 +123,9 @@ const SetGame: React.FC<ISetGameProps> = ({ game }) => {
                 card={card}
                 index={idx}
                 isFlipped={game.openedCards.includes(idx)}
-                marked={(isMarked && game.display.markedCards) || (isMarked && isHost)}
+                marked={
+                  (isMarked && game.display.markedCards) || (isMarked && isHost)
+                }
                 markerState={game.markedCardsState}
                 onClick={handleSelectCard}
               />
@@ -144,28 +140,26 @@ const SetGame: React.FC<ISetGameProps> = ({ game }) => {
 
       {/* Right Content */}
       <ModView>
-        <Flex
-          direction="column"
-          gap="md"
-          w="15rem"
-        >
+        <Flex direction="column" gap="md" w="15rem">
           <div style={{ height: "10rem" }}>
             <PossibleSets />
           </div>
 
           <Button.Group orientation="vertical">
-            <Button
-              onClick={handleFlipAllCards}
-              variant="default"
-            >
+            <Button onClick={handleFlipAllCards} variant="default">
               Karten umdrehen
             </Button>
             <Button
               onClick={handleMarkedCardClick}
               variant="default"
-              disabled={game.markedCards.length !== 3 || game.markedCardsState !== "marked"}
+              disabled={
+                game.markedCards.length !== 3 ||
+                game.markedCardsState !== "marked"
+              }
             >
-              {game.display.markedCards ? "Antwort zeigen" : "Markierten Karten zeigen"}
+              {game.display.markedCards
+                ? "Antwort zeigen"
+                : "Markierten Karten zeigen"}
             </Button>
             <Button
               onClick={handlePrevQuestion}

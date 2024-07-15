@@ -7,8 +7,8 @@ const Section = ({ children }: { children: React.ReactNode }) => (
     mt="xl"
     style={{
       ":first-of-type": {
-        marginTop: 0,
-      },
+        marginTop: 0
+      }
     }}
   >
     {children}

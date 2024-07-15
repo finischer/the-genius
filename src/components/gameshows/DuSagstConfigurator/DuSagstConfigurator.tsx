@@ -13,14 +13,18 @@ const PLACEHOLDER_MAP: { [index: number]: string } = {
   0: "Cola",
   1: "Wasser",
   2: "Apfelschorle",
-  3: "Eistee",
+  3: "Eistee"
 };
 
 const DuSagstConfigurator = () => {
-  const { disableContinueButton, enableContinueButton } = useContext(StepperControlsContext);
+  const { disableContinueButton, enableContinueButton } = useContext(
+    StepperControlsContext
+  );
   const { duSagst, updateGame } = useGameshowConfig(Game.DUSAGST);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [questions, setQuestions] = useState<TDuSagstQuestion[]>(duSagst.questions);
+  const [questions, setQuestions] = useState<TDuSagstQuestion[]>(
+    duSagst.questions
+  );
 
   const form = useForm<TDuSagstFormValues>({
     initialValues: {
@@ -29,8 +33,8 @@ const DuSagstConfigurator = () => {
       answer_1: "",
       answer_2: "",
       answer_3: "",
-      answer_4: "",
-    },
+      answer_4: ""
+    }
   });
 
   const answerInputElements = Array(4)
@@ -50,8 +54,8 @@ const DuSagstConfigurator = () => {
       id: formValues.id,
       question: formValues.question,
       answers: Object.entries(formValues)
-        .filter(([key, value]) => key.startsWith("answer_"))
-        .map(([_, value]) => ({ id: uuidv4(), text: value })),
+        .filter(([key, _]) => key.startsWith("answer_"))
+        .map(([_, value]) => ({ id: uuidv4(), text: value }))
     };
   };
 
@@ -66,7 +70,7 @@ const DuSagstConfigurator = () => {
       answer_1: "",
       answer_2: "",
       answer_3: "",
-      answer_4: "",
+      answer_4: ""
     };
 
     answerKeys.forEach((key, index) => {
@@ -129,11 +133,7 @@ const DuSagstConfigurator = () => {
       selectedQuestionId={form.getInputProps("id").value as string}
       renderValueByKey="question"
     >
-      <Flex
-        direction="column"
-        gap="xl"
-        w="100%"
-      >
+      <Flex direction="column" gap="xl" w="100%">
         <TextInput
           ref={inputRef}
           required

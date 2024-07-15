@@ -7,7 +7,6 @@ on:
   pull_request:
     branches:
       - dev
-      - staging
     types:
       - closed
 
@@ -44,9 +43,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: List environment variables
-        run: echo ${{ env.WEBSITE_URL }}
 
       - name: Run Linter
         run: npm run lint

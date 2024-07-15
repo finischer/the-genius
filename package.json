@@ -11,6 +11,7 @@
     "postinstall": "prisma generate",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
+    "lint:strict": "next lint '*/**/*.{js,jsx,ts,tsx}'",
     "format:all": "prettier --write src/**/*.{ts,tsx,js,jsx,json,md}",
     "start": "next start",
     "tsc": "tsc",

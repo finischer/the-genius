@@ -14,7 +14,8 @@
     "format:all": "prettier --write src/**/*.{ts,tsx,js,jsx,json,md}",
     "start": "next start",
     "tsc": "tsc",
-    "partykit": "npx partykit dev"
+    "partykit": "npx partykit dev",
+    "prepare": "husky"
   },
   "dependencies": {
     "@emotion/react": "^11.10.8",
@@ -100,6 +101,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-unused-imports": "^2.0.0",
     "husky": "^9.0.11",
+    "lint-staged": "^15.2.7",
     "partykit": "0.0.96",
     "postcss": "^8.4.32",
     "postcss-preset-mantine": "^1.12.2",

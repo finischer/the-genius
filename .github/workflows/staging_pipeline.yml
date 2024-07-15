@@ -32,10 +32,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Extract Node.js version
+        id: extract_node_version
+        run: echo "::set-output name=NODE_VERSION::$(jq -r '.engines.node' package.json)"
+
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "20.15.1"
+          node-version: ${{ steps.extract_node_version.outputs.NODE_VERSION }}
 
       - name: Install dependencies
         run: npm ci

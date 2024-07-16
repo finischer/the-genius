@@ -1,5 +1,8 @@
-import { Games, type IGameGeneralState } from "../game.types";
-import type { IReferatBingoState, TReferatBingoNotefieldState } from "./referatBingo.types";
+import { Game, type IGameGeneralState } from "../game.types";
+import type {
+  IReferatBingoState,
+  TReferatBingoNotefieldState
+} from "./referatBingo.types";
 
 export type TReferatBingoGameState = IReferatBingoState & IGameGeneralState;
 
@@ -8,11 +11,11 @@ const NUM_BINGO_FIELDS = 9;
 const DEFAULT_NOTEFIELD_STATE: TReferatBingoNotefieldState = {
   answers: new Array<string>(NUM_BINGO_FIELDS).fill(""),
   selectedAnswers: [],
-  submitted: false,
+  submitted: false
 };
 
 export const DEFAULT_REFERAT_BINGO_STATE: TReferatBingoGameState = {
-  identifier: Games.REFERATBINGO,
+  identifier: Game.REFERATBINGO,
   name: "Referat Bingo",
   modes: ["TEAM"],
   maxPoints: 999,
@@ -22,18 +25,18 @@ export const DEFAULT_REFERAT_BINGO_STATE: TReferatBingoGameState = {
   presenter: {
     id: "",
     name: "",
-    isPresenting: false,
+    isPresenting: false
   },
   notefields: {
     teamOne: DEFAULT_NOTEFIELD_STATE,
-    teamTwo: DEFAULT_NOTEFIELD_STATE,
+    teamTwo: DEFAULT_NOTEFIELD_STATE
   },
   display: {
     notefields: {
       teamOne: false,
-      teamTwo: false,
+      teamTwo: false
     },
-    topic: false,
+    topic: false
   },
   rules: `
   
@@ -50,5 +53,5 @@ Ein Mitglied aus einem Team stellt das Referat vor, während die anderen Spieler
 Markiert ein Teammitglied einen Begriff oder eine Phrase auf seiner Bingo-Karte, wenn sie im Referat erwähnt wird, erhält das Team einen Punkt.
 
 Das Team, das die meisten Punkte nach 4 Referaten hat, gewinnt das Spiel. 
-  `,
+  `
 };

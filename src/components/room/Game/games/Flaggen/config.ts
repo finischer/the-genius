@@ -1,11 +1,11 @@
-import { Games } from "./../game.types";
+import { Game } from "./../game.types";
 import { type IGameGeneralState } from "../game.types";
 import { type IFlaggenState } from "./flaggen.types";
 
 export type TFlaggenGameState = IFlaggenState & IGameGeneralState;
 
 export const DEFAULT_FLAGGEN_STATE: TFlaggenGameState = {
-  identifier: Games.FLAGGEN,
+  identifier: Game.FLAGGEN,
   modes: ["DUELL", "TEAM"],
   maxPoints: 7,
   name: "Flaggen",
@@ -14,7 +14,7 @@ export const DEFAULT_FLAGGEN_STATE: TFlaggenGameState = {
   qIndex: 0,
   display: {
     answer: false,
-    country: false,
+    country: false
   },
   rules: `  
   Spiel: {{gameName}}
@@ -27,7 +27,7 @@ export const DEFAULT_FLAGGEN_STATE: TFlaggenGameState = {
   2. Antwortzeit: Wenn du denkst, dass du das Land der Flagge kennst, musst du rechtzeitig buzzern und innerhalb von 5 Sekunden eine Antwort geben.
   3. Punktvergabe: Wenn deine Antwort korrekt ist, erhältst du einen Punkt. Ist die Antwort falsch, erhält der Gegner einen Punkt.
   4. Siegbedingungen: Das Team, das zuerst {{maxPoints}} Punkte erreicht, gewinnt das Spiel.
-  `,
+  `
 };
 
 interface ICountriesMap {
@@ -340,5 +340,5 @@ export const COUNTRIES: ICountriesMap = {
   yt: "Mayotte",
   za: "Südafrika",
   zm: "Sambia",
-  zw: "Simbabwe",
+  zw: "Simbabwe"
 };

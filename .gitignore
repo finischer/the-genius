@@ -19,6 +19,9 @@ local
 /out/
 next-env.d.ts
 
+# partykit
+/.partykit/
+
 # production
 /build
 

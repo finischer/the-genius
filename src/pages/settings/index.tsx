@@ -1,8 +1,7 @@
 import { Tabs, Title } from "@mantine/core";
-import { IconSettings, IconUser } from "@tabler/icons-react";
+import { IconUser } from "@tabler/icons-react";
 import PageLayout from "~/components/layout/PageLayout";
 import AccountSettingsSection from "~/components/settings/AccountSettingsSection";
-import GeneralSettingsSection from "~/components/settings/GeneralSettingsSection";
 import NextHead from "~/components/shared/NextHead";
 
 const SettingsPage = () => {
@@ -21,10 +20,7 @@ const SettingsPage = () => {
             >
               Allgemein
             </Tabs.Tab> */}
-            <Tabs.Tab
-              value="account"
-              leftSection={<IconUser />}
-            >
+            <Tabs.Tab value="account" leftSection={<IconUser />}>
               Account
             </Tabs.Tab>
           </Tabs.List>
@@ -36,10 +32,7 @@ const SettingsPage = () => {
             <GeneralSettingsSection />
           </Tabs.Panel> */}
 
-          <Tabs.Panel
-            value="account"
-            pt="xs"
-          >
+          <Tabs.Panel value="account" pt="xs">
             <AccountSettingsSection />
           </Tabs.Panel>
         </Tabs>

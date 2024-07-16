@@ -42,7 +42,7 @@ const AnswerBanner: React.FC<IAnswerBannerProps> = ({
               textAlign: "center",
               overflow: "hidden",
               borderRadius: "100px",
-              boxShadow: theme.shadows.xl,
+              boxShadow: theme.shadows.xl
             }}
             {...props}
           >
@@ -52,7 +52,7 @@ const AnswerBanner: React.FC<IAnswerBannerProps> = ({
                 textOverflow: "ellipsis",
                 overflow: "hidden",
                 fontFamily: "Montserrat-Bold, sans-serif",
-                letterSpacing: 3,
+                letterSpacing: 3
               }}
             >
               {answer}

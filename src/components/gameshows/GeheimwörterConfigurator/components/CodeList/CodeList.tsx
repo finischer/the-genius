@@ -1,18 +1,20 @@
-import { Box, Button, Flex, TextInput, Title, useMantineTheme } from "@mantine/core";
-import React from "react";
-import type { ICodeListItemProps, ICodeListProps } from "./codeList.types";
-import { capitalize } from "~/utils/strings";
+import { Flex, TextInput, Title, useMantineTheme } from "@mantine/core";
 import { motion } from "framer-motion";
+import React from "react";
 import { animations } from "~/utils/animations";
+import { capitalize } from "~/utils/strings";
+import type { ICodeListItemProps, ICodeListProps } from "./codeList.types";
 
 const CodeListItem: React.FC<ICodeListItemProps> = ({
   item,
   editable = false,
-  onWordChange = () => null,
+  onWordChange = () => null
 }) => {
   const handleWordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let newWord = e.target.value;
-    const startsWithLetter = newWord.toLowerCase().startsWith(item.letter.toLowerCase());
+    const startsWithLetter = newWord
+      .toLowerCase()
+      .startsWith(item.letter.toLowerCase());
 
     if (newWord.length === 0) {
       newWord = item.letter.toUpperCase();
@@ -27,7 +29,7 @@ const CodeListItem: React.FC<ICodeListItemProps> = ({
     <TextInput
       variant="unstyled"
       style={{
-        borderBottom: "1px solid white",
+        borderBottom: "1px solid white"
       }}
       value={item.category}
       onChange={handleWordChange}
@@ -37,14 +39,8 @@ const CodeListItem: React.FC<ICodeListItemProps> = ({
   );
 
   return (
-    <Flex
-      gap="xl"
-      justify="space-between"
-    >
-      <Flex
-        w="80%"
-        justify="space-between"
-      >
+    <Flex gap="xl" justify="space-between">
+      <Flex w="80%" justify="space-between">
         <span>
           {wordElement}
           {!editable && item.category.slice(1)}
@@ -53,10 +49,7 @@ const CodeListItem: React.FC<ICodeListItemProps> = ({
       <div>
         <span>=</span>
       </div>
-      <Flex
-        w="2rem"
-        style={{ fontWeight: "bold", textAlign: "center" }}
-      >
+      <Flex w="2rem" style={{ fontWeight: "bold", textAlign: "center" }}>
         <span>{item.letter.toUpperCase()}</span>
       </Flex>
     </Flex>
@@ -67,7 +60,7 @@ const CodeList: React.FC<ICodeListProps> = ({
   codeList,
   setCodeList,
   editable = false,
-  showTitle = true,
+  showTitle = true
 }) => {
   const theme = useMantineTheme();
 
@@ -83,11 +76,13 @@ const CodeList: React.FC<ICodeListProps> = ({
   function onWordChange(letter: string, newWord: string) {
     if (setCodeList) {
       setCodeList((draft) => {
-        const indexItem = draft.codeList.findIndex((item) => item.letter.toLowerCase() === letter);
+        const indexItem = draft.codeList.findIndex(
+          (item) => item.letter.toLowerCase() === letter
+        );
 
         draft.codeList[indexItem] = {
           letter,
-          category: newWord || letter.toUpperCase(),
+          category: newWord || letter.toUpperCase()
         };
       });
     }
@@ -95,11 +90,7 @@ const CodeList: React.FC<ICodeListProps> = ({
 
   return (
     <motion.div {...animations.fadeInOut}>
-      <Flex
-        direction="column"
-        gap="lg"
-        w="20rem"
-      >
+      <Flex direction="column" gap="lg" w="20rem">
         {showTitle && <Title order={3}>Codeliste</Title>}
         <Flex
           direction="column"
@@ -107,7 +98,7 @@ const CodeList: React.FC<ICodeListProps> = ({
           p="md"
           style={(theme) => ({
             borderRadius: theme.radius.md,
-            boxShadow: theme.shadows.xl,
+            boxShadow: theme.shadows.xl
           })}
         >
           {codeListElements}

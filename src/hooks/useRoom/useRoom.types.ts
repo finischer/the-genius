@@ -21,4 +21,5 @@ type NonNullableExceptCurrentGame<T> = {
   [K in keyof T]: K extends "currentGame" ? T[K] : NonNullable<T[K]>;
 };
 
-export type INonNullableUseRoomContext = NonNullableExceptCurrentGame<IUseRoomContext>;
+export type INonNullableUseRoomContext =
+  NonNullableExceptCurrentGame<IUseRoomContext>;

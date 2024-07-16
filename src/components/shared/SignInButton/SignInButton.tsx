@@ -4,18 +4,19 @@ import { signIn } from "next-auth/react";
 import React, { useState, type MouseEventHandler } from "react";
 import classes from "./signInButton.module.css";
 
-const DISCORD_PRIMARY_COLOR = "#7289DA";
-
 enum Provider {
   GOOGLE = "google",
-  DISCORD = "discord",
+  DISCORD = "discord"
 }
 
 interface ISignInButton extends ButtonProps {
   onClick: MouseEventHandler<HTMLButtonElement>;
 }
 
-export const GoogleButton: React.FC<ISignInButton> = ({ onClick, ...props }) => {
+export const GoogleButton: React.FC<ISignInButton> = ({
+  onClick,
+  ...props
+}) => {
   return (
     <Button
       className={classes.signinBtnGoogle}
@@ -28,7 +29,10 @@ export const GoogleButton: React.FC<ISignInButton> = ({ onClick, ...props }) => 
   );
 };
 
-export const DiscordButton: React.FC<ISignInButton> = ({ onClick, ...props }) => {
+export const DiscordButton: React.FC<ISignInButton> = ({
+  onClick,
+  ...props
+}) => {
   return (
     <Button
       className={classes.signinBtnDiscord}

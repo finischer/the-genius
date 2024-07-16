@@ -7,19 +7,21 @@ import { LOCAL_STORAGE_KEYS } from "~/config/localStorage";
 
 export enum CookieBannerAction {
   ACCEPT = "ACCEPT",
-  DECLINE = "DECLINE",
+  DECLINE = "DECLINE"
 }
 
 const GoogleAnalytics = () => {
   const [rendered, setRendered] = useState(false);
   const [analytics, setAnalytics] = useLocalStorage<boolean | undefined>({
     key: LOCAL_STORAGE_KEYS.ANALYTICS,
-    defaultValue: undefined,
+    defaultValue: undefined
   });
 
-  const [showCookieBanner, setShowCookieBanner] = useLocalStorage<boolean | undefined>({
+  const [showCookieBanner, setShowCookieBanner] = useLocalStorage<
+    boolean | undefined
+  >({
     key: "cookie-banner",
-    defaultValue: true,
+    defaultValue: true
   });
 
   const gTagId = process.env.NEXT_PUBLIC_GTAG_ID;
@@ -50,10 +52,14 @@ const GoogleAnalytics = () => {
 
   return (
     <>
-      {showCookieBanner && rendered && <CookieBanner onButtonClick={handleCookieBannerButtonClick} />}
+      {showCookieBanner && rendered && (
+        <CookieBanner onButtonClick={handleCookieBannerButtonClick} />
+      )}
       {analytics && (
         <>
-          <Script src={`https://www.googletagmanager.com/gtag/js?id=${gTagId}`} />
+          <Script
+            src={`https://www.googletagmanager.com/gtag/js?id=${gTagId}`}
+          />
           <Script id="google-analytics">
             {`
             window.dataLayer = window.dataLayer || [];

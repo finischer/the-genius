@@ -2,31 +2,32 @@ import { Flex, Text, useMantineTheme } from "@mantine/core";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect } from "react";
 import useAudio from "~/hooks/useAudio";
-import { useRoom } from "~/hooks/useRoom";
+import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { animations } from "~/utils/animations";
 
 const Timer = () => {
   const theme = useMantineTheme();
-  const { room } = useRoom();
+  const room = useSyncedRoom();
   const { triggerAudioEvent } = useAudio();
-  const timerState = room.state.display.clock;
-  const secondsColor = timerState.currentSeconds <= 5 ? theme.colors.red[7] : "white";
+  const timerState = room.context.header.timer;
+  const secondsColor =
+    timerState.currSeconds <= 5 ? theme.colors.red[7] : "white";
 
   useEffect(() => {
-    if (timerState.currentSeconds === 5) {
+    if (timerState.currSeconds === 5) {
       triggerAudioEvent("playSound", "warningBuzzer");
     }
-  }, [timerState.currentSeconds]);
+  }, [timerState.currSeconds]);
 
   useEffect(() => {
-    if (!timerState.isActive) {
+    if (!timerState.active) {
       triggerAudioEvent("stopSound", "warningBuzzer");
     }
-  }, [timerState.isActive]);
+  }, [timerState.active]);
 
   return (
     <AnimatePresence>
-      {timerState.isActive && (
+      {timerState.active && (
         <motion.div {...animations.fadeInOut}>
           <Flex
             h="5rem"
@@ -37,14 +38,11 @@ const Timer = () => {
             align="center"
             style={(theme) => ({
               borderRadius: theme.radius.sm,
-              boxShadow: theme.shadows.xl,
+              boxShadow: theme.shadows.xl
             })}
           >
-            <Text
-              size="2.25rem"
-              color={secondsColor}
-            >
-              {timerState.currentSeconds}
+            <Text size="2.25rem" c={secondsColor}>
+              {timerState.currSeconds}
             </Text>
           </Flex>
         </motion.div>

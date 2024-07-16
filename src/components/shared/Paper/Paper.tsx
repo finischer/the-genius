@@ -1,5 +1,9 @@
-import { type PaperProps, Paper as MantinePaper, UnstyledButton, Box } from "@mantine/core";
-import React, { type FC, type ReactNode } from "react";
+import {
+  Paper as MantinePaper,
+  UnstyledButton,
+  type PaperProps
+} from "@mantine/core";
+import { type FC, type ReactNode } from "react";
 import classes from "./paper.module.css";
 
 interface IPaperProps extends PaperProps {
@@ -32,14 +36,10 @@ const Paper: FC<IPaperProps> = ({
         onClick={handleClick}
         disabled={disabled}
         style={{
-          cursor: disabled || !onClick ? "auto" : "pointer",
+          cursor: disabled || !onClick ? "auto" : "pointer"
         }}
       >
-        <MantinePaper
-          variant={variant}
-          bg={bgColor}
-          {...props}
-        >
+        <MantinePaper variant={variant} bg={bgColor} {...props}>
           {children}
         </MantinePaper>
       </UnstyledButton>
@@ -53,7 +53,7 @@ const Paper: FC<IPaperProps> = ({
       className={!disabled && onClick ? classes.btn : undefined}
       onClick={handleClick}
       style={{
-        cursor: disabled || !onClick ? "auto" : "pointer",
+        cursor: disabled || !onClick ? "auto" : "pointer"
       }}
       {...props}
     >

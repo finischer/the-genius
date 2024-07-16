@@ -1,4 +1,10 @@
-import { Container, Title, useMantineTheme, type MantineStyleProp, Box } from "@mantine/core";
+import {
+  Container,
+  Title,
+  useMantineTheme,
+  type MantineStyleProp,
+  Box
+} from "@mantine/core";
 import React from "react";
 import ReactCardFlip from "react-card-flip";
 import { sizes } from "~/styles/constants";
@@ -13,7 +19,7 @@ const FlipCard: React.FC<IFlipCardProps> = ({
   front,
   back,
   frontStyle = {},
-  backStyle = {},
+  backStyle = {}
 }) => {
   const theme = useMantineTheme();
   const themeColors = theme.colors[theme.primaryColor];
@@ -25,7 +31,7 @@ const FlipCard: React.FC<IFlipCardProps> = ({
     textAlign: "center",
     borderRadius: sizes.borderRadius,
     whiteSpace: "nowrap",
-    textTransform: "uppercase",
+    textTransform: "uppercase"
   };
 
   const handleClick = () => {
@@ -51,13 +57,13 @@ const FlipCard: React.FC<IFlipCardProps> = ({
           front: {
             ...defaultCardStyle,
             backgroundColor: themeColors ? themeColors[9] : theme.primaryColor,
-            ...frontStyle,
+            ...frontStyle
           },
           back: {
             ...defaultCardStyle,
             backgroundColor: themeColors ? themeColors[7] : theme.primaryColor,
-            ...backStyle,
-          },
+            ...backStyle
+          }
         }}
       >
         {/* Front */}

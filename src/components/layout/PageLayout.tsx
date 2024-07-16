@@ -1,4 +1,14 @@
-import { AppShell, Box, Burger, Button, Flex, Group, Modal, Text, TextInput } from "@mantine/core";
+import {
+  AppShell,
+  Box,
+  Burger,
+  Button,
+  Flex,
+  Group,
+  Modal,
+  Text,
+  TextInput
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -19,7 +29,11 @@ interface IPageLayout {
 
 const LOGO_SIZE = isMobile ? 45 : 75;
 
-const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage = "Lädt ...", children }) => {
+const PageLayout: React.FC<IPageLayout> = ({
+  showLoader = false,
+  loadingMessage = "Lädt ...",
+  children
+}) => {
   const { data: session, status } = useSession();
   const { pageIsLoading } = useLoadingState();
   const [opened, { toggle }] = useDisclosure();
@@ -49,10 +63,7 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
           size="sm"
           transitionProps={{ transition: "fade", duration: 200 }}
         >
-          <Flex
-            gap="md"
-            direction="column"
-          >
+          <Flex gap="md" direction="column">
             <TextInput
               placeholder=""
               label="Dein Username"
@@ -76,15 +87,12 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
           navbar={{
             width: { base: 200, md: 300, lg: 400 },
             breakpoint: "sm",
-            collapsed: { mobile: !opened },
+            collapsed: { mobile: !opened }
           }}
           padding="md"
         >
           <AppShell.Header>
-            <Group
-              h="100%"
-              px="md"
-            >
+            <Group h="100%" px="md">
               <Burger
                 color="gray.4"
                 opened={opened}
@@ -97,14 +105,13 @@ const PageLayout: React.FC<IPageLayout> = ({ showLoader = false, loadingMessage 
                 style={{
                   textOverflow: "ellipsis",
                   overflow: "hidden",
-                  flexWrap: "nowrap",
+                  flexWrap: "nowrap"
                 }}
               >
-                <TheGeniusLogo
-                  height={LOGO_SIZE}
-                  width={LOGO_SIZE}
-                />
-                {session.user.username && <Text>Schön dich zu sehen, {session.user.username}!</Text>}
+                <TheGeniusLogo height={LOGO_SIZE} width={LOGO_SIZE} />
+                {session.user.username && (
+                  <Text>Schön dich zu sehen, {session.user.username}!</Text>
+                )}
               </Group>
             </Group>
           </AppShell.Header>

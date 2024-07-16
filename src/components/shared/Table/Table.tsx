@@ -3,7 +3,10 @@ import { Table as MantineTable } from "@mantine/core";
 import type { TableData } from "@mantine/core";
 import _ from "lodash";
 
-function buildTableBodyData(data: Array<{ [key: string]: any }>, targetKeys: string[]) {
+function buildTableBodyData(
+  data: Array<{ [key: string]: any }>,
+  targetKeys: string[]
+) {
   const body: TableData["body"] = [];
 
   data.forEach((elem) => {
@@ -25,7 +28,7 @@ const Table: FC<ITableProps> = ({ data, keys, caption, head }) => {
   const tableData: TableData = {
     caption,
     head,
-    body: buildedData,
+    body: buildedData
   };
 
   return <MantineTable data={tableData} />;

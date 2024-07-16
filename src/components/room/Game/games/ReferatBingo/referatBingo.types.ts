@@ -1,4 +1,4 @@
-import type { Games } from "../game.types";
+import type { Game } from "../game.types";
 
 export type TPresentationTopic = {
   id: string;
@@ -12,7 +12,7 @@ export type TReferatBingoNotefieldState = {
 };
 
 export type IReferatBingoState = {
-  identifier: Games.REFERATBINGO;
+  identifier: Game.REFERATBINGO;
   topics: TPresentationTopic[];
   qIndex: number;
   presenter: {

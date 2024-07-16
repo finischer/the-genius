@@ -12,10 +12,7 @@ interface IGameDetailsModalProps extends ModalProps {
 const GameDetailsModal: FC<IGameDetailsModalProps> = ({ game, ...props }) => {
   const ModalTitle = () => (
     <>
-      <Text
-        fw="bold"
-        fz="md"
-      >
+      <Text fw="bold" fz="md">
         {game.name}
       </Text>
     </>
@@ -24,13 +21,10 @@ const GameDetailsModal: FC<IGameDetailsModalProps> = ({ game, ...props }) => {
   const gameRules = getFormattedGameRules(game);
 
   return (
-    <Modal
-      {...props}
-      size="xl"
-      centered
-      title={<ModalTitle />}
-    >
-      <Text>Modus: {game.modes.map((mode) => capitalize(mode)).join(", ")}</Text>
+    <Modal {...props} size="xl" centered title={<ModalTitle />}>
+      <Text>
+        Modus: {game.modes.map((mode) => capitalize(mode)).join(", ")}
+      </Text>
       <Divider my="md" />
       <Markdown>{gameRules}</Markdown>
     </Modal>

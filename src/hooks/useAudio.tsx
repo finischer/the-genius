@@ -1,7 +1,9 @@
 import type { RoomSounds } from "@prisma/client";
 import path from "path";
 import { useEffect, useState } from "react";
-import { socket } from "./useSocket";
+import { assignObjectKeyByKey } from "~/utils/helpers";
+import useSettings from "./useSettings/useSettings";
+import useSyncedRoom from "./useSyncedRoom";
 
 type TSoundId = keyof RoomSounds;
 
@@ -32,27 +34,36 @@ const SOUND_PATHS: TSoundPaths = {
   typewriter: path.join(BASE_SOUND_PATH, "typewriter_1.mp3"),
   warningBuzzer: path.join(BASE_SOUND_PATH, "warning_buzzer.mp3"),
   whoosh_1: path.join(BASE_SOUND_PATH, "whoosh_1.mp3"),
-  winning: path.join(BASE_SOUND_PATH, "winningSound.mp3"),
+  winning: path.join(BASE_SOUND_PATH, "winningSound.mp3")
 };
 
-function audioIsPlaying(audio: HTMLAudioElement) {
-  return !audio.paused || audio.currentTime > 0;
-}
+// function audioIsPlaying(audio: HTMLAudioElement) {
+//   return !audio.paused || audio.currentTime > 0;
+// }
 
 const useAudio = () => {
+  const room = useSyncedRoom();
+  const { settings } = useSettings();
   const [audioList, setAudioList] = useState<TAudioSound[]>([]);
 
   useEffect(() => {
     for (const [soundId, path] of Object.entries(SOUND_PATHS)) {
       const newElem: TAudioSound = {
         id: soundId as TSoundId,
-        audio: new Audio(path),
+        audio: new Audio(path)
       };
       setAudioList((oldState) => [...oldState, newElem]);
     }
 
     return () => setAudioList([]);
   }, []);
+
+  // update volume if user change volume settings for sound effects
+  useEffect(() => {
+    audioList.forEach((a) => {
+      a.audio.volume = settings.volume.soundEffects / 100;
+    });
+  }, [settings.volume.soundEffects]);
 
   function playAudio(soundId: TSoundId) {
     const elem = audioList.find((a) => a.id === soundId);
@@ -62,13 +73,26 @@ const useAudio = () => {
     void elem.audio.play();
   }
 
-  function updateAudioOption<T extends keyof TAudioOption>(option: T, value: TAudioOption[T]) {
+  function updateAudioOption<T extends keyof TAudioOption>(
+    option: T,
+    value: TAudioOption[T]
+  ) {
     // audioList.forEach(a => {
     // })
+    console.log("Option: ", option);
+    console.log("Value: ", value);
   }
 
   function triggerAudioEvent(event: TAudioEvent, soundId: TSoundId) {
-    socket.emit(event, { soundId });
+    if (event === "playSound") {
+      assignObjectKeyByKey(
+        {
+          ...room.context.audio.sounds,
+          [soundId]: true
+        },
+        room.context.audio.sounds
+      );
+    }
   }
 
   function stopAllAudio() {
@@ -85,7 +109,14 @@ const useAudio = () => {
     elem.audio.currentTime = 0;
   }
 
-  return { playAudio, audioList, updateAudioOption, stopAudio, stopAllAudio, triggerAudioEvent };
+  return {
+    playAudio,
+    audioList,
+    updateAudioOption,
+    stopAudio,
+    stopAllAudio,
+    triggerAudioEvent
+  };
 };
 
 export default useAudio;

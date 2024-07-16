@@ -1,32 +1,47 @@
-import React from "react";
-import { type IMerkenGameProps } from "./merken.types";
-import MerkenPlayground from "./components/MerkenPlayground/MerkenPlayground";
 import { Button, Flex } from "@mantine/core";
-import { socket } from "~/hooks/useSocket";
-import { useUser } from "~/hooks/useUser";
+import React from "react";
 import ModView from "~/components/shared/ModView";
 import useAudio from "~/hooks/useAudio";
+import useSyncedRoom from "~/hooks/useSyncedRoom";
+import useTimer from "~/hooks/useTimer";
+import { useUser } from "~/hooks/useUser";
+import { TimerType } from "~/types/gameshow.types";
+import MerkenPlayground from "./components/MerkenPlayground/MerkenPlayground";
+import { type IMerkenGameProps } from "./merken.types";
 
 const MerkenGame: React.FC<IMerkenGameProps> = ({ game }) => {
-  const { isHost } = useUser();
-  const isStartButtonDisabled = game.timerState.isActive;
+  const { isHost, hostFunction } = useUser();
   const { triggerAudioEvent } = useAudio();
+  const room = useSyncedRoom();
+  const { startTimer, active: isTimerActive } = useTimer(
+    room.context.header.timer,
+    TimerType.COUNTDOWN,
+    game.timerState.timeToThinkSeconds
+  );
 
-  const handleStartGame = () => {
-    if (!isHost || isStartButtonDisabled) return; // to make sure not start the game unintentionally
-    socket.emit("merken:startGame");
-  };
+  const handleStartGame = hostFunction(() => {
+    if (isTimerActive) return;
+    game.allCardsFlipped = true;
 
-  const handleCardClick = (index: number) => {
+    startTimer(() => {
+      game.allCardsFlipped = false;
+    });
+  });
+
+  const handleCardClick = hostFunction((index: number) => {
+    // TODO: Play sound
     triggerAudioEvent("playSound", "whoosh_1");
-    socket.emit("merken:flipCard", { cardIndex: index });
-  };
+
+    if (game.openCards.includes(index)) {
+      const newOpenCards = game.openCards.filter((card) => card !== index);
+      game.openCards = newOpenCards;
+    } else {
+      game.openCards.push(index);
+    }
+  });
 
   return (
-    <Flex
-      direction="column"
-      gap="lg"
-    >
+    <Flex direction="column" gap="lg">
       <MerkenPlayground
         cards={game.cards}
         openCards={game.openCards}
@@ -35,10 +50,7 @@ const MerkenGame: React.FC<IMerkenGameProps> = ({ game }) => {
         onCardClick={handleCardClick}
       />
       <ModView>
-        <Button
-          onClick={handleStartGame}
-          disabled={isStartButtonDisabled}
-        >
+        <Button onClick={handleStartGame} disabled={isTimerActive}>
           Spiel starten
         </Button>
       </ModView>

@@ -1,56 +1,71 @@
 import useSound from "use-sound";
-import type { TMusicSpriteMap, TSongId, TSongMap } from "~/components/room/MediaPlayer/mediaPlayer.types";
-import { useRoom } from "./useRoom";
-import { socket } from "./useSocket";
+import type {
+  TMusicSpriteMap,
+  TSongId,
+  TSongMap
+} from "~/components/room/MediaPlayer/mediaPlayer.types";
+import useSettings from "./useSettings/useSettings";
+import useSyncedRoom from "./useSyncedRoom";
 
 const songInformationMap: TSongMap = {
   violation: {
     id: "violation",
     title: "Violation",
     interpret: "Ethan Sloan",
-    sprite: [65000, 77000],
+    sprite: [65000, 77000]
   },
   waitingRoom: {
     id: "waitingRoom",
     title: "Waiting Room",
     interpret: "Ethan Sloan",
-    sprite: [150000, 94000],
+    sprite: [150000, 94000]
   },
   lightsDisappear: {
     id: "lightsDisappear",
     title: "Lights disappear",
     interpret: "Christian Andersen",
-    sprite: [0, 64000],
-  },
+    sprite: [0, 64000]
+  }
 };
 
 const musicSprite: TMusicSpriteMap = {
   lightsDisappear: songInformationMap.lightsDisappear.sprite,
   violation: songInformationMap.violation.sprite,
-  waitingRoom: songInformationMap.waitingRoom.sprite,
+  waitingRoom: songInformationMap.waitingRoom.sprite
 };
 
 const useMusic = () => {
-  const { room } = useRoom();
+  const room = useSyncedRoom();
+  const { settings } = useSettings();
 
-  const musicState = room?.state.music;
-  const musicTitle: TSongId = (musicState?.title as TSongId) || "lightsDisappear";
+  const musicState = room.context?.audio.music ?? {
+    isActive: false,
+    title: "lightsDisappear"
+  };
+  const musicTitle: TSongId =
+    (musicState?.title as TSongId) || "lightsDisappear";
 
   const songInfo = songInformationMap[musicTitle];
-  const isPlaying = musicState?.isActive === undefined ? false : musicState.isActive;
+  const isPlaying =
+    musicState?.isActive === undefined ? false : musicState.isActive;
 
   const [play, { pause, stop }] = useSound("/static/audio/music_sprites.mp3", {
     sprite: musicSprite,
     loop: true,
     interrupt: true,
+    // volume: 0.5,
+    volume: settings.volume.music / 100
   });
 
   const emitPlayMusic = ({ songId }: { songId: TSongId }) => {
-    socket.emit("playMusic", { songId });
+    // socket.emit("playMusic", { songId });
+    musicState.isActive = true;
+    musicState.title = songId;
   };
 
   const emitPauseMusic = () => {
-    socket.emit("pauseMusic");
+    // socket.emit("pauseMusic");
+    musicState.isActive = false;
   };
 
   const playNextSong = () => {
@@ -90,7 +105,7 @@ const useMusic = () => {
     isPlaying,
     songInfo,
     playNextSong,
-    playPreviousSong,
+    playPreviousSong
   };
 };
 

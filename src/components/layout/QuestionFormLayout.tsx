@@ -1,4 +1,11 @@
-import { Box, Button, Flex, ScrollArea, Title, type FlexProps } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Flex,
+  ScrollArea,
+  Title,
+  type FlexProps
+} from "@mantine/core";
 import React, { useEffect, type SyntheticEvent } from "react";
 import List from "../shared/List";
 import type { IListItem } from "../shared/List/components/ListItem/listItem.types";
@@ -55,15 +62,8 @@ const QuestionFormLayout = <T extends { id: string }>({
       align={{ base: "center", md: "unset", lg: "unset" }}
     >
       <Box w="100%">
-        <form
-          onSubmit={handleSubmit}
-          style={{ width: "100%" }}
-        >
-          <Flex
-            direction="column"
-            gap="xl"
-            align="center"
-          >
+        <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+          <Flex direction="column" gap="xl" align="center">
             {children}
             <Button type="submit">
               {buttonText} {questionExists ? "speichern" : "hinzufügen"}
@@ -72,12 +72,7 @@ const QuestionFormLayout = <T extends { id: string }>({
         </form>
       </Box>
 
-      <Flex
-        w="100%"
-        direction="column"
-        gap="md"
-        {...props}
-      >
+      <Flex w="100%" direction="column" gap="md" {...props}>
         <Title order={3}>{listTitle}</Title>
         <ScrollArea
           mih="100%"

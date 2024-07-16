@@ -1,30 +1,39 @@
 import {
   Button,
-  Checkbox,
   Flex,
+  Input,
   Modal,
   NumberInput,
-  Select,
+  SegmentedControl,
   Text,
   TextInput,
-  SegmentedControl,
-  type SegmentedControlItem,
-  Input,
+  type SegmentedControlItem
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { GameshowMode } from "@prisma/client";
+import { useSyncedStore } from "@syncedstore/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import type { TGame } from "~/components/room/Game/games/game.types";
-import { socket } from "~/hooks/useSocket";
+import { initRoom, roomStore } from "~/config/store";
+import useNotification from "~/hooks/useNotification";
 import { useUser } from "~/hooks/useUser";
 import { GAMESHOW_MODES } from "~/styles/constants";
+import { api } from "~/utils/api";
 import { capitalize } from "~/utils/strings";
-import { type ICreateRoomConfig, type ICreateRoomModalProps } from "./createRoomModal.types";
+import {
+  type ICreateRoomConfig,
+  type ICreateRoomModalProps
+} from "./createRoomModal.types";
 
-const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose, gameshow }) => {
+const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({
+  openedModal,
+  onClose,
+  gameshow
+}) => {
   const gameshowGames = gameshow.games as unknown as TGame[];
-  const hasGameForOnlyTeamMode = gameshowGames.filter((g) => g.modes.every((m) => m === "TEAM")).length > 0;
+  const hasGameForOnlyTeamMode =
+    gameshowGames.filter((g) => g.modes.every((m) => m === "TEAM")).length > 0;
 
   const form = useForm<ICreateRoomConfig>({
     initialValues: {
@@ -32,20 +41,23 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
       modus: hasGameForOnlyTeamMode ? GameshowMode.TEAM : GameshowMode.DUELL,
       isPrivate: true,
       password: "",
-      games: [],
-    },
+      games: []
+    }
   });
   const [loader, setLoader] = useState({
     isLoading: false,
-    loaderMsg: "",
+    loaderMsg: ""
   });
 
   const { user } = useUser();
   const router = useRouter();
+  const { handleZodError, showErrorNotification } = useNotification();
+
+  const store = useSyncedStore(roomStore);
 
   const selectData: SegmentedControlItem[] = GAMESHOW_MODES.map((m) => ({
     value: m,
-    label: capitalize(m),
+    label: capitalize(m)
   }));
 
   useEffect(() => {
@@ -53,20 +65,57 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
     form.reset();
   }, [openedModal]);
 
-  const createRoom = form.onSubmit((values) => {
+  // const { mutateAsync: createParty } = api.parties.create.useMutation();
+  const { mutateAsync: createRoomInDb } = api.rooms.addRoom.useMutation({
+    onError: (error) =>
+      handleZodError(
+        error.data?.zodError,
+        error.message ?? "Raum konnte nicht erstellt werden"
+      )
+  });
+
+  const createRoom = form.onSubmit(async (values) => {
     setLoader({
       isLoading: true,
-      loaderMsg: "Raum wird erstellt ...",
+      loaderMsg: "Raum wird erstellt ..."
     });
-    // create room on server
-    socket.emit("createRoom", { user, roomConfig: values, gameshow }, (room) => {
-      setLoader({
-        isLoading: true,
-        loaderMsg: "Raum wird beigetreten ...",
+
+    const room = initRoom(
+      values.name,
+      values.password,
+      gameshow.games as TGame[],
+      user.id
+    );
+
+    store.room.state = room;
+
+    const dbRoom = await createRoomInDb({
+      id: room.id
+    });
+
+    if (!dbRoom) {
+      showErrorNotification({
+        title: "Fehler",
+        message: "Raum konnte nicht erstellt werden"
       });
-      // connect to room
-      void router.push(`/room/${room.id}`);
-    });
+      return;
+    }
+
+    // await createParty({
+    //   id: room.id,
+    //   config: values,
+    // });
+
+    void router.push(`/room/${room.id}`);
+
+    // socket.emit("createRoom", { user, roomConfig: values, gameshow }, (room) => {
+    //   setLoader({
+    //     isLoading: true,
+    //     loaderMsg: "Raum wird beigetreten ...",
+    //   });
+    //   // connect to room
+    //   void router.push(`/room/${room.id}`);
+    // });
   });
 
   return (
@@ -77,10 +126,7 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
       centered
     >
       <form onSubmit={createRoom}>
-        <Flex
-          gap="md"
-          direction="column"
-        >
+        <Flex gap="md" direction="column">
           <TextInput
             label="Raumname"
             placeholder="Maroom 5"
@@ -88,10 +134,7 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
             {...form.getInputProps("name")}
           />
 
-          <Input.Wrapper
-            label="Modus"
-            required
-          >
+          <Input.Wrapper label="Modus" required>
             <SegmentedControl
               fullWidth
               data={selectData}
@@ -102,15 +145,12 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
           </Input.Wrapper>
 
           {hasGameForOnlyTeamMode && (
-            <Text
-              c="dimmed"
-              size="sm"
-            >
-              Hinweis: Der Modus kann nicht geändert werden, da die Spielshow mind. 1 Spiel enthält, welches
-              im Team gespielt werden muss.
+            <Text c="dimmed" size="sm">
+              Hinweis: Der Modus kann nicht geändert werden, da die Spielshow
+              mind. 1 Spiel enthält, welches im Team gespielt werden muss.
             </Text>
           )}
-          <Checkbox
+          {/* <Checkbox
             label="Privater Raum"
             {...form.getInputProps("isPrivate", { type: "checkbox" })}
           />
@@ -121,17 +161,14 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({ openedModal, onClose
               required
               {...form.getInputProps("password")}
             />
-          )}
+          )} */}
 
           <NumberInput
             label="Anzahl Spiele"
             value={gameshow.games.length}
             readOnly
           />
-          <Button
-            type="submit"
-            loading={loader.isLoading}
-          >
+          <Button type="submit" loading={loader.isLoading}>
             {loader.isLoading ? loader.loaderMsg : "Raum erstellen"}
           </Button>
         </Flex>

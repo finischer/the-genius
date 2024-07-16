@@ -1,10 +1,10 @@
-import { Games, type IGameGeneralState } from "../game.types";
+import { Game, type IGameGeneralState } from "../game.types";
 import type { IGeheimwörterState } from "./geheimwörter.types";
 
 export type TGeheimwörterGameState = IGeheimwörterState & IGameGeneralState;
 
 export const DEFAULT_GEHEIMWOERTER_STATE: TGeheimwörterGameState = {
-  identifier: Games.GEHEIMWOERTER,
+  identifier: Game.GEHEIMWOERTER,
   name: "Geheimwörter",
   modes: ["DUELL", "TEAM"],
   maxPoints: 7,
@@ -15,7 +15,7 @@ export const DEFAULT_GEHEIMWOERTER_STATE: TGeheimwörterGameState = {
   display: {
     answer: false,
     codeList: false,
-    words: false,
+    words: false
   },
   qIndex: 0,
   rules: `
@@ -30,5 +30,5 @@ Ihr müsst gleich Wörter mithilfe eines Codes entschlüsseln. Eine Codetabelle 
 Zum Beispiel steht für den Buchstaben A der Oberbegriff "Automarke" in der Codetabelle, und das erste Wort unter den Wörtern lautet "Ford". Demnach beginnt die gesuchte Antwort mit einem "A".
 Wenn ihr die Antwort wisst, buzzert ihr und habt dann 5 Sekunden Zeit, um sie zu geben. Das Team, das zuerst {{ maxPoints }} Punkte erreicht, gewinnt das Spiel.
 
-  `,
+  `
 };

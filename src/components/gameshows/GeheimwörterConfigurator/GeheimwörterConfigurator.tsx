@@ -3,12 +3,15 @@ import { useContext, useEffect, useState } from "react";
 import { useImmer } from "use-immer";
 import { v4 as uuidv4 } from "uuid";
 import type { TGeheimwoerterQuestionItem } from "~/components/room/Game/games/Geheimwörter/geheimwörter.types";
-import { Games } from "~/components/room/Game/games/game.types";
+import { Game } from "~/components/room/Game/games/game.types";
 import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";
 import { useScreen } from "~/hooks/useScreen";
 import type { TQuestionFormMode } from "../types";
 import CodeList from "./components/CodeList";
-import type { TCodeList, TCodeListItem } from "./components/CodeList/codeList.types";
+import type {
+  TCodeList,
+  TCodeListItem
+} from "./components/CodeList/codeList.types";
 import CreateQuestionForm from "./components/CreateQuestionForm";
 import QuestionList from "./components/QuestionList";
 import { StepperControlsContext } from "~/context/StepperControlsContext";
@@ -37,18 +40,20 @@ const DEFAULT_CODE_WORD_LIST = [
   "Unternehmen",
   "Verein",
   "Werkzeug",
-  "Zahl",
+  "Zahl"
 ];
 
 const generateCodeList = (alphabetList: string[], codeWords: string[]) => {
   const codeList: TCodeList = [];
 
   for (const letter of alphabetList) {
-    const codeWord = codeWords.find((word) => word[0]?.toUpperCase() === letter.toUpperCase());
+    const codeWord = codeWords.find(
+      (word) => word[0]?.toUpperCase() === letter.toUpperCase()
+    );
     if (codeWord) {
       const codeListItem: TCodeListItem = {
         letter,
-        category: codeWord,
+        category: codeWord
       };
 
       codeList.push(codeListItem);
@@ -59,18 +64,24 @@ const generateCodeList = (alphabetList: string[], codeWords: string[]) => {
 };
 
 const GeheimwörterConfigurator = () => {
-  const { disableContinueButton, enableContinueButton } = useContext(StepperControlsContext);
+  const { disableContinueButton, enableContinueButton } = useContext(
+    StepperControlsContext
+  );
   const { isMediumScreen } = useScreen();
 
-  const { updateGame, geheimwoerter } = useGameshowConfig(Games.GEHEIMWOERTER);
+  const { updateGame, geheimwoerter } = useGameshowConfig(Game.GEHEIMWOERTER);
   const [codeListEditable, setCodeListEditable] = useState(false);
-  const [questionList, setQuestionList] = useState<TGeheimwoerterQuestionItem[]>(geheimwoerter.questions);
+  const [questionList, setQuestionList] = useState<
+    TGeheimwoerterQuestionItem[]
+  >(geheimwoerter.questions);
   const [questionItem, setQuestionItem] = useImmer<TGeheimwoerterQuestionItem>({
     id: uuidv4(),
     answer: "",
-    words: [],
+    words: []
   });
-  const questionFormMode: TQuestionFormMode = questionList.map((i) => i.id).includes(questionItem.id)
+  const questionFormMode: TQuestionFormMode = questionList
+    .map((i) => i.id)
+    .includes(questionItem.id)
     ? "UPDATE"
     : "ADD";
 
@@ -107,7 +118,10 @@ const GeheimwörterConfigurator = () => {
   useEffect(() => {
     const codes = geheimwoerter.codeList.map((item) => item.category);
 
-    if (codes.some((item) => item.length === 1) || geheimwoerter.questions.length === 0) {
+    if (
+      codes.some((item) => item.length === 1) ||
+      geheimwoerter.questions.length === 0
+    ) {
       disableContinueButton();
     } else {
       enableContinueButton();
@@ -115,16 +129,8 @@ const GeheimwörterConfigurator = () => {
   }, [geheimwoerter.codeList, geheimwoerter.questions]);
 
   return (
-    <Flex
-      gap="md"
-      direction={isMediumScreen ? "column" : "row"}
-    >
-      <Flex
-        direction="column"
-        gap="sm"
-        w="100%"
-        align="flex-start"
-      >
+    <Flex gap="md" direction={isMediumScreen ? "column" : "row"}>
+      <Flex direction="column" gap="sm" w="100%" align="flex-start">
         <CodeList
           codeList={geheimwoerter.codeList}
           setCodeList={updateGame}

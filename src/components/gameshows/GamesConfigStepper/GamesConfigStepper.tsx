@@ -1,12 +1,13 @@
 import type { StepperStepProps } from "@mantine/core";
 import { Box, Center, Flex, Stepper, TextInput, Title } from "@mantine/core";
-import type { Game } from "@prisma/client";
+import type { Game as PrismaGame } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
-import { createContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useImmer } from "use-immer";
-import { Games, type TGame } from "~/components/room/Game/games/game.types";
+import { Game, type TGame } from "~/components/room/Game/games/game.types";
 import GamesPicker from "~/components/shared/GamesPicker";
+import { StepperControlsContext } from "~/context/StepperControlsContext";
 import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";
 import type { TGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig.types";
 import useNotification from "~/hooks/useNotification";
@@ -14,15 +15,19 @@ import { TApiActions } from "~/server/api/api.types";
 import { api } from "~/utils/api";
 import GameConfig from "../GameConfig";
 import StepperButtons from "./components/StepperButtons";
-import { StepperControlsContext } from "~/context/StepperControlsContext";
 
 const NUM_OF_DEFAULT_STEPS = 2;
 
-const getAlreadySelectedGames = (games: TGame[], availableGames: Game[]) => {
-  const alreadySelected: Game[] = [];
+const getAlreadySelectedGames = (
+  games: TGame[],
+  availableGames: PrismaGame[]
+) => {
+  const alreadySelected: PrismaGame[] = [];
 
   games.forEach((g) => {
-    const game = availableGames.find((availableGame) => availableGame.slug === g.identifier);
+    const game = availableGames.find(
+      (availableGame) => availableGame.slug === g.identifier
+    );
 
     if (game) {
       alreadySelected.push(game);
@@ -33,10 +38,9 @@ const getAlreadySelectedGames = (games: TGame[], availableGames: Game[]) => {
 };
 
 const GamesConfigStepper = () => {
-  const { gameshow, updateGameshowMetadata, updateGameList, availableGames } = useGameshowConfig(
-    Games.DUSAGST
-  );
-  const [selectedGames, setSelectedGames] = useImmer<Game[]>(
+  const { gameshow, updateGameshowMetadata, updateGameList, availableGames } =
+    useGameshowConfig(Game.DUSAGST);
+  const [selectedGames, setSelectedGames] = useImmer<PrismaGame[]>(
     getAlreadySelectedGames(gameshow.games, availableGames)
   );
 
@@ -46,31 +50,40 @@ const GamesConfigStepper = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const action: TApiActions = (searchParams.get("action") as TApiActions) ?? TApiActions.CREATE;
+  const action: TApiActions =
+    (searchParams.get("action") as TApiActions) ?? TApiActions.CREATE;
   const gameshowId = searchParams.get("gameshowId");
 
   const [activeStep, setActiveStep] = useState(0);
 
   const [stepperButtons, setStepperButons] = useImmer({
     leftBtnDisabled: true,
-    rightBtnDisabled: true,
+    rightBtnDisabled: true
   });
 
   // api create gameshow
   const createGameshowApi = api.gameshows.create.useMutation({
-    onError: (error) => handleZodError(error.data?.zodError, error.message ?? "Ein Fehler ist aufgetreten"),
+    onError: (error) =>
+      handleZodError(
+        error.data?.zodError,
+        error.message ?? "Ein Fehler ist aufgetreten"
+      )
   });
 
   // // api update gameshow
   const updateGameshowApi = api.gameshows.update.useMutation({
-    onError: (error) => handleZodError(error.data?.zodError, error.message ?? "Ein Fehler ist aufgetreten"),
+    onError: (error) =>
+      handleZodError(
+        error.data?.zodError,
+        error.message ?? "Ein Fehler ist aufgetreten"
+      )
   });
 
   const isLoading = createGameshowApi.isLoading || updateGameshowApi.isLoading;
 
   const allowSelectStepProps: StepperStepProps = {
     allowStepClick: false,
-    allowStepSelect: false,
+    allowStepSelect: false
   };
 
   const numOfSteps = NUM_OF_DEFAULT_STEPS + selectedGames.length;
@@ -79,10 +92,11 @@ const GamesConfigStepper = () => {
   const STEP_MAP = {
     selectGames: 0,
     detailsGameshow: numOfSteps - 1,
-    summary: numOfSteps,
+    summary: numOfSteps
   };
 
-  const nextStep = () => setActiveStep((current) => (current < numOfSteps ? current + 1 : current));
+  const nextStep = () =>
+    setActiveStep((current) => (current < numOfSteps ? current + 1 : current));
   const prevStep = () => {
     if (activeStep === 0) {
       return router.push("/gameshows");
@@ -107,12 +121,12 @@ const GamesConfigStepper = () => {
     // generate rules as string
     const gamesWithRules = gameshow.games.map((g) => ({
       ...g,
-      rules: g.rules,
+      rules: g.rules
     }));
 
     const gameshowWithGameRules: TGameshowConfig = {
       ...gameshow,
-      games: gamesWithRules,
+      games: gamesWithRules
     };
 
     try {
@@ -121,7 +135,7 @@ const GamesConfigStepper = () => {
       } else if (action === TApiActions.UPDATE && gameshowId) {
         await updateGameshowApi.mutateAsync({
           gameshowId,
-          updatedGameshow: gameshow,
+          updatedGameshow: gameshow
         });
       } else {
         return;
@@ -166,11 +180,10 @@ const GamesConfigStepper = () => {
   }, [selectedGames]);
 
   return (
-    <StepperControlsContext.Provider value={{ enableContinueButton, disableContinueButton }}>
-      <Box
-        pos="relative"
-        h="100%"
-      >
+    <StepperControlsContext.Provider
+      value={{ enableContinueButton, disableContinueButton }}
+    >
+      <Box pos="relative" h="100%">
         <Stepper
           active={activeStep}
           onStepClick={setActiveStep}
@@ -197,14 +210,11 @@ const GamesConfigStepper = () => {
                 label={game.name}
                 {...allowSelectStepProps}
               >
-                <Flex
-                  align="center"
-                  gap="xs"
-                >
+                <Flex align="center" gap="xs">
                   <Title order={2}>Einstellungen - {game.name}</Title>
                 </Flex>
                 <Box mt="xl">
-                  <GameConfig gameSlug={game.slug as Games} />
+                  <GameConfig gameSlug={game.slug as Game} />
                 </Box>
               </Stepper.Step>
             );
@@ -240,7 +250,7 @@ const GamesConfigStepper = () => {
           onClickLeftButton={prevStep}
           onSaveClick={handleSaveGameshow}
           rightButtonProps={{
-            disabled: stepperButtons.rightBtnDisabled,
+            disabled: stepperButtons.rightBtnDisabled
           }}
           isLastStep={isLastStep}
           disabledButtons={isLoading}

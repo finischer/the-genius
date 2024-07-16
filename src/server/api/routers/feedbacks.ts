@@ -1,7 +1,11 @@
 import { z } from "zod";
 import { MAX_TEXTAREA_LENGTH } from "~/config/forms";
 
-import { adminProcedure, createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import {
+  adminProcedure,
+  createTRPCRouter,
+  protectedProcedure
+} from "~/server/api/trpc";
 
 export const safedFeebackSchema = z.object({
   id: z.string(),
@@ -13,9 +17,9 @@ export const safedFeebackSchema = z.object({
   os: z.string(),
   creator: z.object({
     username: z.string().nullish(),
-    email: z.string(),
+    email: z.string()
   }),
-  createdAt: z.date(),
+  createdAt: z.date()
 });
 
 export type SafedFeedback = z.infer<typeof safedFeebackSchema>;
@@ -28,7 +32,10 @@ export const feedbacksRouter = createTRPCRouter({
         comment: z
           .string()
           .min(1, "Dein Feedback muss mindestens 1 Zeichen lang sein")
-          .max(MAX_TEXTAREA_LENGTH, `Dein Feedback darf maximal ${MAX_TEXTAREA_LENGTH} Zeichen lang sein`),
+          .max(
+            MAX_TEXTAREA_LENGTH,
+            `Dein Feedback darf maximal ${MAX_TEXTAREA_LENGTH} Zeichen lang sein`
+          ),
         ratingGeneralExperience: z
           .number()
           .min(1, "Das Rating muss mindestens 1 sein")
@@ -42,29 +49,31 @@ export const feedbacksRouter = createTRPCRouter({
           .min(1, "Das Rating muss mindestens 1 sein")
           .max(5, "Das Rating darf maximal 5 sein"),
         browser: z.string(),
-        os: z.string(),
+        os: z.string()
       })
     )
     .mutation(async ({ ctx, input }) => {
       const feedback = await ctx.prisma.feedback.create({
         data: {
           ...input,
-          creatorId: ctx.session.user.id,
+          creatorId: ctx.session.user.id
         },
         include: {
-          creator: true,
-        },
+          creator: true
+        }
       });
 
       return feedback;
     }),
-  getAll: adminProcedure.output(z.array(safedFeebackSchema)).query(async ({ ctx, input }) => {
-    const allFeedbacks = await ctx.prisma.feedback.findMany({
-      include: {
-        creator: true,
-      },
-    });
+  getAll: adminProcedure
+    .output(z.array(safedFeebackSchema))
+    .query(async ({ ctx }) => {
+      const allFeedbacks = await ctx.prisma.feedback.findMany({
+        include: {
+          creator: true
+        }
+      });
 
-    return allFeedbacks;
-  }),
+      return allFeedbacks;
+    })
 });

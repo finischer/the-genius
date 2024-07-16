@@ -1,5 +1,4 @@
 import React from "react";
-import IntroductionBanner from "./shared/IntroductionBanner";
 
 interface IAuthenticatedLayout {
   children: React.ReactNode;

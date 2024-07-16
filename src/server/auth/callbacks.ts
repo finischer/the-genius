@@ -7,22 +7,27 @@ import { prisma } from "../db";
 import { updateLoginTimestamp } from "../db/users";
 import { GOOGLE_MAIL_SUFFIXES } from "./providers/GoogleProvider";
 
-const isOtherProviderAlreadyInUse = async (userEmail: string | null | undefined, provider: string) => {
+const isOtherProviderAlreadyInUse = async (
+  userEmail: string | null | undefined,
+  provider: string
+) => {
   if (!userEmail) throw new Error("Email is null or undefined");
 
   const user = await prisma.user.findUnique({
     where: {
-      email: userEmail,
+      email: userEmail
     },
     include: {
-      accounts: true,
-    },
+      accounts: true
+    }
   });
 
   if (!user) return false; // no user found, so no other provider is used
 
   // check if another provider is already in use
-  const alreadyUsedProviders = user.accounts.filter((acc) => acc.provider !== provider);
+  const alreadyUsedProviders = user.accounts.filter(
+    (acc) => acc.provider !== provider
+  );
 
   return alreadyUsedProviders.length > 0;
 };
@@ -69,15 +74,23 @@ const isOtherProviderAlreadyInUse = async (userEmail: string | null | undefined,
 //   return false;
 // };
 
-export const signInCallback: CallbacksOptions["signIn"] = async ({ user, account, profile }) => {
-  if (!user.email) throw new Error("Es wurde keine Email in der Anfrage angegeben");
+export const signInCallback: CallbacksOptions["signIn"] = async ({
+  user,
+  account,
+  profile
+}) => {
+  if (!user.email)
+    throw new Error("Es wurde keine Email in der Anfrage angegeben");
 
   if (!user.isEmailVerified)
     throw new Error(
       `Deine Email bei ${capitalize(account?.provider ?? "PROVIDER_NOT_FOUND")} wurde noch nicht verifiziert`
     );
 
-  if (account && (await isOtherProviderAlreadyInUse(user.email, account.provider))) {
+  if (
+    account &&
+    (await isOtherProviderAlreadyInUse(user.email, account.provider))
+  ) {
     // other provider already in use
     throw new Error("Ein anderer Account nutzt diese Email bereits!");
   }
@@ -89,9 +102,15 @@ export const signInCallback: CallbacksOptions["signIn"] = async ({ user, account
     const gmailAdress = googleProfile.email;
     const gmailSuffix = gmailAdress.split("@").at(1);
 
-    if (!gmailSuffix) throw new Error("Email endet nicht mit 'gmail.com' oder 'googlemail.com'");
+    if (!gmailSuffix)
+      throw new Error(
+        "Email endet nicht mit 'gmail.com' oder 'googlemail.com'"
+      );
 
-    if (GOOGLE_MAIL_SUFFIXES.includes(gmailSuffix) && googleProfile.email_verified) {
+    if (
+      GOOGLE_MAIL_SUFFIXES.includes(gmailSuffix) &&
+      googleProfile.email_verified
+    ) {
       canSignIn = true;
     }
   } else if (account?.provider === "discord") {
@@ -117,7 +136,7 @@ export const sessionCallback: CallbacksOptions["session"] = async ({
   session,
   trigger,
   newSession: toValidateNewSession,
-  user,
+  user
 }) => {
   if (user) {
     session.user.id = user.id;
@@ -130,26 +149,28 @@ export const sessionCallback: CallbacksOptions["session"] = async ({
     const newUsername = newSession.user.username ?? "";
 
     const newUser = await prisma.user.findUnique({
-      where: { username: newUsername },
+      where: { username: newUsername }
     });
 
     if (newUser) {
-      throw new Error(`Der Username "${newUsername}" ist leider schon vergeben 🙁`);
+      throw new Error(
+        `Der Username "${newUsername}" ist leider schon vergeben 🙁`
+      );
     }
 
     session = newSession;
 
     await prisma.user.update({
       where: {
-        id: newSession.user.id,
+        id: newSession.user.id
       },
       data: {
-        username: newUsername,
-      },
+        username: newUsername
+      }
     });
   }
 
   return {
-    ...session,
+    ...session
   };
 };

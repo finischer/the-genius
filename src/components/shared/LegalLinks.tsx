@@ -6,19 +6,13 @@ const LegalLinks = () => {
   return (
     <Group>
       <Link href="/impressum">
-        <Text
-          c="dimmed"
-          fz="xs"
-        >
+        <Text c="dimmed" fz="xs">
           Impressum
         </Text>
       </Link>
 
       <Link href="/datenschutz">
-        <Text
-          c="dimmed"
-          fz="xs"
-        >
+        <Text c="dimmed" fz="xs">
           Datenschutz
         </Text>
       </Link>

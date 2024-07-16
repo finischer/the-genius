@@ -1,4 +1,4 @@
-import type Room from "~/pages/api/classes/Room/Room";
+import type { Room } from "~/types/gameshow.types";
 
 export interface IRoomDetailsModalProps {
   openedModal: boolean;

@@ -1,15 +1,14 @@
-import type { Game } from "@prisma/client";
-import { type Dispatch } from "react";
+import type { Game as PrismaGame } from "@prisma/client";
 import type { Updater } from "use-immer";
-import type { Games } from "~/components/room/Game/games/game.types";
+import type { Game } from "~/components/room/Game/games/game.types";
 
 export interface IGamesPickerProps {
-  selectedGames: Game[];
-  setSelectedGames: Updater<Game[]>;
+  selectedGames: PrismaGame[];
+  setSelectedGames: Updater<PrismaGame[]>;
 }
 
 export type TTransferListItem = {
-  value: Games;
+  value: Game;
   label: string;
 };
 

@@ -1,0 +1,7 @@
+.prettierignore
+public/
+.gitignore
+.husky/
+node_modules/
+build
+dist

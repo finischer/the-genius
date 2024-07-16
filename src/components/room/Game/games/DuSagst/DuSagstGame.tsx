@@ -1,36 +1,43 @@
 import { Flex } from "@mantine/core";
 import { IconSwitchHorizontal } from "@tabler/icons-react";
-import React, { useEffect } from "react";
+import React from "react";
 import ActionIcon from "~/components/shared/ActionIcon";
 import ModView from "~/components/shared/ModView";
-import { useRoom } from "~/hooks/useRoom";
-import { socket } from "~/hooks/useSocket";
+import useSyncedRoom from "~/hooks/useSyncedRoom";
 import type { TeamOptions } from "~/pages/api/classes/Room/room.types";
 import AnswerBox from "./components/AnswerBox";
 import QuestionContainer from "./components/QuestionContainer";
-import type { IDuSagstGameProps, TDuSagstAnswerBoxState } from "./duSagst.types";
+import type {
+  IDuSagstGameProps,
+  TDuSagstAnswerBoxState
+} from "./duSagst.types";
 
-const TeamBox = ({ teamBoxes, team }: { teamBoxes: TDuSagstAnswerBoxState[]; team: TeamOptions }) => {
-  const { room } = useRoom();
+const TeamBox = ({
+  teamBoxes,
+  team
+}: {
+  teamBoxes: TDuSagstAnswerBoxState[];
+  team: TeamOptions;
+}) => {
+  const room = useSyncedRoom();
 
   const handleSwitchRoles = () => {
-    socket.emit("duSagst:switchRoles", { boxes: teamBoxes });
+    teamBoxes.forEach((box) => {
+      box.answerTheQuestion = !box.answerTheQuestion;
+    });
   };
 
   return (
-    <Flex
-      direction="column"
-      gap="xl"
-      align="center"
-    >
+    <Flex direction="column" gap="xl" align="center">
       <Flex gap="xl">
         {teamBoxes.map((box, index) => {
           const player = room.teams[team].players.at(index);
+
           return (
             <AnswerBox
               key={box.id}
               playerId={player?.userId ?? ""}
-              selectedAnswer={player?.shared.duSagst.answer ?? -1}
+              selectedAnswer={player?.context.duSagst.answer ?? -1}
               playerName={player?.name ?? "-"}
               boxState={box}
             />
@@ -58,15 +65,9 @@ const DuSagstGame: React.FC<IDuSagstGameProps> = ({ game }) => {
   const t2BoxStates = game.teamStates.t2.boxStates;
 
   return (
-    <Flex
-      gap={70}
-      align="flex-end"
-    >
+    <Flex gap={70} align="flex-end">
       {/* Team One answer boxes */}
-      <TeamBox
-        teamBoxes={t1BoxStates}
-        team="teamOne"
-      />
+      <TeamBox teamBoxes={t1BoxStates} team="teamOne" />
 
       {currQuestion && (
         <QuestionContainer
@@ -77,10 +78,7 @@ const DuSagstGame: React.FC<IDuSagstGameProps> = ({ game }) => {
       )}
 
       {/* Team Two answer boxes */}
-      <TeamBox
-        teamBoxes={t2BoxStates}
-        team="teamTwo"
-      />
+      <TeamBox teamBoxes={t2BoxStates} team="teamTwo" />
     </Flex>
   );
 };

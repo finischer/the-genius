@@ -3,7 +3,7 @@ import type {
   Player as PrismaPlayer,
   Team as PrismaTeam,
   ScorebarTimerState,
-  TeamAvatarImage,
+  TeamAvatarImage
 } from "@prisma/client";
 import { ObjectId } from "bson";
 import { type TUserReduced } from "~/types/socket.types";
@@ -44,8 +44,9 @@ export default class Team implements PrismaTeam {
       avatarImage: "",
       avatarImageList: [],
       buzzer: {
+        isLocked: false,
         isPressed: false,
-        playersBuzzered: [],
+        playersBuzzered: []
       },
       totalScore: 0,
       gameScore: 0,
@@ -53,8 +54,8 @@ export default class Team implements PrismaTeam {
       players: [],
       scorebarTimer: {
         isActive: false,
-        seconds: 5, // default seconds
-      },
+        seconds: 5 // default seconds
+      }
     };
   }
 
@@ -66,7 +67,7 @@ export default class Team implements PrismaTeam {
         return {
           playerKey,
           playerNumber: playerKey === "playerOne" ? 0 : 1,
-          ...player,
+          ...player
         };
       }
     }
@@ -80,7 +81,7 @@ export default class Team implements PrismaTeam {
     const p: TPlayer = {
       name: user.username ?? alternativePlayerName,
       userId: user.id,
-      teamId: this.id,
+      teamId: this.id
     };
     const newPlayer = new Player(p);
 
@@ -91,7 +92,7 @@ export default class Team implements PrismaTeam {
 
     const img: TeamAvatarImage = {
       img: user.image ?? "",
-      userId: user.id,
+      userId: user.id
     };
 
     this.avatarImageList.push(img);
@@ -105,7 +106,9 @@ export default class Team implements PrismaTeam {
     const player = this.players.find((p) => p.userId === userId);
     this.players = this.players.filter((p) => p.userId !== userId);
 
-    this.avatarImageList = this.avatarImageList.filter((avatar) => avatar.userId !== player?.userId);
+    this.avatarImageList = this.avatarImageList.filter(
+      (avatar) => avatar.userId !== player?.userId
+    );
   }
 
   increaseGameScore(step = 1) {

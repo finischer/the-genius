@@ -37,7 +37,7 @@ type CreateContextOptions = {
 const createInnerTRPCContext = (opts: CreateContextOptions) => {
   return {
     session: opts.session,
-    prisma,
+    prisma
   };
 };
 
@@ -54,7 +54,7 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
   const session = await getServerAuthSession({ req, res });
 
   return createInnerTRPCContext({
-    session,
+    session
   });
 };
 
@@ -76,10 +76,10 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
       ...shape,
       data: {
         ...shape.data,
-        zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
-      },
+        zodError: error.cause instanceof ZodError ? error.cause.flatten() : null
+      }
     };
-  },
+  }
 });
 
 /**
@@ -110,26 +110,31 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
   if (!ctx.session || !ctx.session.user) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
-      message: "Du musst angemeldet sein, um die Aktion auszuführen",
+      message: "Du musst angemeldet sein, um die Aktion auszuführen"
     });
   }
   return next({
     ctx: {
       // infers the `session` as non-nullable
-      session: { ...ctx.session, user: ctx.session.user },
-    },
+      session: { ...ctx.session, user: ctx.session.user }
+    }
   });
 });
 
-const enforceUserIsAdmin = enforceUserIsAuthed.unstable_pipe(({ ctx, next }) => {
-  if (ctx.session.user.role !== "ADMIN") {
-    throw new TRPCError({ code: "UNAUTHORIZED", message: "Nur ein Admin kann diese Aktion ausführen" });
+const enforceUserIsAdmin = enforceUserIsAuthed.unstable_pipe(
+  ({ ctx, next }) => {
+    if (ctx.session.user.role !== "ADMIN") {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Nur ein Admin kann diese Aktion ausführen"
+      });
+    }
+
+    return next({
+      ctx
+    });
   }
-
-  return next({
-    ctx,
-  });
-});
+);
 
 /**
  * Protected (authenticated) procedure

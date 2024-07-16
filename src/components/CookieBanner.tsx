@@ -16,33 +16,28 @@ const CookieBanner: React.FC<ICookieBannerProps> = ({ onButtonClick }) => {
       bottom={0}
       w="100%"
       style={{
-        zIndex: 9999,
+        zIndex: 9999
       }}
     >
       <Group
         mb="xs"
         style={{
-          justify: "space-between",
+          justify: "space-between"
         }}
       >
-        <Text
-          fz="md"
-          fw={500}
-        >
+        <Text fz="md" fw={500}>
           Wir nutzen Cookies
         </Text>
       </Group>
-      <Text
-        c="dimmed"
-        fz="xs"
-      >
-        Wir verwenden analytische Cookies und einige Cookies werden von Drittanbietern platziert, die auf
-        unseren Seiten erscheinen. Durch Klicken auf &quot;Alle akzeptieren&quot; stimmen Sie der Verwendung
+      <Text c="dimmed" fz="xs">
+        Wir verwenden analytische Cookies und einige Cookies werden von
+        Drittanbietern platziert, die auf unseren Seiten erscheinen. Durch
+        Klicken auf &quot;Alle akzeptieren&quot; stimmen Sie der Verwendung
         aller Cookies zu.
       </Text>
       <Group
         style={{
-          justify: "flex-end",
+          justify: "flex-end"
         }}
         mt="md"
       >

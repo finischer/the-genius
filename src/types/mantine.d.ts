@@ -1,4 +1,7 @@
-import { DefaultMantineColor, MantineColorsTuple } from "@mantine/core";
+import {
+  type DefaultMantineColor,
+  type MantineColorsTuple
+} from "@mantine/core";
 
 type ExtendedCustomColors =
   | "success"

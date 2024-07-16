@@ -1,18 +1,7 @@
-import {
-  Box,
-  Button,
-  Center,
-  Container,
-  Flex,
-  Stack,
-  Text,
-  TextInput,
-  Title,
-  useMantineTheme,
-} from "@mantine/core";
+import { Box, Center, Flex, Stack, Text, Title } from "@mantine/core";
+import LegalLinks from "../LegalLinks";
 import SignInButton from "../SignInButton/SignInButton";
 import TheGeniusLogo from "../TheGeniusLogo";
-import LegalLinks from "../LegalLinks";
 
 const AuthenticationModal = () => {
   // const { showErrorNotification } = useNotification()
@@ -86,20 +75,10 @@ const AuthenticationModal = () => {
   // })
 
   return (
-    <Stack
-      h="100%"
-      justify="center"
-      align="center"
-    >
-      <Box
-        size={420}
-        my={40}
-      >
+    <Stack h="100%" justify="center" align="center">
+      <Box size={420} my={40}>
         <Stack align="center">
-          <TheGeniusLogo
-            height={200}
-            width={200}
-          />
+          <TheGeniusLogo height={200} width={200} />
           <Center>
             <Text
               variant="gradient"
@@ -111,11 +90,7 @@ const AuthenticationModal = () => {
             </Text>
           </Center>
           <Title order={2}>Willkommen zurück!</Title>
-          <Flex
-            direction="column"
-            mt="md"
-            gap="md"
-          >
+          <Flex direction="column" mt="md" gap="md">
             {/* Auth Providers SignInButtons */}
             <SignInButton />
 

@@ -1,27 +1,38 @@
-import { Card, Container, Divider, Flex, Group, Rating, Text, type TextProps } from "@mantine/core";
+import {
+  Card,
+  Container,
+  Divider,
+  Flex,
+  Group,
+  Rating,
+  Text,
+  type TextProps
+} from "@mantine/core";
 import React from "react";
 import { formatTimestamp } from "~/utils/dates";
 import type { IFeedbackCardProps } from "./feedbackCard.types";
 
-const FeedbackRatingSection = ({ title, rating }: { title: string; rating: number }) => {
+const FeedbackRatingSection = ({
+  title,
+  rating
+}: {
+  title: string;
+  rating: number;
+}) => {
   return (
     <Group align="center">
       <Text w="10rem">{title}</Text>
-      <Rating
-        value={rating}
-        readOnly
-      />
+      <Rating value={rating} readOnly />
     </Group>
   );
 };
 
-const MetadataLine = ({ content, ...props }: { content: string } & TextProps) => (
+const MetadataLine = ({
+  content,
+  ...props
+}: { content: string } & TextProps) => (
   <Group>
-    <Text
-      fz="xs"
-      c="dimmed"
-      {...props}
-    >
+    <Text fz="xs" c="dimmed" {...props}>
       {content}
     </Text>
   </Group>
@@ -31,10 +42,7 @@ const FeedbackCard: React.FC<IFeedbackCardProps> = ({ feedback }) => {
   return (
     <Card withBorder>
       {/* Feedback Metadata */}
-      <Flex
-        direction="column"
-        gap="0.25rem"
-      >
+      <Flex direction="column" gap="0.25rem">
         <MetadataLine
           content={`Feedback-ID: ${feedback.id}`}
           fz="md"
@@ -46,17 +54,15 @@ const FeedbackCard: React.FC<IFeedbackCardProps> = ({ feedback }) => {
           }`}
           fz="sm"
         />
-        <MetadataLine content={`Erstellt am: ${formatTimestamp(feedback.createdAt)}`} />
+        <MetadataLine
+          content={`Erstellt am: ${formatTimestamp(feedback.createdAt)}`}
+        />
         <MetadataLine content={`Betriebssystem: ${feedback.os}`} />
         <MetadataLine content={`Browser: ${feedback.browser}`} />
       </Flex>
 
       {/* Feedback Content */}
-      <Container
-        m={0}
-        p={0}
-        mt="md"
-      >
+      <Container m={0} p={0} mt="md">
         <FeedbackRatingSection
           title="Allgemein"
           rating={feedback.ratingGeneralExperience}
@@ -70,10 +76,7 @@ const FeedbackCard: React.FC<IFeedbackCardProps> = ({ feedback }) => {
 
         <Divider my="xs" />
 
-        <FeedbackRatingSection
-          title="Design"
-          rating={feedback.ratingDesign}
-        />
+        <FeedbackRatingSection title="Design" rating={feedback.ratingDesign} />
 
         <Divider my="xs" />
 
@@ -82,7 +85,9 @@ const FeedbackCard: React.FC<IFeedbackCardProps> = ({ feedback }) => {
           <Text
             c="dimmed"
             fz="md"
-            dangerouslySetInnerHTML={{ __html: feedback.comment.replace(/\n/g, "<br />") }} // show line breaks
+            dangerouslySetInnerHTML={{
+              __html: feedback.comment.replace(/\n/g, "<br />")
+            }} // show line breaks
           />
         </Group>
       </Container>

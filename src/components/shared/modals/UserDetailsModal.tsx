@@ -8,19 +8,14 @@ interface IUserDetailsModalProps {
   user: User;
 }
 
-const UserDetailsModal: React.FC<ContextModalProps<IUserDetailsModalProps>> = ({ innerProps }) => {
+const UserDetailsModal: React.FC<ContextModalProps<IUserDetailsModalProps>> = ({
+  innerProps
+}) => {
   const { user } = innerProps;
 
   return (
-    <Flex
-      direction="column"
-      gap="md"
-    >
-      <Avatar
-        size={48}
-        src={user.image}
-        radius={26}
-      />
+    <Flex direction="column" gap="md">
+      <Avatar size={48} src={user.image} radius={26} />
       <Text>ID: {user.id}</Text>
       <Text>Name: {user.name}</Text>
       <Text>Username: {user.username}</Text>

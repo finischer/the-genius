@@ -1,4 +1,4 @@
-import type { Games } from "../game.types";
+import type { Game } from "../game.types";
 import { type TMerkenGameState } from "./config";
 
 type TMerkenTimerState = {
@@ -7,7 +7,7 @@ type TMerkenTimerState = {
 };
 
 export interface IMerkenState {
-  identifier: Games.MERKEN;
+  identifier: Game.MERKEN;
   timerState: TMerkenTimerState;
   cards: string[]; // path to icon on server side
   openCards: number[]; // array of index which card is open

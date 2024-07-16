@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import type { Games } from "../room/Game/games/game.types";
+import type { Game } from "../room/Game/games/game.types";
 import DuSagstConfigurator from "./DuSagstConfigurator";
 import FlaggenConfigurator from "./FlaggenConfigurator";
 import GeheimwörterConfigurator from "./GeheimwörterConfigurator/GeheimwörterConfigurator";
@@ -8,7 +8,7 @@ import ReferatBingoConfigurator from "./ReferatBingoConfigurator";
 import SetConfigurator from "./SetConfigurator";
 
 export type TGameConfigurators = {
-  [index in Games]: React.ComponentType<any>;
+  [index in Game]: React.ComponentType<any>;
 };
 
 export const GAME_CONFIGURATORS: TGameConfigurators = {
@@ -17,11 +17,11 @@ export const GAME_CONFIGURATORS: TGameConfigurators = {
   geheimwoerter: GeheimwörterConfigurator,
   set: SetConfigurator,
   duSagst: DuSagstConfigurator,
-  referatBingo: ReferatBingoConfigurator,
+  referatBingo: ReferatBingoConfigurator
 };
 
 interface IGameConfigProps {
-  gameSlug: Games;
+  gameSlug: Game;
 }
 
 const GameConfig: FC<IGameConfigProps> = ({ gameSlug }) => {

@@ -1,33 +1,40 @@
-import type { TDuSagstAnswerColors, TDuSagstAnswerSelectMapValue } from "./duSagst.types";
+import type {
+  TDuSagstAnswerColors,
+  TDuSagstAnswerSelectMapValue
+} from "./duSagst.types";
 
 export const DEFAULT_ANSWER_OPTION: TDuSagstAnswerSelectMapValue = {
   label: "Keine Antwort",
-  color: "transparent",
+  color: "transparent"
 };
 
-export const ANSWER_BACKGROUND_COLORS: { [index in TDuSagstAnswerColors]: string } = {
+export const ANSWER_BACKGROUND_COLORS: {
+  [index in TDuSagstAnswerColors]: string;
+} = {
   pink: "#C100FF",
   blue: "#0065FF",
   green: "#28B141",
   yellow: "#FF9900",
-  transparent: "transparent",
+  transparent: "transparent"
 };
 
-export const ANSWER_SELECT_MAP: { [index: number]: TDuSagstAnswerSelectMapValue } = {
+export const ANSWER_SELECT_MAP: {
+  [index: number]: TDuSagstAnswerSelectMapValue;
+} = {
   0: {
     label: "A",
-    color: "blue",
+    color: "blue"
   },
   1: {
     label: "B",
-    color: "green",
+    color: "green"
   },
   2: {
     label: "C",
-    color: "pink",
+    color: "pink"
   },
   3: {
     label: "D",
-    color: "yellow",
-  },
+    color: "yellow"
+  }
 };

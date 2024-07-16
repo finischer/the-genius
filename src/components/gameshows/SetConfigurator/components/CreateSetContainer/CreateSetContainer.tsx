@@ -3,7 +3,10 @@ import SetCard from "~/components/room/Game/games/Set/components/SetCard";
 import { findSets } from "../../helpers";
 import type { ICreateSetContainerProps } from "./createSetContainer.types";
 
-const CreateSetContainer: React.FC<ICreateSetContainerProps> = ({ question, setQuestion }) => {
+const CreateSetContainer: React.FC<ICreateSetContainerProps> = ({
+  question,
+  setQuestion
+}) => {
   const possibleSets = findSets(question.cards);
 
   const cardElements = question.cards.map((item, index) => (
@@ -19,17 +22,10 @@ const CreateSetContainer: React.FC<ICreateSetContainerProps> = ({ question, setQ
 
   return (
     <Group justify="center">
-      <Stack
-        gap="lg"
-        align="center"
-      >
+      <Stack gap="lg" align="center">
         <Title order={3}>Set erstellen</Title>
 
-        <Group
-          align="flex-start"
-          pos="relative"
-          justify="center"
-        >
+        <Group align="flex-start" pos="relative" justify="center">
           <SimpleGrid
             spacing="md"
             verticalSpacing="md"
@@ -38,12 +34,10 @@ const CreateSetContainer: React.FC<ICreateSetContainerProps> = ({ question, setQ
             {cardElements}
           </SimpleGrid>
           {/* Possible sets */}
-          <Flex
-            direction="column"
-            align="center"
-          >
+          <Flex direction="column" align="center">
             <Text c="dimmed">Mögliche Sets</Text>
-            {possibleSets.length === 0 && "Mit diesem Stapel ist kein Set möglich"}
+            {possibleSets.length === 0 &&
+              "Mit diesem Stapel ist kein Set möglich"}
             {possibleSets.map((s, idx) => {
               const cardNumbers = s.map((s) => s + 1);
 

@@ -13,13 +13,14 @@ import ArrowActionButton from "~/components/shared/ArrowActionButton";
 import ModView from "~/components/shared/ModView";
 import useAudio from "~/hooks/useAudio";
 import { slug } from "~/utils/strings";
+import { goToNextQuestion, goToPreviousQuestion, sleep } from "~/utils/helpers";
 
 const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
   const theme = useMantineTheme();
   const question = game.questions[game.qIndex];
   const showAnswer = game.display.answer;
   const showWords = game.display.words;
-  const { isHost } = useUser();
+  const { isHost, hostFunction } = useUser();
   const { socket } = useSocket();
   const { triggerAudioEvent } = useAudio();
 
@@ -31,34 +32,48 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
     return <IconEye size={32} />;
   };
 
-  const toggleCodeList = () => {
-    socket.emit("geheimwoerter:toggleCodeList");
-  };
+  const toggleCodeList = hostFunction(() => {
+    // socket.emit("geheimwoerter:toggleCodeList");
+    game.display.codeList = !game.display.codeList;
+  });
 
-  const toggleWords = () => {
+  const toggleWords = hostFunction(() => {
     socket.emit("geheimwoerter:toggleWords");
-  };
+    game.display.words = !game.display.words;
+  });
 
-  const handleShowAnswer = () => {
+  const handleShowAnswer = hostFunction(() => {
     triggerAudioEvent("playSound", "bell");
-    socket.emit("geheimwoerter:showAnswer");
+    // socket.emit("geheimwoerter:showAnswer");
+    game.display.answer = true;
+  });
+
+  const prepareQuestion = async () => {
+    game.display.words = false;
+    if (showAnswer) {
+      await sleep(200);
+    }
+    game.display.answer = false;
   };
 
-  const handleNextQuestion = () => {
-    socket.emit("geheimwoerter:nextQuestion");
-  };
+  const handleNextQuestion = hostFunction(async () => {
+    await prepareQuestion();
+    goToNextQuestion(game.questions, game.qIndex, (newIndex) => {
+      game.qIndex = newIndex;
+    });
+  });
 
-  const handlePrevQuestion = () => {
-    socket.emit("geheimwoerter:prevQuestion");
-  };
+  const handlePrevQuestion = hostFunction(async () => {
+    await prepareQuestion();
+    goToPreviousQuestion(game.qIndex, (newIndex) => {
+      game.qIndex = newIndex;
+    });
+  });
 
   if (!question) return <></>;
 
   const WordList = () => (
-    <Flex
-      direction="column"
-      gap="md"
-    >
+    <Flex direction="column" gap="md">
       <ModView>
         <ActionIcon
           onClick={toggleWords}
@@ -75,11 +90,7 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
         style={{ borderRadius: theme.radius.md }}
         opacity={showWords ? 1 : 0.4}
       >
-        <SimpleGrid
-          cols={showAnswer ? 2 : 1}
-          verticalSpacing={0}
-          spacing="md"
-        >
+        <SimpleGrid cols={showAnswer ? 2 : 1} verticalSpacing={0} spacing="md">
           {question.words.map((word, index) => (
             <Fragment key={slug([word.word, index])}>
               <span style={{ fontWeight: "bold" }}>{word.word}</span>
@@ -111,11 +122,7 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
   };
 
   return (
-    <Flex
-      align="center"
-      gap="5rem"
-      justify="center"
-    >
+    <Flex align="center" gap="5rem" justify="center">
       <SimpleGrid
         cols={2}
         style={{ display: "flex", alignItems: "center" }}
@@ -124,11 +131,7 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
       >
         <AnimatePresence>
           {(game.display.codeList || isHost) && (
-            <Flex
-              direction="column"
-              gap="sm"
-              w="50%"
-            >
+            <Flex direction="column" gap="sm" w="50%">
               <ModView>
                 <ActionIcon
                   onClick={toggleCodeList}
@@ -140,10 +143,7 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
               </ModView>
 
               <Box opacity={game.display.codeList ? 1 : 0.4}>
-                <CodeList
-                  codeList={game.codeList}
-                  showTitle={false}
-                />
+                <CodeList codeList={game.codeList} showTitle={false} />
               </Box>
             </Flex>
           )}
@@ -151,10 +151,7 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
 
         <AnimatePresence>
           {(showWords || isHost) && (
-            <Flex
-              direction="column"
-              w="auto"
-            >
+            <Flex direction="column" w="auto">
               <motion.div
                 {...animations.fadeInOut}
                 style={{
@@ -162,20 +159,13 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
                   gap: "1rem",
                   flexDirection: "column",
                   justifyContent: "center",
-                  alignItems: "center",
+                  alignItems: "center"
                 }}
               >
-                <Flex
-                  gap="md"
-                  justify="center"
-                  align="center"
-                >
+                <Flex gap="md" justify="center" align="center">
                   <WordList />
                 </Flex>
-                <Flex
-                  align="center"
-                  gap="md"
-                >
+                <Flex align="center" gap="md">
                   <ModView>
                     <ArrowActionButton
                       arrowDirection="left"

@@ -8,7 +8,9 @@ import { useUser } from "~/hooks/useUser";
 const AccountSettingsSection = () => {
   const { data: session } = useSession();
   const [editMode, setEditMode] = useState(false);
-  const [username, setUsername] = useState<string>(session?.user.username ?? "");
+  const [username, setUsername] = useState<string>(
+    session?.user.username ?? ""
+  );
   const isEditable = editMode && session?.user.username;
   const { updateUsername, isLoading, user } = useUser();
   const usernameInputRef = useRef<HTMLInputElement>(null);
@@ -32,21 +34,10 @@ const AccountSettingsSection = () => {
   }, [editMode]);
 
   return (
-    <Flex
-      direction="column"
-      gap="md"
-      maw={rem(300)}
-    >
-      <Avatar
-        src={session?.user.image}
-        radius="100%"
-        size="xl"
-      />
+    <Flex direction="column" gap="md" maw={rem(300)}>
+      <Avatar src={session?.user.image} radius="100%" size="xl" />
       <>
-        <Flex
-          align="flex-end"
-          gap="sm"
-        >
+        <Flex align="flex-end" gap="sm">
           <TextInput
             ref={usernameInputRef}
             readOnly={!isEditable}
@@ -59,10 +50,7 @@ const AccountSettingsSection = () => {
 
           {editMode ? (
             <Tooltip label="Username speichern">
-              <Button
-                onClick={handleUpdateUsername}
-                loading={isLoading}
-              >
+              <Button onClick={handleUpdateUsername} loading={isLoading}>
                 <IconCheck />
               </Button>
             </Tooltip>
@@ -78,11 +66,9 @@ const AccountSettingsSection = () => {
             </Tooltip>
           )}
         </Flex>
-        <Text
-          c="dimmed"
-          size="sm"
-        >
-          Der Username wird in den Spielshows verwendet und ist für andere User sichtbar
+        <Text c="dimmed" size="sm">
+          Der Username wird in den Spielshows verwendet und ist für andere User
+          sichtbar
         </Text>
       </>
       <>
@@ -93,11 +79,9 @@ const AccountSettingsSection = () => {
           type="text"
           value={session?.user.name || "NAME NOT FOUND"}
         />
-        <Text
-          c="dimmed"
-          size="sm"
-        >
-          Dein Name wird nicht öffentlich angezeigt und kann nicht geändert werden
+        <Text c="dimmed" size="sm">
+          Dein Name wird nicht öffentlich angezeigt und kann nicht geändert
+          werden
         </Text>
       </>
       <TextInput
@@ -108,17 +92,10 @@ const AccountSettingsSection = () => {
         value={session?.user.email || "EMAIL NOT FOUND"}
       />
 
-      <Button
-        mt="lg"
-        c="red"
-        disabled
-      >
+      <Button mt="lg" c="red" disabled>
         Account löschen
       </Button>
-      <Text
-        c="dimmed"
-        size="sm"
-      >
+      <Text c="dimmed" size="sm">
         Diese Funktion ist noch nicht verfügbar
       </Text>
     </Flex>

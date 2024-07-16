@@ -1,4 +1,6 @@
-import NextAuthGoogleProvider, { type GoogleProfile } from "next-auth/providers/google";
+import NextAuthGoogleProvider, {
+  type GoogleProfile
+} from "next-auth/providers/google";
 import { DEFAULT_ROLE } from "../../auth";
 
 export const GOOGLE_MAIL_SUFFIXES = ["gmail.com", "googlemail.com"];
@@ -13,7 +15,7 @@ export default NextAuthGoogleProvider({
       isEmailVerified: profile.email_verified,
       name: profile.name,
       email: profile.email,
-      image: profile.picture,
+      image: profile.picture
     };
-  },
+  }
 });

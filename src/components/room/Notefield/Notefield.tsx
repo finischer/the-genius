@@ -1,30 +1,17 @@
 import { Textarea, type TextareaProps } from "@mantine/core";
-import { useDebouncedValue, useFocusWithin } from "@mantine/hooks";
 import { motion } from "framer-motion";
-import React, { useEffect, useRef } from "react";
-import { useImmer } from "use-immer";
-import { socket } from "~/hooks/useSocket";
-import { useUser } from "~/hooks/useUser";
-import type Player from "~/pages/api/classes/Player/Player";
+import React from "react";
+import type { Player } from "~/types/gameshow.types";
 import { animations } from "~/utils/animations";
 
 interface INotefieldProps extends TextareaProps {
   player: Player;
 }
 
-const Notefield: React.FC<INotefieldProps> = ({ player, value, ...props }) => {
-  const { user } = useUser();
-  const isMe = user.id === player.userId;
-  const [textAreaValue, setTextAreaValue] = useImmer("");
-  const [debouncedTxt] = useDebouncedValue(textAreaValue, 200);
-
-  const handleNotefieldChange = (playerId: string, teamId: string, newValue: string) => {
-    socket.emit("updateNotefield", { playerId, teamId, newValue });
+const Notefield: React.FC<INotefieldProps> = ({ player, ...props }) => {
+  const handleValueChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    player.context.notefield.value = e.target.value;
   };
-
-  useEffect(() => {
-    handleNotefieldChange(player.id, player.teamId, debouncedTxt);
-  }, [debouncedTxt]);
 
   return (
     <motion.div {...animations.fadeInOut}>
@@ -32,9 +19,9 @@ const Notefield: React.FC<INotefieldProps> = ({ player, value, ...props }) => {
         label={player?.name || " "}
         w="100%"
         rows={9}
-        onChange={(e) => setTextAreaValue(e.target.value)}
+        onChange={handleValueChange}
         {...props}
-        value={isMe ? textAreaValue : value}
+        value={player.context.notefield.value}
       />
     </motion.div>
   );

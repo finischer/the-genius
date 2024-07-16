@@ -1,7 +1,7 @@
+import { Box } from "@mantine/core";
 import React from "react";
-import { type IContainerBoxProps } from "./containerBox.types";
-import { Box, Container } from "@mantine/core";
 import { sizes } from "~/styles/constants";
+import { type IContainerBoxProps } from "./containerBox.types";
 
 const ContainerBox: React.FC<IContainerBoxProps> = ({
   children,
@@ -21,7 +21,7 @@ const ContainerBox: React.FC<IContainerBoxProps> = ({
         borderRadius: sizes.borderRadius,
         boxShadow: withShadow ? theme.shadows.xl : "none",
         userSelect: "none",
-        ...style,
+        ...style
       })}
       onClick={onClick}
     >

@@ -2,13 +2,18 @@ import { type Server, type Socket } from "socket.io";
 import {
   type IClientToServerEvents,
   type IServerSocketData,
-  type IServerToClientEvents,
+  type IServerToClientEvents
 } from "~/types/socket.types";
 import { getRoomAndTeam } from "../helpers";
 
 export function teamHandler(
   io: Server,
-  socket: Socket<IClientToServerEvents, IServerToClientEvents, IServerSocketData> & IServerSocketData
+  socket: Socket<
+    IClientToServerEvents,
+    IServerToClientEvents,
+    IServerSocketData
+  > &
+    IServerSocketData
 ) {
   socket.on("joinTeam", ({ user, teamId }, cb) => {
     const res = getRoomAndTeam(socket, socket.roomId, teamId);
@@ -72,8 +77,9 @@ export function teamHandler(
 
     team.isActiveTurn = !team.isActiveTurn;
     team.buzzer = {
+      ...team.buzzer,
       isPressed: false,
-      playersBuzzered: [],
+      playersBuzzered: []
     };
     room.state.teamWithTurn = "";
 

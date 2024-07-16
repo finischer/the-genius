@@ -1,22 +1,22 @@
 import type { IListItem } from "~/components/shared/List/components/ListItem/listItem.types";
-import type { Games } from "../game.types";
+import type { Game } from "../game.types";
 
 export enum SET_COLORS {
   RED = "#F94900",
   GREEN = "#70A041",
-  BLUE = "#1583ED",
+  BLUE = "#1583ED"
 }
 
 export enum SET_FORMS {
   RECTANGLE = "rectangle",
   OVAL = "oval",
-  DIAMOND = "diamond",
+  DIAMOND = "diamond"
 }
 
 export enum SET_FILLING {
   FILLED = "filled",
   NONE = "none",
-  DASHED = "dashed",
+  DASHED = "dashed"
 }
 
 export interface ISetGameProps {
@@ -26,7 +26,7 @@ export interface ISetGameProps {
 export type TSetGameMarkedCardsState = "wrong" | "correct" | "marked";
 
 export interface ISetGameState {
-  identifier: Games.SET;
+  identifier: Game.SET;
 
   questions: TSetQuestionList;
   qIndex: number;

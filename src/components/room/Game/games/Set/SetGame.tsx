@@ -2,56 +2,89 @@ import { Button, Flex, SimpleGrid, Text } from "@mantine/core";
 import React from "react";
 import { findSets } from "~/components/gameshows/SetConfigurator/helpers";
 import ModView from "~/components/shared/ModView";
-import { socket } from "~/hooks/useSocket";
 import { useUser } from "~/hooks/useUser";
+import { goToNextQuestion, goToPreviousQuestion, sleep } from "~/utils/helpers";
 import SetCard from "./components/SetCard";
 import type { ISetGameProps } from "./set.types";
 
 const SetGame: React.FC<ISetGameProps> = ({ game }) => {
-  const { isHost } = useUser();
+  const { isHost, hostFunction } = useUser();
   const currQuestion = game.questions[game.qIndex];
   const possibleSets = findSets(currQuestion?.cards ?? []);
 
-  const handleSelectCard = (cardIndex: number) => {
-    if (!isHost || game.display.markedCards) return;
-    socket.emit("set:toggleCard", cardIndex);
+  const handleSelectCard = hostFunction((cardIndex: number) => {
+    if (game.display.markedCards) return;
+    if (game.markedCards.includes(cardIndex)) {
+      game.markedCards = game.markedCards.filter((card) => card !== cardIndex);
+    } else {
+      game.markedCards.push(cardIndex);
+    }
+  });
+
+  const handleFlipAllCards = hostFunction(() => {
+    if (!currQuestion) return;
+
+    if (game.openedCards.length > 0) {
+      game.openedCards = [];
+    } else {
+      game.openedCards = currQuestion.cards.map((_, idx) => idx);
+    }
+
+    game.markedCards = [];
+    game.markedCardsState = "marked";
+    game.display.markedCards = false;
+  });
+
+  const handleShowMarkedCards = hostFunction(() => {
+    game.display.markedCards = true;
+  });
+
+  const prepareQuestion = async () => {
+    game.markedCards = [];
+    game.openedCards = [];
+    game.markedCardsState = "marked";
+    game.display.markedCards = false;
+    await sleep(500);
   };
 
-  const handleFlipAllCards = () => {
-    if (!isHost) return;
-    socket.emit("set:flipAllCards");
-  };
+  const handleNextQuestion = hostFunction(async () => {
+    await prepareQuestion();
+    goToNextQuestion(game.questions, game.qIndex, (newIndex) => {
+      game.qIndex = newIndex;
+    });
+    await sleep(500);
+    handleFlipAllCards();
+  });
 
-  const handleShowMarkedCards = () => {
-    if (!isHost) return;
-    socket.emit("set:showMarkedCards");
-  };
+  const handlePrevQuestion = hostFunction(async () => {
+    await prepareQuestion();
+    goToPreviousQuestion(game.qIndex, (newIndex) => {
+      game.qIndex = newIndex;
+    });
+    await sleep(500);
+    handleFlipAllCards();
+  });
 
-  const handleNextQuestion = () => {
-    if (!isHost || game.qIndex >= game.questions.length - 1) return;
-    socket.emit("set:nextQuestion");
-  };
+  const handleShowAnswer = hostFunction(() => {
+    const isContained = possibleSets.some((set) => {
+      // check, if every element in 'cards' is contained in current 'set'
+      return game.markedCards.every((card) => set.includes(card));
+    });
 
-  const handlePrevQuestion = () => {
-    if (!isHost || game.qIndex <= 0) return;
-    socket.emit("set:prevQuestion");
-  };
+    if (isContained) {
+      game.markedCardsState = "correct";
+    } else {
+      game.markedCardsState = "wrong";
+    }
+  });
 
-  const handleShowAnswer = () => {
-    if (!isHost) return;
-
-    socket.emit("set:changeMarkerState", possibleSets);
-  };
-
-  const handleMarkedCardClick = () => {
-    if (!isHost) return;
-
+  const handleMarkedCardClick = hostFunction(() => {
     if (!game.display.markedCards) {
       handleShowMarkedCards();
     } else {
       handleShowAnswer();
     }
-  };
+  });
 
   const PossibleSets = () => (
     <>
@@ -70,21 +103,15 @@ const SetGame: React.FC<ISetGameProps> = ({ game }) => {
   );
 
   return (
-    <Flex
-      gap="xl"
-      pos="relative"
-    >
+    <Flex gap="xl" pos="relative">
       {/* Left content */}
-      <Flex
-        direction="column"
-        gap="sm"
-      >
+      <Flex direction="column" gap="sm">
         <SimpleGrid
           cols={3}
           verticalSpacing="xs"
           spacing="xs"
           style={{
-            perspective: "100rem",
+            perspective: "100rem"
           }}
         >
           {currQuestion?.cards.map((card, idx) => {
@@ -96,7 +123,9 @@ const SetGame: React.FC<ISetGameProps> = ({ game }) => {
                 card={card}
                 index={idx}
                 isFlipped={game.openedCards.includes(idx)}
-                marked={(isMarked && game.display.markedCards) || (isMarked && isHost)}
+                marked={
+                  (isMarked && game.display.markedCards) || (isMarked && isHost)
+                }
                 markerState={game.markedCardsState}
                 onClick={handleSelectCard}
               />
@@ -111,28 +140,26 @@ const SetGame: React.FC<ISetGameProps> = ({ game }) => {
 
       {/* Right Content */}
       <ModView>
-        <Flex
-          direction="column"
-          gap="md"
-          w="15rem"
-        >
+        <Flex direction="column" gap="md" w="15rem">
           <div style={{ height: "10rem" }}>
             <PossibleSets />
           </div>
 
           <Button.Group orientation="vertical">
-            <Button
-              onClick={handleFlipAllCards}
-              variant="default"
-            >
+            <Button onClick={handleFlipAllCards} variant="default">
               Karten umdrehen
             </Button>
             <Button
               onClick={handleMarkedCardClick}
               variant="default"
-              disabled={game.markedCards.length !== 3 || game.markedCardsState !== "marked"}
+              disabled={
+                game.markedCards.length !== 3 ||
+                game.markedCardsState !== "marked"
+              }
             >
-              {game.display.markedCards ? "Antwort zeigen" : "Markierten Karten zeigen"}
+              {game.display.markedCards
+                ? "Antwort zeigen"
+                : "Markierten Karten zeigen"}
             </Button>
             <Button
               onClick={handlePrevQuestion}

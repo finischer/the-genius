@@ -4,20 +4,24 @@ import {
   type TModeratorSettings,
   type INonNullableUseRoomContext,
   type IUseRoomContext,
-  type IUseRoomProvider,
+  type IUseRoomProvider
 } from "./useRoom.types";
 
 const RoomContext = createContext<IUseRoomContext | undefined>(undefined);
 
 const RoomProvider: React.FC<IUseRoomProvider> = ({ children }) => {
-  const [moderatorSettings, setModeratorSettings] = useState<TModeratorSettings>({
-    showMediaPlayer: false,
+  const [moderatorSettings] = useState<TModeratorSettings>({
+    showMediaPlayer: false
   });
   const [room, setRoom] = useState<Room>();
-  const currentGame = room?.games.find((g) => g.identifier === room?.currentGame);
+  const currentGame = room?.games.find(
+    (g) => g.identifier === room?.currentGame
+  );
 
   return (
-    <RoomContext.Provider value={{ room, currentGame, setRoom, moderatorSettings }}>
+    <RoomContext.Provider
+      value={{ room, currentGame, setRoom, moderatorSettings }}
+    >
       {children}
     </RoomContext.Provider>
   );

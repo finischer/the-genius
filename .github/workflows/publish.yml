@@ -59,7 +59,7 @@ jobs:
           run: npm i -g @railway/cli
 
         - name: Deploy to staging
-          run: railway up
+          run: railway up --service the-genius
           env:
             RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
@@ -96,6 +96,6 @@ jobs:
           run: npm i -g @railway/cli
 
         - name: Deploy to production
-          run: railway up
+          run: railway up --service the-genius
           env:
             RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}

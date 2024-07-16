@@ -1,14 +1,19 @@
-import { Avatar, Container, Flex, Text, getGradient, useMantineTheme } from "@mantine/core";
+import {
+  Avatar,
+  Container,
+  Flex,
+  Text,
+  getGradient,
+  useMantineTheme
+} from "@mantine/core";
 import type { TeamAvatarImage } from "@prisma/client";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
 import React from "react";
 import ActionIcon from "~/components/shared/ActionIcon/ActionIcon";
 import ModView from "~/components/shared/ModView";
 import useAudio from "~/hooks/useAudio";
-import { useRoom } from "~/hooks/useRoom";
-import { socket } from "~/hooks/useSocket";
-import type { IScoreboardProps } from "./scoreboard.types";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
+import type { IScoreboardProps } from "./scoreboard.types";
 
 const SCOREBOARD_BORDER_BACKGROUND_COLOR = "#7b68ee";
 const SCOREBOARD_BACKGROUND_COLOR = "#D8BFD8";
@@ -20,25 +25,38 @@ const Scoreboard: React.FC<IScoreboardProps> = ({ team, color }) => {
   const { triggerAudioEvent } = useAudio();
 
   const avatarImages: TeamAvatarImage[] | string[] =
-    team.avatarImageList.length === 0 ? Array(1).fill(team.avatarImage) : team.avatarImageList;
+    team.avatarImageList.length === 0
+      ? Array(1).fill(team.avatarImage)
+      : team.avatarImageList;
 
   const minNumOfGamesToWin = Math.round((room.games.length + 1) / 2);
 
-  const GREEN_GRADIENT = getGradient({ deg: 90, from: "#00C9FF", to: "#92FE9D" }, theme);
-  const RED_GRADIENT = getGradient({ deg: 90, from: "#D53369", to: "#DAAE51" }, theme);
+  const GREEN_GRADIENT = getGradient(
+    { deg: 90, from: "#00C9FF", to: "#92FE9D" },
+    theme
+  );
+  const RED_GRADIENT = getGradient(
+    { deg: 90, from: "#D53369", to: "#DAAE51" },
+    theme
+  );
 
-  const lineElements = new Array(minNumOfGamesToWin).fill(null).map((_, index) => (
-    <Container
-      p={0}
-      key={index}
-      m="1.2rem 0"
-      w="12rem"
-      opacity={0.8}
-      style={{
-        borderRight: index + 1 < minNumOfGamesToWin ? `1px solid ${DIVIDER_COLOR}` : "none",
-      }}
-    />
-  ));
+  const lineElements = new Array(minNumOfGamesToWin)
+    .fill(null)
+    .map((_, index) => (
+      <Container
+        p={0}
+        key={index}
+        m="1.2rem 0"
+        w="12rem"
+        opacity={0.8}
+        style={{
+          borderRight:
+            index + 1 < minNumOfGamesToWin
+              ? `1px solid ${DIVIDER_COLOR}`
+              : "none"
+        }}
+      />
+    ));
 
   const scoreColor = color === "green" ? GREEN_GRADIENT : RED_GRADIENT;
 
@@ -55,15 +73,8 @@ const Scoreboard: React.FC<IScoreboardProps> = ({ team, color }) => {
   };
 
   return (
-    <Flex
-      h="10rem"
-      align="center"
-      p="2rem"
-    >
-      <Flex
-        align="center"
-        gap="xl"
-      >
+    <Flex h="10rem" align="center" p="2rem">
+      <Flex align="center" gap="xl">
         <Flex
           direction="column"
           gap="md"
@@ -72,13 +83,7 @@ const Scoreboard: React.FC<IScoreboardProps> = ({ team, color }) => {
           w="10rem"
           pos="relative"
         >
-          <Text
-            color="white"
-            p="0 1rem"
-            fw="bold"
-            pos="absolute"
-            top={-35}
-          >
+          <Text color="white" p="0 1rem" fw="bold" pos="absolute" top={-35}>
             {team.name}
           </Text>
           <Avatar.Group spacing="xl">
@@ -107,19 +112,15 @@ const Scoreboard: React.FC<IScoreboardProps> = ({ team, color }) => {
           style={{
             border: `1px solid ${SCOREBOARD_BORDER_BACKGROUND_COLOR}`,
             borderRadius: "100px",
-            overflow: "hidden",
+            overflow: "hidden"
           }}
         >
-          <Flex
-            h="100%"
-            bg="red"
-            style={{ borderRadius: "100px" }}
-          />
+          <Flex h="100%" bg="red" style={{ borderRadius: "100px" }} />
           {lineElements}
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
+              gridTemplateColumns: "repeat(4, 1fr)"
             }}
           />
           <Container
@@ -133,26 +134,17 @@ const Scoreboard: React.FC<IScoreboardProps> = ({ team, color }) => {
             left={0}
             style={{
               borderRadius: "100px",
-              transition: "width 2s",
+              transition: "width 2s"
             }}
           />
         </Flex>
 
         <ModView>
-          <Flex
-            direction="column"
-            gap="md"
-          >
-            <ActionIcon
-              variant="outline"
-              onClick={increaseScore}
-            >
+          <Flex direction="column" gap="md">
+            <ActionIcon variant="outline" onClick={increaseScore}>
               <IconPlus />
             </ActionIcon>
-            <ActionIcon
-              variant="outline"
-              onClick={decreaseScore}
-            >
+            <ActionIcon variant="outline" onClick={decreaseScore}>
               <IconMinus />
             </ActionIcon>
           </Flex>

@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import PageLayout from "~/components/layout/PageLayout";
 import ActionIcon from "~/components/shared/ActionIcon";
-import { BuyMeACoffeeButton } from "~/components/shared/BuyMeACoffeeButton";
 import NextHead from "~/components/shared/NextHead";
 import useNotification from "~/hooks/useNotification";
 import { api } from "~/utils/api";
@@ -196,8 +195,11 @@ const RoomsPage = () => {
     {
       enabled: false,
       onError: (error) => {
-        handleZodError(error.data?.zodError, error.message ?? "Ein Fehler ist aufgetreten");
-      },
+        handleZodError(
+          error.data?.zodError,
+          error.message ?? "Ein Fehler ist aufgetreten"
+        );
+      }
     }
   );
 
@@ -207,7 +209,7 @@ const RoomsPage = () => {
     if (!data) {
       showErrorNotification({
         title: "Fehler",
-        message: "Ein Fehler ist aufgetreten",
+        message: "Ein Fehler ist aufgetreten"
       });
       return;
     }
@@ -215,7 +217,7 @@ const RoomsPage = () => {
     if (!data.exists) {
       showErrorNotification({
         title: "Raum existiert nicht",
-        message: "Der Raum mit der ID existiert nicht",
+        message: "Der Raum mit der ID existiert nicht"
       });
       return;
     }
@@ -234,11 +236,7 @@ const RoomsPage = () => {
             value={inputValue}
             onChange={(event) => setInputValue(event.currentTarget.value)}
           />
-          <ActionIcon
-            size="xl"
-            toolTip="Raum beitreten"
-            onClick={enterRoom}
-          >
+          <ActionIcon size="xl" toolTip="Raum beitreten" onClick={enterRoom}>
             <IconDoorEnter size="2.25rem" />
           </ActionIcon>
         </Stack>

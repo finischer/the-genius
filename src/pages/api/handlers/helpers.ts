@@ -2,7 +2,7 @@ import { type Socket } from "socket.io";
 import {
   type IClientToServerEvents,
   type IServerSocketData,
-  type IServerToClientEvents,
+  type IServerToClientEvents
 } from "~/types/socket.types";
 import { roomManager } from "../controllers/RoomManager";
 import NoRoomException from "../exceptions/NoRoomException";
@@ -18,7 +18,12 @@ type GetRoomAndTeamReturnType =
   | undefined;
 
 export function getRoomAndTeam(
-  socket: Socket<IClientToServerEvents, IServerToClientEvents, IServerSocketData> & IServerSocketData,
+  socket: Socket<
+    IClientToServerEvents,
+    IServerToClientEvents,
+    IServerSocketData
+  > &
+    IServerSocketData,
   roomId: string | null | undefined,
   teamId: string | null | undefined
 ): GetRoomAndTeamReturnType {

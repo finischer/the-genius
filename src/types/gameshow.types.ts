@@ -1,16 +1,20 @@
-import { signOut } from "next-auth/react";
-import type { BuzzerState, RoomMusic, RoomSounds, TeamAvatarImage } from "@prisma/client";
+import type {
+  BuzzerState,
+  RoomMusic,
+  RoomSounds,
+  TeamAvatarImage
+} from "@prisma/client";
 import type { TGame } from "~/components/room/Game/games/game.types";
 
 export enum RoomView {
   EMPTY = "empty",
   SCOREBOARD = "scoreboard",
-  GAME = "game",
+  GAME = "game"
 }
 
 export enum TimerType {
   COUNTDOWN = "countdown",
-  STOPWATCH = "stopwatch",
+  STOPWATCH = "stopwatch"
 }
 
 export type Team = {

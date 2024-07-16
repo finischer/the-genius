@@ -4,4 +4,6 @@ interface IStepperControls {
   enableContinueButton: () => void;
   disableContinueButton: () => void;
 }
-export const StepperControlsContext = createContext<IStepperControls>({} as IStepperControls);
+export const StepperControlsContext = createContext<IStepperControls>(
+  {} as IStepperControls
+);

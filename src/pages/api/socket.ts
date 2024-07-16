@@ -7,7 +7,7 @@ import {
   type IClientToServerEvents,
   type IServerSocketData,
   type IServerToClientEvents,
-  type TNextApiResponse,
+  type TNextApiResponse
 } from "~/types/socket.types";
 import Room from "./classes/Room/Room";
 import { roomManager } from "./controllers/RoomManager";
@@ -22,9 +22,16 @@ import { musicHandler } from "./handlers/musicHandlers";
 
 const prisma = new PrismaClient();
 
-export let io: Server<IClientToServerEvents, IServerToClientEvents, IServerSocketData>;
+export let io: Server<
+  IClientToServerEvents,
+  IServerToClientEvents,
+  IServerSocketData
+>;
 
-export default async function SocketHandler(req: NextApiRequest, res: TNextApiResponse) {
+export default async function SocketHandler(
+  req: NextApiRequest,
+  res: TNextApiResponse
+) {
   // means that socket server was already initialized
   if (res.socket.server.io) {
     console.log("Socket handler already initialized");
@@ -44,8 +51,8 @@ export default async function SocketHandler(req: NextApiRequest, res: TNextApiRe
       cors: {
         origin: "*",
         credentials: true,
-        methods: ["GET", "POST"],
-      },
+        methods: ["GET", "POST"]
+      }
     }
   );
 
@@ -53,9 +60,9 @@ export default async function SocketHandler(req: NextApiRequest, res: TNextApiRe
     auth: {
       type: "basic",
       username: env.SOCKET_IO_ADMIN_USERNAME,
-      password: env.SOCKET_IO_ADMIN_PASSWORD,
+      password: env.SOCKET_IO_ADMIN_PASSWORD
     },
-    mode: "production",
+    mode: "production"
   });
 
   res.socket.server.io = io;
@@ -71,7 +78,13 @@ export default async function SocketHandler(req: NextApiRequest, res: TNextApiRe
     roomManager.addRoom(newRoom);
   });
 
-  const onConnection = (socket: Socket<IClientToServerEvents, IServerToClientEvents, IServerSocketData>) => {
+  const onConnection = (
+    socket: Socket<
+      IClientToServerEvents,
+      IServerToClientEvents,
+      IServerSocketData
+    >
+  ) => {
     // initialize all handlers
     roomHandler(io, socket);
     teamHandler(io, socket);

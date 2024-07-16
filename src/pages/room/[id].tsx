@@ -14,7 +14,8 @@ const RoomPage = () => {
   const { user, setUser } = useUser();
   const { status } = useSession();
 
-  const showUserInputModal = user.role === UserRole.GUEST && status !== "loading";
+  const showUserInputModal =
+    user.role === UserRole.GUEST && status !== "loading";
 
   const UserInputModal: FC<ModalProps> = (props) => {
     const form = useForm({
@@ -30,15 +31,19 @@ const RoomPage = () => {
           }
 
           return null;
-        },
-      },
+        }
+      }
     });
 
     return (
       <Modal {...props}>
         <form
           onSubmit={form.onSubmit((values) =>
-            setUser({ ...user, username: values.username, role: UserRole.USER })
+            setUser({
+              ...user,
+              username: values.username,
+              role: UserRole.USER
+            })
           )}
         >
           <TextInput
@@ -46,10 +51,7 @@ const RoomPage = () => {
             label="Username"
             {...form.getInputProps("username")}
           />
-          <Button
-            type="submit"
-            mt="md"
-          >
+          <Button type="submit" mt="md">
             Beitreten
           </Button>
         </form>

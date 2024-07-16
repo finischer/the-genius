@@ -12,36 +12,38 @@ export const safedGameshowSchema = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
   isFavorite: z.boolean(),
-  games: z.array(z.any()),
+  games: z.array(z.any())
 });
 
 export type SafedGameshow = z.infer<typeof safedGameshowSchema>;
 
 export const gameshowsRouter = createTRPCRouter({
-  getAllByCreatorId: protectedProcedure.output(z.array(safedGameshowSchema)).query(async ({ ctx }) => {
-    const gameshows = await ctx.prisma.gameshow.findMany({
-      where: {
-        creatorId: ctx.session.user.id,
-      },
-      select: {
-        id: true,
-        creatorId: true,
-        name: true,
-        games: true,
-        createdAt: true,
-        updatedAt: true,
-        isFavorite: true,
-      },
-    });
+  getAllByCreatorId: protectedProcedure
+    .output(z.array(safedGameshowSchema))
+    .query(async ({ ctx }) => {
+      const gameshows = await ctx.prisma.gameshow.findMany({
+        where: {
+          creatorId: ctx.session.user.id
+        },
+        select: {
+          id: true,
+          creatorId: true,
+          name: true,
+          games: true,
+          createdAt: true,
+          updatedAt: true,
+          isFavorite: true
+        }
+      });
 
-    // add num of games to every gameshow
-    const modifiedGameshows = gameshows.map((show) => ({
-      ...show,
-      numOfGames: show.games.length,
-    }));
+      // add num of games to every gameshow
+      const modifiedGameshows = gameshows.map((show) => ({
+        ...show,
+        numOfGames: show.games.length
+      }));
 
-    return modifiedGameshows;
-  }),
+      return modifiedGameshows;
+    }),
   getById: protectedProcedure
     .input(z.object({ gameshowId: z.string() }))
     .output(safedGameshowSchema)
@@ -49,75 +51,77 @@ export const gameshowsRouter = createTRPCRouter({
       const gameshow = await ctx.prisma.gameshow.findFirst({
         where: {
           id: input.gameshowId,
-          creatorId: ctx.session.user.id,
-        },
+          creatorId: ctx.session.user.id
+        }
       });
 
       if (!gameshow) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Gameshow not found",
+          message: "Gameshow not found"
         });
       }
 
       // add num of games to every gameshow
       const modifiedGameshow: z.infer<typeof safedGameshowSchema> = {
         ...gameshow,
-        numOfGames: gameshow.games.length,
+        numOfGames: gameshow.games.length
       };
 
       return modifiedGameshow;
     }),
-  create: protectedProcedure.input(z.unknown()).mutation(async ({ ctx, input }) => {
-    const role = ctx.session.user.role;
-    const maxNumGameshows = FEATURES[role].maxNumGameshows;
+  create: protectedProcedure
+    .input(z.unknown())
+    .mutation(async ({ ctx, input }) => {
+      const role = ctx.session.user.role;
+      const maxNumGameshows = FEATURES[role].maxNumGameshows;
 
-    if (maxNumGameshows !== Infinity) {
-      const numOfGameshows = await ctx.prisma.gameshow.count({
-        where: {
-          creatorId: ctx.session.user.id,
-        },
-      });
-
-      if (numOfGameshows >= maxNumGameshows) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "Du hast die maximale Anzahl an Spielshows erreichst",
+      if (maxNumGameshows !== Infinity) {
+        const numOfGameshows = await ctx.prisma.gameshow.count({
+          where: {
+            creatorId: ctx.session.user.id
+          }
         });
-      }
-    }
 
-    const config = input as TGameshowConfig;
-    const gameshow = await ctx.prisma.gameshow.create({
-      data: {
-        name: config.name,
-        // workaround until prisma type is set correctly
-        // @ts-expect-error
-        games: config.games, // TODO: fix game schema in prisma
-        creatorId: ctx.session.user.id,
-      },
-    });
-    return gameshow;
-  }),
+        if (numOfGameshows >= maxNumGameshows) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Du hast die maximale Anzahl an Spielshows erreichst"
+          });
+        }
+      }
+
+      const config = input as TGameshowConfig;
+      const gameshow = await ctx.prisma.gameshow.create({
+        data: {
+          name: config.name,
+          // workaround until prisma type is set correctly
+          // @ts-expect-error
+          games: config.games, // TODO: fix game schema in prisma
+          creatorId: ctx.session.user.id
+        }
+      });
+      return gameshow;
+    }),
   update: protectedProcedure
     .input(
       z.object({
         gameshowId: z.string(),
-        updatedGameshow: z.unknown(),
+        updatedGameshow: z.unknown()
       })
     )
     .mutation(async ({ ctx, input }) => {
       const gameshow = await ctx.prisma.gameshow.findFirst({
         where: {
           id: input.gameshowId,
-          creatorId: ctx.session.user.id,
-        },
+          creatorId: ctx.session.user.id
+        }
       });
 
       if (!gameshow) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Gameshow konnte nicht gespeichert werden",
+          message: "Gameshow konnte nicht gespeichert werden"
         });
       }
 
@@ -128,11 +132,11 @@ export const gameshowsRouter = createTRPCRouter({
           name: config.name,
           // workaround until prisma type is set correctly
           // @ts-expect-error
-          games: config.games, // TODO: fix game schema in prisma
+          games: config.games // TODO: fix game schema in prisma
         },
         where: {
-          id: input.gameshowId,
-        },
+          id: input.gameshowId
+        }
       });
 
       return updatedGameshow;
@@ -140,29 +144,29 @@ export const gameshowsRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(
       z.object({
-        gameshowId: z.string(),
+        gameshowId: z.string()
       })
     )
     .mutation(async ({ ctx, input }) => {
       const gameshowToDelete = await ctx.prisma.gameshow.findFirst({
         where: {
           creatorId: ctx.session.user.id,
-          id: input.gameshowId,
-        },
+          id: input.gameshowId
+        }
       });
 
       if (!gameshowToDelete) {
         throw new TRPCError({
-          code: "FORBIDDEN",
+          code: "FORBIDDEN"
         });
       }
 
       const gameshow = await ctx.prisma.gameshow.delete({
         where: {
-          id: input.gameshowId,
-        },
+          id: input.gameshowId
+        }
       });
 
       return gameshow;
-    }),
+    })
 });

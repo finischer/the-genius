@@ -1,4 +1,9 @@
-import { type GameshowMode, type RoomTeams, type Room as PrismaRoom, Prisma } from "@prisma/client";
+import {
+  type GameshowMode,
+  type RoomTeams,
+  type Room as PrismaRoom,
+  Prisma
+} from "@prisma/client";
 import type Team from "../Team/Team";
 import type { TGame } from "~/components/room/Game/games/game.types";
 import type Room from ".";
@@ -20,7 +25,7 @@ export type IRoomMaxPlayersTeamMap = {
 };
 
 const roomInclude = Prisma.validator<Prisma.RoomInclude>()({
-  creator: true,
+  creator: true
 });
 
 export type PrismaRoomWithCreator = Prisma.RoomGetPayload<{

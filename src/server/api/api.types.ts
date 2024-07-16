@@ -1,4 +1,4 @@
 export enum TApiActions {
   CREATE = "create",
-  UPDATE = "update",
+  UPDATE = "update"
 }

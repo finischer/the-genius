@@ -1,26 +1,26 @@
 import { notifications, type NotificationData } from "@mantine/notifications";
 import { IconInfoCircle } from "@tabler/icons-react";
-import type { ZodError, typeToFlattenedError } from "zod";
+import type { typeToFlattenedError } from "zod";
 
 const useNotification = () => {
   const showErrorNotification = (notification: NotificationData) => {
     notifications.show({
       ...notification,
-      color: "red",
+      color: "red"
     });
   };
 
   const showSuccessNotification = (notification: NotificationData) => {
     notifications.show({
       ...notification,
-      color: "green",
+      color: "green"
     });
   };
 
   const showInfoNotification = (notification: NotificationData) => {
     notifications.show({
       ...notification,
-      icon: <IconInfoCircle />,
+      icon: <IconInfoCircle />
     });
   };
 
@@ -30,7 +30,7 @@ const useNotification = () => {
   ) => {
     if (!errorList) {
       showErrorNotification({
-        message: defaultErrorMsg,
+        message: defaultErrorMsg
       });
       return;
     }
@@ -38,7 +38,7 @@ const useNotification = () => {
     for (const value of Object.values(errorList.fieldErrors)) {
       value?.forEach((v) =>
         showErrorNotification({
-          message: v,
+          message: v
         })
       );
     }
@@ -48,7 +48,7 @@ const useNotification = () => {
     showErrorNotification,
     showSuccessNotification,
     showInfoNotification,
-    handleZodError,
+    handleZodError
   };
 };
 

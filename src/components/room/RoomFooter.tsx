@@ -8,24 +8,15 @@ const RoomFooter = () => {
   const room = useSyncedRoom();
 
   return (
-    <Flex
-      justify="space-between"
-      align="flex-end"
-    >
-      <Scorebar
-        team={room.teams.teamOne}
-        timerPosition="right"
-      />
+    <Flex justify="space-between" align="flex-end">
+      <Scorebar team={room.teams.teamOne} timerPosition="right" />
       <AnswerBanner
         answer={room.context.answerState.answer}
         size="l"
         showAnswer={room.context.answerState.isAnswerDisplayed}
         mx="xl"
       />
-      <Scorebar
-        team={room.teams.teamTwo}
-        timerPosition="left"
-      />
+      <Scorebar team={room.teams.teamTwo} timerPosition="left" />
     </Flex>
   );
 };

@@ -6,8 +6,8 @@ const config: DefaultSeoProps = {
     type: "website",
     locale: "de_DE",
     url: process.env.WEBSITE_URL,
-    siteName: "TheGenius",
-  },
+    siteName: "TheGenius"
+  }
 };
 
 export default config;

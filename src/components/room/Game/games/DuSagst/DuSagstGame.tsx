@@ -7,9 +7,18 @@ import useSyncedRoom from "~/hooks/useSyncedRoom";
 import type { TeamOptions } from "~/pages/api/classes/Room/room.types";
 import AnswerBox from "./components/AnswerBox";
 import QuestionContainer from "./components/QuestionContainer";
-import type { IDuSagstGameProps, TDuSagstAnswerBoxState } from "./duSagst.types";
+import type {
+  IDuSagstGameProps,
+  TDuSagstAnswerBoxState
+} from "./duSagst.types";
 
-const TeamBox = ({ teamBoxes, team }: { teamBoxes: TDuSagstAnswerBoxState[]; team: TeamOptions }) => {
+const TeamBox = ({
+  teamBoxes,
+  team
+}: {
+  teamBoxes: TDuSagstAnswerBoxState[];
+  team: TeamOptions;
+}) => {
   const room = useSyncedRoom();
 
   const handleSwitchRoles = () => {
@@ -19,11 +28,7 @@ const TeamBox = ({ teamBoxes, team }: { teamBoxes: TDuSagstAnswerBoxState[]; tea
   };
 
   return (
-    <Flex
-      direction="column"
-      gap="xl"
-      align="center"
-    >
+    <Flex direction="column" gap="xl" align="center">
       <Flex gap="xl">
         {teamBoxes.map((box, index) => {
           const player = room.teams[team].players.at(index);
@@ -60,15 +65,9 @@ const DuSagstGame: React.FC<IDuSagstGameProps> = ({ game }) => {
   const t2BoxStates = game.teamStates.t2.boxStates;
 
   return (
-    <Flex
-      gap={70}
-      align="flex-end"
-    >
+    <Flex gap={70} align="flex-end">
       {/* Team One answer boxes */}
-      <TeamBox
-        teamBoxes={t1BoxStates}
-        team="teamOne"
-      />
+      <TeamBox teamBoxes={t1BoxStates} team="teamOne" />
 
       {currQuestion && (
         <QuestionContainer
@@ -79,10 +78,7 @@ const DuSagstGame: React.FC<IDuSagstGameProps> = ({ game }) => {
       )}
 
       {/* Team Two answer boxes */}
-      <TeamBox
-        teamBoxes={t2BoxStates}
-        team="teamTwo"
-      />
+      <TeamBox teamBoxes={t2BoxStates} team="teamTwo" />
     </Flex>
   );
 };

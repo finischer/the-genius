@@ -16,7 +16,11 @@ import ReferatBingoGame from "./games/ReferatBingo/ReferatBingoGame";
 import type { TReferatBingoGameState } from "./games/ReferatBingo/config";
 import SetGame from "./games/Set/SetGame";
 import type { TSetGameState } from "./games/Set/config";
-import { Game as GameEnum, type IGameProps, type TGameMap } from "./games/game.types";
+import {
+  type Game as GameEnum,
+  type IGameProps,
+  type TGameMap
+} from "./games/game.types";
 import useAudio from "~/hooks/useAudio";
 
 const SECONDS_TO_ROTATE_TITLE_BANNER = 4;
@@ -36,7 +40,7 @@ const Game: React.FC<IGameProps> = ({ gameName }) => {
     const sequence = [
       [scope.current, { scale: 1 }, { duration: 0.5, delay: 0.5 }],
       [scope.current, { scale: 1.4 }, { duration: 6 }],
-      [scope.current, { scale: 0 }, { duration: 0.5 }],
+      [scope.current, { scale: 0 }, { duration: 0.5 }]
     ];
 
     // @ts-expect-error
@@ -83,7 +87,8 @@ const Game: React.FC<IGameProps> = ({ gameName }) => {
   const introState = room.context.gameIntro;
   const introIsPlaying = room.context.display.gameIntro;
   const showGame = room.context.display.game;
-  const gameNumber = room.games.findIndex((g) => g.identifier === game.identifier) + 1;
+  const gameNumber =
+    room.games.findIndex((g) => g.identifier === game.identifier) + 1;
 
   function getGame(identifier: GameEnum) {
     const GAME_MAP: TGameMap = {
@@ -92,7 +97,7 @@ const Game: React.FC<IGameProps> = ({ gameName }) => {
       geheimwoerter: <GeheimwörterGame game={game as TGeheimwörterGameState} />,
       set: <SetGame game={game as TSetGameState} />,
       duSagst: <DuSagstGame game={game as TDuSagstGameState} />,
-      referatBingo: <ReferatBingoGame game={game as TReferatBingoGameState} />,
+      referatBingo: <ReferatBingoGame game={game as TReferatBingoGameState} />
     };
 
     return GAME_MAP[identifier];
@@ -102,7 +107,9 @@ const Game: React.FC<IGameProps> = ({ gameName }) => {
     <>
       <AnimatePresence>
         {showGame && !introIsPlaying && (
-          <motion.div {...animations.fadeInOut}>{getGame(game.identifier)}</motion.div>
+          <motion.div {...animations.fadeInOut}>
+            {getGame(game.identifier)}
+          </motion.div>
         )}
       </AnimatePresence>
       {/* <AnimatePresence>
@@ -113,12 +120,7 @@ const Game: React.FC<IGameProps> = ({ gameName }) => {
         hidden={!introIsPlaying || showGame}
         initial={{ scale: 0 }}
       >
-        <Flex
-          direction="column"
-          gap="lg"
-          justify="center"
-          align="center"
-        >
+        <Flex direction="column" gap="lg" justify="center" align="center">
           <FlipCard
             isFlipped={introState.flippedTitleBanner}
             front={`Spiel ${gameNumber}`}

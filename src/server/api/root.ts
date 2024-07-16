@@ -18,7 +18,7 @@ export const appRouter = createTRPCRouter({
   gameshows: gameshowsRouter,
   feedbacks: feedbacksRouter,
   betaTesters: betaTestersRouter,
-  games: gamesRouter,
+  games: gamesRouter
   // parties: partyRouter,
 });
 

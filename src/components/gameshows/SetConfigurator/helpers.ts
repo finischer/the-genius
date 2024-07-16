@@ -3,7 +3,7 @@ import type {
   TSetCardFilling,
   TSetCardForm,
   TSetCard,
-  TSetQuestionItem,
+  TSetQuestionItem
 } from "~/components/room/Game/games/Set/set.types";
 import { v4 as uuidv4 } from "uuid";
 
@@ -30,7 +30,7 @@ export function generateRandomFormCard(): TSetCard {
     form,
     color,
     fill,
-    amount,
+    amount
   };
 
   return randomTForm;
@@ -55,7 +55,7 @@ export function generateNewSetQuestion(numOfCards: number): TSetQuestionItem {
 
   return {
     id: uuidv4(),
-    cards,
+    cards
   };
 }
 
@@ -93,7 +93,7 @@ function isValidSet(card1: TSetCard, card2: TSetCard, card3: TSetCard) {
     "form",
     "fill",
     "color",
-    "amount",
+    "amount"
   ];
 
   const results = [];

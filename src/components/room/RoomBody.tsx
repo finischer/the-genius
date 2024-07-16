@@ -1,22 +1,17 @@
-import { Box, Flex } from "@mantine/core";
+import { Flex } from "@mantine/core";
 import { AnimatePresence, motion } from "framer-motion";
-import React from "react";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { RoomView } from "~/types/gameshow.types";
-import Scoreboard from "./Scoreboard/Scoreboard";
 import { animations } from "~/utils/animations";
-import { ScoreboardColor } from "./Scoreboard/scoreboard.types";
 import Game from "./Game";
+import Scoreboard from "./Scoreboard/Scoreboard";
+import { ScoreboardColor } from "./Scoreboard/scoreboard.types";
 
 const RoomBody = () => {
   const room = useSyncedRoom();
 
   return (
-    <Flex
-      h="100%"
-      justify="center"
-      align="center"
-    >
+    <Flex h="100%" justify="center" align="center">
       {/* {currentGame && room.state.view === "GAME" && <Game game={currentGame} />} */}
       <AnimatePresence>
         {room.context.view === RoomView.GAME && room.context.currentGame && (
@@ -24,10 +19,7 @@ const RoomBody = () => {
         )}
         {room.context.view === RoomView.SCOREBOARD && (
           <motion.div {...animations.fadeInOut}>
-            <Flex
-              direction="column"
-              gap="xl"
-            >
+            <Flex direction="column" gap="xl">
               <Scoreboard
                 team={room.teams.teamOne}
                 color={ScoreboardColor.GREEN}

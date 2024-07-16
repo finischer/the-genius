@@ -9,7 +9,7 @@ const QuestionList: React.FC<IQuestionListProps> = ({
   questions,
   setQuestions,
   setQuestionItem,
-  questionItem,
+  questionItem
 }) => {
   const selectedItemId = questionItem.id;
   const keyForRendering: keyof TGeheimwoerterQuestionItem = "answer";
@@ -20,11 +20,7 @@ const QuestionList: React.FC<IQuestionListProps> = ({
   };
 
   return (
-    <Flex
-      direction="column"
-      gap="lg"
-      w="100%"
-    >
+    <Flex direction="column" gap="lg" w="100%">
       <Title order={3}>Antworten ({questions.length})</Title>
       <List
         data={questions}

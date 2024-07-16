@@ -2,7 +2,7 @@ import { type Server, type Socket } from "socket.io";
 import {
   type IClientToServerEvents,
   type IServerSocketData,
-  type IServerToClientEvents,
+  type IServerToClientEvents
 } from "~/types/socket.types";
 import { roomManager } from "../../controllers/RoomManager";
 import NoRoomException from "../../exceptions/NoRoomException";
@@ -12,7 +12,12 @@ const GAME_IDENTIFIER = Game.MERKEN;
 
 export function merkenHandler(
   io: Server,
-  socket: Socket<IClientToServerEvents, IServerToClientEvents, IServerSocketData> & IServerSocketData
+  socket: Socket<
+    IClientToServerEvents,
+    IServerToClientEvents,
+    IServerSocketData
+  > &
+    IServerSocketData
 ) {
   socket.on("merken:startGame", () => {
     const room = roomManager.getRoom(socket.roomId);

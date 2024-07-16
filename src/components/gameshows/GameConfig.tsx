@@ -17,7 +17,7 @@ export const GAME_CONFIGURATORS: TGameConfigurators = {
   geheimwoerter: GeheimwörterConfigurator,
   set: SetConfigurator,
   duSagst: DuSagstConfigurator,
-  referatBingo: ReferatBingoConfigurator,
+  referatBingo: ReferatBingoConfigurator
 };
 
 interface IGameConfigProps {

@@ -1,11 +1,11 @@
-import { roomStore } from "~/config/store";
+// import { roomStore } from "~/config/store";
 
-const SECONDS_TO_ROTATE_TITLE_BANNER = 4;
-const SECONDS_TOTAL_INTRO_DURATION = 8;
-const SECONDS_DELAY_BEFORE_GAME_DISPLAYS = 2;
+// const SECONDS_TO_ROTATE_TITLE_BANNER = 4;
+// const SECONDS_TOTAL_INTRO_DURATION = 8;
+// const SECONDS_DELAY_BEFORE_GAME_DISPLAYS = 2;
 
-const NUM_PLAYERS_DUELL = 1; // per Team
-const NUM_PLAYERS_TEAM = 2; // per Team
+// const NUM_PLAYERS_DUELL = 1; // per Team
+// const NUM_PLAYERS_TEAM = 2; // per Team
 
 export default class Room {
   id: string;
@@ -28,7 +28,12 @@ export default class Room {
 
   interval: NodeJS.Timer | undefined;
 
-  public constructor(name: string, password: string, creatorId: string, roomId: string) {
+  public constructor(
+    name: string,
+    password: string,
+    creatorId: string,
+    roomId: string
+  ) {
     this.id = roomId;
     this.name = name;
     // this.modus = room.modus;

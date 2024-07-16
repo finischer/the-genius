@@ -1,21 +1,20 @@
 import { useEffect, useState } from "react";
-import { useRoom } from "../useRoom";
-import { socket } from "../useSocket";
-import { useUser } from "../useUser";
+import { roomConfig } from "~/config/room.config";
+import { TimerType } from "~/types/gameshow.types";
 import useAudio from "../useAudio";
+import useNotification from "../useNotification";
 import useSyncedRoom from "../useSyncedRoom";
 import useTimer from "../useTimer";
-import { TimerType } from "~/types/gameshow.types";
-import { roomConfig } from "~/config/room.config";
-import useNotification from "../useNotification";
-import { displayObject } from "~/utils/helpers";
+import { useUser } from "../useUser";
 
 const useBuzzer = () => {
   const [isActive, setIsActive] = useState(true);
   const { isPlayer, playerFunction, player } = useUser();
   const room = useSyncedRoom();
 
-  const team = Object.values(room.teams).find((team) => team.players.some((p) => p.id === player?.id));
+  const team = Object.values(room.teams).find((team) =>
+    team.players.some((p) => p.id === player?.id)
+  );
 
   const { triggerAudioEvent } = useAudio();
   const { showInfoNotification } = useNotification();
@@ -25,7 +24,7 @@ const useBuzzer = () => {
       id: null,
       active: false,
       currSeconds: 0,
-      initSeconds: 5,
+      initSeconds: 5
     },
     TimerType.COUNTDOWN,
     roomConfig.timeAfterBuzzerPressedSeconds
@@ -34,8 +33,11 @@ const useBuzzer = () => {
   useEffect(() => {
     function handleBuzzerEvent(e: KeyboardEvent, withTimer = true) {
       // only listen to space
-      if (e.code === "Space" && document.activeElement?.tagName !== "TEXTAREA") {
-        handleBuzzerClick({ withTimer: true });
+      if (
+        e.code === "Space" &&
+        document.activeElement?.tagName !== "TEXTAREA"
+      ) {
+        handleBuzzerClick({ withTimer });
       }
     }
 
@@ -83,7 +85,9 @@ const useBuzzer = () => {
         return;
       }
 
-      const wasAlreadyBuzzered = Object.values(room.teams).some((team) => team.isActiveTurn);
+      const wasAlreadyBuzzered = Object.values(room.teams).some(
+        (team) => team.isActiveTurn
+      );
       if (wasAlreadyBuzzered || !isActive) return;
       triggerAudioEvent("playSound", "buzzer");
 
@@ -96,7 +100,9 @@ const useBuzzer = () => {
       }
     });
 
-  const areAllBuzzersLocked = Object.values(room.teams).every((team) => team.buzzer.isLocked);
+  const areAllBuzzersLocked = Object.values(room.teams).every(
+    (team) => team.buzzer.isLocked
+  );
 
   return {
     isActive,
@@ -105,7 +111,7 @@ const useBuzzer = () => {
     deactivateBuzzer,
     lockAllBuzzers,
     unlockAllBuzzers,
-    areAllBuzzersLocked,
+    areAllBuzzersLocked
   };
 };
 

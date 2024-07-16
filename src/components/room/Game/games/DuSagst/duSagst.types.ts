@@ -9,7 +9,12 @@ export interface IDuSagstGameProps {
 
 export type TDuSagstAnswerOptions = "A" | "B" | "C" | "D" | "Keine Antwort";
 
-export type TDuSagstAnswerColors = "green" | "blue" | "yellow" | "pink" | "transparent";
+export type TDuSagstAnswerColors =
+  | "green"
+  | "blue"
+  | "yellow"
+  | "pink"
+  | "transparent";
 
 export type TDuSagstAnswerSelectMapValue = {
   label: TDuSagstAnswerOptions;
@@ -29,7 +34,10 @@ export type TDuSagstTeamState = {
   boxStates: TDuSagstAnswerBoxState[];
 };
 
-export type TDuSagstQuestion = IListItem<{ question: string; answers: TDuSagstAnswer[] }>;
+export type TDuSagstQuestion = IListItem<{
+  question: string;
+  answers: TDuSagstAnswer[];
+}>;
 
 export type TDuSagstAnswer = {
   id: string;

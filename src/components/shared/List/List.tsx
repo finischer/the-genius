@@ -1,6 +1,5 @@
-import { Center, Flex, Text } from "@mantine/core";
+import { Flex, Text } from "@mantine/core";
 import { Reorder } from "framer-motion";
-import { useImmer } from "use-immer";
 import ListItem from "./components/ListItem";
 import type { IListItem } from "./components/ListItem/listItem.types";
 import type { IListProps } from "./list.types";
@@ -18,7 +17,7 @@ const List = <T,>({
   itemName = "Frage",
   showIndex = false,
   clickable = false,
-  listItem,
+  listItem
 }: IListProps<T>) => {
   // const [selectedItems, setSelectedItems] = useImmer<string[]>([]);
 
@@ -51,15 +50,8 @@ const List = <T,>({
 
   if (data.length === 0) {
     return (
-      <Flex
-        h="100%"
-        justify="center"
-        align="center"
-      >
-        <Text
-          size="xl"
-          ta="center"
-        >
+      <Flex h="100%" justify="center" align="center">
+        <Text size="xl" ta="center">
           {emptyListText}
         </Text>
       </Flex>
@@ -78,7 +70,7 @@ const List = <T,>({
         flexDirection: "column",
         padding: 0,
         margin: 0,
-        userSelect: "none",
+        userSelect: "none"
       }}
     >
       {data.map((item, index) => {
@@ -93,7 +85,11 @@ const List = <T,>({
             onClick={() => handleSelectItem(item)}
             onDelete={() => handleDeleteItem(item.id)}
             // @ts-ignore
-            content={!renderValueByKey ? `${itemName} ${index + 1}` : item[renderValueByKey]}
+            content={
+              !renderValueByKey
+                ? `${itemName} ${index + 1}`
+                : item[renderValueByKey]
+            }
             showIndex={showIndex}
             index={index}
             clickable={onClickItem ? true : false}

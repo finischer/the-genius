@@ -73,10 +73,7 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
   if (!question) return <></>;
 
   const WordList = () => (
-    <Flex
-      direction="column"
-      gap="md"
-    >
+    <Flex direction="column" gap="md">
       <ModView>
         <ActionIcon
           onClick={toggleWords}
@@ -93,11 +90,7 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
         style={{ borderRadius: theme.radius.md }}
         opacity={showWords ? 1 : 0.4}
       >
-        <SimpleGrid
-          cols={showAnswer ? 2 : 1}
-          verticalSpacing={0}
-          spacing="md"
-        >
+        <SimpleGrid cols={showAnswer ? 2 : 1} verticalSpacing={0} spacing="md">
           {question.words.map((word, index) => (
             <Fragment key={slug([word.word, index])}>
               <span style={{ fontWeight: "bold" }}>{word.word}</span>
@@ -129,11 +122,7 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
   };
 
   return (
-    <Flex
-      align="center"
-      gap="5rem"
-      justify="center"
-    >
+    <Flex align="center" gap="5rem" justify="center">
       <SimpleGrid
         cols={2}
         style={{ display: "flex", alignItems: "center" }}
@@ -142,11 +131,7 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
       >
         <AnimatePresence>
           {(game.display.codeList || isHost) && (
-            <Flex
-              direction="column"
-              gap="sm"
-              w="50%"
-            >
+            <Flex direction="column" gap="sm" w="50%">
               <ModView>
                 <ActionIcon
                   onClick={toggleCodeList}
@@ -158,10 +143,7 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
               </ModView>
 
               <Box opacity={game.display.codeList ? 1 : 0.4}>
-                <CodeList
-                  codeList={game.codeList}
-                  showTitle={false}
-                />
+                <CodeList codeList={game.codeList} showTitle={false} />
               </Box>
             </Flex>
           )}
@@ -169,10 +151,7 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
 
         <AnimatePresence>
           {(showWords || isHost) && (
-            <Flex
-              direction="column"
-              w="auto"
-            >
+            <Flex direction="column" w="auto">
               <motion.div
                 {...animations.fadeInOut}
                 style={{
@@ -180,20 +159,13 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
                   gap: "1rem",
                   flexDirection: "column",
                   justifyContent: "center",
-                  alignItems: "center",
+                  alignItems: "center"
                 }}
               >
-                <Flex
-                  gap="md"
-                  justify="center"
-                  align="center"
-                >
+                <Flex gap="md" justify="center" align="center">
                   <WordList />
                 </Flex>
-                <Flex
-                  align="center"
-                  gap="md"
-                >
+                <Flex align="center" gap="md">
                   <ModView>
                     <ArrowActionButton
                       arrowDirection="left"

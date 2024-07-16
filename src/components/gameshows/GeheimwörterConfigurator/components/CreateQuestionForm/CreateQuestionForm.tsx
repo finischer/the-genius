@@ -1,7 +1,10 @@
 import { Button, Flex, Text, TextInput, Title } from "@mantine/core";
 import React, { useEffect, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
-import type { ICreateQuestionContainerProps, IWordItemProps } from "./createQuestionForm.types";
+import type {
+  ICreateQuestionContainerProps,
+  IWordItemProps
+} from "./createQuestionForm.types";
 
 const WordItem: React.FC<IWordItemProps> = ({ word, ...props }) => {
   return (
@@ -22,7 +25,7 @@ const CreateQuestionForm: React.FC<ICreateQuestionContainerProps> = ({
   onUpdateQuestion,
   question,
   setQuestion,
-  mode,
+  mode
 }) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -36,19 +39,22 @@ const CreateQuestionForm: React.FC<ICreateQuestionContainerProps> = ({
       // add new word for every new char in answer
       draft.words = splittedAnswer.map((_, index) => ({
         word: question.words[index]?.word ?? "",
-        category: getCategory(newAnswer[index]),
+        category: getCategory(newAnswer[index])
       }));
     });
   };
 
-  const handleWordsChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+  const handleWordsChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
     const newWord = e.target.value;
     const currCategory = question.words[index]?.category ?? "";
 
     setQuestion((draft) => {
       draft.words[index] = {
         category: currCategory,
-        word: newWord,
+        word: newWord
       };
     });
   };
@@ -65,7 +71,7 @@ const CreateQuestionForm: React.FC<ICreateQuestionContainerProps> = ({
     setQuestion({
       id: uuidv4(),
       answer: "",
-      words: [],
+      words: []
     });
 
     inputRef.current?.focus();
@@ -91,18 +97,14 @@ const CreateQuestionForm: React.FC<ICreateQuestionContainerProps> = ({
         const splittedAnswer = draft.answer.split("");
         return {
           ...word,
-          category: getCategory(splittedAnswer[index]),
+          category: getCategory(splittedAnswer[index])
         };
       });
     });
   }, [codeList]);
 
   return (
-    <Flex
-      direction="column"
-      gap="lg"
-      w="100%"
-    >
+    <Flex direction="column" gap="lg" w="100%">
       <Title order={3}>Antwort erstellen</Title>
       <form onSubmit={handleSubmitQuestion}>
         <Flex
@@ -110,7 +112,7 @@ const CreateQuestionForm: React.FC<ICreateQuestionContainerProps> = ({
           gap="md"
           px="md"
           style={(theme) => ({
-            borderRadius: theme.radius.md,
+            borderRadius: theme.radius.md
           })}
         >
           <TextInput
@@ -122,10 +124,7 @@ const CreateQuestionForm: React.FC<ICreateQuestionContainerProps> = ({
             value={question.answer}
           />
           {question.answer && (
-            <Flex
-              direction="column"
-              gap="sm"
-            >
+            <Flex direction="column" gap="sm">
               <Text size="sm">Wörter</Text>
               {question.words.map((_, index) => {
                 const word = question.words[index];
@@ -141,7 +140,9 @@ const CreateQuestionForm: React.FC<ICreateQuestionContainerProps> = ({
             </Flex>
           )}
 
-          <Button type="submit">{mode === "ADD" ? "Hinzufügen" : "Speichern"}</Button>
+          <Button type="submit">
+            {mode === "ADD" ? "Hinzufügen" : "Speichern"}
+          </Button>
         </Flex>
       </form>
     </Flex>

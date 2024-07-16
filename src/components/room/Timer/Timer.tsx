@@ -10,7 +10,8 @@ const Timer = () => {
   const room = useSyncedRoom();
   const { triggerAudioEvent } = useAudio();
   const timerState = room.context.header.timer;
-  const secondsColor = timerState.currSeconds <= 5 ? theme.colors.red[7] : "white";
+  const secondsColor =
+    timerState.currSeconds <= 5 ? theme.colors.red[7] : "white";
 
   useEffect(() => {
     if (timerState.currSeconds === 5) {
@@ -37,13 +38,10 @@ const Timer = () => {
             align="center"
             style={(theme) => ({
               borderRadius: theme.radius.sm,
-              boxShadow: theme.shadows.xl,
+              boxShadow: theme.shadows.xl
             })}
           >
-            <Text
-              size="2.25rem"
-              c={secondsColor}
-            >
+            <Text size="2.25rem" c={secondsColor}>
               {timerState.currSeconds}
             </Text>
           </Flex>

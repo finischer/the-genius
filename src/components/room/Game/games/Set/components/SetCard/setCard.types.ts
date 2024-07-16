@@ -2,8 +2,7 @@ import type { Updater } from "use-immer";
 import {
   type TSetCard,
   type TSetGameMarkedCardsState,
-  type TSetQuestionItem,
-  type TSetQuestionList,
+  type TSetQuestionItem
 } from "./../../set.types";
 
 export interface ISetCardProps {

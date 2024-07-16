@@ -1,8 +1,7 @@
-import { Button, Flex, Table, Text, TextInput, Title } from "@mantine/core";
+import { Button, Flex, Table, TextInput, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import { IconTrash } from "@tabler/icons-react";
-import React, { useState } from "react";
 import PageLayout from "~/components/layout/PageLayout";
 import ActionIcon from "~/components/shared/ActionIcon";
 import useNotification from "~/hooks/useNotification";
@@ -12,23 +11,32 @@ import { formatTimestamp } from "~/utils/dates";
 const BetaUsersPage = () => {
   const form = useForm({
     initialValues: {
-      email: "",
+      email: ""
     },
 
     validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Ungültige Email"),
-    },
+      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Ungültige Email")
+    }
   });
   const { showSuccessNotification, handleZodError } = useNotification();
-  const { data: betaUserList, refetch: refreshBetaUsers, isLoading } = api.betaTesters.getAll.useQuery();
+  const {
+    data: betaUserList,
+    refetch: refreshBetaUsers,
+    isLoading
+  } = api.betaTesters.getAll.useQuery();
   const { mutate: addBetaUser } = api.betaTesters.create.useMutation({
     onSuccess: () => {
-      showSuccessNotification({ message: "Betatester erfolgreich hinzugefügt" });
+      showSuccessNotification({
+        message: "Betatester erfolgreich hinzugefügt"
+      });
       void refreshBetaUsers();
       form.reset();
     },
     onError: (error) =>
-      handleZodError(error.data?.zodError, error.message ?? "User konnte nicht hinzugefügt werden"),
+      handleZodError(
+        error.data?.zodError,
+        error.message ?? "User konnte nicht hinzugefügt werden"
+      )
   });
 
   const { mutate: deleteBetaUser } = api.betaTesters.deleteById.useMutation({
@@ -37,7 +45,10 @@ const BetaUsersPage = () => {
       void refreshBetaUsers();
     },
     onError: (error) =>
-      handleZodError(error.data?.zodError, error.message ?? "User konnte nicht gelöscht werden"),
+      handleZodError(
+        error.data?.zodError,
+        error.message ?? "User konnte nicht gelöscht werden"
+      )
   });
 
   const openDeleteModal = (userId: string) =>
@@ -46,9 +57,9 @@ const BetaUsersPage = () => {
       labels: { confirm: "Löschen", cancel: "Abbrechen" },
       centered: true,
       confirmProps: {
-        color: "red",
+        color: "red"
       },
-      onConfirm: () => deleteBetaUser(userId),
+      onConfirm: () => deleteBetaUser(userId)
     });
 
   const handleAddBetaUser = form.onSubmit((values) => {
@@ -77,14 +88,8 @@ const BetaUsersPage = () => {
       loadingMessage="Betatester werden geladen ..."
       showLoader={isLoading}
     >
-      <Flex
-        direction="column"
-        gap="xl"
-      >
-        <Flex
-          direction="column"
-          gap="sm"
-        >
+      <Flex direction="column" gap="xl">
+        <Flex direction="column" gap="sm">
           <Title order={4}>Neuen Betatester hinzufügen</Title>
           <form onSubmit={handleAddBetaUser}>
             <Flex gap="md">

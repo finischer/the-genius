@@ -14,9 +14,13 @@ const MIN_TIME_TO_THINK_SECONDS = 1;
 const PATH_TO_ICONS = "/icons/merken";
 
 const MerkenConfigurator = () => {
-  const { disableContinueButton, enableContinueButton } = useContext(StepperControlsContext);
+  const { disableContinueButton, enableContinueButton } = useContext(
+    StepperControlsContext
+  );
   const { merken, updateGame } = useGameshowConfig(Game.MERKEN);
-  const cards = new Array(24).fill(null).map((_, idx) => `${PATH_TO_ICONS}/${idx + 1}.png`);
+  const cards = new Array(24)
+    .fill(null)
+    .map((_, idx) => `${PATH_TO_ICONS}/${idx + 1}.png`);
   const [openCards, updateOpenCards] = useImmer<number[]>([]);
 
   const updateTimeToThink = (value: number | string) => {
@@ -39,7 +43,10 @@ const MerkenConfigurator = () => {
 
   useEffect(() => {
     const timeToThink = merken.timerState.timeToThinkSeconds;
-    if (timeToThink >= MIN_TIME_TO_THINK_SECONDS && timeToThink <= MAX_TIME_TO_THINK_SECONDS) {
+    if (
+      timeToThink >= MIN_TIME_TO_THINK_SECONDS &&
+      timeToThink <= MAX_TIME_TO_THINK_SECONDS
+    ) {
       enableContinueButton();
     } else {
       disableContinueButton();
@@ -53,11 +60,7 @@ const MerkenConfigurator = () => {
   }, []);
 
   return (
-    <Flex
-      direction="column"
-      gap="md"
-      align="center"
-    >
+    <Flex direction="column" gap="md" align="center">
       <NumberInput
         defaultValue={merken.timerState.timeToThinkSeconds}
         label="Nachdenkzeit"

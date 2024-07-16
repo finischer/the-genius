@@ -1,15 +1,14 @@
+import { randomId } from "@mantine/hooks";
 import { useSession } from "next-auth/react";
 import { createContext, useContext, useEffect, useState } from "react";
 import type { Player, Team } from "~/types/gameshow.types";
 import { type TUserReduced } from "~/types/socket.types";
 import type { FunctionToWrap } from "~/types/types";
 import { api } from "~/utils/api";
+import { createRandomUserName } from "~/utils/helpers";
 import useNotification from "../useNotification";
 import useSyncedRoom from "../useSyncedRoom";
 import { type IUseUserContext, type IUseUserProvider } from "./useUser.types";
-import { getYjsValue } from "@syncedstore/core";
-import { createRandomUserName } from "~/utils/helpers";
-import { randomId } from "@mantine/hooks";
 
 const UserContext = createContext<IUseUserContext | undefined>(undefined);
 
@@ -26,7 +25,8 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
   const isInTeam = !!team;
 
   const { showErrorNotification, showSuccessNotification } = useNotification();
-  const { mutateAsync: checkUsername, isLoading } = api.users.isUsernameInUse.useMutation();
+  const { mutateAsync: checkUsername, isLoading } =
+    api.users.isUsernameInUse.useMutation();
 
   const isAdmin = user.role === "ADMIN";
   const isHost = room.creatorId === user.id;
@@ -38,7 +38,7 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
       email: session?.user.email || "",
       image: session?.user.image || null,
       role: session?.user.role || "GUEST",
-      username: session?.user.username || createRandomUserName(),
+      username: session?.user.username || createRandomUserName()
     };
 
     return user;
@@ -56,7 +56,9 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
   function getTeam() {
     if (!room || !room.teams || !isPlayer) return;
 
-    const team = Object.values(room.teams).find((team) => team.id === player.teamId);
+    const team = Object.values(room.teams).find(
+      (team) => team.id === player.teamId
+    );
 
     return team;
   }
@@ -68,21 +70,26 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
 
     if (usernameExists) {
       showErrorNotification({
-        message: `Username "${newUsername}" ist bereits vergeben 🙁`,
+        message: `Username "${newUsername}" ist bereits vergeben 🙁`
       });
       return false;
     }
 
-    const newUser = { ...session, user: { ...session?.user, username: newUsername } };
+    const newUser = {
+      ...session,
+      user: { ...session?.user, username: newUsername }
+    };
     await updateSession(newUser);
 
     showSuccessNotification({
-      message: "Username erfolgreich geändert",
+      message: "Username erfolgreich geändert"
     });
     return true;
   }
 
-  function hostFunction<T extends any[]>(func: FunctionToWrap<T>): FunctionToWrap<T> {
+  function hostFunction<T extends any[]>(
+    func: FunctionToWrap<T>
+  ): FunctionToWrap<T> {
     if (!isHost) return () => null;
     return (...args: T) => func(...args);
   }
@@ -111,7 +118,7 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
         updateUsername,
         isLoading,
         hostFunction,
-        playerFunction,
+        playerFunction
       }}
     >
       {children}

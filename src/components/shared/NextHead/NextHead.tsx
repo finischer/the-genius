@@ -9,7 +9,7 @@ const NextHead: React.FC<INextHeadProps> = ({ title }) => {
       titleTemplate="%s | The Genius"
       defaultTitle="TheGenius"
       openGraph={{
-        title: title,
+        title: title
       }}
     />
   );

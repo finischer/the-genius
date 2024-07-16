@@ -1,8 +1,8 @@
 import { Flex, Menu, UnstyledButton, useMantineTheme } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
-import type React from "react";
+import React from "react";
 import type { CSSProperties } from "react";
-import { SET_FORMS, type TSetCard } from "../set.types";
+import { type SET_FORMS, type TSetCard } from "../set.types";
 import Diamond from "./Diamond";
 import Oval from "./Oval";
 import Rectangle from "./Rectangle";
@@ -29,12 +29,18 @@ export const DEFAULT_SET_FORM_STYLE: CSSProperties = {
   overflow: "hidden",
   alignSelf: "center",
   strokeWidth: "0.25rem",
-  width: "2.6rem",
+  width: "2.6rem"
 };
 
 const CHECK_ICON_SIZE = 14;
 
-const SetForm: React.FC<ISetFormProps> = ({ editable = false, card, onChange, onRemove, removeable }) => {
+const SetForm: React.FC<ISetFormProps> = ({
+  editable = false,
+  card,
+  onChange,
+  onRemove,
+  removeable
+}) => {
   const { form, color, fill, id } = card;
 
   const theme = useMantineTheme();
@@ -43,27 +49,16 @@ const SetForm: React.FC<ISetFormProps> = ({ editable = false, card, onChange, on
   const isDiamond = form === "diamond";
 
   const FORM_MAP: { [key in typeof form]: JSX.Element } = {
-    diamond: (
-      <Diamond
-        color={color}
-        fill={fill}
-      />
-    ),
-    rectangle: (
-      <Rectangle
-        color={color}
-        fill={fill}
-      />
-    ),
-    oval: (
-      <Oval
-        color={color}
-        fill={fill}
-      />
-    ),
+    diamond: <Diamond color={color} fill={fill} />,
+    rectangle: <Rectangle color={color} fill={fill} />,
+    oval: <Oval color={color} fill={fill} />
   };
 
-  const CustomMenuItem: React.FC<ICustomMenuItem> = ({ selected = false, children, name }) => (
+  const CustomMenuItem: React.FC<ICustomMenuItem> = ({
+    selected = false,
+    children,
+    name
+  }) => (
     <Menu.Item
       closeMenuOnClick={false}
       onClick={() => handleChangeFormData(name)}
@@ -91,7 +86,7 @@ const SetForm: React.FC<ISetFormProps> = ({ editable = false, card, onChange, on
 
     const newCard: TSetCard = {
       ...card,
-      [key]: value,
+      [key]: value
     };
 
     onChange(newCard);
@@ -110,8 +105,8 @@ const SetForm: React.FC<ISetFormProps> = ({ editable = false, card, onChange, on
         style={{
           cursor: "pointer",
           ":hover": {
-            background: theme.colors.dark[0],
-          },
+            background: theme.colors.dark[0]
+          }
         }}
       >
         <Menu
@@ -127,76 +122,46 @@ const SetForm: React.FC<ISetFormProps> = ({ editable = false, card, onChange, on
 
           <Menu.Dropdown>
             <Menu.Label>Form</Menu.Label>
-            <CustomMenuItem
-              name="form-rectangle"
-              selected={isRectangle}
-            >
+            <CustomMenuItem name="form-rectangle" selected={isRectangle}>
               Rechteck
             </CustomMenuItem>
-            <CustomMenuItem
-              name="form-diamond"
-              selected={isDiamond}
-            >
+            <CustomMenuItem name="form-diamond" selected={isDiamond}>
               Raute
             </CustomMenuItem>
-            <CustomMenuItem
-              name="form-oval"
-              selected={isOval}
-            >
+            <CustomMenuItem name="form-oval" selected={isOval}>
               Oval
             </CustomMenuItem>
 
             <Menu.Divider />
 
             <Menu.Label>Farbe</Menu.Label>
-            <CustomMenuItem
-              name="color-green"
-              selected={color === "green"}
-            >
+            <CustomMenuItem name="color-green" selected={color === "green"}>
               Grün
             </CustomMenuItem>
-            <CustomMenuItem
-              name="color-blue"
-              selected={color === "blue"}
-            >
+            <CustomMenuItem name="color-blue" selected={color === "blue"}>
               Blau
             </CustomMenuItem>
-            <CustomMenuItem
-              name="color-red"
-              selected={color === "red"}
-            >
+            <CustomMenuItem name="color-red" selected={color === "red"}>
               Rot
             </CustomMenuItem>
 
             <Menu.Divider />
 
             <Menu.Label>Füllung</Menu.Label>
-            <CustomMenuItem
-              name="fill-filled"
-              selected={fill === "filled"}
-            >
+            <CustomMenuItem name="fill-filled" selected={fill === "filled"}>
               Gefüllt
             </CustomMenuItem>
-            <CustomMenuItem
-              name="fill-dashed"
-              selected={fill === "dashed"}
-            >
+            <CustomMenuItem name="fill-dashed" selected={fill === "dashed"}>
               Gestrichelt
             </CustomMenuItem>
-            <CustomMenuItem
-              name="fill-none"
-              selected={fill === "none"}
-            >
+            <CustomMenuItem name="fill-none" selected={fill === "none"}>
               Leer
             </CustomMenuItem>
 
             {removeable && (
               <>
                 <Menu.Divider />
-                <Menu.Item
-                  color="red"
-                  onClick={handleRemoveForm}
-                >
+                <Menu.Item color="red" onClick={handleRemoveForm}>
                   Form entfernen
                 </Menu.Item>
               </>

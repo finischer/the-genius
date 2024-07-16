@@ -11,7 +11,7 @@ const GamesJSON = ({ games }: { games: TGame[] }) => {
       <Box
         bg="dark"
         style={{
-          borderRadius: "1rem",
+          borderRadius: "1rem"
         }}
       >
         <pre key={game.identifier}>
@@ -37,19 +37,18 @@ const GamesJSON = ({ games }: { games: TGame[] }) => {
         <Box
           bg="dark"
           style={{
-            borderRadius: "1rem",
+            borderRadius: "1rem"
           }}
         >
           <pre>
-            <code>{JSON.stringify({ ...room, games: undefined }, null, 2)}</code>
+            <code>
+              {JSON.stringify({ ...room, games: undefined }, null, 2)}
+            </code>
           </pre>
         </Box>
         <Text>Spiele: </Text>
         {games.map((game) => (
-          <GameCard
-            key={game.identifier}
-            game={game}
-          />
+          <GameCard key={game.identifier} game={game} />
         ))}
       </Stack>
     </ScrollArea>

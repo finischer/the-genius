@@ -2,7 +2,7 @@ import { type Server, type Socket } from "socket.io";
 import {
   type IClientToServerEvents,
   type IServerSocketData,
-  type IServerToClientEvents,
+  type IServerToClientEvents
 } from "~/types/socket.types";
 import { roomManager } from "../../controllers/RoomManager";
 import NoRoomException from "../../exceptions/NoRoomException";
@@ -13,7 +13,12 @@ const MS_DELAY = 1000;
 
 export function geheimwoerterHandler(
   io: Server,
-  socket: Socket<IClientToServerEvents, IServerToClientEvents, IServerSocketData> & IServerSocketData
+  socket: Socket<
+    IClientToServerEvents,
+    IServerToClientEvents,
+    IServerSocketData
+  > &
+    IServerSocketData
 ) {
   socket.on("geheimwoerter:toggleCodeList", () => {
     const room = roomManager.getRoom(socket.roomId);

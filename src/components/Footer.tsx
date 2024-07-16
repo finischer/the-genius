@@ -1,9 +1,9 @@
-import { Anchor, AppShell, Group, rem } from "@mantine/core";
+import { Anchor, AppShell, Group } from "@mantine/core";
 import { useRouter } from "next/router";
 
 const links = [
   { link: "/impressum", label: "Impressum" },
-  { link: "/datenschutz", label: "Datenschutzerklärung" },
+  { link: "/datenschutz", label: "Datenschutzerklärung" }
 ];
 
 const Footer = () => {
@@ -20,15 +20,12 @@ const Footer = () => {
   ));
 
   return (
-    <AppShell.Footer
-      px="md"
-      py="xs"
-    >
+    <AppShell.Footer px="md" py="xs">
       <Group
         h="100%"
         style={{
           justifyContent: "center",
-          alignItems: "center",
+          alignItems: "center"
         }}
       >
         {items}

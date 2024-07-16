@@ -1,19 +1,29 @@
 import { randomId } from "@mantine/hooks";
 import type { RoomSounds } from "@prisma/client";
-import { Y, getYjsValue, syncedStore } from "@syncedstore/core";
+import { type Y, getYjsValue, syncedStore } from "@syncedstore/core";
 import { WebsocketProvider } from "y-partykit/provider";
 import type { TGame } from "~/components/room/Game/games/game.types";
-import { RoomView, type Player, type Room, type Team } from "~/types/gameshow.types";
+import {
+  RoomView,
+  type Player,
+  type Room,
+  type Team
+} from "~/types/gameshow.types";
 import { roomConfig } from "./room.config";
 
-export const initRoom = (name: string, password: string, games: TGame[], creatorId: string): Room => ({
+export const initRoom = (
+  name: string,
+  password: string,
+  games: TGame[],
+  creatorId: string
+): Room => ({
   id: randomId(),
   creatorId,
   name,
   password,
   teams: {
     teamOne: initTeam("Team 1"),
-    teamTwo: initTeam("Team 2"),
+    teamTwo: initTeam("Team 2")
   },
   games,
   context: {
@@ -25,32 +35,32 @@ export const initRoom = (name: string, password: string, games: TGame[], creator
         id: null,
         active: false,
         currSeconds: 0,
-        initSeconds: 0,
-      },
+        initSeconds: 0
+      }
     },
     audio: {
       sounds: {} as RoomSounds,
       music: {
         isActive: false,
-        title: "",
-      },
+        title: ""
+      }
     },
     answerState: {
       answer: "",
-      isAnswerDisplayed: false,
+      isAnswerDisplayed: false
     },
     gameIntro: {
       alreadyPlayed: false,
       flippedTitleBanner: false,
-      milliseconds: 0,
+      milliseconds: 0
     },
     display: {
       confetti: false,
       roomTimer: false,
       gameIntro: false,
-      game: false,
-    },
-  },
+      game: false
+    }
+  }
 });
 
 export const initTeam = (name: string): Team => ({
@@ -61,7 +71,7 @@ export const initTeam = (name: string): Team => ({
   buzzer: {
     isLocked: false,
     isPressed: false,
-    playersBuzzered: [],
+    playersBuzzered: []
   },
   totalScore: 0,
   gameScore: 0,
@@ -71,11 +81,15 @@ export const initTeam = (name: string): Team => ({
     id: null,
     currSeconds: 0,
     initSeconds: roomConfig.timeAfterBuzzerPressedSeconds,
-    active: false,
-  },
+    active: false
+  }
 });
 
-export const initPlayer = (userId: string, username: string, teamId: string): Player => ({
+export const initPlayer = (
+  userId: string,
+  username: string,
+  teamId: string
+): Player => ({
   id: randomId(),
   name: username,
   userId,
@@ -83,12 +97,12 @@ export const initPlayer = (userId: string, username: string, teamId: string): Pl
   context: {
     notefield: {
       isActive: false,
-      value: "",
+      value: ""
     },
     duSagst: {
-      answer: -1,
-    },
-  },
+      answer: -1
+    }
+  }
 });
 
 export type RoomStore = {
@@ -96,7 +110,7 @@ export type RoomStore = {
 };
 
 export const roomStore = syncedStore({
-  room: {} as RoomStore,
+  room: {} as RoomStore
 });
 
 export const connectToSocket = (roomId: string) => {

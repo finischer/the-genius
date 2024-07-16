@@ -14,7 +14,7 @@ export const DEFAULT_MERKEN_STATE: TMerkenGameState = {
   openCards: [],
   timerState: {
     isActive: false,
-    timeToThinkSeconds: 60,
+    timeToThinkSeconds: 60
   },
   rules: `
 Spiel: {{ gameName }}
@@ -32,5 +32,5 @@ Dann seid ihr abwechselnd an der Reihe, euren Gegnerteam zu fragen, welche Abbil
 Bei einer richtigen Antwort bekommt das Gegnerteam einen Punkt, und die Karte bleibt offen. Bei einer falschen Antwort wird die Karte wieder verdeckt, und keiner bekommt einen Punkt.
 
 Das erste Team, das {{ maxPoints }} Punkte erreicht, gewinnt das Spiel.
-  `,
+  `
 };

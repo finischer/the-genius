@@ -8,18 +8,16 @@ interface IBuyMeACoffeeButtonProps {
 
 const DEFAULT_BUTTON_WIDTH_PX = 200;
 
-export const BuyMeACoffeeButton: FC<IBuyMeACoffeeButtonProps> = ({ width = DEFAULT_BUTTON_WIDTH_PX }) => {
+export const BuyMeACoffeeButton: FC<IBuyMeACoffeeButtonProps> = ({
+  width = DEFAULT_BUTTON_WIDTH_PX
+}) => {
   return (
     <UnstyledButton
       component="a"
       href={TheGeniusConfig.socialMedia.buyMeACoffee}
       target="_blank"
     >
-      <Image
-        src="/images/bmc-button.svg"
-        w={width}
-        alt="bmc-button"
-      />
+      <Image src="/images/bmc-button.svg" w={width} alt="bmc-button" />
     </UnstyledButton>
   );
 };

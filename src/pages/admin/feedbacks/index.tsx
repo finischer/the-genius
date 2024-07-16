@@ -1,4 +1,4 @@
-import { Center, Divider, Flex, Text, useMantineTheme } from "@mantine/core";
+import { Divider, Flex, Text, useMantineTheme } from "@mantine/core";
 import { IconRefresh } from "@tabler/icons-react";
 import FeedbackList from "~/components/admin/feedbacks/FeedbackList";
 import withAdminAuth from "~/components/admin/withAdminAuth";
@@ -12,7 +12,7 @@ const FeedbackPage = () => {
     data: feedbacks,
     refetch: refreshFeedback,
     isLoading,
-    isFetching,
+    isFetching
   } = api.feedbacks.getAll.useQuery();
   return (
     <PageLayout
@@ -33,13 +33,11 @@ const FeedbackPage = () => {
 
       <Divider my="md" />
 
-      {feedbacks && feedbacks.length > 0 && <FeedbackList feedbacks={feedbacks} />}
+      {feedbacks && feedbacks.length > 0 && (
+        <FeedbackList feedbacks={feedbacks} />
+      )}
       {feedbacks?.length === 0 && (
-        <Flex
-          h="100%"
-          justify="center"
-          align="center"
-        >
+        <Flex h="100%" justify="center" align="center">
           <Text>Es wurde noch kein Feedback eingereicht</Text>
         </Flex>
       )}

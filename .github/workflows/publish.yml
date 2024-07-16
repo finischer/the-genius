@@ -67,7 +67,7 @@ jobs:
     if: github.event.inputs.releaseType == 'production'
     name: Deploy to production
     environment: 
-        name: staging
+        name: production
         url: https://beta.the-genius.de/
     needs: [staging]
 

@@ -65,6 +65,7 @@
     "next-seo": "^6.4.0",
     "nodemailer": "^6.9.1",
     "partysocket": "1.0.0",
+    "posthog-js": "^1.148.0",
     "react": "^18.3.1",
     "react-animations": "^1.0.0",
     "react-card-flip": "^1.2.0",

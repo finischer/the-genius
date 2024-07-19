@@ -35,7 +35,9 @@ export const env = createEnv({
       process.env.NEXT_PUBLIC_GTAG_ID === "production"
         ? z.string().min(1)
         : z.string().min(1).optional(),
-    NEXT_PUBLIC_PARTYKIT_HOST: z.string().min(1)
+    NEXT_PUBLIC_PARTYKIT_HOST: z.string().min(1),
+    NEXT_PUBLIC_POSTHOG_KEY: z.string().min(1),
+    NEXT_PUBLIC_POSTHOG_HOST: z.string().min(1)
   },
 
   /**
@@ -55,6 +57,8 @@ export const env = createEnv({
     WEBSITE_URL: process.env.WEBSITE_URL,
     NEXT_PUBLIC_THE_GENIUS_ENV: process.env.NEXT_PUBLIC_THE_GENIUS_ENV,
     NEXT_PUBLIC_GTAG_ID: process.env.NEXT_PUBLIC_GTAG_ID,
-    NEXT_PUBLIC_PARTYKIT_HOST: process.env.NEXT_PUBLIC_PARTYKIT_HOST
+    NEXT_PUBLIC_PARTYKIT_HOST: process.env.NEXT_PUBLIC_PARTYKIT_HOST,
+    NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
+    NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST
   }
 });

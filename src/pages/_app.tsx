@@ -18,12 +18,41 @@ import { THEME, cssResolver } from "~/styles/constants";
 import "~/styles/globals.css";
 import { api } from "~/utils/api";
 
+import posthog from "posthog-js";
+import { PostHogProvider } from "posthog-js/react";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { env } from "~/env.mjs";
+
+if (typeof window !== "undefined") {
+  posthog.init(env.NEXT_PUBLIC_POSTHOG_KEY, {
+    api_host: env.NEXT_PUBLIC_POSTHOG_HOST || "https://eu.i.posthog.com",
+    person_profiles: "identified_only",
+    // Enable debug mode in development
+    loaded: (posthog) => {
+      if (process.env.NODE_ENV === "development") posthog.debug();
+    }
+  });
+}
+
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps }
 }) => {
+  const router = useRouter();
+
+  useEffect(() => {
+    // Track page views
+    const handleRouteChange = () => posthog?.capture("$pageview");
+    router.events.on("routeChangeComplete", handleRouteChange);
+
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+    };
+  }, []);
+
   return (
-    <>
+    <PostHogProvider client={posthog}>
       {/* Head */}
       <DefaultSeo {...SEO} />
       {/* Body */}
@@ -48,7 +77,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
           </SessionProvider>
         </ModalsProvider>
       </MantineProvider>
-    </>
+    </PostHogProvider>
   );
 };
 

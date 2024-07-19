@@ -22,6 +22,8 @@ env:
   WEBSITE_URL: "${{ secrets.WEBSITE_URL }}"
   NEXT_PUBLIC_THE_GENIUS_ENV: "${{ secrets.NEXT_PUBLIC_THE_GENIUS_ENV }}"
   NEXT_PUBLIC_PARTYKIT_HOST: "${{ secrets.NEXT_PUBLIC_PARTYKIT_HOST }}"
+  NEXT_PUBLIC_POSTHOG_KEY: "${{ secrets.NEXT_PUBLIC_POSTHOG_KEY }}"
+  NEXT_PUBLIC_POSTHOG_HOST: "${{ secrets.NEXT_PUBLIC_POSTHOG_HOST }}"
 
 jobs:
   build:
@@ -66,5 +68,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Prettier
+        run: npm run format:all
+
       - name: Run Linter
         run: npm run lint
+
+        

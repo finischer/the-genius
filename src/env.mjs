@@ -9,7 +9,7 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
-    MONGODB_URI: z.string().url(),
+    MONGODB_URI: z.string().min(1),
     NODE_ENV: environments,
     NEXTAUTH_SECRET:
       process.env.NODE_ENV === "production"

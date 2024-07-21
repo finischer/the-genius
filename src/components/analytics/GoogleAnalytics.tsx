@@ -1,5 +1,4 @@
 import { useLocalStorage } from "@mantine/hooks";
-import Script from "next/script";
 import { isProduction } from "~/utils/environment";
 import CookieBanner from "../CookieBanner";
 import { useEffect, useState } from "react";
@@ -57,7 +56,7 @@ const GoogleAnalytics = () => {
       )}
       {analytics && (
         <>
-          <Script
+          {/* <Script
             src={`https://www.googletagmanager.com/gtag/js?id=${gTagId}`}
           />
           <Script id="google-analytics">
@@ -68,7 +67,7 @@ const GoogleAnalytics = () => {
             
             gtag('config', '${gTagId}' );
             `}
-          </Script>
+          </Script> */}
         </>
       )}
     </>

@@ -262,7 +262,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
               </Menu.Dropdown>
             </ModView>
           </Menu>
-          {!teamFn.isPlayer && !isHost && !teamFn.isTeamFull && (
+          {!teamFn.isPlayer() && !isHost && !teamFn.isTeamFull(team.id) && (
             <Button
               variant="subtle"
               mb="xs"

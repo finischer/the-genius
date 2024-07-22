@@ -11,6 +11,7 @@ on:
       - closed
 
 env:
+  APP_ENV: "${{ secrets.APP_ENV }}"
   GOOGLE_CLIENT_ID: "${{ secrets.GOOGLE_CLIENT_ID }}"
   GOOGLE_CLIENT_SECRET: "${{ secrets.GOOGLE_CLIENT_SECRET }}"
   MONGODB_URI: "${{ secrets.MONGODB_URI }}"
@@ -73,5 +74,3 @@ jobs:
 
       - name: Run Linter
         run: npm run lint
-
-        

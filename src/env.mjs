@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createEnv } from "@t3-oss/env-nextjs";
 
-const environments = z.enum(["development", "test", "production"]);
+const environments = z.enum(["development", "staging", "production"]);
 
 export const env = createEnv({
   /**
@@ -11,8 +11,9 @@ export const env = createEnv({
   server: {
     MONGODB_URI: z.string().min(1),
     NODE_ENV: environments,
+    APP_ENV: environments,
     NEXTAUTH_SECRET:
-      process.env.NODE_ENV === "production"
+      process.env.APP_ENV === "production"
         ? z.string().min(1)
         : z.string().min(1).optional(),
     GOOGLE_CLIENT_ID: z.string(),
@@ -47,6 +48,7 @@ export const env = createEnv({
   runtimeEnv: {
     MONGODB_URI: process.env.MONGODB_URI,
     NODE_ENV: process.env.NODE_ENV,
+    APP_ENV: process.env.APP_ENV,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,

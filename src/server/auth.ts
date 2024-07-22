@@ -11,6 +11,7 @@ import { prisma } from "~/server/db";
 import { sessionCallback, signInCallback } from "./auth/callbacks";
 import DiscordProvider from "./auth/providers/DiscordProvider";
 import GoogleProvider from "./auth/providers/GoogleProvider";
+import { isDevelopment } from "~/utils/environment";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -70,7 +71,7 @@ export const authOptions: NextAuthOptions = {
     strategy: "database"
   },
   // Enable debug messages in the console if you are having problems
-  debug: process.env.NODE_ENV === "development"
+  debug: isDevelopment
 };
 
 /**

@@ -153,7 +153,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
   };
 
   return (
-    <Flex align="flex-end" gap="lg" pos="relative">
+    <Flex align="flex-end" gap="lg" pos="relative" className="scorebar">
       {/* Left Scorbar timer */}
       <AnimatePresence>
         {timerPosition === "left" && team.scorebarTimer.active && (
@@ -289,7 +289,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
           )}
 
           <ModView>
-            <Group mb="xs">
+            <Group mb="xs" className="scorebar-settings">
               <ActionIcon
                 variant="outline"
                 disabled={team.scorebarTimer.active}

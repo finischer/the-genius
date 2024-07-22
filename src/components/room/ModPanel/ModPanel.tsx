@@ -211,7 +211,9 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
           opacity: 0.15
         }}
         scrollAreaComponent={ScrollArea.Autosize}
+        className="mod-panel-explanation"
       >
+        {/* <ReactJoyride steps={tutorial_steps} /> */}
         <Flex h="100%" direction="column" gap="xl" justify="space-between">
           <Flex direction="column" gap="sm">
             <Accordion
@@ -220,18 +222,34 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
               multiple
               onChange={setOpenedItems}
             >
-              <Accordion.Item value="startGame">
+              <Accordion.Item
+                value="startGame"
+                className="mod-panel-start-games-accordion"
+              >
                 <Accordion.Control>
-                  <Title order={titleOrder}>Spiel starten</Title>
+                  <Title
+                    order={titleOrder}
+                    className="mod-panel-start-game-explanation"
+                  >
+                    Spiel starten
+                  </Title>
                 </Accordion.Control>
                 <Accordion.Panel>
                   <Button.Group orientation="vertical">{gameBtns}</Button.Group>
                 </Accordion.Panel>
               </Accordion.Item>
 
-              <Accordion.Item value="views">
+              <Accordion.Item
+                value="views"
+                className="mod-panel-change-scene-accordion"
+              >
                 <Accordion.Control>
-                  <Title order={titleOrder}>Ansichten</Title>
+                  <Title
+                    order={titleOrder}
+                    className="mod-panel-scene-explanation"
+                  >
+                    Ansichten
+                  </Title>
                 </Accordion.Control>
                 <Accordion.Panel>
                   <Button.Group orientation="vertical">
@@ -251,7 +269,10 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                 </Accordion.Panel>
               </Accordion.Item>
 
-              <Accordion.Item value="actions">
+              <Accordion.Item
+                value="actions"
+                className="mod-panel-actions-accordion"
+              >
                 <Accordion.Control>
                   <Title order={titleOrder}>Aktionen</Title>
                 </Accordion.Control>
@@ -299,7 +320,10 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                 </Accordion.Panel>
               </Accordion.Item>
 
-              <Accordion.Item value="sounds">
+              <Accordion.Item
+                value="sounds"
+                className="mod-panel-sounds-accordion"
+              >
                 <Accordion.Control>
                   <Title order={titleOrder}>Sounds</Title>
                 </Accordion.Control>

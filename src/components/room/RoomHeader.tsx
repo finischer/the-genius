@@ -51,6 +51,7 @@ const RoomHeader = () => {
         variant="filled"
         onClick={openSettings}
         toolTip="Einstellungen"
+        className="room-settings-btn"
       >
         <IconSettings size="1.5rem" />
       </ActionIcon>

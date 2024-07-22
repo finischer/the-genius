@@ -23,6 +23,7 @@ import { PostHogProvider } from "posthog-js/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { env } from "~/env.mjs";
+import { isDevelopment } from "~/utils/environment";
 
 if (typeof window !== "undefined") {
   posthog.init(env.NEXT_PUBLIC_POSTHOG_KEY, {
@@ -30,7 +31,7 @@ if (typeof window !== "undefined") {
     person_profiles: "identified_only",
     // Enable debug mode in development
     loaded: (posthog) => {
-      if (process.env.NODE_ENV === "development") posthog.debug();
+      if (isDevelopment) posthog.debug();
     }
   });
 }

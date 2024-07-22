@@ -38,6 +38,7 @@ const MediaPlayer = () => {
       style={(theme) => ({
         borderRadius: theme.radius.md
       })}
+      className="mod-panel-media-player"
     >
       <Flex direction="column">
         <Text fw="bold">{songInfo.title}</Text>

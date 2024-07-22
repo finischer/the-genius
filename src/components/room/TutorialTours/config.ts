@@ -10,10 +10,10 @@ export const scorebarStep: Step = {
 
 export const welcomeStep: Step = {
   target: ".interactive-tour-header",
-  content:
-    "Willkommen! Nimm dir einen Moment Zeit, um dich mit der Oberfläche vertraut zu machen.",
-  placement: "center",
   title: "Willkommen!",
+  content:
+    "Nimm dir einen Moment Zeit, um dich mit der Oberfläche vertraut zu machen.",
+  placement: "center",
   styles: {
     options: {
       arrowColor: "rgba(0, 0, 0, 0)"

@@ -61,7 +61,7 @@ jobs:
         run: npm i -g @railway/cli
 
       - name: Deploy to staging
-        run: railway up --service the-genius-staging --ci
+        run: railway up --service the-genius --ci
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 

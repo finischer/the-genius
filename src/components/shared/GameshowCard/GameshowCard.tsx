@@ -1,5 +1,6 @@
 import { Badge, Button, Card, Group, Text } from "@mantine/core";
 import type { FC } from "react";
+import { api } from "~/utils/api";
 import classes from "./gameshowCard.module.css";
 import type { IGameshowCardProps } from "./gameshowCard.types";
 
@@ -8,28 +9,37 @@ export const GameshowCard: FC<IGameshowCardProps> = ({
   title,
   description,
   creator,
-  badges
+  games
 }) => {
+  const { mutateAsync: importGameshow } =
+    api.gameshows.importGameshow.useMutation();
+
+  const badges = games.map((game) => ({
+    label: game.name
+  }));
+
   const features = badges.map((badge) => (
     <Badge variant="light" key={badge.label}>
       {badge.label}
     </Badge>
   ));
 
-  const handleImportGameshow = () => {
+  const handleImportGameshow = async () => {
     console.log("Importing gameshow with id", id);
+    const importedGameshow = await importGameshow({
+      gameshowId: id
+    });
+
+    console.log("Imported gameshow", importedGameshow);
   };
 
   return (
-    <Card withBorder radius="md" p="md" className={classes.card}>
+    <Card withBorder radius="md" p="md" className={classes.card} w={450}>
       {/* <Card.Section>
         <Image src={image} alt={title} height={180} />
       </Card.Section> */}
 
       <Card.Section className={classes.section} p="md">
-        <Text fz="xs" c="dimmed">
-          Gameshow ID: {id}
-        </Text>
         <Group justify="apart">
           <Text fz="lg" fw={500}>
             {title}

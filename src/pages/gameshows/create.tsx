@@ -1,4 +1,5 @@
 import { Button, Stack, useMantineTheme } from "@mantine/core";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import GamesConfigStepper from "~/components/gameshows/GamesConfigStepper";
 import PageLayout from "~/components/layout/PageLayout";
@@ -6,17 +7,25 @@ import ContainerBox from "~/components/shared/ContainerBox";
 import ImportGameshow from "~/components/shared/ImportGameshow";
 import NextHead from "~/components/shared/NextHead";
 import { GameConfigProvider } from "~/context/GameConfigProvider";
+import { TApiActions } from "~/server/api/api.types";
 
 enum CreateGameshowViews {
   "SELECT_OPTION",
   "CREATE",
-  "IMPORT"
+  "IMPORT",
+  "EDIT"
 }
 
 const CreateGameshowPage = () => {
-  const [view, setView] = useState<CreateGameshowViews>(
-    CreateGameshowViews.SELECT_OPTION
-  );
+  const router = useRouter();
+
+  const action = router.query.action as TApiActions;
+  const defaultView =
+    action === TApiActions.UPDATE
+      ? CreateGameshowViews.EDIT
+      : CreateGameshowViews.SELECT_OPTION;
+
+  const [view, setView] = useState<CreateGameshowViews>(defaultView);
 
   const SelectOptionView = () => {
     const theme = useMantineTheme();
@@ -59,7 +68,8 @@ const CreateGameshowPage = () => {
         <GameConfigProvider>
           {view === CreateGameshowViews.SELECT_OPTION && <SelectOptionView />}
           {view === CreateGameshowViews.IMPORT && <ImportGameshow />}
-          {view === CreateGameshowViews.CREATE && <GamesConfigStepper />}
+          {(view === CreateGameshowViews.CREATE ||
+            view === CreateGameshowViews.EDIT) && <GamesConfigStepper />}
         </GameConfigProvider>
       </PageLayout>
     </>

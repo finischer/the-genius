@@ -1,12 +1,12 @@
 import { Flex, Menu, Table, Text, Title, useMantineTheme } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
-import type { Gameshow } from "@prisma/client";
 import {
   IconDots,
   IconEdit,
   IconPlayerPlay,
   IconPlus,
+  IconShare,
   IconStar,
   IconStarFilled,
   IconTrash
@@ -17,6 +17,7 @@ import PageLayout from "~/components/layout/PageLayout";
 import ActionIcon from "~/components/shared/ActionIcon";
 import CreateRoomModal from "~/components/shared/CreateRoomModal";
 import NextHead from "~/components/shared/NextHead";
+import PublishGameshowModal from "~/components/shared/PublishGameshowModal";
 import useLoadingState from "~/hooks/useLoadingState/useLoadingState";
 import useNotification from "~/hooks/useNotification";
 import type { SafedGameshow } from "~/server/api/routers/gameshows";
@@ -29,9 +30,14 @@ const ActionMenu = ({
   gameshow,
   onDeleteGameshow
 }: {
-  gameshow: Gameshow;
+  gameshow: SafedGameshow;
   onDeleteGameshow: (gameshowId: string) => void;
 }) => {
+  const [
+    openedPublishGameshowModal,
+    { close: closePublishGameshowModal, open: openPublishGameshowModal }
+  ] = useDisclosure(false);
+
   const StarIcon = gameshow.isFavorite ? (
     <IconStarFilled size={MENU_ICON_SIZE} />
   ) : (
@@ -73,33 +79,50 @@ const ActionMenu = ({
     );
   };
 
+  const handlePublishGameshow = () => {
+    openPublishGameshowModal();
+  };
+
   return (
-    <Menu>
-      <ActionIcon variant="default">
-        <Menu.Target>
-          <IconDots />
-        </Menu.Target>
-      </ActionIcon>
-      <Menu.Dropdown>
-        <Menu.Label>Aktionen für {gameshow.name}</Menu.Label>
-        <Menu.Item
-          leftSection={<IconEdit size={MENU_ICON_SIZE} />}
-          onClick={handleEditGameshow}
-        >
-          Bearbeiten
-        </Menu.Item>
-        <Menu.Item disabled leftSection={StarIcon}>
-          Als Favorit {gameshow.isFavorite ? "entfernen" : "hinzufügen"}
-        </Menu.Item>
-        <Menu.Item
-          color="red"
-          leftSection={<IconTrash size={MENU_ICON_SIZE} />}
-          onClick={openDeleteConfirmModal}
-        >
-          Löschen
-        </Menu.Item>
-      </Menu.Dropdown>
-    </Menu>
+    <>
+      <PublishGameshowModal
+        openedModal={openedPublishGameshowModal}
+        onClose={closePublishGameshowModal}
+        gameshow={gameshow}
+      />
+      <Menu>
+        <ActionIcon variant="default">
+          <Menu.Target>
+            <IconDots />
+          </Menu.Target>
+        </ActionIcon>
+        <Menu.Dropdown>
+          <Menu.Label>Aktionen für {gameshow.name}</Menu.Label>
+          <Menu.Item
+            leftSection={<IconEdit size={MENU_ICON_SIZE} />}
+            onClick={handleEditGameshow}
+          >
+            Bearbeiten
+          </Menu.Item>
+          <Menu.Item
+            leftSection={<IconShare size={MENU_ICON_SIZE} />}
+            onClick={handlePublishGameshow}
+          >
+            Veröffentlichen
+          </Menu.Item>
+          <Menu.Item disabled leftSection={StarIcon}>
+            Als Favorit {gameshow.isFavorite ? "entfernen" : "hinzufügen"}
+          </Menu.Item>
+          <Menu.Item
+            color="red"
+            leftSection={<IconTrash size={MENU_ICON_SIZE} />}
+            onClick={openDeleteConfirmModal}
+          >
+            Löschen
+          </Menu.Item>
+        </Menu.Dropdown>
+      </Menu>
+    </>
   );
 };
 
@@ -134,6 +157,7 @@ const GameshowsPage = () => {
     openedCreateRoomModal,
     { open: openCreateRoomModal, close: closeCreateRoomModal }
   ] = useDisclosure(false);
+
   const [activeGameshow, setActiveGameshow] = useState<
     SafedGameshow | undefined
   >(undefined);

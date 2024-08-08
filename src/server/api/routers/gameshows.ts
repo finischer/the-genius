@@ -1,8 +1,10 @@
+import { GameshowDifficulty, GameshowVisbility } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
+import { ObjectId } from "bson";
 import { z } from "zod";
+import { FEATURES } from "~/config/features";
 import { type TGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig.types";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { FEATURES } from "~/config/features";
-import { TRPCError } from "@trpc/server";
 
 export const safedGameshowSchema = z.object({
   id: z.string(),
@@ -12,7 +14,11 @@ export const safedGameshowSchema = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
   isFavorite: z.boolean(),
-  games: z.array(z.any())
+  games: z.array(z.any()),
+  visibility: z.nativeEnum(GameshowVisbility),
+  difficulty: z.nativeEnum(GameshowDifficulty).nullable(),
+  originalCreatorId: z.string().nullable(),
+  originalGameshowId: z.string().nullable()
 });
 
 export type SafedGameshow = z.infer<typeof safedGameshowSchema>;
@@ -32,7 +38,11 @@ export const gameshowsRouter = createTRPCRouter({
           games: true,
           createdAt: true,
           updatedAt: true,
-          isFavorite: true
+          isFavorite: true,
+          visibility: true,
+          originalCreatorId: true,
+          originalGameshowId: true,
+          difficulty: true
         }
       });
 
@@ -70,6 +80,32 @@ export const gameshowsRouter = createTRPCRouter({
 
       return modifiedGameshow;
     }),
+  getPublicGameshows: protectedProcedure.query(async ({ ctx }) => {
+    const gameshows = await ctx.prisma.gameshow.findMany({
+      where: {
+        visibility: GameshowVisbility.PUBLIC
+      },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        games: true,
+        difficulty: true,
+        user: {
+          select: {
+            name: true
+          }
+        }
+      }
+    });
+
+    const returnedGameshows = gameshows.map((gameshow) => ({
+      ...gameshow,
+      difficulty: gameshow.difficulty ?? GameshowDifficulty.MEDIUM
+    }));
+
+    return returnedGameshows;
+  }),
   create: protectedProcedure
     .input(z.unknown())
     .mutation(async ({ ctx, input }) => {
@@ -168,5 +204,91 @@ export const gameshowsRouter = createTRPCRouter({
       });
 
       return gameshow;
+    }),
+  publishGameshow: protectedProcedure
+    .input(
+      z.object({
+        gameshowId: z.string(),
+        name: z.string(),
+        description: z.string(),
+        difficultyLevel: z.nativeEnum(GameshowDifficulty)
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const gameshow = await ctx.prisma.gameshow.findFirst({
+        where: {
+          id: input.gameshowId,
+          creatorId: ctx.session.user.id
+        }
+      });
+
+      if (!gameshow) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Gameshow konnte nicht gespeichert werden"
+        });
+      }
+
+      const updatedGameshow = await ctx.prisma.gameshow.update({
+        data: {
+          visibility: GameshowVisbility.PUBLIC,
+          description: input.description,
+          name: input.name,
+          difficulty: input.difficultyLevel
+        },
+        where: {
+          id: input.gameshowId
+        }
+      });
+
+      return updatedGameshow;
+    }),
+  importGameshow: protectedProcedure
+    .input(
+      z.object({
+        gameshowId: z.string()
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const gameshow = await ctx.prisma.gameshow.findFirst({
+        where: {
+          id: input.gameshowId
+        }
+      });
+
+      if (!gameshow) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Gameshow konnte nicht gespeichert werden"
+        });
+      }
+
+      if (gameshow.importedGameshow) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You can't import an imported gameshow."
+        });
+      }
+
+      if (gameshow.visibility === GameshowVisbility.PRIVATE) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You can't import a private gameshow."
+        });
+      }
+
+      return await ctx.prisma.gameshow.create({
+        data: {
+          id: new ObjectId().toString(),
+          description: gameshow.description,
+          difficulty: gameshow.difficulty,
+          name: gameshow.name,
+          games: gameshow.games,
+          creatorId: ctx.session.user.id,
+          importedGameshow: true,
+          originalCreatorId: gameshow.creatorId,
+          originalGameshowId: gameshow.id
+        }
+      });
     })
 });

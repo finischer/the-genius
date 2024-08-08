@@ -1,7 +1,10 @@
+import type { Game, GameshowDifficulty } from "@prisma/client";
+
 export interface IGameshowCardProps {
-  id: number;
+  id: string;
   title: string;
   creator: string;
   description: string;
-  badges: { label: string }[];
+  games: Game[];
+  difficulty: GameshowDifficulty;
 }

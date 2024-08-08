@@ -8,26 +8,27 @@ datasource db {
 }
 
 model User {
-  id              String       @id @default(auto()) @map("_id") @db.ObjectId
-  name            String
-  username        String?      @unique
-  role            UserRole?    @default(USER)
-  email           String       @unique
-  emailVerified   DateTime?
-  isEmailVerified Boolean
-  password        String?
-  image           String?
-  gameshows       Gameshow[]   @relation(name: "gameshowCreator")
-  friends         Friendship[] @relation(name: "users")
-  friendOf        Friendship[] @relation(name: "friendUsers")
-  roomsOpen       Room[]       @relation(name: "roomCreator")
-  feedback        Feedback[]   @relation(name: "feedbackCreator")
-  accounts        Account[]
-  sessions        Session[]
-  isFirstVisit    Boolean      @default(true)
-  lastLoginAt     DateTime     @default(now())
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
+  id                  String       @id @default(auto()) @map("_id") @db.ObjectId
+  name                String
+  username            String?      @unique
+  role                UserRole?    @default(USER)
+  email               String       @unique
+  emailVerified       DateTime?
+  isEmailVerified     Boolean
+  password            String?
+  image               String?
+  gameshows           Gameshow[]   @relation(name: "gameshowCreator")
+  gameshowsOriginated Gameshow[]   @relation("originalCreator")
+  friends             Friendship[] @relation(name: "users")
+  friendOf            Friendship[] @relation(name: "friendUsers")
+  roomsOpen           Room[]       @relation(name: "roomCreator")
+  feedback            Feedback[]   @relation(name: "feedbackCreator")
+  accounts            Account[]
+  sessions            Session[]
+  isFirstVisit        Boolean      @default(true)
+  lastLoginAt         DateTime     @default(now())
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
 
   @@map("users")
 }
@@ -57,14 +58,21 @@ model BetaTester {
 }
 
 model Gameshow {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  name       String
-  games      Json[]
-  creatorId  String   @db.ObjectId
-  user       User     @relation("gameshowCreator", fields: [creatorId], references: [id], onDelete: Cascade)
-  isFavorite Boolean  @default(false)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id                 String              @id @default(auto()) @map("_id") @db.ObjectId
+  importedGameshow   Boolean?            @default(false)
+  description        String?             @default("")
+  name               String
+  games              Json[]
+  creatorId          String              @db.ObjectId
+  user               User                @relation("gameshowCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+  isFavorite         Boolean             @default(false)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  visibility         GameshowVisbility   @default(PRIVATE)
+  originalCreatorId  String?             @db.ObjectId
+  originalCreator    User?               @relation("originalCreator", fields: [originalCreatorId], references: [id])
+  originalGameshowId String?             @db.ObjectId
+  difficulty         GameshowDifficulty? @default(MEDIUM)
 
   @@map("gameshows")
 }
@@ -193,6 +201,19 @@ enum RoomClockVariants {
   TIMER
 }
 
+enum GameshowVisbility {
+  PUBLIC
+  PRIVATE
+}
+
+enum GameshowDifficulty {
+  VERY_EASY
+  EASY
+  MEDIUM
+  HARD
+  VERY_HARD
+}
+
 // composite types
 type RoomState {
   currentView     String          @default("")
@@ -269,7 +290,7 @@ type Player {
 
 // this type is used to share information for one specific player.
 // e.g. in several games a player must be select an answer. Instead to save answer in gamestate,
-// we can save it in this shared state 
+// we can save it in this shared state
 type PlayerSharedState {
   duSagst PlayerDuSagstSharedState
 }

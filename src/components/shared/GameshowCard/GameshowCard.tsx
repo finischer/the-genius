@@ -1,5 +1,5 @@
 import { Badge, Button, Card, Group, Text } from "@mantine/core";
-import type { FC } from "react";
+import { type FC } from "react";
 import { api } from "~/utils/api";
 import classes from "./gameshowCard.module.css";
 import type { IGameshowCardProps } from "./gameshowCard.types";
@@ -15,15 +15,20 @@ export const GameshowCard: FC<IGameshowCardProps> = ({
   const { showSuccessNotification } = useNotification();
   const { user } = useUser();
   const { name, description, games, user: creator } = gameshow;
-  const { mutateAsync: importGameshow, isLoading: gameshowWillBeImported } =
-    api.gameshows.importGameshow.useMutation({
-      onSuccess: () => {
-        showSuccessNotification({
-          title: "Spielshow importiert",
-          message: "Die Spielshow wurde erfolgreich importiert."
-        });
-      }
-    });
+  const {
+    mutateAsync: importGameshow,
+    isLoading: gameshowWillBeImported,
+    isSuccess: gameshowWasImported
+  } = api.gameshows.importGameshow.useMutation({
+    onSuccess: () => {
+      showSuccessNotification({
+        title: "Spielshow importiert",
+        message: "Die Spielshow wurde erfolgreich importiert."
+      });
+    }
+  });
+
+  const disableImportButton = gameshowWasImported || alreadyImported;
 
   const badges = games.map((game: Game) => ({
     label: game.name
@@ -76,10 +81,10 @@ export const GameshowCard: FC<IGameshowCardProps> = ({
             radius="md"
             style={{ flex: 1 }}
             onClick={handleImportGameshow}
-            disabled={alreadyImported}
+            disabled={disableImportButton || gameshowWillBeImported}
             loading={gameshowWillBeImported}
           >
-            {alreadyImported ? "Bereits importiert" : "Importieren"}
+            {disableImportButton ? "Bereits importiert" : "Importieren"}
           </Button>
           {/* <ActionIcon variant="default" radius="md" size={36}>
           <IconHeart className={classes.like} stroke={1.5} />

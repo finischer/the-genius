@@ -47,9 +47,15 @@ const PublishGameshowModal: FC<IPublishGameshowModalProps> = ({
   onClose,
   gameshow
 }) => {
-  const { showSuccessNotification } = useNotification();
+  const { showSuccessNotification, handleZodError } = useNotification();
   const { mutateAsync: publishGameshow, isLoading } =
     api.gameshows.publishGameshow.useMutation({
+      onError: (error) => {
+        handleZodError(
+          error.data?.zodError,
+          error.message ?? "Ein Fehler ist aufgetreten"
+        );
+      },
       onSuccess: () => {
         showSuccessNotification({
           title: "Spielshow veröffentlicht",

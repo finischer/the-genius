@@ -53,7 +53,7 @@ export const GameshowCard: FC<IGameshowCardProps> = ({
             {name}
           </Text>
           <Badge size="sm" variant="light">
-            {creator.name}
+            {creator.username}
           </Badge>
         </Group>
         <Text fz="sm" mt="xs">

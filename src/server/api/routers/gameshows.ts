@@ -29,7 +29,7 @@ export const safedPublicGameshowSchema = z.object({
   difficulty: z.nativeEnum(GameshowDifficulty),
   games: z.array(z.any()),
   user: z.object({
-    name: z.string(),
+    username: z.string(),
     id: z.string()
   }),
   originalCreatorId: z.string().nullable(),
@@ -116,7 +116,7 @@ export const gameshowsRouter = createTRPCRouter({
           importedGameshow: true,
           user: {
             select: {
-              name: true,
+              username: true,
               id: true
             }
           }
@@ -126,7 +126,11 @@ export const gameshowsRouter = createTRPCRouter({
       const returnedGameshows = gameshows.map((gameshow) => ({
         ...gameshow,
         difficulty: gameshow.difficulty ?? GameshowDifficulty.MEDIUM,
-        description: gameshow.description ?? ""
+        description: gameshow.description ?? "",
+        user: {
+          ...gameshow.user,
+          username: gameshow.user.username ?? "UNKNOWN_USER"
+        }
       }));
 
       return returnedGameshows;

@@ -18,10 +18,27 @@ export const safedGameshowSchema = z.object({
   visibility: z.nativeEnum(GameshowVisbility),
   difficulty: z.nativeEnum(GameshowDifficulty).nullable(),
   originalCreatorId: z.string().nullable(),
-  originalGameshowId: z.string().nullable()
+  originalGameshowId: z.string().nullable(),
+  importedGameshow: z.boolean().nullable()
+});
+
+export const safedPublicGameshowSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string(),
+  difficulty: z.nativeEnum(GameshowDifficulty),
+  games: z.array(z.any()),
+  user: z.object({
+    name: z.string(),
+    id: z.string()
+  }),
+  originalCreatorId: z.string().nullable(),
+  originalGameshowId: z.string().nullable(),
+  importedGameshow: z.boolean().nullable()
 });
 
 export type SafedGameshow = z.infer<typeof safedGameshowSchema>;
+export type SafedPublicGameshow = z.infer<typeof safedPublicGameshowSchema>;
 
 export const gameshowsRouter = createTRPCRouter({
   getAllByCreatorId: protectedProcedure
@@ -42,7 +59,8 @@ export const gameshowsRouter = createTRPCRouter({
           visibility: true,
           originalCreatorId: true,
           originalGameshowId: true,
-          difficulty: true
+          difficulty: true,
+          importedGameshow: true
         }
       });
 
@@ -80,32 +98,39 @@ export const gameshowsRouter = createTRPCRouter({
 
       return modifiedGameshow;
     }),
-  getPublicGameshows: protectedProcedure.query(async ({ ctx }) => {
-    const gameshows = await ctx.prisma.gameshow.findMany({
-      where: {
-        visibility: GameshowVisbility.PUBLIC
-      },
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        games: true,
-        difficulty: true,
-        user: {
-          select: {
-            name: true
+  getPublicGameshows: protectedProcedure
+    .output(z.array(safedPublicGameshowSchema))
+    .query(async ({ ctx }) => {
+      const gameshows = await ctx.prisma.gameshow.findMany({
+        where: {
+          visibility: GameshowVisbility.PUBLIC
+        },
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          games: true,
+          difficulty: true,
+          originalCreatorId: true,
+          originalGameshowId: true,
+          importedGameshow: true,
+          user: {
+            select: {
+              name: true,
+              id: true
+            }
           }
         }
-      }
-    });
+      });
 
-    const returnedGameshows = gameshows.map((gameshow) => ({
-      ...gameshow,
-      difficulty: gameshow.difficulty ?? GameshowDifficulty.MEDIUM
-    }));
+      const returnedGameshows = gameshows.map((gameshow) => ({
+        ...gameshow,
+        difficulty: gameshow.difficulty ?? GameshowDifficulty.MEDIUM,
+        description: gameshow.description ?? ""
+      }));
 
-    return returnedGameshows;
-  }),
+      return returnedGameshows;
+    }),
   create: protectedProcedure
     .input(z.unknown())
     .mutation(async ({ ctx, input }) => {

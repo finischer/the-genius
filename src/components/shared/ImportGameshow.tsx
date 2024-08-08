@@ -1,5 +1,4 @@
 import { Grid, GridCol } from "@mantine/core";
-import type { Game } from "@prisma/client";
 import { api } from "~/utils/api";
 import PageLayout from "../layout/PageLayout";
 import { GameshowCard } from "./GameshowCard/GameshowCard";
@@ -101,28 +100,30 @@ import { GameshowCard } from "./GameshowCard/GameshowCard";
 const ImportGameshow = () => {
   const { data: publicGameshows, isLoading } =
     api.gameshows.getPublicGameshows.useQuery();
+  const { data: userGameshows } = api.gameshows.getAllByCreatorId.useQuery();
 
-  const cards = publicGameshows?.map((data) => (
-    <GridCol key={data.id} span={{ base: 12, md: 6, lg: 4 }}>
+  const cards = publicGameshows?.map((gameshow) => (
+    <GridCol key={gameshow.id} span={{ base: 12, md: 6, lg: 6 }}>
       <GameshowCard
-        id={data.id}
-        title={data.name}
-        creator={data.user.name}
-        description={data.description ?? ""}
-        games={data.games as Game[]}
-        difficulty={data.difficulty}
+        id={gameshow.id}
+        gameshow={gameshow}
+        alreadyImported={
+          userGameshows?.some((gs) => gs.originalGameshowId === gameshow.id) ??
+          false
+        }
       />
     </GridCol>
   ));
 
-  return (
-    <PageLayout
-      showLoader={isLoading}
-      loadingMessage="Spielshows werden geladen ..."
-    >
-      <Grid gutter="xl">{cards}</Grid>
-    </PageLayout>
-  );
+  if (isLoading)
+    return (
+      <PageLayout
+        showLoader={isLoading}
+        loadingMessage="Spielshows werden geladen ..."
+      />
+    );
+
+  return <Grid gutter="xl">{cards}</Grid>;
 };
 
 export default ImportGameshow;

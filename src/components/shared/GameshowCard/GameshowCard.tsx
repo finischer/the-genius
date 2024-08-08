@@ -3,18 +3,29 @@ import type { FC } from "react";
 import { api } from "~/utils/api";
 import classes from "./gameshowCard.module.css";
 import type { IGameshowCardProps } from "./gameshowCard.types";
+import { useUser } from "~/hooks/useUser";
+import useNotification from "~/hooks/useNotification";
+import type { Game } from "@prisma/client";
 
 export const GameshowCard: FC<IGameshowCardProps> = ({
   id,
-  title,
-  description,
-  creator,
-  games
+  gameshow,
+  alreadyImported
 }) => {
-  const { mutateAsync: importGameshow } =
-    api.gameshows.importGameshow.useMutation();
+  const { showSuccessNotification } = useNotification();
+  const { user } = useUser();
+  const { name, description, games, user: creator } = gameshow;
+  const { mutateAsync: importGameshow, isLoading: gameshowWillBeImported } =
+    api.gameshows.importGameshow.useMutation({
+      onSuccess: () => {
+        showSuccessNotification({
+          title: "Spielshow importiert",
+          message: "Die Spielshow wurde erfolgreich importiert."
+        });
+      }
+    });
 
-  const badges = games.map((game) => ({
+  const badges = games.map((game: Game) => ({
     label: game.name
   }));
 
@@ -25,16 +36,13 @@ export const GameshowCard: FC<IGameshowCardProps> = ({
   ));
 
   const handleImportGameshow = async () => {
-    console.log("Importing gameshow with id", id);
-    const importedGameshow = await importGameshow({
+    await importGameshow({
       gameshowId: id
     });
-
-    console.log("Imported gameshow", importedGameshow);
   };
 
   return (
-    <Card withBorder radius="md" p="md" className={classes.card} w={450}>
+    <Card withBorder radius="md" p="md" className={classes.card}>
       {/* <Card.Section>
         <Image src={image} alt={title} height={180} />
       </Card.Section> */}
@@ -42,10 +50,10 @@ export const GameshowCard: FC<IGameshowCardProps> = ({
       <Card.Section className={classes.section} p="md">
         <Group justify="apart">
           <Text fz="lg" fw={500}>
-            {title}
+            {name}
           </Text>
           <Badge size="sm" variant="light">
-            {creator}
+            {creator.name}
           </Badge>
         </Group>
         <Text fz="sm" mt="xs">
@@ -62,14 +70,22 @@ export const GameshowCard: FC<IGameshowCardProps> = ({
         </Group>
       </Card.Section>
 
-      <Group mt="xs">
-        <Button radius="md" style={{ flex: 1 }} onClick={handleImportGameshow}>
-          Show importieren
-        </Button>
-        {/* <ActionIcon variant="default" radius="md" size={36}>
+      {creator.id !== user?.id && (
+        <Group mt="xs">
+          <Button
+            radius="md"
+            style={{ flex: 1 }}
+            onClick={handleImportGameshow}
+            disabled={alreadyImported}
+            loading={gameshowWillBeImported}
+          >
+            {alreadyImported ? "Bereits importiert" : "Importieren"}
+          </Button>
+          {/* <ActionIcon variant="default" radius="md" size={36}>
           <IconHeart className={classes.like} stroke={1.5} />
-        </ActionIcon> */}
-      </Group>
+          </ActionIcon> */}
+        </Group>
+      )}
     </Card>
   );
 };

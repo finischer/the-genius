@@ -1,14 +1,13 @@
 import { Flex, Menu, Table, Text, Title, useMantineTheme } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
+import { GameshowVisbility } from "@prisma/client";
 import {
   IconDots,
   IconEdit,
   IconPlayerPlay,
   IconPlus,
   IconShare,
-  IconStar,
-  IconStarFilled,
   IconTrash
 } from "@tabler/icons-react";
 import { useRouter } from "next/router";
@@ -38,12 +37,20 @@ const ActionMenu = ({
     { close: closePublishGameshowModal, open: openPublishGameshowModal }
   ] = useDisclosure(false);
 
-  const StarIcon = gameshow.isFavorite ? (
-    <IconStarFilled size={MENU_ICON_SIZE} />
-  ) : (
-    <IconStar size={MENU_ICON_SIZE} />
-  );
+  // const StarIcon = gameshow.isFavorite ? (
+  //   <IconStarFilled size={MENU_ICON_SIZE} />
+  // ) : (
+  //   <IconStar size={MENU_ICON_SIZE} />
+  // );
   const router = useRouter();
+
+  const isPublic = gameshow.visibility === GameshowVisbility.PUBLIC;
+  const isImported = gameshow.importedGameshow;
+  const publishDisabledReason = isPublic
+    ? "(bereits veröffentlicht)"
+    : isImported
+      ? "(importierte Spielshow)"
+      : undefined;
 
   const openDeleteConfirmModal = () =>
     modals.openConfirmModal({
@@ -107,12 +114,13 @@ const ActionMenu = ({
           <Menu.Item
             leftSection={<IconShare size={MENU_ICON_SIZE} />}
             onClick={handlePublishGameshow}
+            disabled={isImported || isPublic}
           >
-            Veröffentlichen
+            Veröffentlichen {publishDisabledReason}
           </Menu.Item>
-          <Menu.Item disabled leftSection={StarIcon}>
+          {/* <Menu.Item disabled leftSection={StarIcon}>
             Als Favorit {gameshow.isFavorite ? "entfernen" : "hinzufügen"}
-          </Menu.Item>
+          </Menu.Item> */}
           <Menu.Item
             color="red"
             leftSection={<IconTrash size={MENU_ICON_SIZE} />}

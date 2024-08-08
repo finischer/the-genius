@@ -1,10 +1,7 @@
-import type { Game, GameshowDifficulty } from "@prisma/client";
+import type { SafedPublicGameshow } from "~/server/api/routers/gameshows";
 
 export interface IGameshowCardProps {
   id: string;
-  title: string;
-  creator: string;
-  description: string;
-  games: Game[];
-  difficulty: GameshowDifficulty;
+  alreadyImported: boolean;
+  gameshow: SafedPublicGameshow;
 }

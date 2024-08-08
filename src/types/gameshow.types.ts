@@ -31,7 +31,7 @@ export type Team = {
 };
 
 export type TimerState = {
-  id: NodeJS.Timer | null;
+  id: NodeJS.Timeout | null;
   active: boolean;
   currSeconds: number;
   initSeconds: number;

@@ -27,7 +27,7 @@ interface IPageLayout {
   children?: React.ReactNode;
 }
 
-const LOGO_SIZE = isMobile ? 45 : 75;
+const LOGO_SIZE = isMobile ? 45 : 70;
 
 const PageLayout: React.FC<IPageLayout> = ({
   showLoader = false,
@@ -83,7 +83,9 @@ const PageLayout: React.FC<IPageLayout> = ({
         </Modal>
 
         <AppShell
-          header={{ height: { base: 60, md: 70, lg: 80 } }}
+          header={{
+            height: { base: 60, md: 70, lg: 80 }
+          }}
           navbar={{
             width: { base: 200, md: 300, lg: 400 },
             breakpoint: "sm",
@@ -93,24 +95,26 @@ const PageLayout: React.FC<IPageLayout> = ({
         >
           <AppShell.Header>
             <Group h="100%" px="md">
-              <Burger
-                color="gray.4"
-                opened={opened}
-                onClick={toggle}
-                hiddenFrom="sm"
-                size="sm"
-              />
               <Group
-                w="90%"
+                h="100%"
                 style={{
-                  textOverflow: "ellipsis",
+                  // textOverflow: "ellipsis",
                   overflow: "hidden",
                   flexWrap: "nowrap"
                 }}
               >
+                <Burger
+                  color="gray.4"
+                  opened={opened}
+                  onClick={toggle}
+                  hiddenFrom="sm"
+                  size="sm"
+                />
                 <TheGeniusLogo height={LOGO_SIZE} width={LOGO_SIZE} />
                 {session.user.username && (
-                  <Text>Schön dich zu sehen, {session.user.username}!</Text>
+                  <Text lineClamp={2}>
+                    Schön dich zu sehen, {session.user.username}!
+                  </Text>
                 )}
               </Group>
             </Group>

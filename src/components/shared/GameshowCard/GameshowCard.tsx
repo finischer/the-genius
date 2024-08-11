@@ -1,25 +1,34 @@
-import { Badge, Button, Card, Group, Text } from "@mantine/core";
+import { Badge, Button, Card, Group, Stack, Text } from "@mantine/core";
+import type { Game } from "@prisma/client";
 import { type FC } from "react";
+import useNotification from "~/hooks/useNotification";
+import { useUser } from "~/hooks/useUser";
 import { api } from "~/utils/api";
+import { getDifficultLevel } from "~/utils/helpers";
+import Tooltip from "../Tooltip";
 import classes from "./gameshowCard.module.css";
 import type { IGameshowCardProps } from "./gameshowCard.types";
-import { useUser } from "~/hooks/useUser";
-import useNotification from "~/hooks/useNotification";
-import type { Game } from "@prisma/client";
 
 export const GameshowCard: FC<IGameshowCardProps> = ({
   id,
   gameshow,
   alreadyImported
 }) => {
-  const { showSuccessNotification } = useNotification();
+  const { showSuccessNotification, handleZodError } = useNotification();
   const { user } = useUser();
   const { name, description, games, user: creator } = gameshow;
+  const difficulty = getDifficultLevel(gameshow.difficulty);
   const {
     mutateAsync: importGameshow,
     isLoading: gameshowWillBeImported,
     isSuccess: gameshowWasImported
   } = api.gameshows.importGameshow.useMutation({
+    onError: (error) => {
+      handleZodError(
+        error.data?.zodError,
+        error.message ?? "Ein Fehler ist aufgetreten"
+      );
+    },
     onSuccess: () => {
       showSuccessNotification({
         title: "Spielshow importiert",
@@ -41,9 +50,13 @@ export const GameshowCard: FC<IGameshowCardProps> = ({
   ));
 
   const handleImportGameshow = async () => {
-    await importGameshow({
-      gameshowId: id
-    });
+    try {
+      await importGameshow({
+        gameshowId: id
+      });
+    } catch (error) {
+      return;
+    }
   };
 
   return (
@@ -53,14 +66,21 @@ export const GameshowCard: FC<IGameshowCardProps> = ({
       </Card.Section> */}
 
       <Card.Section className={classes.section} p="md">
-        <Group justify="apart">
-          <Text fz="lg" fw={500}>
-            {name}
+        <Stack gap={0}>
+          <Group align="center">
+            <Text fz="lg" fw={500}>
+              {name}
+            </Text>
+            <Tooltip label="Schwierigkeitsgrad">
+              <Badge size="sm" variant="light">
+                {difficulty.name}
+              </Badge>
+            </Tooltip>
+          </Group>
+          <Text fz="xs" c="dimmed">
+            Erstellt von {creator.username}
           </Text>
-          <Badge size="sm" variant="light">
-            {creator.username}
-          </Badge>
-        </Group>
+        </Stack>
         <Text fz="sm" mt="xs">
           {description}
         </Text>

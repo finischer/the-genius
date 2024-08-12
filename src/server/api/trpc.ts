@@ -68,6 +68,7 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
+import { FEATURES } from "~/config/features";
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
@@ -136,6 +137,33 @@ const enforceUserIsAdmin = enforceUserIsAuthed.unstable_pipe(
   }
 );
 
+const enforceUserCanCreateGameshow = enforceUserIsAuthed.unstable_pipe(
+  async ({ ctx, next }) => {
+    const role = ctx.session.user.role;
+
+    const maxNumGameshows = FEATURES[role].maxNumGameshows;
+
+    if (maxNumGameshows !== Infinity) {
+      const numOfGameshows = await ctx.prisma.gameshow.count({
+        where: {
+          creatorId: ctx.session.user.id
+        }
+      });
+
+      if (numOfGameshows >= maxNumGameshows) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Du hast die maximale Anzahl an Spielshows erreichst"
+        });
+      }
+    }
+
+    return next({
+      ctx
+    });
+  }
+);
+
 /**
  * Protected (authenticated) procedure
  *
@@ -146,3 +174,6 @@ const enforceUserIsAdmin = enforceUserIsAuthed.unstable_pipe(
  */
 export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
 export const adminProcedure = t.procedure.use(enforceUserIsAdmin);
+export const createGameshowProcedure = t.procedure.use(
+  enforceUserCanCreateGameshow
+);

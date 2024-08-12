@@ -4,6 +4,7 @@ import { modals } from "@mantine/modals";
 import { GameshowVisbility } from "@prisma/client";
 import {
   IconDots,
+  IconDownload,
   IconEdit,
   IconPlayerPlay,
   IconPlus,
@@ -185,6 +186,10 @@ const GameshowsPage = () => {
     void router.push("/gameshows/create");
   };
 
+  const handleImportGameshow = () => {
+    void router.push("/gameshows/import");
+  };
+
   const handleDeleteGameshow = (gameshowId: string) => {
     void deleteGameshow({ gameshowId });
   };
@@ -247,6 +252,16 @@ const GameshowsPage = () => {
             loading={pageIsLoading}
           >
             <IconPlus />
+          </ActionIcon>
+
+          <ActionIcon
+            toolTip="Spielshow importieren"
+            color={theme.primaryColor}
+            variant="filled"
+            onClick={handleImportGameshow}
+            loading={pageIsLoading}
+          >
+            <IconDownload />
           </ActionIcon>
         </Flex>
         <Text c="dimmed">{subtitleText}</Text>

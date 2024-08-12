@@ -1,11 +1,11 @@
 import { Grid, GridCol } from "@mantine/core";
-import { api } from "~/utils/api";
-import PageLayout from "../layout/PageLayout";
-import { GameshowCard } from "./GameshowCard/GameshowCard";
-import useNotification from "~/hooks/useNotification";
 import { useEffect } from "react";
+import PageLayout from "~/components/layout/PageLayout";
+import { GameshowCard } from "~/components/shared/GameshowCard/GameshowCard";
+import useNotification from "~/hooks/useNotification";
+import { api } from "~/utils/api";
 
-const ImportGameshow = () => {
+const ImportGameshowPage = () => {
   const { showErrorNotification } = useNotification();
 
   const publicGameshowsFetcher = api.gameshows.getPublicGameshows.useQuery();
@@ -35,12 +35,16 @@ const ImportGameshow = () => {
     }
   }, [publicGameshowsFetcher.isError, userGameshowsFetcher.isError]);
 
-  if (publicGameshowsFetcher.isLoading || userGameshowsFetcher.isLoading)
-    return (
-      <PageLayout showLoader loadingMessage="Spielshows werden geladen ..." />
-    );
-
-  return <Grid gutter="xl">{cards}</Grid>;
+  return (
+    <PageLayout
+      showLoader={
+        publicGameshowsFetcher.isLoading || userGameshowsFetcher.isLoading
+      }
+      loadingMessage="Spielshows werden geladen ..."
+    >
+      <Grid gutter="xl">{cards}</Grid>
+    </PageLayout>
+  );
 };
 
-export default ImportGameshow;
+export default ImportGameshowPage;

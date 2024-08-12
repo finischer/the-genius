@@ -1,4 +1,6 @@
+import type { GameshowDifficulty } from "@prisma/client";
 import { getYjsValue } from "@syncedstore/core";
+import { TheGeniusConfig } from "~/config/the-genius";
 
 export const createRandomUserName = () => {
   const randomID = Math.floor(Math.random() * 1000);
@@ -54,4 +56,9 @@ export const displayObject = (obj: object) => {
   const value = getYjsValue(obj)?.toJSON() as object;
   console.log(value);
   return value;
+};
+
+export const getDifficultLevel = (difficulty: GameshowDifficulty) => {
+  const difficultLevels = TheGeniusConfig.gameshow.difficultLevels;
+  return difficultLevels[difficulty];
 };

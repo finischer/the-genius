@@ -115,7 +115,6 @@ const RoomUI = () => {
               openModPanel={modPanelDisclosure[1].open}
               // callback={handleInteractiveModerationTourCallback}
             />
-
             <Box pos="absolute" bottom="50%" className="mod-panel-btn">
               <ActionIcon variant="filled" toolTip="Mod-Panel öffnen">
                 <IconArrowRight onClick={modPanelDisclosure[1].open} />

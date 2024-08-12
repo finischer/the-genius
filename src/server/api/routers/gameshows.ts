@@ -1,8 +1,13 @@
+import { GameshowDifficulty, GameshowVisbility } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
+import { ObjectId } from "bson";
 import { z } from "zod";
 import { type TGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig.types";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { FEATURES } from "~/config/features";
-import { TRPCError } from "@trpc/server";
+import {
+  createGameshowProcedure,
+  createTRPCRouter,
+  protectedProcedure
+} from "../trpc";
 
 export const safedGameshowSchema = z.object({
   id: z.string(),
@@ -12,10 +17,31 @@ export const safedGameshowSchema = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
   isFavorite: z.boolean(),
-  games: z.array(z.any())
+  games: z.array(z.any()),
+  visibility: z.nativeEnum(GameshowVisbility),
+  difficulty: z.nativeEnum(GameshowDifficulty).nullable(),
+  originalCreatorId: z.string().nullable(),
+  originalGameshowId: z.string().nullable(),
+  importedGameshow: z.boolean().nullable()
+});
+
+export const safedPublicGameshowSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string(),
+  difficulty: z.nativeEnum(GameshowDifficulty),
+  games: z.array(z.any()),
+  user: z.object({
+    username: z.string(),
+    id: z.string()
+  }),
+  originalCreatorId: z.string().nullable(),
+  originalGameshowId: z.string().nullable(),
+  importedGameshow: z.boolean().nullable()
 });
 
 export type SafedGameshow = z.infer<typeof safedGameshowSchema>;
+export type SafedPublicGameshow = z.infer<typeof safedPublicGameshowSchema>;
 
 export const gameshowsRouter = createTRPCRouter({
   getAllByCreatorId: protectedProcedure
@@ -32,7 +58,12 @@ export const gameshowsRouter = createTRPCRouter({
           games: true,
           createdAt: true,
           updatedAt: true,
-          isFavorite: true
+          isFavorite: true,
+          visibility: true,
+          originalCreatorId: true,
+          originalGameshowId: true,
+          difficulty: true,
+          importedGameshow: true
         }
       });
 
@@ -70,27 +101,46 @@ export const gameshowsRouter = createTRPCRouter({
 
       return modifiedGameshow;
     }),
-  create: protectedProcedure
+  getPublicGameshows: protectedProcedure
+    .output(z.array(safedPublicGameshowSchema))
+    .query(async ({ ctx }) => {
+      const gameshows = await ctx.prisma.gameshow.findMany({
+        where: {
+          visibility: GameshowVisbility.PUBLIC
+        },
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          games: true,
+          difficulty: true,
+          originalCreatorId: true,
+          originalGameshowId: true,
+          importedGameshow: true,
+          user: {
+            select: {
+              username: true,
+              id: true
+            }
+          }
+        }
+      });
+
+      const returnedGameshows = gameshows.map((gameshow) => ({
+        ...gameshow,
+        difficulty: gameshow.difficulty ?? GameshowDifficulty.MEDIUM,
+        description: gameshow.description ?? "",
+        user: {
+          ...gameshow.user,
+          username: gameshow.user.username ?? "UNKNOWN_USER"
+        }
+      }));
+
+      return returnedGameshows;
+    }),
+  create: createGameshowProcedure
     .input(z.unknown())
     .mutation(async ({ ctx, input }) => {
-      const role = ctx.session.user.role;
-      const maxNumGameshows = FEATURES[role].maxNumGameshows;
-
-      if (maxNumGameshows !== Infinity) {
-        const numOfGameshows = await ctx.prisma.gameshow.count({
-          where: {
-            creatorId: ctx.session.user.id
-          }
-        });
-
-        if (numOfGameshows >= maxNumGameshows) {
-          throw new TRPCError({
-            code: "FORBIDDEN",
-            message: "Du hast die maximale Anzahl an Spielshows erreichst"
-          });
-        }
-      }
-
       const config = input as TGameshowConfig;
       const gameshow = await ctx.prisma.gameshow.create({
         data: {
@@ -168,5 +218,91 @@ export const gameshowsRouter = createTRPCRouter({
       });
 
       return gameshow;
+    }),
+  publishGameshow: protectedProcedure
+    .input(
+      z.object({
+        gameshowId: z.string(),
+        name: z.string(),
+        description: z.string(),
+        difficultyLevel: z.nativeEnum(GameshowDifficulty)
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const gameshow = await ctx.prisma.gameshow.findFirst({
+        where: {
+          id: input.gameshowId,
+          creatorId: ctx.session.user.id
+        }
+      });
+
+      if (!gameshow) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Gameshow konnte nicht gespeichert werden"
+        });
+      }
+
+      const updatedGameshow = await ctx.prisma.gameshow.update({
+        data: {
+          visibility: GameshowVisbility.PUBLIC,
+          description: input.description,
+          name: input.name,
+          difficulty: input.difficultyLevel
+        },
+        where: {
+          id: input.gameshowId
+        }
+      });
+
+      return updatedGameshow;
+    }),
+  importGameshow: createGameshowProcedure
+    .input(
+      z.object({
+        gameshowId: z.string()
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const gameshow = await ctx.prisma.gameshow.findFirst({
+        where: {
+          id: input.gameshowId
+        }
+      });
+
+      if (!gameshow) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Gameshow konnte nicht gespeichert werden"
+        });
+      }
+
+      if (gameshow.importedGameshow) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You can't import an imported gameshow."
+        });
+      }
+
+      if (gameshow.visibility === GameshowVisbility.PRIVATE) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You can't import a private gameshow."
+        });
+      }
+
+      return await ctx.prisma.gameshow.create({
+        data: {
+          id: new ObjectId().toString(),
+          description: gameshow.description,
+          difficulty: gameshow.difficulty,
+          name: gameshow.name,
+          games: gameshow.games,
+          creatorId: ctx.session.user.id,
+          importedGameshow: true,
+          originalCreatorId: gameshow.creatorId,
+          originalGameshowId: gameshow.id
+        }
+      });
     })
 });

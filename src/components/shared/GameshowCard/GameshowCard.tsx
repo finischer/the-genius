@@ -67,21 +67,22 @@ export const GameshowCard: FC<IGameshowCardProps> = ({
 
       <Card.Section className={classes.section} p="md">
         <Stack gap={0}>
-          <Group align="center">
-            <Text fz="lg" fw={500}>
-              {name}
-            </Text>
+          <Stack gap="xs">
             <Tooltip label="Schwierigkeitsgrad">
               <Badge size="sm" variant="light">
                 {difficulty.name}
               </Badge>
             </Tooltip>
-          </Group>
+            <Text fz="lg" fw={500}>
+              {name}
+            </Text>
+          </Stack>
+
           <Text fz="xs" c="dimmed">
             Erstellt von {creator.username}
           </Text>
         </Stack>
-        <Text fz="sm" mt="xs">
+        <Text fz="sm" mt="md">
           {description}
         </Text>
       </Card.Section>

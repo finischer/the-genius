@@ -17,9 +17,12 @@ export enum TimerType {
   STOPWATCH = "stopwatch"
 }
 
+export type TeamShortNames = "t1" | "t2";
+
 export type Team = {
   id: string;
   name: string;
+  shortName: TeamShortNames;
   totalScore: number;
   gameScore: number;
   avatarImage: string;

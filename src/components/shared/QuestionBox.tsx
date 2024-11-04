@@ -5,11 +5,15 @@ import type { IContainerBoxProps } from "./ContainerBox/containerBox.types";
 
 interface IQuestionBoxProps extends IContainerBoxProps {
   children: ReactNode;
+  cursor?: "default" | "pointer";
 }
 
-const QuestionBox: FC<IQuestionBoxProps> = ({ children, ...props }) => {
+const QuestionBox: FC<IQuestionBoxProps> = ({
+  children,
+  cursor = "default",
+  ...props
+}) => {
   const theme = useMantineTheme();
-
   return (
     <ContainerBox
       bg={theme.primaryColor}
@@ -18,7 +22,9 @@ const QuestionBox: FC<IQuestionBoxProps> = ({ children, ...props }) => {
       py="1rem"
       px="2rem"
       style={{
-        transition: "opacity 300ms"
+        transition: "opacity 300ms",
+        wordBreak: "break-word",
+        cursor
       }}
       {...props}
     >

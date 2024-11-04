@@ -1,6 +1,7 @@
 import type { GameshowDifficulty } from "@prisma/client";
 import { getYjsValue } from "@syncedstore/core";
 import { TheGeniusConfig } from "~/config/the-genius";
+import type { RoomTeams, TeamShortNames } from "~/types/gameshow.types";
 
 export const createRandomUserName = () => {
   const randomID = Math.floor(Math.random() * 1000);
@@ -61,4 +62,11 @@ export const displayObject = (obj: object) => {
 export const getDifficultLevel = (difficulty: GameshowDifficulty) => {
   const difficultLevels = TheGeniusConfig.gameshow.difficultLevels;
   return difficultLevels[difficulty];
+};
+
+export const getTeamByShortName = (
+  teams: RoomTeams,
+  shortName: TeamShortNames
+) => {
+  return shortName === "t1" ? teams.teamOne : teams.teamTwo;
 };

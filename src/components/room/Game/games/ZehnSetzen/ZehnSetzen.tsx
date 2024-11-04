@@ -1,98 +1,139 @@
-import { Flex, Group, Stack } from "@mantine/core";
-import { IconMinus, IconPlus } from "@tabler/icons-react";
+import { Button, ButtonGroup, Stack, Text } from "@mantine/core";
+import { AnimatePresence, motion } from "framer-motion";
 import { type FC } from "react";
-import ActionIcon from "~/components/shared/ActionIcon";
+import ModView from "~/components/shared/ModView";
 import QuestionBox from "~/components/shared/QuestionBox";
+import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { useUser } from "~/hooks/useUser";
-import type { TZehnSetzenGameState } from "./config";
+import type { TeamShortNames } from "~/types/gameshow.types";
+import { animations } from "~/utils/animations";
+import {
+  getTeamByShortName,
+  goToNextQuestion,
+  goToPreviousQuestion,
+  sleep
+} from "~/utils/helpers";
 import type { IZehnSetzenGameProps } from "./zehnSetzen.types";
+import AnswerGroup from "./components/AnswerGroup";
 
 const ZehnSetzen: FC<IZehnSetzenGameProps> = ({ game }) => {
-  const currQuestion = game.questions.at(0);
+  const currQuestion = game.questions.at(game.qIndex);
   const teamState = game.teamStates;
-  const { isPlayer, team, playerFunction } = useUser();
-  const TeamScore = ({
-    isDisplayed,
-    score
-  }: {
-    isDisplayed: boolean;
-    score: number;
-  }) => {
-    const opacity = isDisplayed ? 1 : isPlayer ? 0 : 0.5;
-    const display = isDisplayed || !isPlayer ? "block" : "none";
+  const room = useSyncedRoom();
 
-    const textStyle = {
-      opacity,
-      display,
-      transition: "opacity 0.5s"
-    };
+  const { team, isHost, hostFunction } = useUser();
 
-    return (
-      <Flex w={30} justify="center">
-        <span style={textStyle}>{score}</span>
-      </Flex>
-    );
-  };
+  const showQuestion = game.display.question;
+  const inactiveOpacity = isHost ? 0.7 : 0;
+  const questionBoxOpacity = showQuestion ? 1 : inactiveOpacity;
 
-  const answerElements = currQuestion?.answers.map((answer, index) => {
-    const teamKey = team?.shortName ?? null;
+  const hasSubmittedAnswer = team?.shortName
+    ? teamState[team.shortName].submitted
+    : false;
 
-    const incrementScore = (
-      teamKey: keyof TZehnSetzenGameState["teamStates"] | null
-    ) => {
-      if (!teamKey) return;
+  const submittedTeams = Object.entries(teamState)
+    .map(([teamName, teamState]) => {
+      return {
+        teamName: teamName as TeamShortNames,
+        ...teamState
+      };
+    })
+    .filter((team) => team.submitted);
 
-      playerFunction(() => {
-        const currScore = teamState[teamKey].answerScores.at(index) ?? 0;
-        const newScore = currScore + 1;
-        teamState[teamKey].answerScores.splice(index, 1, newScore);
-      });
-    };
-
-    const decrementScore = (
-      teamKey: keyof TZehnSetzenGameState["teamStates"] | null
-    ) => {
-      if (!teamKey) return;
-
-      playerFunction(() => {
-        const currScore = teamState[teamKey].answerScores.at(index) ?? 0;
-        const newScore = currScore - 1;
-        teamState[teamKey].answerScores.splice(index, 1, newScore);
-      });
-    };
-
-    return (
-      <Group key={answer.id}>
-        <ActionIcon onClick={() => decrementScore(teamKey)}>
-          <IconMinus size={16} />
-        </ActionIcon>
-        <QuestionBox py="xs" px="md" contentCentered={false}>
-          <Group justify="space-between" w="100%">
-            <TeamScore
-              isDisplayed={true}
-              score={teamState.t1.answerScores.at(index) ?? 0}
-            />
-            {answer.answer}
-            <TeamScore
-              isDisplayed={true}
-              score={teamState.t2.answerScores.at(index) ?? 0}
-            />
-          </Group>
-        </QuestionBox>
-        <ActionIcon onClick={() => incrementScore(teamKey)}>
-          <IconPlus size={16} />
-        </ActionIcon>
-      </Group>
-    );
+  const handleToggleCorrectAnswer = hostFunction(() => {
+    game.display.correctAnswer = !game.display.correctAnswer;
   });
 
+  // const allTeamsSubbmitted = Object.values(teamState).every(
+  //   (team) => team.submitted
+  // );
+
+  const prepareQuestion = async () => {
+    const sleepTimeout = game.display.question ? 300 : 0;
+
+    game.display.answers = [];
+    game.display.correctAnswer = false;
+    game.display.question = false;
+    game.display.teamScores.t1 = false;
+    game.display.teamScores.t2 = false;
+    teamState.t1.answerScores = new Array<number>(4).fill(0);
+    teamState.t1.submitted = false;
+
+    teamState.t2.answerScores = new Array<number>(4).fill(0);
+    teamState.t2.submitted = false;
+
+    await sleep(sleepTimeout);
+  };
+
   return (
-    <div>
+    <AnimatePresence>
       <Stack align="center">
-        <QuestionBox>{game.questions.at(0)?.question}</QuestionBox>
-        {answerElements}
+        <motion.div layout>
+          <Stack align="center">
+            <QuestionBox
+              cursor={isHost ? "pointer" : "default"}
+              onClick={hostFunction(() => {
+                game.display.question = !game.display.question;
+              })}
+              opacity={questionBoxOpacity}
+            >
+              {currQuestion?.question}
+            </QuestionBox>
+            <AnswerGroup
+              game={game}
+              question={currQuestion}
+              hasSubmittedAnswer={hasSubmittedAnswer}
+            />
+          </Stack>
+        </motion.div>
+        <Text c="dimmed">
+          {game.qIndex + 1}/{game.questions.length}
+        </Text>
+        <ModView>
+          {submittedTeams.map((team) => {
+            const roomTeam = getTeamByShortName(room.teams, team.teamName);
+
+            return (
+              <motion.span
+                key={team.id}
+                {...animations.fadeInOut}
+                transition={{ delay: 0.2 }}
+              >
+                {roomTeam.name} hat eingeloggt
+              </motion.span>
+            );
+          })}
+
+          <ButtonGroup>
+            <Button
+              variant="default"
+              onClick={async () => {
+                await prepareQuestion();
+                goToPreviousQuestion(game.qIndex, () => {
+                  game.qIndex -= 1;
+                });
+              }}
+            >
+              Vorherige Frage
+            </Button>
+            <Button variant="default" onClick={handleToggleCorrectAnswer}>
+              Lösung {game.display.correctAnswer ? "ausblenden" : "anzeigen"}
+            </Button>
+            <Button
+              variant="default"
+              onClick={async () => {
+                await prepareQuestion();
+                goToNextQuestion(game.questions, game.qIndex, () => {
+                  game.qIndex += 1;
+                });
+              }}
+            >
+              Nächste Frage
+            </Button>
+          </ButtonGroup>
+        </ModView>
       </Stack>
-    </div>
+    </AnimatePresence>
   );
 };
 

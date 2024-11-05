@@ -16,6 +16,8 @@ import {
 import type { IZehnSetzenGameProps } from "./zehnSetzen.types";
 import AnswerGroup from "./components/AnswerGroup";
 
+const INACTIVE_OPACITY = 0.5;
+
 const ZehnSetzen: FC<IZehnSetzenGameProps> = ({ game }) => {
   const currQuestion = game.questions.at(game.qIndex);
   const teamState = game.teamStates;
@@ -24,7 +26,7 @@ const ZehnSetzen: FC<IZehnSetzenGameProps> = ({ game }) => {
   const { team, isHost, hostFunction } = useUser();
 
   const showQuestion = game.display.question;
-  const inactiveOpacity = isHost ? 0.7 : 0;
+  const inactiveOpacity = isHost ? INACTIVE_OPACITY : 0;
   const questionBoxOpacity = showQuestion ? 1 : inactiveOpacity;
 
   const hasSubmittedAnswer = team?.shortName

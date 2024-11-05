@@ -19,6 +19,8 @@ interface AnswerElementProps {
   hasSubmittedAnswer: boolean;
 }
 
+const INACTIVE_OPACITY = 0.5;
+
 const AnswerElement: FC<AnswerElementProps> = ({
   answer,
   showAnswer,
@@ -37,7 +39,7 @@ const AnswerElement: FC<AnswerElementProps> = ({
   const currQuestion = game.questions.at(game.qIndex);
   const isCorrectAnswer = currQuestion?.correctAnswer?.id === answer.id;
 
-  const inactiveOpacity = isHost ? 0.7 : 0;
+  const inactiveOpacity = isHost ? INACTIVE_OPACITY : 0;
   const answerOpacity = showAnswer ? 1 : inactiveOpacity;
   const displayChangeScoreButtons =
     isPlayer && !hasSubmittedAnswer && showAnswer;
@@ -114,7 +116,6 @@ const AnswerElement: FC<AnswerElementProps> = ({
           px="md"
           contentCentered={false}
           opacity={answerOpacity}
-          cursor={isHost ? "pointer" : "default"}
           onClick={toggleAnswer}
           bg={
             isCorrectAnswer && game.display.correctAnswer
@@ -122,7 +123,8 @@ const AnswerElement: FC<AnswerElementProps> = ({
               : theme.primaryColor
           }
           style={{
-            transition: "opacity 300ms, background-color 0.2s ease-in-out"
+            transition: "opacity 300ms, background-color 0.2s ease-in-out",
+            cursor: isHost ? "pointer" : "default"
           }}
         >
           <Group justify="space-between" w="100%">

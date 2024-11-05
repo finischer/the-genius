@@ -1,9 +1,22 @@
-import { Box, Button, Group, Text, useMantineTheme } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Checkbox,
+  Group,
+  Text,
+  useMantineTheme
+} from "@mantine/core";
 import { type TooltipRenderProps } from "react-joyride";
 import { interactiveTourDefaultProps } from "./config";
 import { IconX } from "@tabler/icons-react";
+import { useEffect, useState, type FC } from "react";
+import { useLocalStorage } from "@mantine/hooks";
 
-function CustomTooltip(props: TooltipRenderProps) {
+interface CustomTooltipProps extends TooltipRenderProps {
+  tourId: string;
+}
+
+const CustomTooltip: FC<CustomTooltipProps> = ({ tourId, ...props }) => {
   const {
     backProps,
     closeProps,
@@ -14,10 +27,19 @@ function CustomTooltip(props: TooltipRenderProps) {
     size,
     tooltipProps
   } = props;
+  const [runInteractiveTour, setRunInteractiveTour] = useLocalStorage({
+    key: tourId,
+    defaultValue: true
+  });
+  const [checkboxChecked, setCheckboxChecked] = useState(runInteractiveTour);
   const theme = useMantineTheme();
   const config = interactiveTourDefaultProps(theme);
 
   const styles = config.styles;
+
+  useEffect(() => {
+    setCheckboxChecked(runInteractiveTour);
+  }, [runInteractiveTour]);
 
   return (
     <Box
@@ -25,7 +47,7 @@ function CustomTooltip(props: TooltipRenderProps) {
         borderRadius: theme.radius.xs,
         textAlign: "center"
       }}
-      maw={400}
+      w={600}
       bg={styles?.options?.backgroundColor}
       p="md"
       {...tooltipProps}
@@ -48,24 +70,33 @@ function CustomTooltip(props: TooltipRenderProps) {
       <Text py="md">{step.content}</Text>
 
       {/* Footer */}
-      <Group justify="end">
-        {index > 0 && (
-          <Button
-            {...backProps}
-            color={theme.colors.gray[4]}
-            variant="transparent"
-          >
-            {backProps.title}
-          </Button>
-        )}
-        {continuous && (
-          <Button {...primaryProps}>
-            {primaryProps.title} ({index + 1}/{size})
-          </Button>
-        )}
+      <Group justify="space-between">
+        <Checkbox
+          checked={!checkboxChecked}
+          label="Tour nicht mehr anzeigen"
+          onChange={(event) => {
+            setRunInteractiveTour(!event.currentTarget.checked);
+          }}
+        />
+        <Group justify="end">
+          {index > 0 && (
+            <Button
+              {...backProps}
+              color={theme.colors.gray[4]}
+              variant="transparent"
+            >
+              {backProps.title}
+            </Button>
+          )}
+          {continuous && (
+            <Button {...primaryProps}>
+              {primaryProps.title} ({index + 1}/{size})
+            </Button>
+          )}
+        </Group>
       </Group>
     </Box>
   );
-}
+};
 
 export default CustomTooltip;

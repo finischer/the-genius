@@ -21,7 +21,7 @@ const TeamModButtons: FC<TeamModButtonsProps> = ({ team, game }) => {
       <Text fw="bold">{team.name}</Text>
       <ButtonGroup>
         <Button variant="default" onClick={toggleAnswerScores}>
-          Scores {displayTeamScores ? "ausblenden" : "anzeigen"}
+          Punkteverteilung {displayTeamScores ? "ausblenden" : "anzeigen"}
         </Button>
       </ButtonGroup>
     </Stack>

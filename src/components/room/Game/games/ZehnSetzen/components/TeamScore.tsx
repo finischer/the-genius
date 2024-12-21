@@ -10,11 +10,19 @@ const TeamScore = ({
   isDisplayed: boolean;
   score: number;
 }) => {
-  const { team, isPlayer } = useUser();
+  const { team, isPlayer, isHost } = useUser();
 
   const isInTeam = team?.id === teamId;
 
-  const opacity = isDisplayed || isInTeam ? 1 : isPlayer ? 0 : 0.5;
+  let opacity = 0;
+  if (isDisplayed || isInTeam) {
+    opacity = 1;
+  } else if (isPlayer || !isHost) {
+    opacity = 0;
+  } else {
+    opacity = 0.5;
+  }
+
   //   const display = isDisplayed || !isPlayer || isInTeam ? "block" : "none";
 
   const textStyle = {

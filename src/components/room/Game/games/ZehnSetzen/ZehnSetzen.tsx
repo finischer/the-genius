@@ -42,16 +42,21 @@ const ZehnSetzen: FC<IZehnSetzenGameProps> = ({ game }) => {
     })
     .filter((team) => team.submitted);
 
-  const handleToggleCorrectAnswer = hostFunction(() => {
+  const handleToggleCorrectAnswer = hostFunction(async () => {
     game.display.correctAnswer = !game.display.correctAnswer;
+
+    await sleep(1000);
+
+    applyPointsToTeamScores();
   });
 
-  // const allTeamsSubbmitted = Object.values(teamState).every(
-  //   (team) => team.submitted
-  // );
+  const allTeamsSubbmitted = Object.values(teamState).every(
+    (team) => team.submitted
+  );
 
   const prepareQuestion = async () => {
-    const sleepTimeout = game.display.question ? 300 : 0;
+    const sleepTimeout =
+      game.display.question || game.display.answers.length > 0 ? 300 : 0;
 
     game.display.answers = [];
     game.display.correctAnswer = false;
@@ -66,6 +71,39 @@ const ZehnSetzen: FC<IZehnSetzenGameProps> = ({ game }) => {
 
     await sleep(sleepTimeout);
   };
+
+  const handlePrevQuestion = async () => {
+    await prepareQuestion();
+    goToPreviousQuestion(game.qIndex, () => {
+      game.qIndex -= 1;
+    });
+  };
+
+  const handleNextQuestion = async () => {
+    await prepareQuestion();
+    goToNextQuestion(game.questions, game.qIndex, () => {
+      game.qIndex += 1;
+    });
+  };
+
+  const applyPointsToTeamScores = hostFunction(() => {
+    const correctAnswerIndex = currQuestion?.answers.findIndex(
+      (answer) => answer.id === currQuestion?.correctAnswer?.id
+    );
+
+    if (correctAnswerIndex === undefined) return;
+
+    const pointsTeamOne = teamState.t1.answerScores.at(correctAnswerIndex);
+    const pointsTeamTwo = teamState.t2.answerScores.at(correctAnswerIndex);
+
+    if (pointsTeamOne) {
+      room.teams.teamOne.gameScore += pointsTeamOne;
+    }
+
+    if (pointsTeamTwo) {
+      room.teams.teamTwo.gameScore += pointsTeamTwo;
+    }
+  });
 
   return (
     <AnimatePresence>
@@ -107,29 +145,17 @@ const ZehnSetzen: FC<IZehnSetzenGameProps> = ({ game }) => {
           })}
 
           <ButtonGroup>
-            <Button
-              variant="default"
-              onClick={async () => {
-                await prepareQuestion();
-                goToPreviousQuestion(game.qIndex, () => {
-                  game.qIndex -= 1;
-                });
-              }}
-            >
+            <Button variant="default" onClick={handlePrevQuestion}>
               Vorherige Frage
             </Button>
-            <Button variant="default" onClick={handleToggleCorrectAnswer}>
+            <Button
+              disabled={!allTeamsSubbmitted}
+              variant="default"
+              onClick={handleToggleCorrectAnswer}
+            >
               Lösung {game.display.correctAnswer ? "ausblenden" : "anzeigen"}
             </Button>
-            <Button
-              variant="default"
-              onClick={async () => {
-                await prepareQuestion();
-                goToNextQuestion(game.questions, game.qIndex, () => {
-                  game.qIndex += 1;
-                });
-              }}
-            >
+            <Button variant="default" onClick={handleNextQuestion}>
               Nächste Frage
             </Button>
           </ButtonGroup>

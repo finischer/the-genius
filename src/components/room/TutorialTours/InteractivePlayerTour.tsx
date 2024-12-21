@@ -6,6 +6,10 @@ import {
   welcomeStep
 } from "./config";
 import { useMantineTheme } from "@mantine/core";
+import CustomTooltip from "./CustomTooltip";
+import { useLocalStorage } from "@mantine/hooks";
+import { useState } from "react";
+import { LOCAL_STORAGE_KEYS } from "~/config/localStorage";
 
 const steps: Step[] = [
   welcomeStep,
@@ -20,12 +24,24 @@ const steps: Step[] = [
 ];
 
 const InteractivePlayerTour = () => {
+  const [runTour] = useLocalStorage({
+    key: LOCAL_STORAGE_KEYS.PLAYER_TOUR,
+    defaultValue: true,
+    getInitialValueInEffect: false
+  });
+
+  const [run] = useState(runTour);
   const theme = useMantineTheme();
+
   return (
     <ReactJoyride
       {...interactiveTourDefaultProps(theme)}
       beaconComponent={() => null}
       steps={steps}
+      run={run}
+      tooltipComponent={(props) => (
+        <CustomTooltip tourId={LOCAL_STORAGE_KEYS.PLAYER_TOUR} {...props} />
+      )}
     />
   );
 };

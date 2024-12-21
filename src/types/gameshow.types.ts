@@ -17,9 +17,12 @@ export enum TimerType {
   STOPWATCH = "stopwatch"
 }
 
+export type TeamShortNames = "t1" | "t2";
+
 export type Team = {
   id: string;
   name: string;
+  shortName: TeamShortNames;
   totalScore: number;
   gameScore: number;
   avatarImage: string;
@@ -37,15 +40,17 @@ export type TimerState = {
   initSeconds: number;
 };
 
+export type RoomTeams = {
+  teamOne: Team;
+  teamTwo: Team;
+};
+
 export type Room = {
   id: string;
   creatorId: string;
   name: string;
   password: string;
-  teams: {
-    teamOne: Team;
-    teamTwo: Team;
-  };
+  teams: RoomTeams;
   games: TGame[];
   context: {
     isClosed: boolean;

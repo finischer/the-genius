@@ -2,6 +2,7 @@ import { Flex } from "@mantine/core";
 import { AnimatePresence, motion, useAnimate } from "framer-motion";
 import React, { useEffect } from "react";
 import FlipCard from "~/components/shared/FlipCard/FlipCard";
+import useAudio from "~/hooks/useAudio";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { animations } from "~/utils/animations";
 import DuSagstGame from "./games/DuSagst/DuSagstGame";
@@ -16,12 +17,13 @@ import ReferatBingoGame from "./games/ReferatBingo/ReferatBingoGame";
 import type { TReferatBingoGameState } from "./games/ReferatBingo/config";
 import SetGame from "./games/Set/SetGame";
 import type { TSetGameState } from "./games/Set/config";
+import ZehnSetzen from "./games/ZehnSetzen";
+import type { TZehnSetzenGameState } from "./games/ZehnSetzen/config";
 import {
   type Game as GameEnum,
   type IGameProps,
   type TGameMap
 } from "./games/game.types";
-import useAudio from "~/hooks/useAudio";
 
 const SECONDS_TO_ROTATE_TITLE_BANNER = 4;
 const SECONDS_TOTAL_INTRO_DURATION = 8;
@@ -97,7 +99,8 @@ const Game: React.FC<IGameProps> = ({ gameName }) => {
       geheimwoerter: <GeheimwörterGame game={game as TGeheimwörterGameState} />,
       set: <SetGame game={game as TSetGameState} />,
       duSagst: <DuSagstGame game={game as TDuSagstGameState} />,
-      referatBingo: <ReferatBingoGame game={game as TReferatBingoGameState} />
+      referatBingo: <ReferatBingoGame game={game as TReferatBingoGameState} />,
+      zehnSetzen: <ZehnSetzen game={game as TZehnSetzenGameState} />
     };
 
     return GAME_MAP[identifier];

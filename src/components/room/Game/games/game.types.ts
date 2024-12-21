@@ -1,10 +1,11 @@
 import type { GameshowMode } from "@prisma/client";
-import type { TFlaggenGameState } from "./Flaggen/config";
-import type { TMerkenGameState } from "./Merken/config";
-import type { TGeheimwörterGameState } from "./Geheimwörter/config";
-import type { TSetGameState } from "./Set/config";
 import type { TDuSagstGameState } from "./DuSagst/config";
+import type { TFlaggenGameState } from "./Flaggen/config";
+import type { TGeheimwörterGameState } from "./Geheimwörter/config";
+import type { TMerkenGameState } from "./Merken/config";
 import type { TReferatBingoGameState } from "./ReferatBingo/config";
+import type { TSetGameState } from "./Set/config";
+import type { TZehnSetzenGameState } from "./ZehnSetzen/config";
 
 export type TScorebarMode = "number" | "circle";
 
@@ -14,7 +15,8 @@ export enum Game {
   MERKEN = "merken",
   SET = "set",
   DUSAGST = "duSagst",
-  REFERATBINGO = "referatBingo"
+  REFERATBINGO = "referatBingo",
+  ZEHN_SETZEN = "zehnSetzen"
 }
 
 export type TGameSettingsMap = {
@@ -24,6 +26,7 @@ export type TGameSettingsMap = {
   set: TSetGameState;
   duSagst: TDuSagstGameState;
   referatBingo: TReferatBingoGameState;
+  zehnSetzen: TZehnSetzenGameState;
 };
 
 export interface IGameGeneralState {

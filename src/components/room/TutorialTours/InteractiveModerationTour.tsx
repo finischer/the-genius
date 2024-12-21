@@ -15,6 +15,9 @@ import {
   scorebarStep,
   welcomeStep
 } from "./config";
+import { useLocalStorage } from "@mantine/hooks";
+import CustomTooltip from "./CustomTooltip";
+import { LOCAL_STORAGE_KEYS } from "~/config/localStorage";
 
 const steps: Step[] = [
   welcomeStep,
@@ -70,12 +73,23 @@ interface IInteractiveModerationTourProps {
 const InteractiveModerationTour: FC<IInteractiveModerationTourProps> = ({
   openModPanel
 }) => {
-  const [run, setRun] = useState(true);
+  const [runTour] = useLocalStorage({
+    key: LOCAL_STORAGE_KEYS.MOD_TOUR,
+    defaultValue: true,
+    getInitialValueInEffect: false
+  });
+  const [run, setRun] = useState(runTour);
   const [stepIndex, setStepIndex] = useState(0);
   const theme = useMantineTheme();
 
   const handleInteractiveModerationTourCallback = (data: CallBackProps) => {
     const { index, action, step, type, status } = data;
+
+    if (action === ACTIONS.CLOSE) {
+      setRun(false);
+      return;
+    }
+
     const nextStep = () => {
       if (
         ([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND] as Events[]).includes(
@@ -116,6 +130,9 @@ const InteractiveModerationTour: FC<IInteractiveModerationTourProps> = ({
       run={run}
       stepIndex={stepIndex}
       callback={handleInteractiveModerationTourCallback}
+      tooltipComponent={(props) => (
+        <CustomTooltip tourId={LOCAL_STORAGE_KEYS.MOD_TOUR} {...props} />
+      )}
     />
   );
 };

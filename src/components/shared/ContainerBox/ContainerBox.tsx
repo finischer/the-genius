@@ -18,6 +18,7 @@ const ContainerBox: React.FC<IContainerBoxProps> = ({
         display: "flex",
         justifyContent: contentCentered ? "center" : "flex-start",
         alignItems: contentCentered ? "center" : "flex-start",
+        textAlign: contentCentered ? "center" : "left",
         borderRadius: sizes.borderRadius,
         boxShadow: withShadow ? theme.shadows.xl : "none",
         userSelect: "none",

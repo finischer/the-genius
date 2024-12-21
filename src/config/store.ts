@@ -1,13 +1,14 @@
 import { randomId } from "@mantine/hooks";
 import type { RoomSounds } from "@prisma/client";
-import { type Y, getYjsValue, syncedStore } from "@syncedstore/core";
+import { getYjsValue, syncedStore, type Y } from "@syncedstore/core";
 import { WebsocketProvider } from "y-partykit/provider";
 import type { TGame } from "~/components/room/Game/games/game.types";
 import {
   RoomView,
   type Player,
   type Room,
-  type Team
+  type Team,
+  type TeamShortNames
 } from "~/types/gameshow.types";
 import { roomConfig } from "./room.config";
 
@@ -22,8 +23,8 @@ export const initRoom = (
   name,
   password,
   teams: {
-    teamOne: initTeam("Team 1"),
-    teamTwo: initTeam("Team 2")
+    teamOne: initTeam("Team 1", "t1"),
+    teamTwo: initTeam("Team 2", "t2")
   },
   games,
   context: {
@@ -63,9 +64,10 @@ export const initRoom = (
   }
 });
 
-export const initTeam = (name: string): Team => ({
+export const initTeam = (name: string, shortName: TeamShortNames): Team => ({
   id: randomId(),
   name,
+  shortName,
   avatarImage: "",
   avatarImageList: [],
   buzzer: {

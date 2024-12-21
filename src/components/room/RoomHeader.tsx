@@ -11,6 +11,7 @@ import ContainerBox from "../shared/ContainerBox";
 import RoomDetailsModal from "./RoomDetailsModal";
 import SettingsModal from "./SettingsModal/SettingsModal";
 import Timer from "./Timer";
+import { useUser } from "~/hooks/useUser";
 
 const RoomHeader = () => {
   const { buzzer } = useBuzzer();
@@ -23,7 +24,7 @@ const RoomHeader = () => {
   const [openedSettings, { open: openSettings, close: closeSettings }] =
     useDisclosure(false);
   const currGame = room.context.currentGame;
-
+  const { isHost } = useUser();
   const showCurrGameBanner =
     room.context.view == RoomView.GAME &&
     !!currGame &&
@@ -58,6 +59,13 @@ const RoomHeader = () => {
     );
   };
 
+  const handleClickOnCurrentGame = () => {
+    if (isHost) {
+      return;
+    }
+    buzzer({ withTimer: true });
+  };
+
   return (
     <Box h={125} w="100%" pos="relative">
       <RoomDetailsModal
@@ -90,7 +98,7 @@ const RoomHeader = () => {
               top={0}
               contentCentered
               withShadow
-              onClick={() => buzzer({ withTimer: true })}
+              onClick={handleClickOnCurrentGame}
             >
               <Text>{currGame.name}</Text>
             </ContainerBox>

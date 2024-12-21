@@ -74,6 +74,7 @@
     "react-hot-toast": "^2.4.1",
     "react-joyride": "^2.8.2",
     "react-markdown": "^9.0.1",
+    "react-popout": "^3.0.4",
     "socket.io": "^4.7.1",
     "socket.io-client": "^4.7.1",
     "superjson": "1.12.2",

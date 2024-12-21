@@ -50,6 +50,7 @@ const QuestionFormLayout = <T extends { id: string }>({
   }, [questions]);
 
   const handleSubmit = (e: SyntheticEvent) => {
+    console.log("Submit form");
     e.preventDefault();
     onFormSubmit();
   };

@@ -3,8 +3,8 @@ import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 import ActionIcon from "~/components/shared/ActionIcon";
-import ContainerBox from "~/components/shared/ContainerBox";
 import ModView from "~/components/shared/ModView";
+import QuestionBox from "~/components/shared/QuestionBox";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import useTimer from "~/hooks/useTimer";
 import { useUser } from "~/hooks/useUser";
@@ -45,7 +45,6 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({
     (team) => team.boxStates
   );
 
-  const theme = useMantineTheme();
   const q = question.endsWith("?") ? question : question + "?";
   const allAnswersSubmitted = allBoxes.every((box) => box.submitted);
   const isAnswerClickable = isPlayer && !allAnswersSubmitted;
@@ -142,19 +141,9 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({
             Frage anzeigen
           </Button>
         </ModView>
-        <ContainerBox
-          bg={theme.primaryColor}
-          contentCentered
-          w="25rem"
-          py="1rem"
-          px="2rem"
-          opacity={game.display.question ? 1 : questionOpacity}
-          style={{
-            transition: "opacity 300ms"
-          }}
-        >
-          <Text ta="center">{q}</Text>
-        </ContainerBox>
+        <QuestionBox opacity={game.display.question ? 1 : questionOpacity}>
+          {q}
+        </QuestionBox>
       </Flex>
 
       <AnimatePresence>

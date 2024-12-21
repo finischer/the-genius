@@ -3,5 +3,7 @@ export enum LOCAL_STORAGE_KEYS {
   ANALYTICS = "analytics",
   MOD_PANEL_OPENED_ITEMS = "mod-panel-opened-items",
   PRIMARY_COLOR = "primary-color",
-  SETTINGS = "settings"
+  SETTINGS = "settings",
+  MOD_TOUR = "moderator-tour",
+  PLAYER_TOUR = "player-tour"
 }

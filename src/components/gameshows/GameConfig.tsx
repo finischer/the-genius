@@ -6,6 +6,7 @@ import GeheimwörterConfigurator from "./GeheimwörterConfigurator/Geheimwörter
 import MerkenConfigurator from "./MerkenConfigurator/MerkenConfigurator";
 import ReferatBingoConfigurator from "./ReferatBingoConfigurator";
 import SetConfigurator from "./SetConfigurator";
+import ZehnSetzenConfigurator from "./ZehnSetzenConfigurator";
 
 export type TGameConfigurators = {
   [index in Game]: React.ComponentType<any>;
@@ -17,7 +18,8 @@ export const GAME_CONFIGURATORS: TGameConfigurators = {
   geheimwoerter: GeheimwörterConfigurator,
   set: SetConfigurator,
   duSagst: DuSagstConfigurator,
-  referatBingo: ReferatBingoConfigurator
+  referatBingo: ReferatBingoConfigurator,
+  zehnSetzen: ZehnSetzenConfigurator
 };
 
 interface IGameConfigProps {

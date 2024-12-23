@@ -42,7 +42,7 @@ jobs:
 
       - name: Extract Node.js version
         id: extract_node_version
-        run: echo "::set-output name=NODE_VERSION::$(jq -r '.engines.node' package.json)"
+        run: echo "NODE_VERSION=$(jq -r '.engines.node' package.json)" >> $GITHUB_OUTPUT
 
       - name: Set up Node.js
         uses: actions/setup-node@v2

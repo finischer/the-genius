@@ -25,9 +25,10 @@ jobs:
             echo "Version $CURRENT_VERSION already exists as a tag. Please bump the version in package.json."
             exit 1
           fi
-          echo "::set-output name=APP_VERSION::$CURRENT_VERSION"
+          echo "APP_VERSION=$CURRENT_VERSION" >> $GITHUB_OUTPUT
 
   build-and-test:
+    needs: check-version-bumped
     uses: ./.github/workflows/build_and_test.yml
     with:
       environment: production
@@ -59,6 +60,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Create tag
         env:

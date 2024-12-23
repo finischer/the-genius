@@ -1,14 +1,12 @@
 name: Build app
 
 on:
-  pull_request:
-    branches: production
+  # pull_request:
+  #   branches: production
+  # push:
+  #   branches-ignore: production
 
-  push:
-    branches-ignore: production
-
-  workflow_dispatch:
-
+  # workflow_dispatch:
   workflow_call:
 
 env:

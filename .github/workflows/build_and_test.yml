@@ -8,6 +8,12 @@ on:
 
   # workflow_dispatch:
   workflow_call:
+    inputs:
+      environment:
+        type: string
+        description: "The environment to deploy to"
+        required: true
+        default: "development"
 
 env:
   APP_ENV: "${{ secrets.APP_ENV }}"
@@ -28,7 +34,7 @@ env:
 jobs:
   build-and-test:
     environment:
-      name: development
+      name: ${{ inputs.environment }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

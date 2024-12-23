@@ -1,6 +1,5 @@
-import { useMantineTheme } from "@mantine/core";
 import { useState, type FC } from "react";
-import Joyride, {
+import {
   ACTIONS,
   EVENTS,
   STATUS,
@@ -11,13 +10,12 @@ import Joyride, {
 } from "react-joyride";
 import {
   generalSettingStep,
-  interactiveTourDefaultProps,
   scorebarStep,
   welcomeStep
-} from "./config";
+} from "~/components/shared/Tours/config";
 import { useLocalStorage } from "@mantine/hooks";
-import CustomTooltip from "./CustomTooltip";
 import { LOCAL_STORAGE_KEYS } from "~/config/localStorage";
+import InteractiveTour from "~/components/shared/Tours";
 
 const steps: Step[] = [
   welcomeStep,
@@ -80,7 +78,6 @@ const InteractiveModerationTour: FC<IInteractiveModerationTourProps> = ({
   });
   const [run, setRun] = useState(runTour);
   const [stepIndex, setStepIndex] = useState(0);
-  const theme = useMantineTheme();
 
   const handleInteractiveModerationTourCallback = (data: CallBackProps) => {
     const { index, action, step, type, status } = data;
@@ -123,16 +120,12 @@ const InteractiveModerationTour: FC<IInteractiveModerationTourProps> = ({
   };
 
   return (
-    <Joyride
-      {...interactiveTourDefaultProps(theme)}
-      beaconComponent={() => null}
-      steps={steps}
+    <InteractiveTour
       run={run}
+      steps={steps}
+      tourId={LOCAL_STORAGE_KEYS.MOD_TOUR}
       stepIndex={stepIndex}
       callback={handleInteractiveModerationTourCallback}
-      tooltipComponent={(props) => (
-        <CustomTooltip tourId={LOCAL_STORAGE_KEYS.MOD_TOUR} {...props} />
-      )}
     />
   );
 };

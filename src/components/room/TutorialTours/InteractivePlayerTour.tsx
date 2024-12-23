@@ -1,15 +1,11 @@
-import ReactJoyride, { type Step } from "react-joyride";
+import { type Step } from "react-joyride";
 import {
   generalSettingStep,
-  interactiveTourDefaultProps,
   scorebarStep,
   welcomeStep
-} from "./config";
-import { useMantineTheme } from "@mantine/core";
-import CustomTooltip from "./CustomTooltip";
-import { useLocalStorage } from "@mantine/hooks";
-import { useState } from "react";
+} from "~/components/shared/Tours/config";
 import { LOCAL_STORAGE_KEYS } from "~/config/localStorage";
+import InteractiveTour from "~/components/shared/Tours";
 
 const steps: Step[] = [
   welcomeStep,
@@ -24,25 +20,8 @@ const steps: Step[] = [
 ];
 
 const InteractivePlayerTour = () => {
-  const [runTour] = useLocalStorage({
-    key: LOCAL_STORAGE_KEYS.PLAYER_TOUR,
-    defaultValue: true,
-    getInitialValueInEffect: false
-  });
-
-  const [run] = useState(runTour);
-  const theme = useMantineTheme();
-
   return (
-    <ReactJoyride
-      {...interactiveTourDefaultProps(theme)}
-      beaconComponent={() => null}
-      steps={steps}
-      run={run}
-      tooltipComponent={(props) => (
-        <CustomTooltip tourId={LOCAL_STORAGE_KEYS.PLAYER_TOUR} {...props} />
-      )}
-    />
+    <InteractiveTour steps={steps} tourId={LOCAL_STORAGE_KEYS.PLAYER_TOUR} />
   );
 };
 

@@ -25,7 +25,7 @@ env:
 jobs:
   build-and-test:
     uses: ./.github/workflows/build_and_test.yml
-    secrets: inherit # Pass secrets to the build workflow, if necessary.
+    # secrets: inherit # Pass secrets to the build workflow, if necessary.
 
   deploy-to-staging:
     # Only run this deploy job after the build-and-test job completes successfully.

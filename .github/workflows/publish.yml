@@ -98,10 +98,9 @@ jobs:
           CURRENT_VERSION=$(jq -r '.version' package.json)
           echo "Current version: $CURRENT_VERSION"
           git fetch --tags
-          LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
-          echo "Latest tag: $LATEST_TAG"
-          if [ "$CURRENT_VERSION" == "$LATEST_TAG" ]; then
-            echo "Version has not changed manually. Bumping version..."
+          TAG_COUNT=$(git tag | wc -l)
+          if [ "$TAG_COUNT" -eq 0 ]; then
+            echo "No tags found. Bumping version..."
             npm version patch --no-git-tag-version
             NEW_VERSION=$(jq -r '.version' package.json)
             echo "New version: $NEW_VERSION"
@@ -111,8 +110,26 @@ jobs:
             git tag $NEW_VERSION
             git push origin --tags
             git push
+            echo "::set-output name=NEW_VERSION::$NEW_VERSION"
           else
-            echo "Version was changed manually."
+            LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+            echo "Latest tag: $LATEST_TAG"
+            if [ "$CURRENT_VERSION" == "$LATEST_TAG" ]; then
+              echo "Version has not changed manually. Bumping version..."
+              npm version patch --no-git-tag-version
+              NEW_VERSION=$(jq -r '.version' package.json)
+              echo "New version: $NEW_VERSION"
+              git config user.name "github-actions"
+              git config user.email "github-actions@github.com"
+              git commit -am "Bump version to $NEW_VERSION"
+              git tag $NEW_VERSION
+              git push origin --tags
+              git push
+              echo "::set-output name=NEW_VERSION::$NEW_VERSION"
+            else
+              echo "Version was changed manually."
+              echo "::set-output name=NEW_VERSION::$CURRENT_VERSION"
+            fi
           fi
 
       - name: Install Railway

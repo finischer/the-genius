@@ -21,7 +21,7 @@ jobs:
         run: |
           CURRENT_VERSION=$(jq -r '.version' package.json)
           echo "Current version: $CURRENT_VERSION"
-          if git tag --list | grep -q $CURRENT_VERSION; then
+          if git tag --list v$CURRENT_VERSION; then
             echo "Version $CURRENT_VERSION already exists as a tag. Please bump the version in package.json."
             exit 1
           fi

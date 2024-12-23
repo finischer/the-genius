@@ -5,5 +5,6 @@ export enum LOCAL_STORAGE_KEYS {
   PRIMARY_COLOR = "primary-color",
   SETTINGS = "settings",
   MOD_TOUR = "moderator-tour",
-  PLAYER_TOUR = "player-tour"
+  PLAYER_TOUR = "player-tour",
+  IMPORT_GAMESHOW_TOUR = "import-gameshow-tour"
 }

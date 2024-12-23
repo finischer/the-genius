@@ -23,8 +23,20 @@ import useNotification from "~/hooks/useNotification";
 import type { SafedGameshow } from "~/server/api/routers/gameshows";
 import { api } from "~/utils/api";
 import { formatTimestamp } from "~/utils/dates";
+import InteractiveTour from "~/components/shared/Tours/InteractiveTour";
+import type { Step } from "react-joyride";
+import { LOCAL_STORAGE_KEYS } from "~/config/localStorage";
 
 const MENU_ICON_SIZE = 14;
+
+const tourSteps: Step[] = [
+  {
+    target: ".import-gameshow-btn",
+    title: "Spielshow importieren",
+    content:
+      "Hier kannst du öffentliche Spielshows importieren, die von anderen Nutzern erstellt wurden. Klicke auf das Icon, um fortzufahren."
+  }
+];
 
 const ActionMenu = ({
   gameshow,
@@ -231,10 +243,15 @@ const GameshowsPage = () => {
   return (
     <>
       <NextHead title="Meine Spielshows" />
+
       <PageLayout
         showLoader={isLoading}
         loadingMessage="Spielshows werden geladen ..."
       >
+        <InteractiveTour
+          tourId={LOCAL_STORAGE_KEYS.IMPORT_GAMESHOW_TOUR}
+          steps={tourSteps}
+        />
         {activeGameshow && (
           <CreateRoomModal
             openedModal={openedCreateRoomModal}
@@ -260,6 +277,7 @@ const GameshowsPage = () => {
             variant="filled"
             onClick={handleImportGameshow}
             loading={pageIsLoading}
+            className="import-gameshow-btn"
           >
             <IconDownload />
           </ActionIcon>

@@ -1,18 +1,13 @@
 name: Publish
 
 on:
-  release:
-    types: [published]
   workflow_dispatch:
     inputs:
       releaseType:
-        description: "Type of release"
+        description: "Release type"
         required: true
         default: "staging"
-        type: choice
-        options:
-          - staging
-          - production
+        type: string
 
 env:
   APP_ENV: "${{ secrets.APP_ENV }}"
@@ -32,10 +27,8 @@ env:
 
 jobs:
   staging:
+    if: github.event.inputs.releaseType == 'staging'
     name: Deploy to staging
-    environment:
-      name: staging
-      url: https://the-genius-staging.up.railway.app/
     runs-on: ubuntu-latest
 
     steps:
@@ -94,6 +87,29 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Check package.json version
+        id: check_version
+        run: |
+          CURRENT_VERSION=$(jq -r '.version' package.json)
+          echo "Current version: $CURRENT_VERSION"
+          git fetch --tags
+          LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+          echo "Latest tag: $LATEST_TAG"
+          if [ "$CURRENT_VERSION" == "$LATEST_TAG" ]; then
+            echo "Version has not changed manually. Bumping version..."
+            npm version patch --no-git-tag-version
+            NEW_VERSION=$(jq -r '.version' package.json)
+            echo "New version: $NEW_VERSION"
+            git config user.name "github-actions"
+            git config user.email "github-actions@github.com"
+            git commit -am "Bump version to $NEW_VERSION"
+            git tag $NEW_VERSION
+            git push origin --tags
+            git push
+          else
+            echo "Version was changed manually."
+          fi
+
       - name: Install Railway
         run: npm i -g @railway/cli
 
@@ -101,3 +117,16 @@ jobs:
         run: railway up --service the-genius --ci
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Create GitHub Release
+        if: steps.check_version.outputs.NEW_VERSION
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ steps.check_version.outputs.NEW_VERSION }}
+          release_name: Release ${{ steps.check_version.outputs.NEW_VERSION }}
+          body: |
+            Release ${{ steps.check_version.outputs.NEW_VERSION }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

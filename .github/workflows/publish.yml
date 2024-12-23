@@ -9,6 +9,8 @@ on:
 jobs:
   build-and-test:
     uses: ./.github/workflows/build_and_test.yml
+    with:
+      environment: production
     secrets: inherit # Pass secrets to the build workflow, if necessary.
 
   deploy-to-staging:

@@ -249,6 +249,7 @@ const GameshowsPage = () => {
         loadingMessage="Spielshows werden geladen ..."
       >
         <InteractiveTour
+          withBeacon
           tourId={LOCAL_STORAGE_KEYS.IMPORT_GAMESHOW_TOUR}
           steps={tourSteps}
         />

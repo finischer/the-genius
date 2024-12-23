@@ -4,10 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       releaseType:
-        description: "Release type"
+        description: "Type of release"
         required: true
         default: "staging"
-        type: string
+        type: choice
+        options:
+          - staging
+          - production
 
 env:
   APP_ENV: "${{ secrets.APP_ENV }}"
@@ -27,8 +30,10 @@ env:
 
 jobs:
   staging:
-    if: github.event.inputs.releaseType == 'staging'
     name: Deploy to staging
+    environment:
+      name: staging
+      url: https://the-genius-staging.up.railway.app/
     runs-on: ubuntu-latest
 
     steps:

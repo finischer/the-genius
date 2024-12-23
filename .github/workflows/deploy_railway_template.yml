@@ -29,6 +29,23 @@ jobs:
       # Steps to deploy the code go here.
       #   - name: Install Railway
       #     run: npm i -g @railway/cli
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Extract Node.js version
+        id: extract_node_version
+        run: echo "::set-output name=NODE_VERSION::$(jq -r '.engines.node' package.json)"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ steps.extract_node_version.outputs.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
 
       - name: Deploy to ${{ inputs.environmentName }}
         run: railway up --service the-genius --ci

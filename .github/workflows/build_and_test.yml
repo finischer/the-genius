@@ -1,9 +1,13 @@
-name: Publish to production
+name: Build app
 
 on:
-  release:
-    types:
-      - published
+  # pull_request:
+  #   branches: production
+  # push:
+  #   branches-ignore: production
+
+  # workflow_dispatch:
+  workflow_call:
 
 env:
   APP_ENV: "${{ secrets.APP_ENV }}"
@@ -22,14 +26,8 @@ env:
   NEXT_PUBLIC_POSTHOG_HOST: "${{ secrets.NEXT_PUBLIC_POSTHOG_HOST }}"
 
 jobs:
-  deploy:
-    name: Deploy to production
-    environment:
-      name: production
-      url: https://beta.the-genius.de/
-
+  build-and-test:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -48,36 +46,3 @@ jobs:
 
       - name: Build
         run: npm run build
-
-      - name: Install Railway
-        run: npm i -g @railway/cli
-
-      - name: Deploy to production
-        run: railway up --service the-genius --ci
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-  tag:
-    name: Create Tag
-    needs: deploy
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-      - name: Configure Git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Create and Push Tag
-        run: |
-          TAG_NAME=$([[ -n "${{ github.event.release.tag_name }}" ]] && echo "${{ github.event.release.tag_name }}" || jq -r '.version' package.json)
-          git tag -a "$TAG_NAME" -m "Release $TAG_NAME"
-          git push origin "$TAG_NAME"

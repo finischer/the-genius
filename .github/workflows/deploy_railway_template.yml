@@ -1,9 +1,16 @@
-name: Publish to staging
+name: Deploy Template
 
 on:
-  push:
-    branches:
-      - dev
+  workflow_call:
+    inputs:
+      environmentName:
+        description: The name of the environment to deploy to.
+        required: true
+        type: string
+      url:
+        description: The URL to deploy to.
+        required: true
+        type: string
 
 env:
   APP_ENV: "${{ secrets.APP_ENV }}"
@@ -23,38 +30,23 @@ env:
 
 jobs:
   deploy:
-    name: Deploy to staging
-    environment:
-      name: staging
-      url: https://the-genius-staging.up.railway.app/
     runs-on: ubuntu-latest
-
+    container: ghcr.io/railwayapp/cli:latest
+    environment:
+      name: ${{ inputs.environmentName }}
+      url: ${{ inputs.url }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      #   - name: Download artifact
+      #     uses: actions/download-artifact@v4
+      #     with:
+      #       name: ${{ inputs.artifactName }}
+      #       path: ./buildArtifact
 
-      - name: Validate and Bump Version
-        uses: ./validate-version.yml
+      # Steps to deploy the code go here.
+      #   - name: Install Railway
+      #     run: npm i -g @railway/cli
 
-      - name: Extract Node.js version
-        id: extract_node_version
-        run: echo "::set-output name=NODE_VERSION::$(jq -r '.engines.node' package.json)"
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ steps.extract_node_version.outputs.NODE_VERSION }}
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
-      - name: Install Railway
-        run: npm i -g @railway/cli
-
-      - name: Deploy to staging
+      - name: Deploy to ${{ inputs.environmentName }}
         run: railway up --service the-genius --ci
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}

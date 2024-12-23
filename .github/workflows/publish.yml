@@ -1,0 +1,32 @@
+name: Deploy code
+
+on:
+  push:
+    branches: production
+
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    uses: ./.github/workflows/build_and_test.yml
+    secrets: inherit # Pass secrets to the build workflow, if necessary.
+
+  deploy-to-staging:
+    # Only run this deploy job after the build-and-test job completes successfully.
+    needs: build-and-test
+    uses: ./.github/workflows/deploy_railway_template.yml
+    with:
+      environmentName: staging
+      url: https://the-genius-staging.up.railway.app/
+
+    secrets: inherit
+
+  deploy-to-production:
+    # Only run this deploy job after the deploy-to-staging job completes successfully.
+    needs: deploy-to-staging
+    uses: ./.github/workflows/deploy_railway_template.yml
+    with:
+      environmentName: production
+      url: https://beta.the-genius.de/
+
+    secrets: inherit

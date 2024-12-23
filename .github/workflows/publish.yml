@@ -6,7 +6,27 @@ on:
 
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
+  check-version-bumped:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Check if version is bumped
+        id: check_version
+        run: |
+          CURRENT_VERSION=$(jq -r '.version' package.json)
+          echo "Current version: $CURRENT_VERSION"
+          if git tag --list | grep -q $CURRENT_VERSION; then
+            echo "Version $CURRENT_VERSION already exists as a tag. Please bump the version in package.json."
+            exit 1
+          fi
+          echo "::set-output name=APP_VERSION::$CURRENT_VERSION"
+
   build-and-test:
     uses: ./.github/workflows/build_and_test.yml
     with:
@@ -32,3 +52,20 @@ jobs:
       url: https://beta.the-genius.de/
 
     secrets: inherit
+
+  create-tag:
+    needs: deploy-to-production
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Create tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          CURRENT_VERSION=$(jq -r '.version' package.json)
+          TAG_NAME="v$CURRENT_VERSION"
+          echo "Current version: $CURRENT_VERSION"
+          git tag -a $TAG_NAME -m "Release $TAG_NAME"
+          git push origin $TAG_NAME

@@ -92,41 +92,20 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Check package.json version
-        id: check_version
+      - name: Verify package.json version changed
+        id: verify_version
         run: |
-          CURRENT_VERSION=$(jq -r '.version' package.json)
-          echo "Current version: $CURRENT_VERSION"
-          git fetch --tags
-          TAG_COUNT=$(git tag | wc -l)
-          if [ "$TAG_COUNT" -eq 0 ]; then
-            echo "No tags found. Bumping version..."
-            npm version patch --no-git-tag-version
-            NEW_VERSION=$(jq -r '.version' package.json)
-            echo "New version: $NEW_VERSION"
-            git config user.name "github-actions"
-            git config user.email "github-actions@github.com"
-            git commit -am "Bump version to $NEW_VERSION"
-            git tag $NEW_VERSION
-            echo "::set-output name=NEW_VERSION::$NEW_VERSION"
-          else
-            LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
-            echo "Latest tag: $LATEST_TAG"
-            if [ "$CURRENT_VERSION" == "$LATEST_TAG" ]; then
-              echo "Version has not changed manually. Bumping version..."
-              npm version patch --no-git-tag-version
-              NEW_VERSION=$(jq -r '.version' package.json)
-              echo "New version: $NEW_VERSION"
-              git config user.name "github-actions"
-              git config user.email "github-actions@github.com"
-              git commit -am "Bump version to $NEW_VERSION"
-              git tag $NEW_VERSION
-              echo "::set-output name=NEW_VERSION::$NEW_VERSION"
-            else
-              echo "Version was changed manually."
-              echo "::set-output name=NEW_VERSION::$CURRENT_VERSION"
-            fi
+          set -e
+          # Wenn kein Unterschied, dann abbrechen:
+          if git diff --quiet HEAD -- package.json; then
+            echo "ERROR: The package.json version was NOT updated. Please bump version manually before production deploy."
+            exit 1
           fi
+
+          # Lese neue Version aus package.json
+          newVersion=$(jq -r '.version' package.json)
+          echo "New version found in package.json: $newVersion"
+          echo "::set-output name=VERSION::$newVersion"
 
       - name: Install Railway
         run: npm i -g @railway/cli
@@ -136,15 +115,41 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
+      - name: Create Tag
+        run: |
+          newVersion=${{ steps.verify_version.outputs.VERSION }}
+          echo "Tagging current commit as v${newVersion}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag "v${newVersion}"
+
+      - name: Get last tag
+        id: last_tag
+        run: |
+          # Hole letzten Tag (oder Standard "v0.0.0", wenn es keinen gibt)
+          last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          echo "Last tag: $last_tag"
+          echo "::set-output name=LAST_TAG::$last_tag"
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Hole neue Version aus vorherigem Schritt
+          new_version=${{ steps.verify_version.outputs.VERSION }}
+          last_tag=${{ steps.last_tag.outputs.LAST_TAG }}
+
+          # Generiere Commit-Liste seit letztem Tag
+          changelog=$(git log $last_tag..HEAD --pretty=format:"- %s")
+          echo "Changelog generated: $changelog"
+          echo "::set-output name=CHANGELOG::$changelog"
+
       - name: Create GitHub Release
-        if: steps.check_version.outputs.NEW_VERSION
         uses: actions/create-release@v1
         with:
-          tag_name: ${{ steps.check_version.outputs.NEW_VERSION }}
-          release_name: Release ${{ steps.check_version.outputs.NEW_VERSION }}
+          tag_name: v${{ steps.verify_version.outputs.VERSION }}
+          release_name: "Release v${{ steps.verify_version.outputs.VERSION }}"
           body: |
-            Release ${{ steps.check_version.outputs.NEW_VERSION }}
+            ### Changes
+            ${{ steps.changelog.outputs.CHANGELOG }}
           draft: false
           prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

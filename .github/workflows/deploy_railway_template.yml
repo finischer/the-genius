@@ -15,20 +15,17 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    container: ghcr.io/railwayapp/cli:latest
     environment:
       name: ${{ inputs.environmentName }}
       url: ${{ inputs.url }}
     steps:
-      #   - name: Download artifact
-      #     uses: actions/download-artifact@v4
-      #     with:
-      #       name: ${{ inputs.artifactName }}
-      #       path: ./buildArtifact
+      # - name: Download artifact
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: ${{ inputs.artifactName }}
+      #     path: ./buildArtifact
 
       # Steps to deploy the code go here.
-      #   - name: Install Railway
-      #     run: npm i -g @railway/cli
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -41,11 +38,14 @@ jobs:
         with:
           node-version: ${{ steps.extract_node_version.outputs.NODE_VERSION }}
 
-      - name: Install dependencies
-        run: npm ci
+      # - name: Install dependencies
+      #   run: npm ci
 
-      - name: Build
-        run: npm run build
+      # - name: Build
+      #   run: npm run build
+
+      - name: Install Railway
+        run: npm i -g @railway/cli
 
       - name: Deploy to ${{ inputs.environmentName }}
         run: railway up --service the-genius --ci

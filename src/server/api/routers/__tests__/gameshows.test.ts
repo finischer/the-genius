@@ -6,7 +6,6 @@ vi.mock("~/server/db", () => {
     prisma: {
       gameshow: {
         findMany: vi.fn()
-        // findFirst, create, update, delete... je nachdem, was du brauchst
       }
     }
   };
@@ -28,7 +27,7 @@ describe("gameshowsRouter -> getAllByCreatorId", () => {
     );
   });
 
-  it("gibt Gameshows zurück, wenn ein User eingeloggt ist", async () => {
+  it("Should return all gameshows created by the authenticated user", async () => {
     mockFindManyGameshows([
       {
         id: "1",

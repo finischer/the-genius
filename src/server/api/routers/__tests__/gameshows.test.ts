@@ -1,16 +1,4 @@
-import { assert, describe, expect, it, vi } from "vitest";
-
-// Important: First mock before importing the module
-vi.mock("~/server/db", () => {
-  return {
-    prisma: {
-      gameshow: {
-        findMany: vi.fn()
-      }
-    }
-  };
-});
-
+import { assert, describe, expect, it } from "vitest";
 import { TRPCError } from "@trpc/server";
 import { getOrCreateObjectId } from "~/utils/database";
 import { getTestCaller, mockFindManyGameshows } from "__tests__/utils";

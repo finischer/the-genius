@@ -13,18 +13,12 @@ vi.mock("~/server/db", () => {
 });
 
 import { TRPCError } from "@trpc/server";
-import { appRouter } from "~/server/api/root";
-import { createInnerTRPCContext, t } from "~/server/api/trpc";
 import { getOrCreateObjectId } from "~/utils/database";
-import { prisma } from "~/server/db";
+import { getTestCaller, mockFindManyGameshows } from "__tests__/utils";
 
 describe("gameshowsRouter -> getAllByCreatorId", () => {
   it("Unauthed user should not be possible to get gameshows from other users", async () => {
-    const ctx = createInnerTRPCContext({
-      session: null
-    });
-    const createCaller = t.createCallerFactory(appRouter);
-    const caller = createCaller(ctx);
+    const caller = getTestCaller(null);
 
     await expect(caller.gameshows.getAllByCreatorId()).rejects.toThrowError(
       new TRPCError({
@@ -35,39 +29,34 @@ describe("gameshowsRouter -> getAllByCreatorId", () => {
   });
 
   it("gibt Gameshows zurück, wenn ein User eingeloggt ist", async () => {
-    (
-      prisma.gameshow.findMany as ReturnType<typeof vi.fn>
-    ).mockResolvedValueOnce([
+    mockFindManyGameshows([
       {
         id: "1",
         creatorId: "1",
         name: "Gameshow #1",
-        games: [{}, {}], // => 2 Einträge
+        games: [{}, {}],
         createdAt: new Date(),
         updatedAt: new Date(),
         isFavorite: false,
-        visibility: "PUBLIC",
+        visibility: "PRIVATE",
         originalCreatorId: null,
         originalGameshowId: null,
-        difficulty: null,
-        importedGameshow: false
+        difficulty: "EASY",
+        importedGameshow: null,
+        description: ""
       }
     ]);
 
-    const ctx = createInnerTRPCContext({
-      session: {
-        user: {
-          id: getOrCreateObjectId("1"),
-          role: "USER",
-          username: "testuser",
-          email: ""
-        },
-        expires: "2100-01-01T00:00:00.000Z"
-      }
+    const caller = getTestCaller({
+      user: {
+        id: getOrCreateObjectId("1"),
+        role: "USER",
+        username: "testuser",
+        email: ""
+      },
+      expires: "2100-01-01T00:00:00.000Z"
     });
 
-    const createCaller = t.createCallerFactory(appRouter);
-    const caller = createCaller(ctx);
     const result = await caller.gameshows.getAllByCreatorId();
 
     expect(result).toHaveLength(1);

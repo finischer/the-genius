@@ -52,6 +52,14 @@ Step 2: Run command
 docker-compose up -d
 ```
 
+### Run tests
+
+```
+npm run test:unit
+
+npm run test:unit:watch
+```
+
 ### Start next.js Server
 
 Step 1: Open new terminal  

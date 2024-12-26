@@ -40,7 +40,7 @@ export const MOCK_GAMESHOWS: Gameshow[] = [
     updatedAt: new Date(),
     isFavorite: false,
     games: [],
-    visibility: "PRIVATE",
+    visibility: "PUBLIC",
     difficulty: "EASY",
     originalCreatorId: null,
     originalGameshowId: null,

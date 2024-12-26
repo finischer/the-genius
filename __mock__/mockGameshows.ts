@@ -52,6 +52,18 @@ export const MOCK_GAMESHOWS: Gameshow[] = [
 ];
 
 export const GAMESHOW_MOCK_FUNCTIONS = {
+  delete: vi.fn().mockImplementation((args: Prisma.GameshowDeleteArgs) => {
+    const showIndex = MOCK_GAMESHOWS.findIndex((g) => g.id === args.where.id);
+
+    if (showIndex === -1) {
+      return null;
+    }
+
+    const deletedShow = MOCK_GAMESHOWS[showIndex];
+    MOCK_GAMESHOWS.splice(showIndex, 1);
+
+    return deletedShow;
+  }),
   update: vi.fn().mockImplementation((args: Prisma.GameshowUpdateArgs) => {
     // updates the gameshow in the mock data
     const updatedShow = MOCK_GAMESHOWS.find((g) => g.id === args.where.id);

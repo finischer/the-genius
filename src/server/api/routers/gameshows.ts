@@ -47,6 +47,7 @@ export const gameshowsRouter = createTRPCRouter({
   getAllByCreatorId: protectedProcedure
     .output(z.array(safedGameshowSchema))
     .query(async ({ ctx }) => {
+      console.log("User ID: ", ctx.session.user.id);
       const gameshows = await ctx.prisma.gameshow.findMany({
         where: {
           creatorId: ctx.session.user.id

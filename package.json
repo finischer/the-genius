@@ -89,6 +89,8 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.6.1",
+    "@commitlint/config-conventional": "^19.6.0",
     "@types/bcrypt": "^5.0.0",
     "@types/eslint": "^8.21.3",
     "@types/lodash": "^4.14.202",

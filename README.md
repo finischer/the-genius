@@ -11,7 +11,8 @@ All technologies you should be familiar with.
 - [TRPC](https://trpc.io/)
 - [MongoDB](https://www.mongodb.com/de-de)
 - [ReactJS](https://react.dev/)
-- [Socket.IO](https://socket.io/)
+- ~~[Socket.IO](https://socket.io/)~~ (Currently not in use)
+- [Partykit](https://www.partykit.io/)
 - [Typescript](https://www.typescriptlang.org/)
 
 Also we use [Mantine](https://mantine.dev/) to customize our UI React Components
@@ -68,6 +69,40 @@ Step 2: Run command
 ```
 npm run dev
 ```
+
+### Commitlint and Husky
+
+We use `commitlint` and `husky` to enforce consistent commit messages and run pre-commit hooks.
+
+- **Commitlint**: Ensures that commit messages follow a specified convention. This helps in maintaining a clean and readable commit history.
+- **Husky**: Allows us to run scripts at various stages of the Git lifecycle, such as before commits or pushes. We use it to run `commitlint` before each commit.
+
+To make a commit, follow these steps:
+
+1. Stage your changes:
+
+```
+git add .
+```
+
+2. Commit your changes:
+
+```
+git commit -m "docs: update README.md"
+```
+
+### Conventional Commits
+
+We follow the [Conventional Commits](https://www.conventionalcommits.org/) style for commit messages. This convention uses a structured format for commit messages, which helps in maintaining a clean and readable commit history. Here are some examples of conventional commit messages:
+
+- `feat: add new user authentication feature`
+- `fix: resolve issue with user login`
+- `docs: update README.md with new instructions`
+- `style: improve code formatting`
+- `refactor: simplify user service logic`
+- `test: add unit tests for user service`
+
+Make sure to follow the commit message guidelines specified in the project.
 
 ### Additional hints
 

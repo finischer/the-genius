@@ -47,6 +47,21 @@ export const MOCK_GAMESHOWS: Gameshow[] = [
     difficulty: "EASY",
     originalCreatorId: null,
     originalGameshowId: null,
+    importedGameshow: true
+  },
+  {
+    id: "4",
+    creatorId: "2",
+    description: "Test Gameshow 4",
+    name: "Test Gameshow 4",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    isFavorite: false,
+    games: [],
+    visibility: "PUBLIC",
+    difficulty: "EASY",
+    originalCreatorId: null,
+    originalGameshowId: null,
     importedGameshow: false
   }
 ];
@@ -82,7 +97,6 @@ export const GAMESHOW_MOCK_FUNCTIONS = {
   }),
   create: vi.fn().mockImplementation((args: Prisma.GameshowCreateArgs) => {
     return {
-      ...args.data,
       id: "created-id",
       description: "",
       createdAt: new Date(),
@@ -92,7 +106,8 @@ export const GAMESHOW_MOCK_FUNCTIONS = {
       difficulty: null,
       originalCreatorId: null,
       originalGameshowId: null,
-      importedGameshow: false
+      importedGameshow: false,
+      ...args.data
     };
   }),
   count: vi.fn(),
@@ -128,9 +143,12 @@ export const GAMESHOW_MOCK_FUNCTIONS = {
     .fn()
     .mockImplementation((args: Prisma.GameshowFindFirstArgs) => {
       const found = MOCK_GAMESHOWS.find((g) => {
-        const idMatches = args.where?.id === g.id;
-        const creatorMatches = args.where?.creatorId === g.creatorId;
-        return idMatches && creatorMatches;
+        // Check if keys in where clause match
+        const keys = Object.keys(args.where || {});
+        return keys.every((key) => {
+          // @ts-ignore
+          return g[key] === args.where[key];
+        });
       });
       return found ?? null;
     })

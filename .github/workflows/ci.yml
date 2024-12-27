@@ -1,14 +1,10 @@
 name: CI
 
+# Only trigger on dev pushes or closed pull requests to dev
 on:
   push:
     branches:
       - dev
-  pull_request:
-    branches:
-      - dev
-    types:
-      - closed
 
 env:
   APP_ENV: "${{ secrets.APP_ENV }}"

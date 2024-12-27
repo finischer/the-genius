@@ -1,9 +1,12 @@
 name: CI
 
+# Only run if pushes to dev and changed files are in the src directory
 on:
   push:
     branches:
       - dev
+    paths:
+      - "src/**"
 
 env:
   APP_ENV: "${{ secrets.APP_ENV }}"

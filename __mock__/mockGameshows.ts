@@ -72,11 +72,11 @@ export const GAMESHOW_MOCK_FUNCTIONS = {
       return null;
     }
 
-    // Updates gameshow with new data
-    Object.assign(updatedShow, {
-      name: args.data.name,
-      games: args.data.games
-    });
+    // Updates every key in the data object
+    for (const key in args.data) {
+      const newValue = args.data[key as keyof Prisma.GameshowUpdateInput];
+      (updatedShow as any)[key] = newValue;
+    }
 
     return updatedShow;
   }),

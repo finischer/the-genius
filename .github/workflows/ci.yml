@@ -1,6 +1,5 @@
 name: CI
 
-# Only trigger on dev pushes or closed pull requests to dev
 on:
   push:
     branches:

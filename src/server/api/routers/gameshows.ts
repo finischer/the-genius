@@ -151,6 +151,7 @@ export const gameshowsRouter = createTRPCRouter({
           creatorId: ctx.session.user.id
         }
       });
+
       return gameshow;
     }),
   update: protectedProcedure
@@ -273,7 +274,7 @@ export const gameshowsRouter = createTRPCRouter({
       if (!gameshow) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Gameshow konnte nicht gespeichert werden"
+          message: "Gameshow konnte nicht gefunden werden"
         });
       }
 

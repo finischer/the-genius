@@ -6,7 +6,7 @@ import {
   type NextAuthOptions
 } from "next-auth";
 
-import { type UserRole } from "@prisma/client";
+import { UserRole } from "@prisma/client";
 import { prisma } from "~/server/db";
 import { sessionCallback, signInCallback } from "./auth/callbacks";
 import DiscordProvider from "./auth/providers/DiscordProvider";
@@ -20,7 +20,7 @@ import { isDevelopment } from "~/utils/environment";
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
 
-export const DEFAULT_ROLE: UserRole = "USER";
+export const DEFAULT_ROLE: UserRole = UserRole.USER;
 
 declare module "next-auth" {
   interface Session extends DefaultSession {

@@ -3,6 +3,7 @@ import { IconBrandDiscordFilled, IconBrandGoogle } from "@tabler/icons-react";
 import { signIn } from "next-auth/react";
 import React, { useState, type MouseEventHandler } from "react";
 import classes from "./signInButton.module.css";
+import { isDevelopmentClient } from "~/utils/environment";
 
 enum Provider {
   GOOGLE = "google",
@@ -56,12 +57,29 @@ const SignInButton = () => {
   return (
     <>
       <LoadingOverlay visible={loading} />
-      <GoogleButton onClick={() => handleSignIn(Provider.GOOGLE)}>
-        <Text>Mit Google fortfahren</Text>
-      </GoogleButton>
-      <DiscordButton onClick={() => handleSignIn(Provider.DISCORD)}>
-        <Text>Mit Discord einloggen</Text>
-      </DiscordButton>
+      {!isDevelopmentClient && (
+        <>
+          <GoogleButton onClick={() => handleSignIn(Provider.GOOGLE)}>
+            <Text>Mit Google fortfahren</Text>
+          </GoogleButton>
+          <DiscordButton onClick={() => handleSignIn(Provider.DISCORD)}>
+            <Text>Mit Discord einloggen</Text>
+          </DiscordButton>
+        </>
+      )}
+
+      {isDevelopmentClient && (
+        <Button
+          onClick={() =>
+            signIn("credentials", {
+              email: "dummyuser@example.com",
+              password: "password"
+            })
+          }
+        >
+          Offline-Login (Credentials)
+        </Button>
+      )}
     </>
   );
 };

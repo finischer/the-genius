@@ -9,6 +9,7 @@ import { createRandomUserName } from "~/utils/helpers";
 import useNotification from "../useNotification";
 import useSyncedRoom from "../useSyncedRoom";
 import { type IUseUserContext, type IUseUserProvider } from "./useUser.types";
+import { isDevelopmentClient } from "~/utils/environment";
 
 const UserContext = createContext<IUseUserContext | undefined>(undefined);
 
@@ -27,6 +28,8 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
   const { showErrorNotification, showSuccessNotification } = useNotification();
   const { mutateAsync: checkUsername, isLoading } =
     api.users.isUsernameInUse.useMutation();
+
+  const { mutateAsync: updateUser } = api.users.updateUser.useMutation();
 
   const isAdmin = user.role === "ADMIN";
   const isHost = room.creatorId === user.id;
@@ -73,6 +76,10 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
         message: `Username "${newUsername}" ist bereits vergeben 🙁`
       });
       return false;
+    }
+
+    if (isDevelopmentClient) {
+      await updateUser({ data: { username: newUsername } });
     }
 
     const newUser = {

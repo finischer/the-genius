@@ -23,15 +23,15 @@ import { PostHogProvider } from "posthog-js/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { env } from "~/env.mjs";
-import { isDevelopment } from "~/utils/environment";
+import { isDevelopmentClient } from "~/utils/environment";
 
-if (typeof window !== "undefined") {
+if (typeof window !== "undefined" && !isDevelopmentClient) {
   posthog.init(env.NEXT_PUBLIC_POSTHOG_KEY, {
     api_host: env.NEXT_PUBLIC_POSTHOG_HOST || "https://eu.i.posthog.com",
     person_profiles: "identified_only",
     // Enable debug mode in development
     loaded: (posthog) => {
-      if (isDevelopment) posthog.debug();
+      if (isDevelopmentClient) posthog.debug();
     }
   });
 }

@@ -24,10 +24,9 @@ type UserPropertiesUpdatebaleByAdmin = Pick<
   User,
   "email" | "image" | "name" | "password" | "role" | "username"
 >; // only these properties can be updated by admins
-type UserPropertiesUpdatebaleByUser = Pick<
-  User,
-  "email" | "image" | "password" | "lastLoginAt"
->; // only these properties can be updated by admins
+type UserPropertiesUpdatebaleByUser = Partial<
+  Pick<User, "email" | "image" | "password" | "lastLoginAt" | "username">
+>; // only these properties can be updated by user
 
 export const usersRouter = createTRPCRouter({
   getAll: adminProcedure.query(async ({ ctx }) => {
@@ -56,19 +55,20 @@ export const usersRouter = createTRPCRouter({
   updateUser: protectedProcedure
     .input(
       z.object({
-        id: z.string(),
         data: z.custom<UserPropertiesUpdatebaleByUser>()
       })
     )
     .mutation(async ({ ctx, input }) => {
       const user = await ctx.prisma.user.update({
         where: {
-          id: input.id
+          id: ctx.session.user.id
         },
         data: {
           ...input.data
         }
       });
+
+      console.log("UPDATED USER: ", user);
 
       return user;
     }),
@@ -141,7 +141,7 @@ export const usersRouter = createTRPCRouter({
       return false;
     }),
   me: protectedProcedure.output(safedUserSchema).query(async ({ ctx }) => {
-    const user = await ctx.prisma.user.findUnique({
+    const user = await ctx.prisma.user.findFirst({
       where: {
         id: ctx.session.user.id
       }

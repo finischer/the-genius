@@ -5,13 +5,13 @@ import {
   type DefaultSession,
   type NextAuthOptions
 } from "next-auth";
-
 import { UserRole } from "@prisma/client";
 import { prisma } from "~/server/db";
-import { sessionCallback, signInCallback } from "./auth/callbacks";
+import { jwtCallback, sessionCallback, signInCallback } from "./auth/callbacks";
 import DiscordProvider from "./auth/providers/DiscordProvider";
 import GoogleProvider from "./auth/providers/GoogleProvider";
-import { isDevelopment } from "~/utils/environment";
+import LocalCredentialsProvider from "./auth/providers/LocalCredentialsProvider";
+import { isDevelopmentServer } from "~/utils/environment";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -56,22 +56,28 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     signIn: signInCallback,
     session: sessionCallback,
+    jwt: isDevelopmentServer ? jwtCallback : undefined,
     redirect: ({ baseUrl }) => {
       return baseUrl;
     }
   },
   adapter: PrismaAdapter(prisma),
-  providers: [GoogleProvider, DiscordProvider],
+  providers: [
+    GoogleProvider,
+    DiscordProvider,
+    // Add local credentials provider if isDevelopment
+    ...(isDevelopmentServer ? [LocalCredentialsProvider] : [])
+  ],
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/auth/signin",
     error: "/auth/error"
   },
   session: {
-    strategy: "database"
+    strategy: isDevelopmentServer ? "jwt" : "database"
   },
   // Enable debug messages in the console if you are having problems
-  debug: isDevelopment
+  debug: isDevelopmentServer
 };
 
 /**

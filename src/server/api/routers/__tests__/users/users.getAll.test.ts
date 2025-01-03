@@ -3,7 +3,7 @@ import { getTestCaller } from "__tests__/utils";
 import { TRPCError } from "@trpc/server";
 import { MOCK_USERS } from "__mock__/mockUsers";
 
-describe("usersRouter", () => {
+describe("usersRouter -> getAll", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });

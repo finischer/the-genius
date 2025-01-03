@@ -20,9 +20,8 @@ export const safedUserSchema = z.object({
 
 export type SafedUser = z.infer<typeof safedUserSchema>;
 
-type UserPropertiesUpdatebaleByAdmin = Pick<
-  User,
-  "email" | "image" | "name" | "password" | "role" | "username"
+type UserPropertiesUpdatebaleByAdmin = Partial<
+  Pick<User, "email" | "image" | "name" | "password" | "role" | "username">
 >; // only these properties can be updated by admins
 type UserPropertiesUpdatebaleByUser = Partial<
   Pick<User, "email" | "image" | "password" | "lastLoginAt" | "username">

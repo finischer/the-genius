@@ -6,7 +6,7 @@ import {
 } from "~/types/socket.types";
 import { roomManager } from "../../controllers/RoomManager";
 import NoRoomException from "../../exceptions/NoRoomException";
-import { Game } from "~/components/room/Game/games/game.types";
+import { Game } from "~/components/games/game.types";
 
 const GAME_IDENTIFIER = Game.FLAGGEN;
 const MS_DELAY = 1000;

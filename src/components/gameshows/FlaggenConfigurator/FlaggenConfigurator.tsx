@@ -9,9 +9,9 @@ import {
 } from "@mantine/core";
 import { useContext, useEffect } from "react";
 import { useImmer } from "use-immer";
-import { COUNTRIES } from "~/components/room/Game/games/Flaggen/config";
-import type { TCountry } from "~/components/room/Game/games/Flaggen/flaggen.types";
-import { Game } from "~/components/room/Game/games/game.types";
+import { COUNTRIES } from "~/components/games/Flaggen/config";
+import type { TCountry } from "~/components/games/Flaggen/flaggen.types";
+import { Game } from "~/components/games/game.types";
 import List from "~/components/shared/List";
 import { StepperControlsContext } from "~/context/StepperControlsContext";
 import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";

@@ -3,7 +3,7 @@ import type {
   Game,
   TGame,
   TGameSettingsMap
-} from "~/components/room/Game/games/game.types";
+} from "~/components/games/game.types";
 
 export type TGameshowConfig = {
   name: string;

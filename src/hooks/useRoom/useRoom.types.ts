@@ -1,5 +1,5 @@
 import { type Dispatch } from "react";
-import type { TGame } from "~/components/room/Game/games/game.types";
+import type { TGame } from "~/components/games/game.types";
 import type Room from "~/pages/api/classes/Room/Room";
 
 export interface IUseRoomProvider {

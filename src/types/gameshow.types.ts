@@ -4,7 +4,7 @@ import type {
   RoomSounds,
   TeamAvatarImage
 } from "@prisma/client";
-import type { TGame } from "~/components/room/Game/games/game.types";
+import type { TGame } from "~/components/games/game.types";
 
 export enum RoomView {
   EMPTY = "empty",

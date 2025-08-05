@@ -3,7 +3,7 @@ import {
   type TSetCard,
   type TSetGameMarkedCardsState,
   type TSetQuestionItem
-} from "./../../set.types";
+} from "../../set.types";
 
 export interface ISetCardProps {
   editable?: boolean;

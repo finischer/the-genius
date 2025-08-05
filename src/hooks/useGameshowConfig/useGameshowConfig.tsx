@@ -1,11 +1,11 @@
 import type { Game as PrismaGame } from "@prisma/client";
 import { useContext } from "react";
-import { GAME_STATE_MAP } from "~/components/room/Game/games/game.constants";
+import { GAME_STATE_MAP } from "~/components/games/game.constants";
 import {
   type Game,
   type TGame,
   type TGameSettingsMap
-} from "~/components/room/Game/games/game.types";
+} from "~/components/games/game.types";
 import { GameConfigContext } from "~/context/GameConfigProvider";
 import type {
   IUseGameshowConfigReturn,

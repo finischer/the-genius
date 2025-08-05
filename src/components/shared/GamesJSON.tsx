@@ -1,5 +1,5 @@
 import React from "react";
-import type { TGame } from "../room/Game/games/game.types";
+import type { TGame } from "../games/game.types";
 import { Box, ScrollArea, Stack, Text } from "@mantine/core";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 

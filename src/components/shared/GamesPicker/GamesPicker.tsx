@@ -8,8 +8,8 @@ import {
 } from "@tabler/icons-react";
 import React from "react";
 import GameDetailsModal from "~/components/gameshows/GameDetailsModal";
-import { GAME_STATE_MAP } from "~/components/room/Game/games/game.constants";
-import type { Game } from "~/components/room/Game/games/game.types";
+import { GAME_STATE_MAP } from "~/components/games/game.constants";
+import type { Game } from "~/components/games/game.types";
 import { api } from "~/utils/api";
 import List from "../List";
 import Paper from "../Paper";

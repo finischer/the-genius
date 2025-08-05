@@ -5,7 +5,7 @@ import {
   Prisma
 } from "@prisma/client";
 import type Team from "../Team/Team";
-import type { TGame } from "~/components/room/Game/games/game.types";
+import type { TGame } from "~/components/games/game.types";
 import type Room from ".";
 
 export type TeamOptions = keyof Room["teams"];

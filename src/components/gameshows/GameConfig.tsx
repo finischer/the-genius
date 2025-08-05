@@ -1,6 +1,6 @@
 import type { FC } from "react";
-import type { Game } from "../room/Game/games/game.types";
-import { GAME_CONFIGURATORS } from "../room/Game/games/game-registry";
+import type { Game } from "../games/game.types";
+import { GAME_CONFIGURATORS } from "../games/game-registry";
 
 interface IGameConfigProps {
   gameSlug: Game;

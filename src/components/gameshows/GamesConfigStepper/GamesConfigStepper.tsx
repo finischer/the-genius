@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useImmer } from "use-immer";
-import { Game, type TGame } from "~/components/room/Game/games/game.types";
+import { Game, type TGame } from "~/components/games/game.types";
 import GamesPicker from "~/components/shared/GamesPicker";
 import { StepperControlsContext } from "~/context/StepperControlsContext";
 import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";

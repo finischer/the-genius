@@ -3,7 +3,7 @@ import type { Updater } from "use-immer";
 import type {
   TSetQuestionItem,
   TSetQuestionList
-} from "~/components/room/Game/games/Set/set.types";
+} from "~/components/games/Set/set.types";
 
 export interface ISetListProps {
   questions: TSetQuestionList;

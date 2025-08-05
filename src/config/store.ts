@@ -2,7 +2,7 @@ import { randomId } from "@mantine/hooks";
 import type { RoomSounds } from "@prisma/client";
 import { getYjsValue, syncedStore, type Y } from "@syncedstore/core";
 import { WebsocketProvider } from "y-partykit/provider";
-import type { TGame } from "~/components/room/Game/games/game.types";
+import type { TGame } from "~/components/games/game.types";
 import {
   RoomView,
   type Player,

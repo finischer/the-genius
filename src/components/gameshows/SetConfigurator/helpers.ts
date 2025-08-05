@@ -4,7 +4,7 @@ import type {
   TSetCardForm,
   TSetCard,
   TSetQuestionItem
-} from "~/components/room/Game/games/Set/set.types";
+} from "~/components/games/Set/set.types";
 import { v4 as uuidv4 } from "uuid";
 
 export function generateRandomFormCard(): TSetCard {

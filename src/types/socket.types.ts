@@ -1,12 +1,12 @@
 import { type Gameshow, type RoomSounds, type RoomViews } from "@prisma/client";
 import { type NextApiResponse } from "next";
 import { type Server, type Socket } from "socket.io";
-import type { Game } from "~/components/room/Game/games/game.types";
+import type { Game } from "~/components/games/game.types";
 import type { TSongId } from "~/components/room/MediaPlayer/mediaPlayer.types";
 import type { ICreateRoomConfig } from "~/components/shared/CreateRoomModal/createRoomModal.types";
 import type Room from "~/pages/api/classes/Room/Room";
 import type { SafedUser } from "~/server/api/routers/users";
-import { type TDuSagstAnswerBoxState } from "./../components/room/Game/games/DuSagst/duSagst.types";
+import { type TDuSagstAnswerBoxState } from "../components/games/DuSagst/duSagst.types";
 import { type TExceptionReason } from "./../pages/api/exceptions/exceptions.types";
 
 type TSocketUser = {

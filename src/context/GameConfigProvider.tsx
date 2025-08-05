@@ -2,7 +2,7 @@ import type { Game as PrismaGame } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
 import { createContext, type FC, type ReactNode } from "react";
 import { useImmer, type Updater } from "use-immer";
-import type { TGame } from "~/components/room/Game/games/game.types";
+import type { TGame } from "~/components/games/game.types";
 import type { TGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig.types";
 import useNotification from "~/hooks/useNotification";
 import { api } from "~/utils/api";

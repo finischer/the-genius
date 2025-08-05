@@ -1,7 +1,7 @@
 import { type Server, type Socket } from "socket.io";
-import type { TDuSagstGameState } from "~/components/room/Game/games/DuSagst/config";
-import type { TDuSagstAnswerBoxState } from "~/components/room/Game/games/DuSagst/duSagst.types";
-import { Game } from "~/components/room/Game/games/game.types";
+import type { TDuSagstGameState } from "~/components/games/DuSagst/config";
+import type { TDuSagstAnswerBoxState } from "~/components/games/DuSagst/duSagst.types";
+import { Game } from "~/components/games/game.types";
 import {
   type IClientToServerEvents,
   type IServerSocketData,

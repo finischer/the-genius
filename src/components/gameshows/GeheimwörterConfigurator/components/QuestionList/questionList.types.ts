@@ -1,5 +1,5 @@
 import type { Dispatch, SetStateAction } from "react";
-import { type TGeheimwoerterQuestionItem } from "./../../../../room/Game/games/Geheimwörter/geheimwörter.types";
+import { type TGeheimwoerterQuestionItem } from "../../../../games/Geheimwörter/geheimwörter.types";
 import type { Updater } from "use-immer";
 
 export interface IQuestionListProps {

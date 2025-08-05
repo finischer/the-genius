@@ -5,8 +5,8 @@ import FlipCard from "~/components/shared/FlipCard/FlipCard";
 import useAudio from "~/hooks/useAudio";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { animations } from "~/utils/animations";
-import { type Game as GameEnum, type IGameProps } from "./games/game.types";
-import { GAME_COMPONENTS } from "./games/game-registry";
+import { type Game as GameEnum, type IGameProps } from "../../games/game.types";
+import { GAME_COMPONENTS } from "../../games/game-registry";
 
 const SECONDS_TO_ROTATE_TITLE_BANNER = 4;
 const SECONDS_TOTAL_INTRO_DURATION = 8;

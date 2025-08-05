@@ -1,4 +1,4 @@
-import { Game } from "./../game.types";
+import { Game } from "../game.types";
 import { type IGameGeneralState } from "../game.types";
 import { type IFlaggenState } from "./flaggen.types";
 

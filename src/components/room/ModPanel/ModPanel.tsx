@@ -27,7 +27,7 @@ import useTimer from "~/hooks/useTimer";
 import { RoomView, TimerType } from "~/types/gameshow.types";
 import { api } from "~/utils/api";
 import { assignObjectKeyByKey } from "~/utils/helpers";
-import type { TGame } from "../Game/games/game.types";
+import type { TGame } from "../../games/game.types";
 import MediaPlayer from "../MediaPlayer";
 import { type IModPanelProps } from "./modPanel.types";
 

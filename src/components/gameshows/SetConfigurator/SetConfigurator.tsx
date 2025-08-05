@@ -4,8 +4,8 @@ import QuestionFormLayout from "~/components/layout/QuestionFormLayout";
 import type {
   TSetQuestionItem,
   TSetQuestionList
-} from "~/components/room/Game/games/Set/set.types";
-import { Game } from "~/components/room/Game/games/game.types";
+} from "~/components/games/Set/set.types";
+import { Game } from "~/components/games/game.types";
 import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";
 import CreateSetContainer from "./components/CreateSetContainer";
 import { generateNewSetQuestion } from "./helpers";

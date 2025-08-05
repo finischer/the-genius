@@ -9,7 +9,7 @@ import type {
   Game,
   TGame,
   TGameSettingsMap
-} from "~/components/room/Game/games/game.types";
+} from "~/components/games/game.types";
 import { prisma } from "~/server/db";
 import { io } from "../../socket";
 import Team from "../Team/Team";

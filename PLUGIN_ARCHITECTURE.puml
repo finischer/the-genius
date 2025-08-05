@@ -1,0 +1,150 @@
+@startuml Plugin-Based Game Architecture
+!theme plain
+skinparam linetype ortho
+
+package "Core Types (Manual Extension Required)" {
+  enum Game {
+    FLAGGEN = "flaggen"
+    GEHEIMWOERTER = "geheimwoerter"
+    MERKEN = "merken"
+    SET = "set"
+    DUSAGST = "duSagst"
+    REFERATBINGO = "referatBingo"
+    ZEHN_SETZEN = "zehnSetzen"
+    --
+    📝 Neue Spiele hier hinzufügen
+  }
+  
+  class TGameSettingsMap {
+    flaggen: TFlaggenGameState
+    merken: TMerkenGameState
+    geheimwoerter: TGeheimwörterGameState
+    set: TSetGameState
+    duSagst: TDuSagstGameState
+    referatBingo: TReferatBingoGameState
+    zehnSetzen: TZehnSetzenGameState
+    --
+    📝 Neue Spiele hier hinzufügen
+  }
+  
+  interface IGameGeneralState
+}
+
+package "Plugin System Core (Automatic)" {
+  interface GamePlugin {
+    +identifier: Game
+    +name: string
+    +defaultConfig: IGameGeneralState
+    +configurator: ComponentType
+    +gameComponent: ComponentType
+    +handlers?: Record<string, Function>
+  }
+  
+  class GamePluginManager {
+    -plugins: GamePluginRegistry
+    +registerPlugin(plugin)
+    +getDefaultStates()
+    +getConfigurators()
+    +getGameComponents()
+    +getAllHandlers()
+  }
+}
+
+package "Game Registry (Automatic)" {
+  class GameRegistry {
+    +GAME_STATE_MAP
+    +GAME_CONFIGURATORS  
+    +GAME_COMPONENTS
+    +registerAllPlugins()
+  }
+  
+  note right of GameRegistry : Automatisch generiert\naus registrierten Plugins
+}
+
+package "Individual Game Plugins (One per Game)" {
+  class FlaggenPlugin implements GamePlugin
+  class MerkenPlugin implements GamePlugin
+  class SetPlugin implements GamePlugin
+  class GeheimwörterPlugin implements GamePlugin
+  class DuSagstPlugin implements GamePlugin
+  class ReferatBingoPlugin implements GamePlugin
+  class ZehnSetzenPlugin implements GamePlugin
+  
+  class "NeuesSpielPlugin" implements GamePlugin <<NEW>>
+  
+  note right of "NeuesSpielPlugin" : Neues Spiel?\n1. Plugin erstellen\n2. Registrieren
+}
+
+package "Game Implementation" {
+  package "Configuration" {
+    abstract BaseConfigurator
+    class FlaggenConfigurator extends BaseConfigurator
+    class MerkenConfigurator extends BaseConfigurator
+  }
+  
+  package "Game Components" {
+    abstract BaseGameComponent
+    class FlaggenGame extends BaseGameComponent
+    class MerkenGame extends BaseGameComponent
+  }
+  
+  package "Default Configs" {
+    class DEFAULT_FLAGGEN_STATE
+    class DEFAULT_MERKEN_STATE
+  }
+}
+
+package "Consumer Components (Automatic)" {
+  class "GameConfig.tsx" {
+    +getConfigurator()
+    --
+    Verwendet automatisch\ngenerierte Registry
+  }
+  
+  class "Game.tsx" {
+    +getGame()
+    --
+    Verwendet automatisch\ngenerierte Registry
+  }
+}
+
+' Core Type Relationships
+Game --> TGameSettingsMap : defines keys
+TGameSettingsMap --> IGameGeneralState : extends
+
+' Plugin System Relationships
+GamePluginManager --> GamePlugin : manages
+GameRegistry --> GamePluginManager : uses
+GamePlugin --> Game : references enum
+
+' Plugin Implementations
+FlaggenPlugin --> FlaggenConfigurator : references
+FlaggenPlugin --> FlaggenGame : references
+FlaggenPlugin --> DEFAULT_FLAGGEN_STATE : references
+
+MerkenPlugin --> MerkenConfigurator : references
+MerkenPlugin --> MerkenGame : references
+MerkenPlugin --> DEFAULT_MERKEN_STATE : references
+
+"NeuesSpielPlugin" --> Game : <<requires extension>>
+"NeuesSpielPlugin" --> TGameSettingsMap : <<requires extension>>
+
+' Registration Flow
+GameRegistry --> FlaggenPlugin : registers
+GameRegistry --> MerkenPlugin : registers
+GameRegistry --> SetPlugin : registers
+GameRegistry --> GeheimwörterPlugin : registers
+GameRegistry --> DuSagstPlugin : registers
+GameRegistry --> ReferatBingoPlugin : registers
+GameRegistry --> ZehnSetzenPlugin : registers
+GameRegistry --> "NeuesSpielPlugin" : registers
+
+' Consumer Integration
+"GameConfig.tsx" --> GameRegistry : imports from
+"Game.tsx" --> GameRegistry : imports from
+
+' Manual Extension Points
+note top of Game : ⚠️ MANUAL:\nNeue Spiele hier\nhinzufügen
+note top of TGameSettingsMap : ⚠️ MANUAL:\nNeue Spiele hier\nhinzufügen
+
+@enduml

@@ -1,26 +1,6 @@
 import type { FC } from "react";
 import type { Game } from "../room/Game/games/game.types";
-import DuSagstConfigurator from "./DuSagstConfigurator";
-import FlaggenConfigurator from "./FlaggenConfigurator";
-import GeheimwörterConfigurator from "./GeheimwörterConfigurator/GeheimwörterConfigurator";
-import MerkenConfigurator from "./MerkenConfigurator/MerkenConfigurator";
-import ReferatBingoConfigurator from "./ReferatBingoConfigurator";
-import SetConfigurator from "./SetConfigurator";
-import ZehnSetzenConfigurator from "./ZehnSetzenConfigurator";
-
-export type TGameConfigurators = {
-  [index in Game]: React.ComponentType<any>;
-};
-
-export const GAME_CONFIGURATORS: TGameConfigurators = {
-  flaggen: FlaggenConfigurator,
-  merken: MerkenConfigurator,
-  geheimwoerter: GeheimwörterConfigurator,
-  set: SetConfigurator,
-  duSagst: DuSagstConfigurator,
-  referatBingo: ReferatBingoConfigurator,
-  zehnSetzen: ZehnSetzenConfigurator
-};
+import { GAME_CONFIGURATORS } from "../room/Game/games/game-registry";
 
 interface IGameConfigProps {
   gameSlug: Game;

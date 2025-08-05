@@ -10,7 +10,7 @@ import ReferatBingoGame from "./ReferatBingoGame";
 export const referatBingoPlugin: GamePlugin = {
   identifier: Game.REFERATBINGO,
   name: "Referat Bingo",
-  defaultConfig: DEFAULT_REFERAT_BINGO_STATE,
+  state: DEFAULT_REFERAT_BINGO_STATE,
   configurator: ReferatBingoConfigurator,
   gameComponent: ReferatBingoGame as unknown as GamePlugin["gameComponent"],
   handlers: undefined

@@ -1,5 +1,10 @@
 import type { ComponentType } from "react";
-import type { Game, IGameGeneralState } from "./game.types";
+import type {
+  Game,
+  IGameGeneralState,
+  TGame,
+  TGameSettingsMap
+} from "./game.types";
 
 /**
  * Plugin-Interface für Spiele
@@ -13,7 +18,7 @@ export interface GamePlugin {
   name: string;
 
   /** Default-Konfiguration des Spiels */
-  defaultConfig: IGameGeneralState;
+  state: TGameSettingsMap[Game];
 
   /** Konfigurator-Komponente für das Spiel */
   configurator: ComponentType<unknown>;
@@ -60,14 +65,14 @@ export class GamePluginManager {
   }
 
   /**
-   * Gibt alle Default-Konfigurationen zurück
+   * Gibt alle Spielzustände zurück
    */
-  static getDefaultStates(): Record<Game, IGameGeneralState> {
-    const states: Partial<Record<Game, IGameGeneralState>> = {};
+  static getGameStateMap(): Record<Game, TGame> {
+    const states: Partial<Record<Game, TGame>> = {};
     Object.values(this.plugins).forEach((plugin) => {
-      states[plugin.identifier] = plugin.defaultConfig;
+      states[plugin.identifier] = plugin.state;
     });
-    return states as Record<Game, IGameGeneralState>;
+    return states as Record<Game, TGame>;
   }
 
   /**

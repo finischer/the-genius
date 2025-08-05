@@ -10,7 +10,7 @@ import FlaggenGame from "./FlaggenGame";
 export const flaggenPlugin: GamePlugin = {
   identifier: Game.FLAGGEN,
   name: "Flaggen",
-  defaultConfig: DEFAULT_FLAGGEN_STATE,
+  state: DEFAULT_FLAGGEN_STATE,
   configurator: FlaggenConfigurator,
   gameComponent: FlaggenGame as unknown as GamePlugin["gameComponent"],
   // Flaggen hat keine speziellen Socket-Handler

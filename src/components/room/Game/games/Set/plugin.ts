@@ -10,7 +10,7 @@ import SetGame from "./SetGame";
 export const setPlugin: GamePlugin = {
   identifier: Game.SET,
   name: "Set",
-  defaultConfig: DEFAULT_SET_STATE,
+  state: DEFAULT_SET_STATE,
   configurator: SetConfigurator,
   gameComponent: SetGame as unknown as GamePlugin["gameComponent"],
   handlers: undefined

@@ -10,7 +10,7 @@ import GeheimwörterGame from "./GeheimwörterGame";
 export const geheimwoerterPlugin: GamePlugin = {
   identifier: Game.GEHEIMWOERTER,
   name: "Geheimwörter",
-  defaultConfig: DEFAULT_GEHEIMWOERTER_STATE,
+  state: DEFAULT_GEHEIMWOERTER_STATE,
   configurator: GeheimwörterConfigurator,
   gameComponent: GeheimwörterGame as unknown as GamePlugin["gameComponent"],
   handlers: undefined

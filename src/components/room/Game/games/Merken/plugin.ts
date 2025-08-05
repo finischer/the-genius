@@ -10,7 +10,7 @@ import MerkenGame from "./MerkenGame";
 export const merkenPlugin: GamePlugin = {
   identifier: Game.MERKEN,
   name: "Merken",
-  defaultConfig: DEFAULT_MERKEN_STATE,
+  state: DEFAULT_MERKEN_STATE,
   configurator: MerkenConfigurator,
   gameComponent: MerkenGame as unknown as GamePlugin["gameComponent"],
   // Handler werden vorerst separat verwaltet

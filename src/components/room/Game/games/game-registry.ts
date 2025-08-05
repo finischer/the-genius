@@ -25,7 +25,7 @@ function registerAllPlugins() {
 registerAllPlugins();
 
 // Export der Plugin-gesteuerten Maps (Ersatz für die alten separaten Maps)
-export const GAME_STATE_MAP = GamePluginManager.getDefaultStates();
+export const GAME_STATE_MAP = GamePluginManager.getGameStateMap();
 export const GAME_CONFIGURATORS = GamePluginManager.getConfigurators();
 export const GAME_COMPONENTS = GamePluginManager.getGameComponents();
 

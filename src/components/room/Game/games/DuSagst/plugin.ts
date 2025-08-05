@@ -10,7 +10,7 @@ import DuSagstGame from "./DuSagstGame";
 export const duSagstPlugin: GamePlugin = {
   identifier: Game.DUSAGST,
   name: "Du sagst",
-  defaultConfig: DEFAULT_DUSAGST_STATE,
+  state: DEFAULT_DUSAGST_STATE,
   configurator: DuSagstConfigurator,
   gameComponent: DuSagstGame as unknown as GamePlugin["gameComponent"],
   handlers: undefined

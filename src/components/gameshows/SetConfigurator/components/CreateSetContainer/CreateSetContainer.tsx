@@ -1,5 +1,5 @@
 import { Flex, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
-import SetCard from "~/components/games/Set/components/SetCard";
+import SetCard from "~/games/Set/components/SetCard";
 import { findSets } from "../../helpers";
 import type { ICreateSetContainerProps } from "./createSetContainer.types";
 

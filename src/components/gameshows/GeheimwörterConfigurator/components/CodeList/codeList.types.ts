@@ -1,4 +1,4 @@
-import type { Game } from "~/components/games/game.types";
+import type { Game } from "~/games";
 import type { TGameConfigUpdateFn } from "~/hooks/useGameshowConfig/useGameshowConfig.types";
 
 export type TCodeListItem = {

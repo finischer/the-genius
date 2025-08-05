@@ -1,9 +1,6 @@
 import type { Dispatch, SetStateAction } from "react";
 import type { Updater } from "use-immer";
-import type {
-  TSetQuestionItem,
-  TSetQuestionList
-} from "~/components/games/Set/set.types";
+import type { TSetQuestionItem, TSetQuestionList } from "~/games/Set/set.types";
 
 export interface ISetListProps {
   questions: TSetQuestionList;

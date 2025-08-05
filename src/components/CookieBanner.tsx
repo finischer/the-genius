@@ -1,5 +1,9 @@
 import { Button, Group, Paper, Text } from "@mantine/core";
-import { CookieBannerAction } from "./analytics/GoogleAnalytics";
+
+enum CookieBannerAction {
+  ACCEPT = "ACCEPT",
+  DECLINE = "DECLINE"
+}
 
 interface ICookieBannerProps {
   onButtonClick: (action: CookieBannerAction) => void;

@@ -1,8 +1,7 @@
 import Handlebars from "handlebars";
-import { GAME_STATE_MAP } from "~/components/games/game.constants";
-import { Game, type TGame } from "~/components/games/game.types";
+import { Game, GAME_STATE_MAP, type GameState } from "~/games";
 
-export function getFormattedGameRules(game: TGame) {
+export function getFormattedGameRules(game: GameState) {
   const metadata = {
     gameName: game.name,
     maxPoints: game.maxPoints,

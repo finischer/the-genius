@@ -2,11 +2,14 @@ import { Flex } from "@mantine/core";
 import { AnimatePresence, motion, useAnimate } from "framer-motion";
 import React, { useEffect } from "react";
 import FlipCard from "~/components/shared/FlipCard/FlipCard";
+import {
+  GAME_COMPONENTS,
+  type Game as GameEnum,
+  type IGameProps
+} from "~/games";
 import useAudio from "~/hooks/useAudio";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { animations } from "~/utils/animations";
-import { type Game as GameEnum, type IGameProps } from "../../games/game.types";
-import { GAME_COMPONENTS } from "../../games/game-registry";
 
 const SECONDS_TO_ROTATE_TITLE_BANNER = 4;
 const SECONDS_TOTAL_INTRO_DURATION = 8;

@@ -1,15 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { useImmer } from "use-immer";
 import QuestionFormLayout from "~/components/layout/QuestionFormLayout";
-import type {
-  TSetQuestionItem,
-  TSetQuestionList
-} from "~/components/games/Set/set.types";
-import { Game } from "~/components/games/game.types";
+import type { TSetQuestionItem, TSetQuestionList } from "~/games/Set/set.types";
 import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";
 import CreateSetContainer from "./components/CreateSetContainer";
 import { generateNewSetQuestion } from "./helpers";
 import { StepperControlsContext } from "~/context/StepperControlsContext";
+import { Game } from "~/games";
 
 export const NUM_OF_CARDS = 12;
 

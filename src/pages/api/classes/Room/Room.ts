@@ -5,11 +5,6 @@ import type {
   RoomState,
   RoomViews
 } from "@prisma/client";
-import type {
-  Game,
-  TGame,
-  TGameSettingsMap
-} from "~/components/games/game.types";
 import { prisma } from "~/server/db";
 import { io } from "../../socket";
 import Team from "../Team/Team";
@@ -18,6 +13,7 @@ import {
   type PrismaRoomFixed,
   type TRoomTeams
 } from "./room.types";
+import type { Game, GameState, TGameSettingsMap } from "~/games";
 
 const SECONDS_TO_ROTATE_TITLE_BANNER = 4;
 const SECONDS_TOTAL_INTRO_DURATION = 8;
@@ -39,7 +35,7 @@ export default class Room implements PrismaRoomFixed {
   creatorId: string;
   createdAt: Date;
   updatedAt: Date;
-  games: TGame[];
+  games: GameState[];
   defaultGameStates: Prisma.JsonValue[];
   teams: TRoomTeams;
   state: RoomState;
@@ -57,7 +53,7 @@ export default class Room implements PrismaRoomFixed {
     this.creatorId = room.creatorId; // TODO: Add only name of creator -> userIds are sensible data which should not be leaked to the client
     this.createdAt = room.createdAt;
     this.updatedAt = room.updatedAt;
-    this.games = room.games as unknown as TGame[];
+    this.games = room.games as unknown as GameState[];
     this.defaultGameStates = room.defaultGameStates;
     this.teams = {
       teamOne: new Team(room.teams.teamOne),
@@ -139,7 +135,7 @@ export default class Room implements PrismaRoomFixed {
   }
 
   getGame<T extends Game>(gameIdentifier: T): TGameSettingsMap[T] {
-    const games = this.games as unknown as TGame[];
+    const games = this.games as unknown as GameState[];
     const game = games.find(
       (g) => g.identifier === gameIdentifier
     ) as unknown as TGameSettingsMap[T];

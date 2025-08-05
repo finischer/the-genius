@@ -2,7 +2,6 @@ import { randomId } from "@mantine/hooks";
 import type { RoomSounds } from "@prisma/client";
 import { getYjsValue, syncedStore, type Y } from "@syncedstore/core";
 import { WebsocketProvider } from "y-partykit/provider";
-import type { TGame } from "~/components/games/game.types";
 import {
   RoomView,
   type Player,
@@ -11,11 +10,12 @@ import {
   type TeamShortNames
 } from "~/types/gameshow.types";
 import { roomConfig } from "./room.config";
+import type { GameState } from "~/games";
 
 export const initRoom = (
   name: string,
   password: string,
-  games: TGame[],
+  games: GameState[],
   creatorId: string
 ): Room => ({
   id: randomId(),
@@ -29,7 +29,7 @@ export const initRoom = (
   games,
   context: {
     isClosed: false,
-    currentGame: {} as TGame | null,
+    currentGame: {} as GameState | null,
     view: RoomView.EMPTY,
     header: {
       timer: {

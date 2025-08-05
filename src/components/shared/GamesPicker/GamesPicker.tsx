@@ -8,14 +8,13 @@ import {
 } from "@tabler/icons-react";
 import React from "react";
 import GameDetailsModal from "~/components/gameshows/GameDetailsModal";
-import { GAME_STATE_MAP } from "~/components/games/game.constants";
-import type { Game } from "~/components/games/game.types";
 import { api } from "~/utils/api";
 import List from "../List";
 import Paper from "../Paper";
 import Tooltip from "../Tooltip";
 import classes from "./gamesPicker.module.css";
 import { type IGamesPickerProps } from "./gamesPicker.types";
+import { GAME_STATE_MAP, type Game } from "~/games";
 
 const GamesPicker: React.FC<IGamesPickerProps> = ({
   selectedGames,

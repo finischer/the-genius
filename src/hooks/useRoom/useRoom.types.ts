@@ -1,5 +1,5 @@
 import { type Dispatch } from "react";
-import type { TGame } from "~/components/games/game.types";
+import type { GameState } from "~/games";
 import type Room from "~/pages/api/classes/Room/Room";
 
 export interface IUseRoomProvider {
@@ -12,7 +12,7 @@ export type TModeratorSettings = {
 
 export interface IUseRoomContext {
   room: Room | undefined;
-  currentGame: TGame | undefined;
+  currentGame: GameState | undefined;
   setRoom: Dispatch<Room>;
   moderatorSettings: TModeratorSettings;
 }

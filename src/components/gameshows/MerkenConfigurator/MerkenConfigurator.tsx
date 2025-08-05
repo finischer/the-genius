@@ -2,11 +2,11 @@ import { Flex, NumberInput } from "@mantine/core";
 import { parseInt } from "lodash";
 import { useContext, useEffect } from "react";
 import { useImmer } from "use-immer";
-import MerkenPlayground from "~/components/games/Merken/components/MerkenPlayground/MerkenPlayground";
-import { Game } from "~/components/games/game.types";
+import MerkenPlayground from "~/games/Merken/components/MerkenPlayground/MerkenPlayground";
 import { StepperControlsContext } from "~/context/StepperControlsContext";
 import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";
 import { shuffleArray } from "~/utils/array";
+import { Game } from "~/games";
 
 const MAX_TIME_TO_THINK_SECONDS = 180; // 3 minutes
 const MIN_TIME_TO_THINK_SECONDS = 1;

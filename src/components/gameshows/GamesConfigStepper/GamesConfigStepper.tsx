@@ -5,7 +5,6 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useImmer } from "use-immer";
-import { Game, type TGame } from "~/components/games/game.types";
 import GamesPicker from "~/components/shared/GamesPicker";
 import { StepperControlsContext } from "~/context/StepperControlsContext";
 import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";
@@ -15,11 +14,12 @@ import { TApiActions } from "~/server/api/api.types";
 import { api } from "~/utils/api";
 import GameConfig from "../GameConfig";
 import StepperButtons from "./components/StepperButtons";
+import { Game, type GameState } from "~/games";
 
 const NUM_OF_DEFAULT_STEPS = 2;
 
 const getAlreadySelectedGames = (
-  games: TGame[],
+  games: GameState[],
   availableGames: PrismaGame[]
 ) => {
   const alreadySelected: PrismaGame[] = [];

@@ -7,7 +7,6 @@ import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { DefaultSeo } from "next-seo";
 import { type AppType } from "next/app";
-import GoogleAnalytics from "~/components/analytics/GoogleAnalytics";
 import { modals } from "~/components/shared/modals/modalComponents";
 import SEO from "~/config/next-seo.config";
 import { RoomProvider } from "~/hooks/useRoom";
@@ -69,8 +68,6 @@ const MyApp: AppType<{ session: Session | null }> = ({
             <SocketProvider>
               <RoomProvider>
                 <UserProvider>
-                  <GoogleAnalytics />
-
                   <Component {...pageProps} />
                 </UserProvider>
               </RoomProvider>

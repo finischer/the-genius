@@ -1,5 +1,5 @@
 import { Flex, Title } from "@mantine/core";
-import type { TSetQuestionItem } from "~/components/games/Set/set.types";
+import type { TSetQuestionItem } from "~/games/Set/set.types";
 import List from "~/components/shared/List";
 import type { IListItem } from "~/components/shared/List/components/ListItem/listItem.types";
 import type { ISetListProps } from "./setList.typtes";

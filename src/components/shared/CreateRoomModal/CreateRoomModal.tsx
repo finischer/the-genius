@@ -14,7 +14,6 @@ import { GameshowMode } from "@prisma/client";
 import { useSyncedStore } from "@syncedstore/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import type { TGame } from "~/components/games/game.types";
 import { initRoom, roomStore } from "~/config/store";
 import useNotification from "~/hooks/useNotification";
 import { useUser } from "~/hooks/useUser";
@@ -25,13 +24,14 @@ import {
   type ICreateRoomConfig,
   type ICreateRoomModalProps
 } from "./createRoomModal.types";
+import type { GameState } from "~/games";
 
 const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({
   openedModal,
   onClose,
   gameshow
 }) => {
-  const gameshowGames = gameshow.games as unknown as TGame[];
+  const gameshowGames = gameshow.games as unknown as GameState[];
   const hasGameForOnlyTeamMode =
     gameshowGames.filter((g) => g.modes.every((m) => m === "TEAM")).length > 0;
 
@@ -83,7 +83,7 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({
     const room = initRoom(
       values.name,
       values.password,
-      gameshow.games as TGame[],
+      gameshow.games as GameState[],
       user.id
     );
 

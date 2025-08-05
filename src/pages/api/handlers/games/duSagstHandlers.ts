@@ -1,7 +1,6 @@
 import { type Server, type Socket } from "socket.io";
-import type { TDuSagstGameState } from "~/components/games/DuSagst/config";
-import type { TDuSagstAnswerBoxState } from "~/components/games/DuSagst/duSagst.types";
-import { Game } from "~/components/games/game.types";
+import type { TDuSagstGameState } from "~/games/DuSagst/config";
+import type { TDuSagstAnswerBoxState } from "~/games/DuSagst/duSagst.types";
 import {
   type IClientToServerEvents,
   type IServerSocketData,
@@ -10,6 +9,7 @@ import {
 import { roomManager } from "../../controllers/RoomManager";
 import NoRoomException from "../../exceptions/NoRoomException";
 import { getRoomAndTeam } from "../helpers";
+import { Game } from "~/games";
 
 const GAME_IDENTIFIER = Game.DUSAGST;
 

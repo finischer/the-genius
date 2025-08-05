@@ -1,6 +1,6 @@
 import type { Game as PrismaGame } from "@prisma/client";
 import type { Updater } from "use-immer";
-import type { Game } from "~/components/games/game.types";
+import type { Game } from "~/games";
 
 export interface IGamesPickerProps {
   selectedGames: PrismaGame[];

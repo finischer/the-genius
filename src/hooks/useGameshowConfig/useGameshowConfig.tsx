@@ -1,16 +1,16 @@
 import type { Game as PrismaGame } from "@prisma/client";
 import { useContext } from "react";
-import { GAME_STATE_MAP } from "~/components/games/game.constants";
-import {
-  type Game,
-  type TGame,
-  type TGameSettingsMap
-} from "~/components/games/game.types";
 import { GameConfigContext } from "~/context/GameConfigProvider";
 import type {
   IUseGameshowConfigReturn,
   TGameshowConfigKeys
 } from "./useGameshowConfig.types";
+import {
+  GAME_STATE_MAP,
+  type Game,
+  type GameState,
+  type TGameSettingsMap
+} from "~/games";
 
 const useGameshowConfig = <T extends Game>(gameName: T) => {
   const gameConfigContext = useContext(GameConfigContext);
@@ -51,7 +51,7 @@ const useGameshowConfig = <T extends Game>(gameName: T) => {
   const updateGameList = (newGameList: PrismaGame[]) => {
     const gameIdentifiers = newGameList.map((g) => g.slug);
 
-    const newGames: TGame[] = [];
+    const newGames: GameState[] = [];
 
     gameIdentifiers.forEach((gId) => {
       const game = gameshow.games.find((g) => g.identifier === gId);

@@ -27,9 +27,9 @@ import useTimer from "~/hooks/useTimer";
 import { RoomView, TimerType } from "~/types/gameshow.types";
 import { api } from "~/utils/api";
 import { assignObjectKeyByKey } from "~/utils/helpers";
-import type { TGame } from "../../games/game.types";
 import MediaPlayer from "../MediaPlayer";
 import { type IModPanelProps } from "./modPanel.types";
+import type { GameState } from "~/games";
 
 const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
   const { mutateAsync: removeActiveRoom } =
@@ -47,7 +47,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
   // for game rules
   const [openedGameRules, { open: openGameRules, close: closeGameRules }] =
     useDisclosure();
-  const [clickedGame, setClickedGame] = useState<TGame>();
+  const [clickedGame, setClickedGame] = useState<GameState>();
 
   const room = useSyncedRoom();
   const { triggerAudioEvent } = useAudio();
@@ -74,7 +74,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
   const atLeastOneNotefieldIsActive =
     allPlayers.filter((p) => p.context.notefield.isActive).length > 0;
 
-  const handleOpenGameRules = (game: TGame) => {
+  const handleOpenGameRules = (game: GameState) => {
     setClickedGame(game);
     openGameRules();
   };
@@ -120,7 +120,7 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
     );
   });
 
-  const startGame = (game: TGame) => {
+  const startGame = (game: GameState) => {
     hideAnswer();
     assignObjectKeyByKey(
       game as unknown as Record<string, unknown>,

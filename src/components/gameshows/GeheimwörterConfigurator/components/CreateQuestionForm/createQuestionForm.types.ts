@@ -1,6 +1,6 @@
-import { type TGeheimWoerterQuestionsWordsItem } from "../../../../games/Geheimwörter/geheimwörter.types";
+import { type TGeheimWoerterQuestionsWordsItem } from "../../../../../games/Geheimwörter/geheimwörter.types";
 import type { TextInputProps } from "@mantine/core";
-import type { TGeheimwoerterQuestionItem } from "~/components/games/Geheimwörter/geheimwörter.types";
+import type { TGeheimwoerterQuestionItem } from "~/games/Geheimwörter/geheimwörter.types";
 import type { TCodeList } from "../CodeList/codeList.types";
 import type { Updater } from "use-immer";
 import type { TQuestionFormMode } from "~/components/gameshows/types";

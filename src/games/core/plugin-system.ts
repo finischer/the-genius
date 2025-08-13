@@ -21,7 +21,7 @@ export interface GamePlugin {
   /** Spiel-Komponente für die Ausführung */
   gameComponent: ComponentType<{ game: IGameGeneralState }>;
 
-  /** Optionale Socket-Handler für das Spiel */
+  /** Optionale Event-Handler für das Spiel */
   handlers?: Record<string, (...args: unknown[]) => unknown>;
 }
 

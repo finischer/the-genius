@@ -1,6 +1,6 @@
 import { type Dispatch } from "react";
 import type { Player, Team } from "~/types/gameshow.types";
-import { type TUserReduced } from "~/types/socket.types";
+import { type TUserReduced } from "~/types/user.types";
 import type { FunctionToWrap } from "~/types/types";
 
 export interface IUseUserProvider {

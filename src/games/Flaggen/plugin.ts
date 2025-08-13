@@ -13,6 +13,6 @@ export const flaggenPlugin: GamePlugin = {
   state: DEFAULT_FLAGGEN_STATE,
   configurator: FlaggenConfigurator,
   gameComponent: FlaggenGame as unknown as GamePlugin["gameComponent"],
-  // Flaggen hat keine speziellen Socket-Handler
+  // Flaggen hat keine speziellen Event-Handler
   handlers: undefined
 };

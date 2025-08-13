@@ -11,7 +11,6 @@ All technologies you should be familiar with.
 - [TRPC](https://trpc.io/)
 - [MongoDB](https://www.mongodb.com/de-de)
 - [ReactJS](https://react.dev/)
-- ~~[Socket.IO](https://socket.io/)~~ (Currently not in use)
 - [Partykit](https://www.partykit.io/)
 - [Typescript](https://www.typescriptlang.org/)
 

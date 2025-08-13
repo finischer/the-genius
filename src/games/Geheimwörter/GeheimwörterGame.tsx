@@ -5,7 +5,6 @@ import React, { Fragment } from "react";
 import CodeList from "~/components/gameshows/GeheimwörterConfigurator/components/CodeList";
 import AnswerBanner from "~/components/room/AnswerBanner";
 import ActionIcon from "~/components/shared/ActionIcon";
-import { useSocket } from "~/hooks/useSocket";
 import { useUser } from "~/hooks/useUser";
 import { animations } from "~/utils/animations";
 import type { IGeheimwörterGameProps } from "./geheimwörter.types";
@@ -21,7 +20,6 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
   const showAnswer = game.display.answer;
   const showWords = game.display.words;
   const { isHost, hostFunction } = useUser();
-  const { socket } = useSocket();
   const { triggerAudioEvent } = useAudio();
 
   const ToggleIcon = ({ action }: { action: keyof typeof game.display }) => {
@@ -38,7 +36,6 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
   });
 
   const toggleWords = hostFunction(() => {
-    socket.emit("geheimwoerter:toggleWords");
     game.display.words = !game.display.words;
   });
 

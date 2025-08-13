@@ -6,7 +6,7 @@ import type {
   TeamAvatarImage
 } from "@prisma/client";
 import { ObjectId } from "bson";
-import { type TUserReduced } from "~/types/socket.types";
+import { type TUserReduced } from "~/types/user.types";
 import Player from "../Player/Player";
 import type { TPlayer } from "../Player/player.types";
 

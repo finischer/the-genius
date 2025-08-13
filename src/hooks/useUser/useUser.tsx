@@ -2,7 +2,7 @@ import { randomId } from "@mantine/hooks";
 import { useSession } from "next-auth/react";
 import { createContext, useContext, useEffect, useState } from "react";
 import type { Player, Team } from "~/types/gameshow.types";
-import { type TUserReduced } from "~/types/socket.types";
+import { type TUserReduced } from "~/types/user.types";
 import type { FunctionToWrap } from "~/types/types";
 import { api } from "~/utils/api";
 import { createRandomUserName } from "~/utils/helpers";

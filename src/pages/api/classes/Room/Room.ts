@@ -6,7 +6,6 @@ import type {
   RoomViews
 } from "@prisma/client";
 import { prisma } from "~/server/db";
-import { io } from "../../socket";
 import Team from "../Team/Team";
 import {
   type IRoomMaxPlayersTeamMap,
@@ -235,7 +234,7 @@ export default class Room implements PrismaRoomFixed {
   update() {
     // TODO: add safe room schema to prevent leaks of sensible information
 
-    io.to(this.id).emit("updateRoom", { newRoomState: this });
+    // Socket.io was removed - room updates now happen via Partykit
 
     // update room state in db
     void prisma.room.update({

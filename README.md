@@ -288,6 +288,56 @@ export type { TYourGameGameState } from "./config";
 export type { IYourGameState } from "./yourgame.types";
 ```
 
+}
+```
+
+#### Step 6: 🗄️ Register Game in MongoDB Database
+
+**⚠️ WICHTIG: Ohne diesen Schritt erscheint das Spiel NICHT im GamesPicker!**
+
+Das neue Spiel muss in der MongoDB-Datenbank registriert werden, um im GamesPicker verfügbar zu sein.
+
+**MongoDB Document Format:**
+
+```javascript
+// Collection: "Game"
+{
+  "name": "Your Game Name",           // Display Name im UI
+  "slug": "yourGame",                 // MUSS exakt mit Game Enum Wert übereinstimmen!
+  "mode": "DUELL",                   // "DUELL", "TEAM", oder beide Modi
+  "forPremiumUsers": false,          // true für Premium-Features
+  "isNew": true,                     // true = wird als "NEU" Badge angezeigt
+  "rules": "",                       // Immer leer lassen (wird automatisch generiert)
+  "active": true,                    // false = Spiel wird ausgeblendet
+  "createdAt": ISODate("..."),       // Automatisch
+  "updatedAt": ISODate("...")        // Automatisch
+}
+```
+
+**Beispiel für "Zehn Setzen":**
+```javascript
+{
+  "_id": ObjectId("66c9cbae470bf05c9c2e0b09"),
+  "name": "Zehn Setzen",
+  "slug": "zehnSetzen",              // ← Entspricht Game.ZEHN_SETZEN
+  "mode": "DUELL",
+  "forPremiumUsers": false,
+  "isNew": true,
+  "rules": "",
+  "active": true,
+  "createdAt": ISODate("2024-08-24T14:01:44.748Z"),
+  "updatedAt": ISODate("2024-08-24T14:01:44.748Z")
+}
+```
+
+**🔑 Kritische Anforderungen:**
+- ✅ `slug` MUSS exakt mit Game Enum Wert übereinstimmen
+- ✅ `active: true` um das Spiel zu aktivieren  
+- ✅ `rules: ""` immer leer lassen
+- ✅ Manuell in MongoDB hinzufügen (wird nicht automatisch erstellt)
+
+#### Step 7: Verify Integration
+
 ### 🎯 That's it! Your game is now fully integrated!
 
 **What you get automatically:**
@@ -326,3 +376,31 @@ updateGame((draft) => {
 3. **Follow naming conventions** (PascalCase for components)
 4. **Add comprehensive rules** in the config template
 5. **Test configurator thoroughly** before deploying
+6. **🗄️ Database First:** Always add the game to MongoDB before testing
+7. **🔗 Slug Consistency:** Ensure Game Enum value matches MongoDB slug exactly
+
+### 🚨 Common Issues & Solutions
+
+**Problem: "Game doesn't appear in GamesPicker"**
+- ✅ Check if game exists in MongoDB `Game` collection
+- ✅ Verify `active: true` in database
+- ✅ Ensure `slug` matches Game Enum value exactly
+
+**Problem: "Game appears but doesn't work"** 
+- ✅ Check if Game Enum is defined correctly
+- ✅ Verify game is registered in `games.config.ts`
+- ✅ Ensure TGameSettingsMap includes your game type
+
+**Problem: "Configurator not working"**
+- ✅ Check useGameshowConfig hook usage
+- ✅ Verify game state structure matches interface
+- ✅ Test updateGame function calls
+
+### 🔄 Development Workflow
+
+1. **Code** → Implement game + configurator
+2. **Enum** → Add to Game enum & TGameSettingsMap
+3. **Register** → Add to games.config.ts  
+4. **Database** → Manually add MongoDB document
+5. **Test** → Verify in GamesPicker
+6. **Deploy** → Ready for production!

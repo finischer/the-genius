@@ -3,3 +3,5 @@ public
 build
 dist
 src/**/env.mjs
+# Examples Ordner - nur für Dokumentation
+src/examples/**/*

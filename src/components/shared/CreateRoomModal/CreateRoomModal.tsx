@@ -107,15 +107,6 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({
     // });
 
     void router.push(`/room/${room.id}`);
-
-    // socket.emit("createRoom", { user, roomConfig: values, gameshow }, (room) => {
-    //   setLoader({
-    //     isLoading: true,
-    //     loaderMsg: "Raum wird beigetreten ...",
-    //   });
-    //   // connect to room
-    //   void router.push(`/room/${room.id}`);
-    // });
   });
 
   return (

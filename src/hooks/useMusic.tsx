@@ -58,13 +58,11 @@ const useMusic = () => {
   });
 
   const emitPlayMusic = ({ songId }: { songId: TSongId }) => {
-    // socket.emit("playMusic", { songId });
     musicState.isActive = true;
     musicState.title = songId;
   };
 
   const emitPauseMusic = () => {
-    // socket.emit("pauseMusic");
     musicState.isActive = false;
   };
 

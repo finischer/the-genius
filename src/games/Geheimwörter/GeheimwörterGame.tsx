@@ -31,7 +31,6 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
   };
 
   const toggleCodeList = hostFunction(() => {
-    // socket.emit("geheimwoerter:toggleCodeList");
     game.display.codeList = !game.display.codeList;
   });
 
@@ -41,7 +40,6 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
 
   const handleShowAnswer = hostFunction(() => {
     triggerAudioEvent("playSound", "bell");
-    // socket.emit("geheimwoerter:showAnswer");
     game.display.answer = true;
   });
 

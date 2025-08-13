@@ -102,7 +102,6 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({
   };
 
   const handleShowQuestion = hostFunction(() => {
-    // socket.emit("duSagst:showQuestion");
     game.display.question = true;
   });
 

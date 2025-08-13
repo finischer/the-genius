@@ -233,9 +233,6 @@ export default class Room implements PrismaRoomFixed {
 
   update() {
     // TODO: add safe room schema to prevent leaks of sensible information
-
-    // Socket.io was removed - room updates now happen via Partykit
-
     // update room state in db
     void prisma.room.update({
       where: {
@@ -246,10 +243,6 @@ export default class Room implements PrismaRoomFixed {
         state: this.state
       }
     });
-
-    // DEPRECATED
-    // const allRooms = roomManager.getRoomsAsArray();
-    // io.emit("updateAllRooms", { newRooms: allRooms });
   }
 
   // function which defines which information can be send to the client

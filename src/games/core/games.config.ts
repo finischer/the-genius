@@ -96,15 +96,15 @@ export const GAME_CONFIGS: Array<{
     configurator: ZehnSetzenConfigurator,
     gameComponent: ZehnSetzenGame as React.ComponentType<unknown>
   }
-  // 🎯 DEMO: So einfach ist es, ein neues Spiel hinzuzufügen!
-  // Einfach diese Kommentare entfernen und echte Werte einsetzen:
+  // 🎯 BEISPIEL: So einfach ist es, ein neues Spiel hinzuzufügen!
+  // Siehe /src/examples/ für vollständige Implementierung:
   //
   // {
-  //   identifier: Game.QUIZ_MASTER,
-  //   name: "Quiz Master",
-  //   defaultState: DEFAULT_QUIZ_MASTER_STATE,
-  //   configurator: QuizMasterConfigurator,
-  //   gameComponent: QuizMasterGame as React.ComponentType<unknown>,
+  //   identifier: Game.EXAMPLE_GAME,
+  //   name: "Beispiel Spiel",
+  //   defaultState: DEFAULT_EXAMPLE_GAME_STATE,
+  //   configurator: ExampleGameConfigurator,
+  //   gameComponent: ExampleGame as React.ComponentType<unknown>,
   // },
   //
   // Das war's! Keine weiteren Dateien nötig! 🚀

@@ -7,6 +7,7 @@ import type {
 } from "./useGameshowConfig.types";
 import {
   GAME_STATE_MAP,
+  GENERATED_PLUGINS,
   type Game,
   type GameState,
   type TGameSettingsMap
@@ -59,7 +60,11 @@ const useGameshowConfig = <T extends Game>(gameName: T) => {
       if (game) {
         newGames.push(game);
       } else {
-        newGames.push(GAME_STATE_MAP[gId as Game]);
+        const defaultGameState = GENERATED_PLUGINS[gId as Game]?.state;
+
+        if (defaultGameState) {
+          newGames.push(defaultGameState);
+        }
       }
     });
 

@@ -1,5 +1,5 @@
 import Handlebars from "handlebars";
-import { Game, GAME_STATE_MAP, type GameState } from "~/games";
+import { Game, GENERATED_PLUGINS, type GameState } from "~/games";
 
 export function getFormattedGameRules(game: GameState) {
   const metadata = {
@@ -11,7 +11,8 @@ export function getFormattedGameRules(game: GameState) {
 
   let gameData = {};
 
-  const rules = GAME_STATE_MAP[game.identifier].rules;
+  const rules =
+    GENERATED_PLUGINS[game.identifier]?.state.rules ?? "Keine Regeln verfügbar";
 
   switch (game.identifier) {
     case Game.DUSAGST:
@@ -37,8 +38,4 @@ export function getFormattedGameRules(game: GameState) {
   const template = Handlebars.compile(rules);
 
   return template(data);
-}
-
-export function getDefaultGameState<T extends Game>(gameName: T) {
-  return GAME_STATE_MAP[gameName];
 }

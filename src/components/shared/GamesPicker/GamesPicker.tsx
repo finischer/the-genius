@@ -14,7 +14,7 @@ import Paper from "../Paper";
 import Tooltip from "../Tooltip";
 import classes from "./gamesPicker.module.css";
 import { type IGamesPickerProps } from "./gamesPicker.types";
-import { GAME_STATE_MAP, type Game } from "~/games";
+import { GENERATED_PLUGINS, type Game } from "~/games";
 
 const GamesPicker: React.FC<IGamesPickerProps> = ({
   selectedGames,
@@ -37,15 +37,17 @@ const GamesPicker: React.FC<IGamesPickerProps> = ({
       { open: openGameDetails, close: closeGameDetails }
     ] = useDisclosure(false);
 
-    const defaultGameState = GAME_STATE_MAP[game.slug as Game];
+    const defaultGameState = GENERATED_PLUGINS[game.slug as Game]?.state;
 
     return (
       <>
-        <GameDetailsModal
-          game={defaultGameState}
-          opened={gameRulesOpened}
-          onClose={closeGameDetails}
-        />
+        {defaultGameState && (
+          <GameDetailsModal
+            game={defaultGameState}
+            opened={gameRulesOpened}
+            onClose={closeGameDetails}
+          />
+        )}
 
         <Button.Group>
           <Button

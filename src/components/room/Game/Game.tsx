@@ -3,7 +3,7 @@ import { AnimatePresence, motion, useAnimate } from "framer-motion";
 import React, { useEffect } from "react";
 import FlipCard from "~/components/shared/FlipCard/FlipCard";
 import {
-  GAME_COMPONENTS,
+  GENERATED_PLUGINS,
   type Game as GameEnum,
   type IGameProps
 } from "~/games";
@@ -79,13 +79,13 @@ const Game: React.FC<IGameProps> = ({ gameName }) => {
     room.games.findIndex((g) => g.identifier === game.identifier) + 1;
 
   function getGame(identifier: GameEnum) {
-    const GameComponent = GAME_COMPONENTS[identifier];
+    const GameComponent = GENERATED_PLUGINS[identifier]?.gameComponent;
     if (!GameComponent || !game) {
       return <div>Spiel nicht gefunden: {identifier}</div>;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
-    return <GameComponent game={game as any} />;
+    return <GameComponent game={game} />;
   }
 
   return (

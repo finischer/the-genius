@@ -6,7 +6,8 @@ interface IGameConfigProps {
 }
 
 const GameConfig: FC<IGameConfigProps> = ({ gameSlug }) => {
-  const ConfiguratorComponent = GAME_CONFIGURATORS[gameSlug]; // Hole die entsprechende Konfigurationskomponente
+  // 🎯 GAME_CONFIGURATORS wird automatisch aus der neuen games.config.ts generiert!
+  const ConfiguratorComponent = GAME_CONFIGURATORS[gameSlug];
 
   // Prüfe, ob eine gültige Konfigurationskomponente gefunden wurde
   if (!ConfiguratorComponent) {

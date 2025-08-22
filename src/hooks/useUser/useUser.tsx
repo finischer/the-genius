@@ -79,7 +79,14 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
     }
 
     if (isDevelopmentClient) {
-      await updateUser({ data: { username: newUsername } });
+      try {
+        await updateUser({ data: { username: newUsername } });
+      } catch (error) {
+        showErrorNotification({
+          message: "Fehler beim Aktualisieren des Benutzernamens (Entwicklungsmodus)."
+        });
+        return false;
+      }
     }
 
     const newUser = {

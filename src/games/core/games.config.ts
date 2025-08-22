@@ -128,7 +128,7 @@ export const GENERATED_PLUGINS = Object.fromEntries(
             "div",
             {},
             "Loading..."
-          ))) as React.ComponentType<{ game: unknown }>
+        createFallbackComponent) as React.ComponentType<{ game: unknown }>
     }
   ])
 );

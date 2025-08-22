@@ -12,7 +12,7 @@ export function getFormattedGameRules(game: GameState) {
   let gameData = {};
 
   const rules =
-    GENERATED_PLUGINS[game.identifier]?.state.rules ?? "Keine Regeln verfügbar";
+    GENERATED_PLUGINS[game.identifier]?.state?.rules ?? "Keine Regeln verfügbar";
 
   switch (game.identifier) {
     case Game.DUSAGST:

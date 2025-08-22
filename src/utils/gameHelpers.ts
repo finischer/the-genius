@@ -1,8 +1,7 @@
 import Handlebars from "handlebars";
-import { GAME_STATE_MAP } from "~/components/room/Game/games/game.constants";
-import { Game, type TGame } from "~/components/room/Game/games/game.types";
+import { Game, GENERATED_PLUGINS, type GameState } from "~/games";
 
-export function getFormattedGameRules(game: TGame) {
+export function getFormattedGameRules(game: GameState) {
   const metadata = {
     gameName: game.name,
     maxPoints: game.maxPoints,
@@ -12,7 +11,8 @@ export function getFormattedGameRules(game: TGame) {
 
   let gameData = {};
 
-  const rules = GAME_STATE_MAP[game.identifier].rules;
+  const rules =
+    GENERATED_PLUGINS[game.identifier]?.state?.rules ?? "Keine Regeln verfügbar";
 
   switch (game.identifier) {
     case Game.DUSAGST:
@@ -38,8 +38,4 @@ export function getFormattedGameRules(game: TGame) {
   const template = Handlebars.compile(rules);
 
   return template(data);
-}
-
-export function getDefaultGameState<T extends Game>(gameName: T) {
-  return GAME_STATE_MAP[gameName];
 }

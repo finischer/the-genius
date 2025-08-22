@@ -1,0 +1,197 @@
+@startuml Simplified Game Architecture (New System)
+!theme plain
+skinparam linetype ortho
+
+package "Core Types (Manual Extension)" {
+  enum Game {
+    FLAGGEN = "flaggen"
+    GEHEIMWOERTER = "geheimwoerter"
+    MERKEN = "merken"
+    SET = "set"
+    DUSAGST = "duSagst"
+    REFERATBINGO = "referatBingo"
+    ZEHN_SETZEN = "zehnSetzen"
+    --
+    📝 Schritt 1: Neues Spiel hinzufügen
+  }
+  
+  interface TGameSettingsMap {
+    [Game.FLAGGEN]: TFlaggenGameState
+    [Game.MERKEN]: TMerkenGameState
+    [Game.GEHEIMWOERTER]: TGeheimwörterGameState
+    [Game.SET]: TSetGameState
+    [Game.DUSAGST]: TDuSagstGameState
+    [Game.REFERATBINGO]: TReferatBingoGameState
+    [Game.ZEHN_SETZEN]: TZehnSetzenGameState
+    --
+    📝 Schritt 2: Type-Mapping hinzufügen
+  }
+  
+  interface IGameGeneralState {
+    +identifier: Game
+    +name: string
+    +maxPoints: number
+    +scorebarMode: TScorebarMode
+    +rules: string
+    +modes: GameshowMode[]
+  }
+}
+
+package "Central Configuration (games.config.ts)" {
+  class GAME_CONFIGS {
+    -Array<GameConfig>
+    --
+    📝 Schritt 3: Eine Zeile hinzufügen!
+    +identifier: Game
+    +name: string
+    +defaultState: GameState
+    +configurator: ComponentType
+    +gameComponent: ComponentType
+  }
+  
+  note right of GAME_CONFIGS : ✨ MAGIC:\nAlles automatisch generiert\naus dieser einen Datei!
+}
+
+package "Auto-Generated Exports (Automatic)" {
+  class GAME_STATE_MAP {
+    +[Game]: GameState
+    --
+    Automatisch generiert
+  }
+  
+  class GAME_CONFIGURATORS {
+    +[Game]: ComponentType
+    --
+    Automatisch generiert
+  }
+  
+  class GAME_COMPONENTS {
+    +[Game]: ComponentType
+    --
+    Automatisch generiert
+  }
+  
+  class GAME_NAMES {
+    +[Game]: string
+    --
+    Automatisch generiert
+  }
+}
+
+package "Game Implementations" {
+  package "Configurations" {
+    class DEFAULT_FLAGGEN_STATE
+    class DEFAULT_MERKEN_STATE
+    class DEFAULT_ZEHN_SETZEN_STATE
+  }
+  
+  package "Configurators" {
+    class FlaggenConfigurator
+    class MerkenConfigurator
+    class ZehnSetzenConfigurator {
+      +useGameshowConfig()
+      +updateGame()
+    }
+  }
+  
+  package "Game Components" {
+    class FlaggenGame
+    class MerkenGame
+    class ZehnSetzenGame
+  }
+}
+
+package "Database Integration" {
+  class MongoDB {
+    Collection: Game
+    --
+    📝 Schritt 4: Manuell hinzufügen
+    +name: string
+    +slug: string (= Game enum)
+    +mode: "DUELL" | "TEAM"
+    +active: boolean
+    +forPremiumUsers: boolean
+  }
+  
+  note right of MongoDB : ⚠️ KRITISCH:\nslug MUSS Game enum\nWert entsprechen!
+}
+
+package "Consumer Components (Automatic)" {
+  class GameConfig {
+    +GAME_CONFIGURATORS
+    --
+    Automatisch funktionstüchtig
+  }
+  
+  class GamesPicker {
+    +availableGames (from DB)
+    +GAME_NAMES
+    --
+    Zeigt nur aktive Spiele
+  }
+  
+  class RoomGameComponent {
+    +GAME_COMPONENTS
+    --
+    Automatisch funktionstüchtig
+  }
+}
+
+package "State Management" {
+  class useGameshowConfig {
+    +updateGame()
+    +updateGameshowMetadata()
+    +gameshow
+    +[gameName]: gameState
+  }
+  
+  note right of useGameshowConfig : 🎯 HOOK:\nVerwende in Konfiguratoren\nfür automatische Persistierung
+}
+
+' Core Relationships
+Game --> TGameSettingsMap : defines
+TGameSettingsMap --> IGameGeneralState : extends
+GAME_CONFIGS --> Game : references
+GAME_CONFIGS --> TGameSettingsMap : uses types
+
+' Auto-Generation Flow
+GAME_CONFIGS --> GAME_STATE_MAP : generates
+GAME_CONFIGS --> GAME_CONFIGURATORS : generates
+GAME_CONFIGS --> GAME_COMPONENTS : generates
+GAME_CONFIGS --> GAME_NAMES : generates
+
+' Implementation References
+GAME_CONFIGS --> DEFAULT_FLAGGEN_STATE : imports
+GAME_CONFIGS --> DEFAULT_MERKEN_STATE : imports
+GAME_CONFIGS --> DEFAULT_ZEHN_SETZEN_STATE : imports
+GAME_CONFIGS --> FlaggenConfigurator : imports
+GAME_CONFIGS --> MerkenConfigurator : imports
+GAME_CONFIGS --> ZehnSetzenConfigurator : imports
+GAME_CONFIGS --> FlaggenGame : imports
+GAME_CONFIGS --> MerkenGame : imports
+GAME_CONFIGS --> ZehnSetzenGame : imports
+
+' Database Integration
+MongoDB --> GamesPicker : provides available games
+Game --> MongoDB : slug mapping
+
+' Consumer Usage
+GameConfig --> GAME_CONFIGURATORS : uses
+GamesPicker --> GAME_NAMES : uses
+GamesPicker --> MongoDB : queries
+RoomGameComponent --> GAME_COMPONENTS : uses
+
+' State Management
+ZehnSetzenConfigurator --> useGameshowConfig : uses
+useGameshowConfig --> GAME_STATE_MAP : accesses
+
+' Manual Steps (Red for attention)
+note top of Game #ffcccc : MANUAL STEP 1:\nAdd enum value
+note top of TGameSettingsMap #ffcccc : MANUAL STEP 2:\nAdd type mapping
+note top of GAME_CONFIGS #ccffcc : MANUAL STEP 3:\nAdd one line here!\n(Everything else automatic)
+note top of MongoDB #ffcccc : MANUAL STEP 4:\nAdd database entry
+
+' Benefits Box
+note bottom : ✨ NEW SYSTEM BENEFITS ✨\n• 90% less code per game\n• No plugin.ts files needed\n• Automatic registration\n• One central config\n• Type-safe throughout
+
+@enduml

@@ -3,11 +3,11 @@ import { useForm } from "@mantine/form";
 import { useContext, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import QuestionFormLayout from "~/components/layout/QuestionFormLayout";
-import type { TDuSagstQuestion } from "~/components/room/Game/games/DuSagst/duSagst.types";
-import { Game } from "~/components/room/Game/games/game.types";
+import type { TDuSagstQuestion } from "~/games/DuSagst/duSagst.types";
 import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";
 import type { TDuSagstFormValues } from "./duSagstConfigurator.types";
 import { StepperControlsContext } from "~/context/StepperControlsContext";
+import { Game } from "~/games";
 
 const PLACEHOLDER_MAP: { [index: number]: string } = {
   0: "Cola",

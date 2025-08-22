@@ -106,7 +106,10 @@ export const gameshowsRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       const gameshows = await ctx.prisma.gameshow.findMany({
         where: {
-          visibility: GameshowVisbility.PUBLIC
+          visibility: GameshowVisbility.PUBLIC,
+          user: {
+            isNot: null
+          }
         },
         select: {
           id: true,

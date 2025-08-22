@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-import { isDevelopment, isProduction } from "~/utils/environment";
+import { isDevelopmentServer, isProduction } from "~/utils/environment";
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
@@ -9,7 +9,7 @@ const globalForPrisma = globalThis as unknown as {
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
-    log: isDevelopment ? ["query", "error", "warn"] : ["error"]
+    log: isDevelopmentServer ? ["query", "error", "warn"] : ["error"]
   });
 
 if (!isProduction) globalForPrisma.prisma = prisma;

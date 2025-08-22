@@ -6,6 +6,9 @@ import { capitalize } from "~/utils/strings";
 import { prisma } from "../db";
 import { updateLoginTimestamp } from "../db/users";
 import { GOOGLE_MAIL_SUFFIXES } from "./providers/GoogleProvider";
+import type { JWT } from "next-auth/jwt";
+import { UserRole } from "@prisma/client";
+import { isDevelopmentServer } from "~/utils/environment";
 
 const isOtherProviderAlreadyInUse = async (
   userEmail: string | null | undefined,
@@ -95,6 +98,10 @@ export const signInCallback: CallbacksOptions["signIn"] = async ({
     throw new Error("Ein anderer Account nutzt diese Email bereits!");
   }
 
+  if (isDevelopmentServer) {
+    return true;
+  }
+
   let canSignIn = false;
   if (account?.provider === "google") {
     const googleProfile: GoogleProfile = profile as GoogleProfile;
@@ -132,13 +139,39 @@ export const signInCallback: CallbacksOptions["signIn"] = async ({
   );
 };
 
+const devCallback = (session: Session, token: JWT) => {
+  session.user.id = token.sub ?? "";
+  session.user.username = token.username;
+  session.user.role = token.role;
+
+  return session;
+};
+
+export const jwtCallback: CallbacksOptions["jwt"] = async (params) => {
+  const user = await prisma.user.findUnique({
+    where: { id: params.token.sub }
+  });
+
+  if (!user) {
+    return params.token;
+  }
+
+  params.token.role = user.role ?? UserRole.USER;
+  params.token.username = user.username ?? undefined;
+
+  return params.token;
+};
+
 export const sessionCallback: CallbacksOptions["session"] = async ({
   session,
   trigger,
+  token,
   newSession: toValidateNewSession,
   user
 }) => {
-  if (user) {
+  if (isDevelopmentServer) {
+    session = devCallback(session, token);
+  } else if (user) {
     session.user.id = user.id;
     session.user.username = user.username;
     session.user.role = user.role;

@@ -2,13 +2,14 @@ import { randomId } from "@mantine/hooks";
 import { useSession } from "next-auth/react";
 import { createContext, useContext, useEffect, useState } from "react";
 import type { Player, Team } from "~/types/gameshow.types";
-import { type TUserReduced } from "~/types/socket.types";
+import { type TUserReduced } from "~/types/user.types";
 import type { FunctionToWrap } from "~/types/types";
 import { api } from "~/utils/api";
 import { createRandomUserName } from "~/utils/helpers";
 import useNotification from "../useNotification";
 import useSyncedRoom from "../useSyncedRoom";
 import { type IUseUserContext, type IUseUserProvider } from "./useUser.types";
+import { isDevelopmentClient } from "~/utils/environment";
 
 const UserContext = createContext<IUseUserContext | undefined>(undefined);
 
@@ -27,6 +28,8 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
   const { showErrorNotification, showSuccessNotification } = useNotification();
   const { mutateAsync: checkUsername, isLoading } =
     api.users.isUsernameInUse.useMutation();
+
+  const { mutateAsync: updateUser } = api.users.updateUser.useMutation();
 
   const isAdmin = user.role === "ADMIN";
   const isHost = room.creatorId === user.id;
@@ -73,6 +76,17 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
         message: `Username "${newUsername}" ist bereits vergeben 🙁`
       });
       return false;
+    }
+
+    if (isDevelopmentClient) {
+      try {
+        await updateUser({ data: { username: newUsername } });
+      } catch (error) {
+        showErrorNotification({
+          message: "Fehler beim Aktualisieren des Benutzernamens (Entwicklungsmodus)."
+        });
+        return false;
+      }
     }
 
     const newUser = {

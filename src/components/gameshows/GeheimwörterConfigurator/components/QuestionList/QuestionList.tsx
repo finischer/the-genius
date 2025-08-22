@@ -1,6 +1,6 @@
 import { Flex, Title } from "@mantine/core";
 import React from "react";
-import type { TGeheimwoerterQuestionItem } from "~/components/room/Game/games/Geheimwörter/geheimwörter.types";
+import type { TGeheimwoerterQuestionItem } from "~/games/Geheimwörter/geheimwörter.types";
 import List from "~/components/shared/List";
 import type { IQuestionListProps } from "./questionList.types";
 import type { IListItem } from "~/components/shared/List/components/ListItem/listItem.types";

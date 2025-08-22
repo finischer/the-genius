@@ -81,7 +81,9 @@ export const GAMESHOW_MOCK_FUNCTIONS = {
   }),
   update: vi.fn().mockImplementation((args: Prisma.GameshowUpdateArgs) => {
     // updates the gameshow in the mock data
-    const updatedShow = MOCK_GAMESHOWS.find((g) => g.id === args.where.id);
+    const updatedShow = MOCK_GAMESHOWS.find(
+      (g): g is Gameshow => g.id === args.where.id
+    );
 
     if (!updatedShow) {
       return null;
@@ -90,7 +92,7 @@ export const GAMESHOW_MOCK_FUNCTIONS = {
     // Updates every key in the data object
     for (const key in args.data) {
       const newValue = args.data[key as keyof Prisma.GameshowUpdateInput];
-      (updatedShow as any)[key] = newValue;
+      (updatedShow as unknown as Record<string, unknown>)[key] = newValue;
     }
 
     return updatedShow;

@@ -2,7 +2,7 @@ import type { Game as PrismaGame } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
 import { createContext, type FC, type ReactNode } from "react";
 import { useImmer, type Updater } from "use-immer";
-import type { TGame } from "~/components/room/Game/games/game.types";
+import type { GameState } from "~/games";
 import type { TGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig.types";
 import useNotification from "~/hooks/useNotification";
 import { api } from "~/utils/api";
@@ -56,7 +56,7 @@ const GameConfigProvider: FC<IGameConfigProviderProps> = ({ children }) => {
       onSuccess(data) {
         const gameshowConfig: TGameshowConfig = {
           name: data.name,
-          games: data.games as TGame[]
+          games: data.games as GameState[]
         };
         setGameshow(gameshowConfig);
       }

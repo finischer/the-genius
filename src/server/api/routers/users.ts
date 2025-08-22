@@ -68,7 +68,6 @@ export const usersRouter = createTRPCRouter({
       });
 
       console.log("UPDATED USER: ", user);
-
       return user;
     }),
   // create: publicProcedure

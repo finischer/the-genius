@@ -52,7 +52,7 @@ Step 2: Run command
 docker-compose up -d
 ```
 
-### Start next.js Server
+### Start Next.js Server
 
 Step 1: Open new terminal  
 Step 2: Run command
@@ -63,6 +63,6 @@ npm run dev
 
 ### Additional hints
 
-Prisma will run on Port: 4466  
-Webiste will run on Port: 3000  
-MongoDB will run on Port: 27017
+Prisma will run on Port: 4466.
+Website will run on Port: 3000.
+MongoDB will run on Port: 27017.

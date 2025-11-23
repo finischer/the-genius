@@ -59,10 +59,11 @@ const ActionMenu = ({
 
   const isPublic = gameshow.visibility === GameshowVisbility.PUBLIC;
   const isImported = gameshow.importedGameshow;
+  const isUnmodifiedImport = isImported && !gameshow.isModified;
   const publishDisabledReason = isPublic
     ? "(bereits veröffentlicht)"
-    : isImported
-      ? "(importierte Spielshow)"
+    : isUnmodifiedImport
+      ? "(importierte Spielshow - bitte erst bearbeiten)"
       : undefined;
 
   const openDeleteConfirmModal = () =>
@@ -127,7 +128,7 @@ const ActionMenu = ({
           <Menu.Item
             leftSection={<IconShare size={MENU_ICON_SIZE} />}
             onClick={handlePublishGameshow}
-            disabled={isImported || isPublic}
+            disabled={isUnmodifiedImport || isPublic}
           >
             Veröffentlichen {publishDisabledReason}
           </Menu.Item>

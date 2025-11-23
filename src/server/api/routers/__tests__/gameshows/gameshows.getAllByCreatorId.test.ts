@@ -27,7 +27,7 @@ describe("gameshowsRouter -> getAllByCreatorId", () => {
 
     const result = await caller.gameshows.getAllByCreatorId();
 
-    expect(result).toHaveLength(2);
+    expect(result).toHaveLength(3); // Updated: Now includes imported+modified gameshow
 
     const firstGameshow = result[0];
     assert(firstGameshow);

@@ -22,7 +22,8 @@ export const safedGameshowSchema = z.object({
   difficulty: z.nativeEnum(GameshowDifficulty).nullable(),
   originalCreatorId: z.string().nullable(),
   originalGameshowId: z.string().nullable(),
-  importedGameshow: z.boolean().nullable()
+  importedGameshow: z.boolean().nullable(),
+  isModified: z.boolean().nullable()
 });
 
 export const safedPublicGameshowSchema = z.object({
@@ -63,7 +64,8 @@ export const gameshowsRouter = createTRPCRouter({
           originalCreatorId: true,
           originalGameshowId: true,
           difficulty: true,
-          importedGameshow: true
+          importedGameshow: true,
+          isModified: true
         }
       });
 
@@ -186,7 +188,9 @@ export const gameshowsRouter = createTRPCRouter({
           name: config.name,
           // workaround until prisma type is set correctly
           // @ts-expect-error
-          games: config.games // TODO: fix game schema in prisma
+          games: config.games, // TODO: fix game schema in prisma
+          // Mark imported gameshow as modified when updated
+          ...(gameshow.importedGameshow && { isModified: true })
         },
         where: {
           id: input.gameshowId
@@ -247,6 +251,15 @@ export const gameshowsRouter = createTRPCRouter({
         });
       }
 
+      // Prevent publishing unmodified imported gameshows
+      if (gameshow.importedGameshow && !gameshow.isModified) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message:
+            "Unveränderte importierte Spielshows können nicht veröffentlicht werden. Bitte bearbeiten Sie die Spielshow zuerst."
+        });
+      }
+
       const updatedGameshow = await ctx.prisma.gameshow.update({
         data: {
           visibility: GameshowVisbility.PUBLIC,
@@ -301,9 +314,12 @@ export const gameshowsRouter = createTRPCRouter({
           description: gameshow.description,
           difficulty: gameshow.difficulty,
           name: gameshow.name,
-          games: gameshow.games,
+          games: JSON.parse(
+            JSON.stringify(gameshow.games)
+          ) as typeof gameshow.games, // Deep copy to prevent reference sharing
           creatorId: ctx.session.user.id,
           importedGameshow: true,
+          isModified: false,
           originalCreatorId: gameshow.creatorId,
           originalGameshowId: gameshow.id
         }

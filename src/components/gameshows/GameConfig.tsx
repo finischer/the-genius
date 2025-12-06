@@ -1,33 +1,13 @@
 import type { FC } from "react";
-import type { Game } from "../room/Game/games/game.types";
-import DuSagstConfigurator from "./DuSagstConfigurator";
-import FlaggenConfigurator from "./FlaggenConfigurator";
-import GeheimwörterConfigurator from "./GeheimwörterConfigurator/GeheimwörterConfigurator";
-import MerkenConfigurator from "./MerkenConfigurator/MerkenConfigurator";
-import ReferatBingoConfigurator from "./ReferatBingoConfigurator";
-import SetConfigurator from "./SetConfigurator";
-import ZehnSetzenConfigurator from "./ZehnSetzenConfigurator";
-
-export type TGameConfigurators = {
-  [index in Game]: React.ComponentType<any>;
-};
-
-export const GAME_CONFIGURATORS: TGameConfigurators = {
-  flaggen: FlaggenConfigurator,
-  merken: MerkenConfigurator,
-  geheimwoerter: GeheimwörterConfigurator,
-  set: SetConfigurator,
-  duSagst: DuSagstConfigurator,
-  referatBingo: ReferatBingoConfigurator,
-  zehnSetzen: ZehnSetzenConfigurator
-};
+import { type Game, GAME_CONFIGURATORS } from "~/games";
 
 interface IGameConfigProps {
   gameSlug: Game;
 }
 
 const GameConfig: FC<IGameConfigProps> = ({ gameSlug }) => {
-  const ConfiguratorComponent = GAME_CONFIGURATORS[gameSlug]; // Hole die entsprechende Konfigurationskomponente
+  // 🎯 GAME_CONFIGURATORS wird automatisch aus der neuen games.config.ts generiert!
+  const ConfiguratorComponent = GAME_CONFIGURATORS[gameSlug];
 
   // Prüfe, ob eine gültige Konfigurationskomponente gefunden wurde
   if (!ConfiguratorComponent) {

@@ -2,8 +2,7 @@ import { Button, Flex } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
 import { useImmer } from "use-immer";
 import { v4 as uuidv4 } from "uuid";
-import type { TGeheimwoerterQuestionItem } from "~/components/room/Game/games/Geheimwörter/geheimwörter.types";
-import { Game } from "~/components/room/Game/games/game.types";
+import type { TGeheimwoerterQuestionItem } from "~/games/Geheimwörter/geheimwörter.types";
 import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";
 import { useScreen } from "~/hooks/useScreen";
 import type { TQuestionFormMode } from "../types";
@@ -15,6 +14,7 @@ import type {
 import CreateQuestionForm from "./components/CreateQuestionForm";
 import QuestionList from "./components/QuestionList";
 import { StepperControlsContext } from "~/context/StepperControlsContext";
+import { Game } from "~/games";
 
 const ALPHABET = [..."abcdefghijklmnoprstuvwxyz"];
 const DEFAULT_CODE_WORD_LIST = [

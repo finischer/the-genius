@@ -1,16 +1,17 @@
 import type { Game as PrismaGame } from "@prisma/client";
 import { useContext } from "react";
-import { GAME_STATE_MAP } from "~/components/room/Game/games/game.constants";
-import {
-  type Game,
-  type TGame,
-  type TGameSettingsMap
-} from "~/components/room/Game/games/game.types";
 import { GameConfigContext } from "~/context/GameConfigProvider";
 import type {
   IUseGameshowConfigReturn,
   TGameshowConfigKeys
 } from "./useGameshowConfig.types";
+import {
+  GAME_STATE_MAP,
+  GENERATED_PLUGINS,
+  type Game,
+  type GameState,
+  type TGameSettingsMap
+} from "~/games";
 
 const useGameshowConfig = <T extends Game>(gameName: T) => {
   const gameConfigContext = useContext(GameConfigContext);
@@ -51,7 +52,7 @@ const useGameshowConfig = <T extends Game>(gameName: T) => {
   const updateGameList = (newGameList: PrismaGame[]) => {
     const gameIdentifiers = newGameList.map((g) => g.slug);
 
-    const newGames: TGame[] = [];
+    const newGames: GameState[] = [];
 
     gameIdentifiers.forEach((gId) => {
       const game = gameshow.games.find((g) => g.identifier === gId);
@@ -59,7 +60,11 @@ const useGameshowConfig = <T extends Game>(gameName: T) => {
       if (game) {
         newGames.push(game);
       } else {
-        newGames.push(GAME_STATE_MAP[gId as Game]);
+        const defaultGameState = GENERATED_PLUGINS[gId as Game]?.state;
+
+        if (defaultGameState) {
+          newGames.push(defaultGameState);
+        }
       }
     });
 

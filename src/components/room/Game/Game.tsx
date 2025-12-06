@@ -2,28 +2,14 @@ import { Flex } from "@mantine/core";
 import { AnimatePresence, motion, useAnimate } from "framer-motion";
 import React, { useEffect } from "react";
 import FlipCard from "~/components/shared/FlipCard/FlipCard";
+import {
+  GENERATED_PLUGINS,
+  type Game as GameEnum,
+  type IGameProps
+} from "~/games";
 import useAudio from "~/hooks/useAudio";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { animations } from "~/utils/animations";
-import DuSagstGame from "./games/DuSagst/DuSagstGame";
-import type { TDuSagstGameState } from "./games/DuSagst/config";
-import FlaggenGame from "./games/Flaggen/FlaggenGame";
-import { type TFlaggenGameState } from "./games/Flaggen/config";
-import GeheimwörterGame from "./games/Geheimwörter/GeheimwörterGame";
-import type { TGeheimwörterGameState } from "./games/Geheimwörter/config";
-import MerkenGame from "./games/Merken/MerkenGame";
-import { type TMerkenGameState } from "./games/Merken/config";
-import ReferatBingoGame from "./games/ReferatBingo/ReferatBingoGame";
-import type { TReferatBingoGameState } from "./games/ReferatBingo/config";
-import SetGame from "./games/Set/SetGame";
-import type { TSetGameState } from "./games/Set/config";
-import ZehnSetzen from "./games/ZehnSetzen";
-import type { TZehnSetzenGameState } from "./games/ZehnSetzen/config";
-import {
-  type Game as GameEnum,
-  type IGameProps,
-  type TGameMap
-} from "./games/game.types";
 
 const SECONDS_TO_ROTATE_TITLE_BANNER = 4;
 const SECONDS_TOTAL_INTRO_DURATION = 8;
@@ -93,17 +79,13 @@ const Game: React.FC<IGameProps> = ({ gameName }) => {
     room.games.findIndex((g) => g.identifier === game.identifier) + 1;
 
   function getGame(identifier: GameEnum) {
-    const GAME_MAP: TGameMap = {
-      flaggen: <FlaggenGame game={game as TFlaggenGameState} />,
-      merken: <MerkenGame game={game as TMerkenGameState} />,
-      geheimwoerter: <GeheimwörterGame game={game as TGeheimwörterGameState} />,
-      set: <SetGame game={game as TSetGameState} />,
-      duSagst: <DuSagstGame game={game as TDuSagstGameState} />,
-      referatBingo: <ReferatBingoGame game={game as TReferatBingoGameState} />,
-      zehnSetzen: <ZehnSetzen game={game as TZehnSetzenGameState} />
-    };
+    const GameComponent = GENERATED_PLUGINS[identifier]?.gameComponent;
+    if (!GameComponent || !game) {
+      return <div>Spiel nicht gefunden: {identifier}</div>;
+    }
 
-    return GAME_MAP[identifier];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
+    return <GameComponent game={game} />;
   }
 
   return (

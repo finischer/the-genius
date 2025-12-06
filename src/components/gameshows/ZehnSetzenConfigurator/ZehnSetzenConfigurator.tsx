@@ -9,11 +9,11 @@ import { useForm } from "@mantine/form";
 import { useContext, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import QuestionFormLayout from "~/components/layout/QuestionFormLayout";
-import { Game } from "~/components/room/Game/games/game.types";
-import type { TZehnSetzenQuestion } from "~/components/room/Game/games/ZehnSetzen/zehnSetzen.types";
+import type { TZehnSetzenQuestion } from "~/games/ZehnSetzen/zehnSetzen.types";
 import { StepperControlsContext } from "~/context/StepperControlsContext";
 import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";
 import useNotification from "~/hooks/useNotification";
+import { Game } from "~/games";
 
 const PLACEHOLDER_MAP: { [index: number]: string } = {
   0: "ca. 73 Mio.",

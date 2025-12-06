@@ -1,13 +1,9 @@
 import type { Game as PrismaGame } from "@prisma/client";
-import type {
-  Game,
-  TGame,
-  TGameSettingsMap
-} from "~/components/room/Game/games/game.types";
+import type { Game, GameState, TGameSettingsMap } from "~/games";
 
 export type TGameshowConfig = {
   name: string;
-  games: TGame[];
+  games: GameState[];
 };
 
 export type TGameshowConfigKeys = Omit<TGameshowConfig, "games">;

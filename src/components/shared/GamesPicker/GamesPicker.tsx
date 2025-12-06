@@ -8,14 +8,13 @@ import {
 } from "@tabler/icons-react";
 import React from "react";
 import GameDetailsModal from "~/components/gameshows/GameDetailsModal";
-import { GAME_STATE_MAP } from "~/components/room/Game/games/game.constants";
-import type { Game } from "~/components/room/Game/games/game.types";
 import { api } from "~/utils/api";
 import List from "../List";
 import Paper from "../Paper";
 import Tooltip from "../Tooltip";
 import classes from "./gamesPicker.module.css";
 import { type IGamesPickerProps } from "./gamesPicker.types";
+import { GENERATED_PLUGINS, type Game } from "~/games";
 
 const GamesPicker: React.FC<IGamesPickerProps> = ({
   selectedGames,
@@ -38,15 +37,17 @@ const GamesPicker: React.FC<IGamesPickerProps> = ({
       { open: openGameDetails, close: closeGameDetails }
     ] = useDisclosure(false);
 
-    const defaultGameState = GAME_STATE_MAP[game.slug as Game];
+    const defaultGameState = GENERATED_PLUGINS[game.slug as Game]?.state;
 
     return (
       <>
-        <GameDetailsModal
-          game={defaultGameState}
-          opened={gameRulesOpened}
-          onClose={closeGameDetails}
-        />
+        {defaultGameState && (
+          <GameDetailsModal
+            game={defaultGameState}
+            opened={gameRulesOpened}
+            onClose={closeGameDetails}
+          />
+        )}
 
         <Button.Group>
           <Button

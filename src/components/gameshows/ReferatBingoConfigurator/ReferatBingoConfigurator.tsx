@@ -3,8 +3,8 @@ import { useForm } from "@mantine/form";
 import { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import QuestionFormLayout from "~/components/layout/QuestionFormLayout";
-import type { TPresentationTopic } from "~/components/room/Game/games/ReferatBingo/referatBingo.types";
-import { Game } from "~/components/room/Game/games/game.types";
+import { Game } from "~/games";
+import type { TPresentationTopic } from "~/games/ReferatBingo/referatBingo.types";
 import { useGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig";
 
 const ReferatBingoConfigurator = () => {

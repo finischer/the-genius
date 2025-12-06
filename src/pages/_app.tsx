@@ -7,11 +7,9 @@ import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { DefaultSeo } from "next-seo";
 import { type AppType } from "next/app";
-import GoogleAnalytics from "~/components/analytics/GoogleAnalytics";
 import { modals } from "~/components/shared/modals/modalComponents";
 import SEO from "~/config/next-seo.config";
 import { RoomProvider } from "~/hooks/useRoom";
-import { SocketProvider } from "~/hooks/useSocket";
 import { UserProvider } from "~/hooks/useUser";
 import { THEME, cssResolver } from "~/styles/constants";
 
@@ -23,15 +21,15 @@ import { PostHogProvider } from "posthog-js/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { env } from "~/env.mjs";
-import { isDevelopment } from "~/utils/environment";
+import { isDevelopmentClient } from "~/utils/environment";
 
-if (typeof window !== "undefined") {
+if (typeof window !== "undefined" && !isDevelopmentClient) {
   posthog.init(env.NEXT_PUBLIC_POSTHOG_KEY, {
     api_host: env.NEXT_PUBLIC_POSTHOG_HOST || "https://eu.i.posthog.com",
     person_profiles: "identified_only",
     // Enable debug mode in development
     loaded: (posthog) => {
-      if (isDevelopment) posthog.debug();
+      if (isDevelopmentClient) posthog.debug();
     }
   });
 }
@@ -66,15 +64,11 @@ const MyApp: AppType<{ session: Session | null }> = ({
           <Notifications position="top-center" />
 
           <SessionProvider session={session}>
-            <SocketProvider>
-              <RoomProvider>
-                <UserProvider>
-                  <GoogleAnalytics />
-
-                  <Component {...pageProps} />
-                </UserProvider>
-              </RoomProvider>
-            </SocketProvider>
+            <RoomProvider>
+              <UserProvider>
+                <Component {...pageProps} />
+              </UserProvider>
+            </RoomProvider>
           </SessionProvider>
         </ModalsProvider>
       </MantineProvider>

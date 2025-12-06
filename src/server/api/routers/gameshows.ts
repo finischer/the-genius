@@ -106,7 +106,10 @@ export const gameshowsRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       const gameshows = await ctx.prisma.gameshow.findMany({
         where: {
-          visibility: GameshowVisbility.PUBLIC
+          visibility: GameshowVisbility.PUBLIC,
+          user: {
+            isNot: null
+          }
         },
         select: {
           id: true,
@@ -151,6 +154,7 @@ export const gameshowsRouter = createTRPCRouter({
           creatorId: ctx.session.user.id
         }
       });
+
       return gameshow;
     }),
   update: protectedProcedure
@@ -273,7 +277,7 @@ export const gameshowsRouter = createTRPCRouter({
       if (!gameshow) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Gameshow konnte nicht gespeichert werden"
+          message: "Gameshow konnte nicht gefunden werden"
         });
       }
 

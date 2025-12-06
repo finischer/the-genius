@@ -1,1 +1,0 @@
-export { teamHandler } from "./teamHandlers";

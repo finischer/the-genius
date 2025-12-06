@@ -4,7 +4,7 @@ import type {
   RoomSounds,
   TeamAvatarImage
 } from "@prisma/client";
-import type { TGame } from "~/components/room/Game/games/game.types";
+import type { GameState } from "~/games";
 
 export enum RoomView {
   EMPTY = "empty",
@@ -51,10 +51,10 @@ export type Room = {
   name: string;
   password: string;
   teams: RoomTeams;
-  games: TGame[];
+  games: GameState[];
   context: {
     isClosed: boolean;
-    currentGame: TGame | null;
+    currentGame: GameState | null;
     view: RoomView;
     answerState: RoomAnswerState;
     header: {

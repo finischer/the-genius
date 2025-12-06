@@ -1,12 +1,12 @@
 import React from "react";
-import type { TGame } from "../room/Game/games/game.types";
 import { Box, ScrollArea, Stack, Text } from "@mantine/core";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
+import type { GameState } from "~/games";
 
-const GamesJSON = ({ games }: { games: TGame[] }) => {
+const GamesJSON = ({ games }: { games: GameState[] }) => {
   const room = useSyncedRoom();
 
-  const GameCard = ({ game }: { game: TGame }) => {
+  const GameCard = ({ game }: { game: GameState }) => {
     return (
       <Box
         bg="dark"

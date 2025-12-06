@@ -2,11 +2,11 @@ import { Divider, Modal, Text, type ModalProps } from "@mantine/core";
 import { capitalize } from "lodash";
 import { type FC } from "react";
 import Markdown from "react-markdown";
-import { type TGame } from "../room/Game/games/game.types";
+import type { GameState } from "~/games";
 import { getFormattedGameRules } from "~/utils/gameHelpers";
 
 interface IGameDetailsModalProps extends ModalProps {
-  game: TGame;
+  game: GameState;
 }
 
 const GameDetailsModal: FC<IGameDetailsModalProps> = ({ game, ...props }) => {

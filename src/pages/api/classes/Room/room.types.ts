@@ -5,8 +5,8 @@ import {
   Prisma
 } from "@prisma/client";
 import type Team from "../Team/Team";
-import type { TGame } from "~/components/room/Game/games/game.types";
 import type Room from ".";
+import type { GameState } from "~/games";
 
 export type TeamOptions = keyof Room["teams"];
 
@@ -17,7 +17,7 @@ export type TRoomTeams = Omit<RoomTeams, "teamOne" | "teamTwo"> & {
 
 // type where type of games is set correctly
 export type PrismaRoomFixed = Omit<PrismaRoom, "games"> & {
-  games: TGame[];
+  games: GameState[];
 };
 
 export type IRoomMaxPlayersTeamMap = {

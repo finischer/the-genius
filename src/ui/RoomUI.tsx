@@ -37,6 +37,8 @@ const RoomUI = () => {
     isActive: false,
     title: "lightsDisappear"
   };
+
+  console.log("Title: ", musicState.title);
   const modPanelDisclosure = useDisclosure(false);
 
   useEffect(() => {

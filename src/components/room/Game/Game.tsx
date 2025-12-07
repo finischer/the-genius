@@ -31,7 +31,7 @@ const Game: React.FC<IGameProps> = ({ gameName }) => {
       [scope.current, { scale: 0 }, { duration: 0.5 }]
     ];
 
-    // @ts-expect-error
+    // @ts-expect-error - framer-motion animate function expects different sequence format
     await animate(sequence);
     // await animate(
     //   scope.current,
@@ -84,7 +84,6 @@ const Game: React.FC<IGameProps> = ({ gameName }) => {
       return <div>Spiel nicht gefunden: {identifier}</div>;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
     return <GameComponent game={game} />;
   }
 

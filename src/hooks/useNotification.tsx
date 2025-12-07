@@ -25,7 +25,7 @@ const useNotification = () => {
   };
 
   const handleZodError = (
-    errorList: typeToFlattenedError<any, string> | null | undefined,
+    errorList: typeToFlattenedError<unknown, string> | null | undefined,
     defaultErrorMsg = "Ein Fehler ist aufgetreten"
   ) => {
     if (!errorList) {
@@ -36,11 +36,13 @@ const useNotification = () => {
     }
 
     for (const value of Object.values(errorList.fieldErrors)) {
-      value?.forEach((v) =>
-        showErrorNotification({
-          message: v
-        })
-      );
+      if (Array.isArray(value)) {
+        value.forEach((v) =>
+          showErrorNotification({
+            message: String(v)
+          })
+        );
+      }
     }
   };
 

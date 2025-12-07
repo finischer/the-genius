@@ -81,9 +81,10 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
     if (isDevelopmentClient) {
       try {
         await updateUser({ data: { username: newUsername } });
-      } catch (error) {
+      } catch {
         showErrorNotification({
-          message: "Fehler beim Aktualisieren des Benutzernamens (Entwicklungsmodus)."
+          message:
+            "Fehler beim Aktualisieren des Benutzernamens (Entwicklungsmodus)."
         });
         return false;
       }
@@ -101,7 +102,7 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
     return true;
   }
 
-  function hostFunction<T extends any[]>(
+  function hostFunction<T extends unknown[]>(
     func: FunctionToWrap<T>
   ): FunctionToWrap<T> {
     if (!isHost) return () => null;

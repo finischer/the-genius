@@ -55,7 +55,7 @@ const useGameshowConfig = <T extends Game>(gameName: T) => {
     const newGames: GameState[] = [];
 
     gameIdentifiers.forEach((gId) => {
-      const game = gameshow.games.find((g) => g.identifier === gId);
+      const game = gameshow.games.find((g) => (g.identifier as string) === gId);
 
       if (game) {
         newGames.push(game);

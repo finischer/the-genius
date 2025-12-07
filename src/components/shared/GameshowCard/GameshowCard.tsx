@@ -54,7 +54,7 @@ export const GameshowCard: FC<IGameshowCardProps> = ({
       await importGameshow({
         gameshowId: id
       });
-    } catch (error) {
+    } catch {
       return;
     }
   };

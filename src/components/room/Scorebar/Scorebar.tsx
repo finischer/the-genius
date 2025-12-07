@@ -141,7 +141,8 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
 
   const toggleTeamActiveState = () => {
     team.isActiveTurn = !team.isActiveTurn;
-    (team.buzzer.isPressed = false), (team.buzzer.playersBuzzered = []);
+    team.buzzer.isPressed = false;
+    team.buzzer.playersBuzzered = [];
 
     // set other teams active state to false
     const otherTeams = Object.values(room.teams).filter(

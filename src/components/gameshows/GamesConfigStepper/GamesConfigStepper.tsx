@@ -26,7 +26,7 @@ const getAlreadySelectedGames = (
 
   games.forEach((g) => {
     const game = availableGames.find(
-      (availableGame) => availableGame.slug === g.identifier
+      (availableGame) => availableGame.slug === (g.identifier as string)
     );
 
     if (game) {
@@ -143,7 +143,9 @@ const GamesConfigStepper = () => {
 
       // navigate back to gameshows
       void router.push("/gameshows");
-    } catch (err) {}
+    } catch {
+      // Error handling not needed here
+    }
   };
 
   useEffect(() => {

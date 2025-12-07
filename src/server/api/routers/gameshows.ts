@@ -149,7 +149,7 @@ export const gameshowsRouter = createTRPCRouter({
         data: {
           name: config.name,
           // workaround until prisma type is set correctly
-          // @ts-expect-error
+          // @ts-expect-error - Prisma game schema type mismatch, needs to be fixed in schema
           games: config.games, // TODO: fix game schema in prisma
           creatorId: ctx.session.user.id
         }
@@ -185,7 +185,7 @@ export const gameshowsRouter = createTRPCRouter({
         data: {
           name: config.name,
           // workaround until prisma type is set correctly
-          // @ts-expect-error
+          // @ts-expect-error - Prisma game schema type mismatch, needs to be fixed in schema
           games: config.games // TODO: fix game schema in prisma
         },
         where: {

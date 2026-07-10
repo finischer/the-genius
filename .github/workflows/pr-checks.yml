@@ -3,8 +3,7 @@ name: PR Checks
 on:
   pull_request:
     branches:
-      - main
-      - dev
+      - staging
       - production
 
 env:

@@ -3,14 +3,14 @@ name: Deploy to Staging
 on:
   push:
     branches:
-      - dev
+      - staging
   workflow_dispatch:
 
 jobs:
   build-and-test:
     uses: ./.github/workflows/build_and_test.yml
     with:
-      environment: development
+      environment: staging
     secrets: inherit
 
   deploy-to-staging:

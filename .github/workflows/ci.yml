@@ -1,10 +1,10 @@
 name: CI
 
-# Only run if pushes to dev and changed files are in the src directory
+# Only run if pushes to staging and changed files are in the src directory
 on:
   push:
     branches:
-      - dev
+      - staging
     paths:
       - "src/**"
 

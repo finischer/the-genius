@@ -1,6 +1,6 @@
 import { GameshowMode } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { z } from "zod";
 import {
   createTRPCRouter,

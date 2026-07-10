@@ -36,15 +36,19 @@ runs:
         
         echo "📝 Changed files:"
         echo "$CHANGED_FILES"
+        echo ""
         
         # Filter out irrelevant files (workflows, docs, config files)
-        RELEVANT_FILES=$(echo "$CHANGED_FILES" | grep -v -E '^\\.github/|\\.(md|txt)$|^docs/|^\\.gitignore$|^\\.eslintrc|^\\.prettier|^\\.editorconfig$|^LICENSE$' || true)
+        # ^\.github/ matches anything in .github/ folder
+        # \.md$ matches markdown files
+        # ^docs/ matches anything in docs/ folder
+        RELEVANT_FILES=$(echo "$CHANGED_FILES" | grep -v -E '^\.github/|\.md$|\.txt$|^docs/|^\.gitignore$|^\.eslintrc|^\.prettier|^\.editorconfig$|^LICENSE$' || true)
         
         if [ -z "$RELEVANT_FILES" ]; then
           echo "should_deploy=false" >> $GITHUB_OUTPUT
           echo "⏭️  Only documentation/config files changed - skipping deployment"
         else
           echo "should_deploy=true" >> $GITHUB_OUTPUT
-          echo "✅ Code changes detected - deployment needed"
+          echo "✅ Code changes detected - deployment needed:"
           echo "$RELEVANT_FILES"
         fi

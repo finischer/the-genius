@@ -55,4 +55,23 @@ describe("gameshowsRouter -> update", () => {
     expect(result).toBeDefined();
     expect(result.name).toBe("Updated Name");
   });
+
+  it("Auth user -> marks imported gameshow as modified when updated", async () => {
+    const caller = getTestCaller({
+      user: { id: "2", username: "Test user", role: "USER" },
+      expires: "2100-01-01T00:00:00.000Z"
+    });
+
+    const result = await caller.gameshows.update({
+      gameshowId: "3", // This is an imported gameshow (importedGameshow: true, isModified: false)
+      updatedGameshow: {
+        name: "Updated Imported Gameshow",
+        games: [{}]
+      }
+    });
+
+    expect(result).toBeDefined();
+    expect(result.name).toBe("Updated Imported Gameshow");
+    expect(result.isModified).toBe(true); // Should now be marked as modified
+  });
 });

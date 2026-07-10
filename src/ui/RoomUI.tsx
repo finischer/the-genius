@@ -6,6 +6,7 @@ import { IconArrowRight, IconCheck } from "@tabler/icons-react";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import Confetti from "~/components/room/Confetti/Confetti";
 import ModPanel from "~/components/room/ModPanel";
 import RoomBody from "~/components/room/RoomBody";
 import RoomFooter from "~/components/room/RoomFooter";
@@ -91,6 +92,7 @@ const RoomUI = () => {
 
   return (
     <>
+      <Confetti />
       {isPlayer && <InteractivePlayerTour />}
 
       {/* Hidden Header. Just do display the first welcome step of the interactive tour */}

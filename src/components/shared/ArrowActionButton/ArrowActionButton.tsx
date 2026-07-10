@@ -4,7 +4,7 @@ import {
   IconArrowLeft,
   IconArrowRight,
   IconArrowUp,
-  type TablerIconsProps
+  type Icon
 } from "@tabler/icons-react";
 import React from "react";
 import ActionIcon from "../ActionIcon";
@@ -13,10 +13,7 @@ import type {
   TArrowDirection
 } from "./arrowActionButton.types";
 
-const arrowIconMap: Record<
-  TArrowDirection,
-  (props: TablerIconsProps) => JSX.Element
-> = {
+const arrowIconMap: Record<TArrowDirection, Icon> = {
   up: IconArrowUp,
   right: IconArrowRight,
   down: IconArrowDown,

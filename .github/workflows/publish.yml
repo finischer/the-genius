@@ -1,8 +1,9 @@
-name: Deploy code
+name: Deploy to Production
 
 on:
   push:
-    branches: production
+    branches:
+      - production
 
   workflow_dispatch:
 
@@ -14,14 +15,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Check if version is bumped
         id: check_version
         run: |
           CURRENT_VERSION=$(jq -r '.version' package.json)
           echo "Current version: $CURRENT_VERSION"
-          if git tag --list v$CURRENT_VERSION; then
+          if [ -n "$(git tag --list v$CURRENT_VERSION)" ]; then
             echo "Version $CURRENT_VERSION already exists as a tag. Please bump the version in package.json."
             exit 1
           fi
@@ -34,19 +35,9 @@ jobs:
       environment: production
     secrets: inherit # Pass secrets to the build workflow, if necessary.
 
-  deploy-to-staging:
+  deploy-to-production:
     # Only run this deploy job after the build-and-test job completes successfully.
     needs: build-and-test
-    uses: ./.github/workflows/deploy_railway_template.yml
-    with:
-      environmentName: staging
-      url: https://the-genius-staging.up.railway.app/
-
-    secrets: inherit
-
-  deploy-to-production:
-    # Only run this deploy job after the deploy-to-staging job completes successfully.
-    needs: deploy-to-staging
     uses: ./.github/workflows/deploy_railway_template.yml
     with:
       environmentName: production
@@ -59,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Configure Git
         run: |

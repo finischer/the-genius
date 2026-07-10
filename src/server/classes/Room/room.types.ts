@@ -2,7 +2,7 @@ import {
   type GameshowMode,
   type RoomTeams,
   type Room as PrismaRoom,
-  Prisma
+  type Prisma
 } from "@prisma/client";
 import type Team from "../Team/Team";
 import type Room from ".";
@@ -24,10 +24,8 @@ export type IRoomMaxPlayersTeamMap = {
   [key in GameshowMode]: number;
 };
 
-const roomInclude = Prisma.validator<Prisma.RoomInclude>()({
-  creator: true
-});
-
 export type PrismaRoomWithCreator = Prisma.RoomGetPayload<{
-  include: typeof roomInclude;
+  include: {
+    creator: true;
+  };
 }>;

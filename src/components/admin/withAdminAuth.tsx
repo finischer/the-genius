@@ -5,7 +5,7 @@ import useNotification from "~/hooks/useNotification";
 import { useUser } from "~/hooks/useUser";
 
 const withAdminAuth = <P extends object>(Component: NextPage) => {
-  const Auth = (props: JSX.IntrinsicAttributes & P) => {
+  const Auth = (props: P) => {
     // Login data added to props via redux-store (or use react context for example)
     const { isAdmin } = useUser();
     const router = useRouter();

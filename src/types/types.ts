@@ -13,6 +13,6 @@ export type FixedSizeArray<N extends number, T> = N extends 0
       length: N;
     } & ReadonlyArray<T>;
 
-export type FunctionToWrap<T extends any[]> = (...args: T) => void;
+export type FunctionToWrap<T extends unknown[]> = (...args: T) => void;
 
 export type YDocMap<T> = Y.Map<T>;

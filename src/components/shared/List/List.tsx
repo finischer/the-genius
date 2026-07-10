@@ -84,7 +84,7 @@ const List = <T,>({
             selected={item.id === selectedItemId}
             onClick={() => handleSelectItem(item)}
             onDelete={() => handleDeleteItem(item.id)}
-            // @ts-ignore
+            // @ts-expect-error - dynamic key access on generic type
             content={
               !renderValueByKey
                 ? `${itemName} ${index + 1}`

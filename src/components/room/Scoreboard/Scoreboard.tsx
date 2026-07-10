@@ -58,7 +58,8 @@ const Scoreboard: React.FC<IScoreboardProps> = ({ team, color }) => {
       />
     ));
 
-  const scoreColor = color === "green" ? GREEN_GRADIENT : RED_GRADIENT;
+  const scoreColor =
+    (color as string) === "green" ? GREEN_GRADIENT : RED_GRADIENT;
 
   const increaseScore = () => {
     if (team.totalScore >= minNumOfGamesToWin) return;

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import type Room from "~/pages/api/classes/Room/Room";
+import type Room from "~/server/classes/Room/Room";
 import {
   type TModeratorSettings,
   type INonNullableUseRoomContext,

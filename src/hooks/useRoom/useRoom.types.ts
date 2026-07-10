@@ -1,6 +1,6 @@
 import { type Dispatch } from "react";
 import type { GameState } from "~/games";
-import type Room from "~/pages/api/classes/Room/Room";
+import type Room from "~/server/classes/Room/Room";
 
 export interface IUseRoomProvider {
   children: React.ReactNode;

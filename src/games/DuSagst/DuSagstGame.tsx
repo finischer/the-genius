@@ -4,7 +4,7 @@ import React from "react";
 import ActionIcon from "~/components/shared/ActionIcon";
 import ModView from "~/components/shared/ModView";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
-import type { TeamOptions } from "~/pages/api/classes/Room/room.types";
+import type { TeamOptions } from "~/server/classes/Room/room.types";
 import AnswerBox from "./components/AnswerBox";
 import QuestionContainer from "./components/QuestionContainer";
 import type {

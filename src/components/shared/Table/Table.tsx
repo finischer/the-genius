@@ -4,7 +4,7 @@ import type { TableData } from "@mantine/core";
 import _ from "lodash";
 
 function buildTableBodyData(
-  data: Array<{ [key: string]: any }>,
+  data: Array<{ [key: string]: unknown }>,
   targetKeys: string[]
 ) {
   const body: TableData["body"] = [];
@@ -18,7 +18,7 @@ function buildTableBodyData(
 }
 
 interface ITableProps extends TableData {
-  data: Array<{ [key: string]: any }>;
+  data: Array<{ [key: string]: unknown }>;
   keys: string[];
 }
 

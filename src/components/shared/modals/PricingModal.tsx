@@ -2,7 +2,9 @@ import { Text } from "@mantine/core";
 import type { ContextModalProps } from "@mantine/modals";
 import React from "react";
 
-const PricingModal: React.FC<ContextModalProps<any>> = () => {
+const PricingModal: React.FC<
+  ContextModalProps<Record<string, unknown>>
+> = () => {
   // const theme = useMantineTheme();
   return <Text>PricingModal</Text>;
   // return (

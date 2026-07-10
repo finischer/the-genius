@@ -1,0 +1,109 @@
+name: Create Release Tag after Production Merge
+
+on:
+  push:
+    branches:
+      - production
+    paths-ignore:
+      - '.github/**'
+      - 'README.md'
+      - 'docs/**'
+
+jobs:
+  create-tag:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout production branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Get version from package.json
+        id: get_version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "📦 Current version in package.json: $VERSION"
+
+      - name: Check if tag already exists
+        id: check_tag
+        run: |
+          if git rev-parse "v${{ steps.get_version.outputs.version }}" >/dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "⚠️  Tag v${{ steps.get_version.outputs.version }} already exists"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "✅ Tag v${{ steps.get_version.outputs.version }} does not exist yet"
+          fi
+
+      - name: Get commit messages since last tag
+        if: steps.check_tag.outputs.exists == 'false'
+        id: changelog
+        run: |
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$LAST_TAG" ]; then
+            echo "📝 No previous tag found, getting all commits"
+            COMMITS=$(git log --pretty=format:"- %s (%h)" --no-merges)
+          else
+            echo "📝 Getting commits since $LAST_TAG"
+            COMMITS=$(git log ${LAST_TAG}..HEAD --pretty=format:"- %s (%h)" --no-merges)
+          fi
+          
+          # Escape for GitHub Actions output
+          COMMITS="${COMMITS//'%'/'%25'}"
+          COMMITS="${COMMITS//$'\n'/'%0A'}"
+          COMMITS="${COMMITS//$'\r'/'%0D'}"
+          
+          echo "commits=$COMMITS" >> $GITHUB_OUTPUT
+
+      - name: Create and push tag
+        if: steps.check_tag.outputs.exists == 'false'
+        run: |
+          git tag -a "v${{ steps.get_version.outputs.version }}" -m "Release v${{ steps.get_version.outputs.version }}"
+          git push origin "v${{ steps.get_version.outputs.version }}"
+          echo "✅ Tag v${{ steps.get_version.outputs.version }} created and pushed"
+
+      - name: Create GitHub Release
+        if: steps.check_tag.outputs.exists == 'false'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const version = '${{ steps.get_version.outputs.version }}';
+            const commits = `${{ steps.changelog.outputs.commits }}`;
+            
+            const releaseNotes = `## Release v${version}
+            
+            ### Changes
+            ${commits || 'No changes documented'}
+            
+            ---
+            *This release was automatically created after merging staging into production.*`;
+            
+            try {
+              const response = await github.rest.repos.createRelease({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag_name: `v${version}`,
+                name: `Release v${version}`,
+                body: releaseNotes,
+                draft: false,
+                prerelease: false
+              });
+              
+              console.log(`✅ Release created: ${response.data.html_url}`);
+            } catch (error) {
+              console.error('❌ Failed to create release:', error.message);
+              throw error;
+            }
+
+      - name: Tag already exists
+        if: steps.check_tag.outputs.exists == 'true'
+        run: |
+          echo "ℹ️  Tag v${{ steps.get_version.outputs.version }} already exists, skipping tag creation"

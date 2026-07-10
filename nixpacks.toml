@@ -1,0 +1,18 @@
+[phases.setup]
+nixPkgs = ["nodejs_24"]
+
+[phases.install]
+cmds = [
+  "npm ci --include=dev"
+]
+
+[phases.build]
+cmds = ["npm run build"]
+
+[phases.prune]
+cmds = [
+  "npm prune --production"
+]
+
+[start]
+cmd = "npm run start"

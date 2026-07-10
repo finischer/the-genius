@@ -17,7 +17,8 @@ export const MOCK_GAMESHOWS: Gameshow[] = [
     difficulty: "EASY",
     originalCreatorId: null,
     originalGameshowId: null,
-    importedGameshow: false
+    importedGameshow: false,
+    isModified: null
   },
   {
     id: "2",
@@ -32,7 +33,8 @@ export const MOCK_GAMESHOWS: Gameshow[] = [
     difficulty: "EASY",
     originalCreatorId: null,
     originalGameshowId: null,
-    importedGameshow: false
+    importedGameshow: false,
+    isModified: null
   },
   {
     id: "3",
@@ -47,7 +49,8 @@ export const MOCK_GAMESHOWS: Gameshow[] = [
     difficulty: "EASY",
     originalCreatorId: null,
     originalGameshowId: null,
-    importedGameshow: true
+    importedGameshow: true,
+    isModified: false
   },
   {
     id: "4",
@@ -62,7 +65,24 @@ export const MOCK_GAMESHOWS: Gameshow[] = [
     difficulty: "EASY",
     originalCreatorId: null,
     originalGameshowId: null,
-    importedGameshow: false
+    importedGameshow: false,
+    isModified: null
+  },
+  {
+    id: "5",
+    creatorId: "1",
+    description: "Test Gameshow 5 - Modified Import",
+    name: "Test Gameshow 5 - Modified Import",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    isFavorite: false,
+    games: [],
+    visibility: "PRIVATE",
+    difficulty: "MEDIUM",
+    originalCreatorId: "2",
+    originalGameshowId: "4",
+    importedGameshow: true,
+    isModified: true
   }
 ];
 
@@ -109,6 +129,7 @@ export const GAMESHOW_MOCK_FUNCTIONS = {
       originalCreatorId: null,
       originalGameshowId: null,
       importedGameshow: false,
+      isModified: null,
       ...args.data
     };
   }),

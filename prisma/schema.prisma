@@ -73,6 +73,7 @@ model Gameshow {
   originalCreator    User?               @relation("originalCreator", fields: [originalCreatorId], references: [id])
   originalGameshowId String?             @db.ObjectId
   difficulty         GameshowDifficulty? @default(MEDIUM)
+  isModified         Boolean?            @default(false)
 
   @@map("gameshows")
 }

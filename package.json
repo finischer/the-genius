@@ -16,7 +16,6 @@
     "start": "next start",
     "tsc": "tsc",
     "partykit": "npx partykit dev",
-    "prepare": "husky",
     "test:unit": "vitest run",
     "test:unit:watch": "vitest"
   },

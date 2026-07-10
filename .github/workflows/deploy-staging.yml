@@ -1,0 +1,22 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    uses: ./.github/workflows/build_and_test.yml
+    with:
+      environment: development
+    secrets: inherit
+
+  deploy-to-staging:
+    needs: build-and-test
+    uses: ./.github/workflows/deploy_railway_template.yml
+    with:
+      environmentName: staging
+      url: https://the-genius-staging.up.railway.app/
+    secrets: inherit

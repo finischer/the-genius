@@ -134,7 +134,7 @@ export default class Room implements PrismaRoomFixed {
   }
 
   getGame<T extends Game>(gameIdentifier: T): TGameSettingsMap[T] {
-    const games = this.games as unknown as GameState[];
+    const games = this.games;
     const game = games.find(
       (g) => g.identifier === gameIdentifier
     ) as unknown as TGameSettingsMap[T];

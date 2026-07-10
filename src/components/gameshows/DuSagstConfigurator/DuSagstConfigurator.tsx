@@ -120,7 +120,7 @@ const DuSagstConfigurator = () => {
     }
 
     updateGame((draft) => {
-      draft.questions = questions as unknown as TDuSagstQuestion[];
+      draft.questions = questions;
     });
   }, [questions]);
 

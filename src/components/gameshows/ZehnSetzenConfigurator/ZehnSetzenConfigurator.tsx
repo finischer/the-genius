@@ -157,7 +157,7 @@ const ZehnSetzenConfigurator = () => {
     }
 
     updateGame((draft) => {
-      draft.questions = questions as unknown as TZehnSetzenQuestion[];
+      draft.questions = questions;
     });
   }, [questions]);
 

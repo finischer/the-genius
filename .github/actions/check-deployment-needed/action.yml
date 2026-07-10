@@ -1,0 +1,50 @@
+name: Check if Deployment is Needed
+description: Checks if deployment should proceed based on changed files
+
+outputs:
+  should_deploy:
+    description: "Whether deployment should proceed (true/false)"
+    value: ${{ steps.check.outputs.should_deploy }}
+  app_version:
+    description: "Current app version from package.json"
+    value: ${{ steps.get_version.outputs.version }}
+
+runs:
+  using: composite
+  steps:
+    - name: Get current version
+      id: get_version
+      shell: bash
+      run: |
+        CURRENT_VERSION=$(jq -r '.version' package.json)
+        echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+        echo "📦 Current version: $CURRENT_VERSION"
+
+    - name: Check if deployment is needed
+      id: check
+      shell: bash
+      run: |
+        # Always deploy on manual trigger
+        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          echo "should_deploy=true" >> $GITHUB_OUTPUT
+          echo "✅ Manual trigger - deployment will proceed"
+          exit 0
+        fi
+        
+        # Check which files have changed
+        CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+        
+        echo "📝 Changed files:"
+        echo "$CHANGED_FILES"
+        
+        # Filter out irrelevant files (workflows, docs, config files)
+        RELEVANT_FILES=$(echo "$CHANGED_FILES" | grep -v -E '^\\.github/|\\.(md|txt)$|^docs/|^\\.gitignore$|^\\.eslintrc|^\\.prettier|^\\.editorconfig$|^LICENSE$' || true)
+        
+        if [ -z "$RELEVANT_FILES" ]; then
+          echo "should_deploy=false" >> $GITHUB_OUTPUT
+          echo "⏭️  Only documentation/config files changed - skipping deployment"
+        else
+          echo "should_deploy=true" >> $GITHUB_OUTPUT
+          echo "✅ Code changes detected - deployment needed"
+          echo "$RELEVANT_FILES"
+        fi

@@ -1,5 +1,6 @@
 # TheGenius
 
+
 TheGenius is a game show application that allows users to create their own game show and play it with friends. The project is inspired by the game show "Brain Battle", which appears on the YouTube channel [PietSmiet](https://www.pietsmiet.de/).
 
 ## Techstack

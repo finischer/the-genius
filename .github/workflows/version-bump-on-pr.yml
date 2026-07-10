@@ -1,0 +1,135 @@
+name: Version Bump on Staging → Production PR
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - production
+    paths-ignore:
+      - '.github/**'
+      - 'README.md'
+      - 'docs/**'
+
+jobs:
+  bump-version:
+    # Only run if PR is from staging branch
+    if: github.head_ref == 'staging'
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          # Use PAT if branch protection is active, otherwise GITHUB_TOKEN
+          token: ${{ secrets.BOT_PAT || secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.18.0'
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Determine version bump type
+        id: bump_type
+        run: |
+          # Default to patch release
+          BUMP_TYPE="patch"
+          
+          # Check PR title and labels for major/minor releases
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_BODY="${{ github.event.pull_request.body }}"
+          
+          # Look for [major], [minor] or [patch] in PR title or body
+          if echo "$PR_TITLE $PR_BODY" | grep -qi "\[major\]"; then
+            BUMP_TYPE="major"
+          elif echo "$PR_TITLE $PR_BODY" | grep -qi "\[minor\]"; then
+            BUMP_TYPE="minor"
+          fi
+          
+          # Also check labels
+          LABELS=$(echo '${{ toJson(github.event.pull_request.labels.*.name) }}' | jq -r '.[]')
+          if echo "$LABELS" | grep -qi "major"; then
+            BUMP_TYPE="major"
+          elif echo "$LABELS" | grep -qi "minor"; then
+            BUMP_TYPE="minor"
+          fi
+          
+          echo "bump_type=$BUMP_TYPE" >> $GITHUB_OUTPUT
+          echo "🔖 Version bump type: $BUMP_TYPE"
+
+      - name: Get current version
+        id: current_version
+        run: |
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "current=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          echo "📦 Current version: $CURRENT_VERSION"
+
+      - name: Bump version
+        id: new_version
+        run: |
+          BUMP_TYPE="${{ steps.bump_type.outputs.bump_type }}"
+          npm version $BUMP_TYPE --no-git-tag-version
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "✨ New version: $NEW_VERSION"
+
+      - name: Check if version changed
+        id: version_check
+        run: |
+          git diff --exit-code package.json && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push version bump
+        if: steps.version_check.outputs.changed == 'true'
+        run: |
+          git add package.json package-lock.json 2>/dev/null || git add package.json
+          git commit -m "chore(release): bump version to ${{ steps.new_version.outputs.version }} [skip ci]"
+          
+          # Retry logic in case branch protection is active
+          MAX_RETRIES=3
+          RETRY_COUNT=0
+          
+          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+            if git push origin ${{ github.head_ref }}; then
+              echo "✅ Successfully pushed to ${{ github.head_ref }}"
+              exit 0
+            else
+              RETRY_COUNT=$((RETRY_COUNT + 1))
+              echo "⚠️  Push failed (attempt $RETRY_COUNT/$MAX_RETRIES)"
+              
+              if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+                echo "Retrying in 5 seconds..."
+                sleep 5
+              fi
+            fi
+          done
+          
+          echo "❌ Failed to push after $MAX_RETRIES attempts"
+          echo "💡 Possible causes:"
+          echo "   - Branch Protection Rules active on staging"
+          echo "   - BOT_PAT Secret missing or insufficient permissions"
+          echo "   - Repository Settings → Actions → Workflow permissions too restrictive"
+          exit 1
+
+      - name: Comment on PR
+        if: steps.version_check.outputs.changed == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `🚀 Version wurde automatisch auf **v${{ steps.new_version.outputs.version }}** erhöht (${{ steps.bump_type.outputs.bump_type }} release)
+              
+              **Vorherige Version:** ${{ steps.current_version.outputs.current }}
+              **Neue Version:** ${{ steps.new_version.outputs.version }}
+              **Bump Type:** \`${{ steps.bump_type.outputs.bump_type }}\`
+              
+              Der neue Commit wurde zum PR hinzugefügt. Nach dem Merge wird automatisch ein Git-Tag erstellt.`
+            })

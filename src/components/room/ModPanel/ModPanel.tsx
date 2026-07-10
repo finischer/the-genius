@@ -12,7 +12,7 @@ import { useDisclosure, useLocalStorage } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconQuestionMark } from "@tabler/icons-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import GameDetailsModal from "~/components/gameshows/GameDetailsModal";
 import Tooltip from "~/components/shared/Tooltip/Tooltip";
 import { LOCAL_STORAGE_KEYS } from "~/config/localStorage";
@@ -59,6 +59,31 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
     roomConfig.modPanel.actions.timerSeconds
   );
 
+  // Confetti countdown timer
+  const [confettiTimeLeft, setConfettiTimeLeft] = useState(0);
+
+  useEffect(() => {
+    if (room.context.display.confetti) {
+      // Set initial countdown to 10 seconds
+      setConfettiTimeLeft(10);
+
+      // Update countdown every second
+      const interval = setInterval(() => {
+        setConfettiTimeLeft((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(interval);
+    } else {
+      setConfettiTimeLeft(0);
+    }
+  }, [room.context.display.confetti]);
+
   const [isOpen, { close: closeModPanel }] = disclosure;
   const btnVariantDefault: ButtonProps = { variant: "default" };
   const titleOrder = 3;
@@ -92,6 +117,11 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
   const hideAnswer = () => {
     room.context.answerState.isAnswerDisplayed = false;
     room.context.answerState.answer = "";
+  };
+
+  const handleTriggerConfetti = () => {
+    // Toggle: If confetti is running, stop it; otherwise start it
+    room.context.display.confetti = !room.context.display.confetti;
   };
 
   const gameBtns = room.games.map((g) => {
@@ -313,8 +343,13 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
                     >
                       Antwort ausblenden
                     </Button>
-                    <Button {...btnVariantDefault} disabled>
-                      Konfetti regnen lassen
+                    <Button
+                      {...btnVariantDefault}
+                      onClick={handleTriggerConfetti}
+                    >
+                      {room.context.display.confetti
+                        ? `Konfetti stoppen (${confettiTimeLeft}s)`
+                        : "Konfetti regnen lassen"}
                     </Button>
                   </Button.Group>
                 </Accordion.Panel>

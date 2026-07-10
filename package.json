@@ -1,9 +1,9 @@
 {
   "name": "the-genius",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "engines": {
-    "node": "20.15.1"
+    "node": "24.18.0"
   },
   "scripts": {
     "build": "next build",
@@ -16,7 +16,6 @@
     "start": "next start",
     "tsc": "tsc",
     "partykit": "npx partykit dev",
-    "prepare": "husky",
     "test:unit": "vitest run",
     "test:unit:watch": "vitest"
   },
@@ -50,8 +49,9 @@
     "@trpc/next": "^10.18.0",
     "@trpc/react-query": "^10.18.0",
     "@trpc/server": "^10.18.0",
-    "bcrypt": "^5.1.0",
+    "bcryptjs": "^3.0.3",
     "bson": "^5.2.0",
+    "canvas-confetti": "^1.9.4",
     "chroma-js": "^2.4.2",
     "dayjs": "^1.11.10",
     "embla-carousel-react": "^8.0.0",
@@ -61,7 +61,7 @@
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "mongodb": "^5.7.0",
-    "next": "16.0.7",
+    "next": "^16.2.10",
     "next-auth": "^4.24.5",
     "next-seo": "^6.4.0",
     "partysocket": "1.0.0",
@@ -87,7 +87,8 @@
     "@commitlint/config-conventional": "^19.6.0",
     "@eslint/eslintrc": "^3.3.3",
     "@eslint/js": "^9.39.1",
-    "@types/bcrypt": "^5.0.0",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/canvas-confetti": "^1.9.0",
     "@types/eslint": "^8.21.3",
     "@types/lodash": "^4.14.202",
     "@types/node": "^18.15.5",
@@ -101,7 +102,7 @@
     "@typescript-eslint/eslint-plugin": "^8.17.0",
     "@typescript-eslint/parser": "^8.17.0",
     "eslint": "^9.15.0",
-    "eslint-config-next": "^16.0.7",
+    "eslint-config-next": "^16.2.10",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-unused-imports": "^4.1.4",
     "husky": "^9.0.11",

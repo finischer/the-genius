@@ -77,6 +77,9 @@ describe("gameshowsRouter -> importGameshow", () => {
     expect(result).toBeDefined();
     // Der Router erzeugt eine neue Gameshow mit neuem "id" (ObjectId) und setzt "importedGameshow = true"
     expect(result.importedGameshow).toBe(true);
+    expect(result.isModified).toBe(false); // Should initially be false
     expect(result.originalGameshowId).toBe("4");
+    expect(result.originalCreatorId).toBe("2"); // Original creator ID should be preserved
+    expect(result.creatorId).toBe("1"); // But current user should be the new creator
   });
 });

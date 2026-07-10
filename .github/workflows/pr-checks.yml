@@ -1,12 +1,10 @@
-name: CI
+name: PR Checks
 
-# Only run if pushes to staging and changed files are in the src directory
 on:
-  push:
+  pull_request:
     branches:
       - staging
-    paths:
-      - "src/**"
+      - production
 
 jobs:
   checks:

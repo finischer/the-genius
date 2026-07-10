@@ -1,0 +1,39 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches:
+      - staging
+  workflow_dispatch:
+
+jobs:
+  check-deployment-needed:
+    runs-on: ubuntu-latest
+    outputs:
+      should_deploy: ${{ steps.check.outputs.should_deploy }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Check if deployment is needed
+        id: check
+        uses: ./.github/actions/check-deployment-needed
+
+  build-and-test:
+    needs: check-deployment-needed
+    if: needs.check-deployment-needed.outputs.should_deploy == 'true'
+    uses: ./.github/workflows/build_and_test.yml
+    with:
+      environment: staging
+    secrets: inherit
+
+  deploy-to-staging:
+    needs: build-and-test
+    uses: ./.github/workflows/deploy_railway_template.yml
+    with:
+      environmentName: staging
+      url: https://the-genius-staging.up.railway.app/
+    secrets: inherit
+

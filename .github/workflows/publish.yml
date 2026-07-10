@@ -1,66 +1,72 @@
-name: Deploy code
+name: Deploy to Production
 
 on:
   push:
     branches:
       - production
-
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
+  check-deployment-needed:
+    runs-on: ubuntu-latest
+    outputs:
+      should_deploy: ${{ steps.check.outputs.should_deploy }}
+      app_version: ${{ steps.check.outputs.app_version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Check if deployment is needed
+        id: check
+        uses: ./.github/actions/check-deployment-needed
+
   check-version-bumped:
+    needs: check-deployment-needed
+    if: needs.check-deployment-needed.outputs.should_deploy == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Check if version is bumped
-        id: check_version
         run: |
-          CURRENT_VERSION=$(jq -r '.version' package.json)
+          CURRENT_VERSION="${{ needs.check-deployment-needed.outputs.app_version }}"
           echo "Current version: $CURRENT_VERSION"
           if [ -n "$(git tag --list v$CURRENT_VERSION)" ]; then
-            echo "Version $CURRENT_VERSION already exists as a tag. Please bump the version in package.json."
+            echo "❌ Version $CURRENT_VERSION already exists as a tag. Please bump the version in package.json."
             exit 1
           fi
-          echo "APP_VERSION=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          echo "✅ Version check passed"
 
   build-and-test:
-    needs: check-version-bumped
+    needs: [check-deployment-needed, check-version-bumped]
+    if: needs.check-deployment-needed.outputs.should_deploy == 'true'
     uses: ./.github/workflows/build_and_test.yml
     with:
       environment: production
-    secrets: inherit # Pass secrets to the build workflow, if necessary.
-
-  deploy-to-staging:
-    # Only run this deploy job after the build-and-test job completes successfully.
-    needs: build-and-test
-    uses: ./.github/workflows/deploy_railway_template.yml
-    with:
-      environmentName: staging
-      url: https://the-genius-staging.up.railway.app/
-
     secrets: inherit
 
   deploy-to-production:
-    # Only run this deploy job after the deploy-to-staging job completes successfully.
-    needs: deploy-to-staging
+    needs: [check-deployment-needed, build-and-test]
+    if: needs.check-deployment-needed.outputs.should_deploy == 'true'
     uses: ./.github/workflows/deploy_railway_template.yml
     with:
       environmentName: production
       url: https://beta.the-genius.de/
-
     secrets: inherit
 
   create-tag:
-    needs: deploy-to-production
+    needs: [check-deployment-needed, deploy-to-production]
+    if: needs.check-deployment-needed.outputs.should_deploy == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Configure Git
         run: |
@@ -71,8 +77,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          CURRENT_VERSION=$(jq -r '.version' package.json)
+          CURRENT_VERSION="${{ needs.check-deployment-needed.outputs.app_version }}"
           TAG_NAME="v$CURRENT_VERSION"
-          echo "Current version: $CURRENT_VERSION"
+          echo "📦 Creating tag: $TAG_NAME"
           git tag -a $TAG_NAME -m "Release $TAG_NAME"
           git push origin $TAG_NAME
+          echo "✅ Tag $TAG_NAME created and pushed"
+

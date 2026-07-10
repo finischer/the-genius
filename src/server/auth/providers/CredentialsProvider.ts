@@ -1,4 +1,4 @@
-// import { bcrypt } from 'bcrypt';
+// import bcrypt from 'bcryptjs';
 // import NextAuthCredentialsProvider from "next-auth/providers/credentials";
 // import { prisma } from "../db";
 // import { filterUserForClient } from '../helpers/filterForUserClient';

@@ -7,7 +7,7 @@ on:
         type: string
         description: "The environment to deploy to"
         required: false
-        default: ""
+        default: "development"
 
 env:
   APP_ENV: "${{ secrets.APP_ENV }}"
@@ -29,6 +29,8 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.environment }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -48,6 +50,8 @@ jobs:
   typecheck:
     name: TypeScript Check
     runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.environment }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -67,6 +71,8 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.environment }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -86,23 +92,8 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    env:
-      CI: true
-      APP_ENV: ${{ inputs.environment || 'development' }}
-      NODE_ENV: production
-      MONGODB_URI: ${{ secrets.MONGODB_URI }}
-      NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-      DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
-      DISCORD_CLIENT_SECRET: ${{ secrets.DISCORD_CLIENT_SECRET }}
-      SOCKET_IO_ADMIN_USERNAME: ${{ secrets.SOCKET_IO_ADMIN_USERNAME }}
-      SOCKET_IO_ADMIN_PASSWORD: ${{ secrets.SOCKET_IO_ADMIN_PASSWORD }}
-      WEBSITE_URL: ${{ secrets.WEBSITE_URL }}
-      NEXT_PUBLIC_THE_GENIUS_ENV: ${{ secrets.NEXT_PUBLIC_THE_GENIUS_ENV }}
-      NEXT_PUBLIC_PARTYKIT_HOST: ${{ secrets.NEXT_PUBLIC_PARTYKIT_HOST }}
-      NEXT_PUBLIC_POSTHOG_KEY: ${{ secrets.NEXT_PUBLIC_POSTHOG_KEY }}
-      NEXT_PUBLIC_POSTHOG_HOST: ${{ secrets.NEXT_PUBLIC_POSTHOG_HOST }}
+    environment:
+      name: ${{ inputs.environment }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

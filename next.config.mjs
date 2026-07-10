@@ -18,5 +18,8 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+
+  // Exclude server-only packages from client bundle
+  serverExternalPackages: ['@prisma/client', 'bcryptjs'],
 };
 export default config;

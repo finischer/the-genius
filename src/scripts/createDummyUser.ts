@@ -1,5 +1,5 @@
 import { prisma } from "~/server/db";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 
 async function createDummyUser() {
   const hashedPassword = await bcrypt.hash("password", 10);

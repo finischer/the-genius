@@ -77,6 +77,9 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    env:
+      APP_ENV: ${{ inputs.environment || 'development' }}
+      NODE_ENV: production
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

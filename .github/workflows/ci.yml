@@ -12,4 +12,6 @@ jobs:
   checks:
     name: Run Checks
     uses: ./.github/workflows/build_and_test.yml
+    with:
+      environment: development
     secrets: inherit

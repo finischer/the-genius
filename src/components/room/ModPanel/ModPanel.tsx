@@ -156,6 +156,9 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
       game as unknown as Record<string, unknown>,
       room.context.currentGame as unknown as Record<string, unknown>
     );
+
+    Object.values(room.teams).forEach((team) => (team.gameScore = 0));
+
     room.context.view = RoomView.GAME;
     room.context.display.game = false;
     setTimeout(() => {

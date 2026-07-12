@@ -34,6 +34,12 @@ const steps: Step[] = [
       "Als Moderator kannst du das Mod-Panel öffnen. Hier kannst du Spiele starten, Szenen wechseln und Musik/Audio steuern."
   },
   {
+    target: ".mod-panel-detach-btn",
+    title: "Mod-Panel detachen",
+    content:
+      "Du kannst das Mod-Panel in ein eigenes Fenster auslagern – ideal wenn du zwei Monitore nutzt. Klicke auf dieses Icon, um das Panel zu detachen."
+  },
+  {
     target: ".mod-panel-start-games-accordion",
     title: "Spiele starten",
     content:

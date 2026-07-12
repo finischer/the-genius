@@ -70,7 +70,12 @@ const useAudio = () => {
     if (!elem) return;
 
     elem.audio.load();
-    void elem.audio.play();
+    elem.audio.play().catch((err: unknown) => {
+      // AbortError happens when the browser interrupts playback (e.g. rapid
+      // successive calls or navigation) – safe to ignore silently.
+      if (err instanceof DOMException && err.name === "AbortError") return;
+      console.error("Audio playback failed:", err);
+    });
   }
 
   function updateAudioOption<T extends keyof TAudioOption>(

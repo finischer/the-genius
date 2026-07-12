@@ -5,6 +5,38 @@ import type { IMerkenPlaygroundProps } from "./merkenPlayground.types";
 import Image from "next/image";
 import type { MantineStyleProp } from "@mantine/core";
 
+const FrontContent = ({ content }: { content: number }) => {
+  return <Text size="1.5rem">{content}</Text>;
+};
+
+const BackContent = ({
+  content,
+  index
+}: {
+  content: string;
+  index: number;
+}) => {
+  return (
+    <Box>
+      <span
+        style={{
+          position: "absolute",
+          top: "0.25rem",
+          left: "0.5rem",
+          fontSize: "1rem",
+          fontWeight: "500",
+          opacity: 0.7
+        }}
+      >
+        {index + 1}
+      </span>
+      <Center>
+        <Image src={content} alt={index.toString()} width={48} height={48} />
+      </Center>
+    </Box>
+  );
+};
+
 const MerkenPlayground: React.FC<IMerkenPlaygroundProps> = ({
   cards,
   openCards = [],
@@ -21,38 +53,6 @@ const MerkenPlayground: React.FC<IMerkenPlaygroundProps> = ({
     justifyContent: "center",
     alignItems: "center",
     userSelect: "none"
-  };
-
-  const FrontContent = ({ content }: { content: number }) => {
-    return <Text size="1.5rem">{content}</Text>;
-  };
-
-  const BackContent = ({
-    content,
-    index
-  }: {
-    content: string;
-    index: number;
-  }) => {
-    return (
-      <Box>
-        <span
-          style={{
-            position: "absolute",
-            top: "0.25rem",
-            left: "0.5rem",
-            fontSize: "1rem",
-            fontWeight: "500",
-            opacity: 0.7
-          }}
-        >
-          {index + 1}
-        </span>
-        <Center>
-          <Image src={content} alt={index.toString()} width={48} height={48} />
-        </Center>
-      </Box>
-    );
   };
 
   return (

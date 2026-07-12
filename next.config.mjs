@@ -20,6 +20,6 @@ const config = {
   },
 
   // Exclude server-only packages from client bundle
-  serverExternalPackages: ['@prisma/client', 'bcrypt'],
+  serverExternalPackages: ['@prisma/client'],
 };
 export default config;

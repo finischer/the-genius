@@ -7,7 +7,8 @@ import {
   Text,
   Title
 } from "@mantine/core";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useMemo } from "react";
+import React from "react";
 import { useImmer } from "use-immer";
 import { COUNTRIES } from "~/games/Flaggen/config";
 import type { TCountry } from "~/games/Flaggen/flaggen.types";
@@ -22,17 +23,18 @@ const availableCountries: TCountry[] = Object.keys(COUNTRIES).map((code) => ({
   country: COUNTRIES[code] as string
 }));
 
-// TODO: Optimize performance
-const CountryItem = ({ country }: { country: TCountry }) => (
+const CountryItem = React.memo(({ country }: { country: TCountry }) => (
   <Group>
     <Image
       src={`https://flagcdn.com/w40/${country.shortCode}.png`}
       alt={country.country}
-      width={40}
+      w={40}
+      h="auto"
+      loading="lazy"
     />
     <Text>{country.country}</Text>
   </Group>
-);
+));
 
 const FlaggenConfigurator = () => {
   const { disableContinueButton, enableContinueButton } = useContext(
@@ -102,6 +104,17 @@ const FlaggenConfigurator = () => {
     });
   };
 
+  const availableListItems = useMemo(
+    () =>
+      notSelectedCountries.map((c) => <CountryItem key={c.id} country={c} />),
+    [notSelectedCountries]
+  );
+
+  const selectedListItems = useMemo(
+    () => selectedCountries.map((c) => <CountryItem key={c.id} country={c} />),
+    [selectedCountries]
+  );
+
   return (
     <Flex
       gap="md"
@@ -117,9 +130,7 @@ const FlaggenConfigurator = () => {
                 !selectedCountries.map((c) => c.shortCode).includes(c.shortCode)
             )}
             setData={setCountries}
-            listItem={notSelectedCountries.map((c) => (
-              <CountryItem key={c.id} country={c} />
-            ))}
+            listItem={availableListItems}
             renderValueByKey="country"
             onClickItem={handleSelectCountry}
             onDeleteItem={handleDeselectCountry}
@@ -134,9 +145,7 @@ const FlaggenConfigurator = () => {
             emptyListText="Füge deine erste Flagge hinzu!"
             data={selectedCountries}
             setData={setSelectedCountries}
-            listItem={selectedCountries.map((c) => (
-              <CountryItem key={c.id} country={c} />
-            ))}
+            listItem={selectedListItems}
             renderValueByKey="country"
             editable
             deletableItems

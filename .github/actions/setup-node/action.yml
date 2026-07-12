@@ -1,5 +1,5 @@
-name: 'Setup Node.js'
-description: 'Extract Node.js version from package.json and setup Node.js with caching'
+name: 'Setup Bun'
+description: 'Extract Node.js version from package.json and setup Bun with caching'
 outputs:
   node-version:
     description: 'The detected Node.js version'
@@ -15,8 +15,7 @@ runs:
         echo "NODE_VERSION=$NODE_VERSION" >> $GITHUB_OUTPUT
         echo "📦 Detected Node.js version: $NODE_VERSION"
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
+    - name: Set up Bun
+      uses: oven-sh/setup-bun@v2
       with:
-        node-version: ${{ steps.extract_node_version.outputs.NODE_VERSION }}
-        cache: 'npm'
+        bun-version: latest

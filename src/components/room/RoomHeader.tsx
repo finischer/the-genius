@@ -1,11 +1,15 @@
 import { Box, Flex, Group, Text, useMantineTheme } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { modals } from "@mantine/modals";
 import { IconSettings, IconShare } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
 import useBuzzer from "~/hooks/useBuzzer";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
+import useNotification from "~/hooks/useNotification";
 import { RoomView } from "~/types/gameshow.types";
 import { animations } from "~/utils/animations";
+import { GAME_STATE_MAP } from "~/games/core/games.config";
+import { assignObjectKeyByKey } from "~/utils/helpers";
 import ActionIcon from "../shared/ActionIcon";
 import ContainerBox from "../shared/ContainerBox";
 import RoomDetailsModal from "./RoomDetailsModal";
@@ -25,10 +29,48 @@ const RoomHeader = () => {
     useDisclosure(false);
   const currGame = room.context.currentGame;
   const { isHost } = useUser();
+  const { showErrorNotification } = useNotification();
   const showCurrGameBanner =
     room.context.view == RoomView.GAME &&
     !!currGame &&
     room.context.display.game;
+
+  const resetCurrentGame = () => {
+    if (!currGame) return;
+
+    const defaultState = GAME_STATE_MAP[currGame.identifier];
+
+    if (defaultState === undefined) {
+      showErrorNotification({
+        title: "Fehler",
+        message:
+          "Kein Standard-Zustand für dieses Spiel gefunden. Reset nicht möglich."
+      });
+      return;
+    }
+
+    assignObjectKeyByKey(
+      defaultState as unknown as Record<string, unknown>,
+      room.context.currentGame as unknown as Record<string, unknown>
+    );
+
+    room.teams.teamOne.gameScore = 0;
+    room.teams.teamTwo.gameScore = 0;
+
+    room.context.display.game = false;
+    setTimeout(() => {
+      room.context.display.gameIntro = true;
+    }, 500);
+
+    room.context.answerState.isAnswerDisplayed = false;
+    room.context.answerState.answer = "";
+
+    for (const team of Object.values(room.teams)) {
+      team.isActiveTurn = false;
+      team.buzzer.isPressed = false;
+      team.buzzer.playersBuzzered = [];
+    }
+  };
 
   const ShareButton = () => (
     <ActionIcon
@@ -61,6 +103,19 @@ const RoomHeader = () => {
 
   const handleClickOnCurrentGame = () => {
     if (isHost) {
+      modals.openConfirmModal({
+        title: "Spiel zurücksetzen?",
+        children: (
+          <Text size="sm">
+            Das aktuelle Spiel wird vollständig zurückgesetzt. Diese Aktion kann
+            nicht rückgängig gemacht werden.
+          </Text>
+        ),
+        labels: { confirm: "Zurücksetzen", cancel: "Abbrechen" },
+        confirmProps: { color: "red" },
+        onConfirm: resetCurrentGame,
+        onCancel: () => {}
+      });
       return;
     }
     buzzer({ withTimer: true });
@@ -99,6 +154,7 @@ const RoomHeader = () => {
               contentCentered
               withShadow
               onClick={handleClickOnCurrentGame}
+              className="game-reset-banner"
             >
               <Text>{currGame.name}</Text>
             </ContainerBox>

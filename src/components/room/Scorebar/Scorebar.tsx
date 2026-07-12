@@ -166,8 +166,8 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
         )}
       </AnimatePresence>
 
-      {/* Only show notefields to own team players or viewers */}
-      {(player?.teamId === team.id || !teamFn.isPlayer) && (
+      {/* Only show notefields to own team players, viewers or the host */}
+      {(player?.teamId === team.id || !teamFn.isPlayer() || isHost) && (
         <Flex pos="absolute" top={-300} w="100%" gap="md">
           {team.players.map((p) => (
             <AnimatePresence key={p.id}>

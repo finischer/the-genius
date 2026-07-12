@@ -2,6 +2,7 @@
   "name": "the-genius",
   "version": "0.2.2",
   "private": true,
+  "packageManager": "bun@1.3.14",
   "engines": {
     "node": "24.18.0"
   },

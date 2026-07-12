@@ -25,10 +25,10 @@ jobs:
           token: ${{ secrets.BOT_PAT || secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: '24.18.0'
+          bun-version: latest
 
       - name: Configure Git
         run: |
@@ -74,7 +74,7 @@ jobs:
         id: new_version
         run: |
           BUMP_TYPE="${{ steps.bump_type.outputs.bump_type }}"
-          npm version $BUMP_TYPE --no-git-tag-version
+          bun version $BUMP_TYPE --no-git-tag-version
           NEW_VERSION=$(node -p "require('./package.json').version")
           echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "✨ New version: $NEW_VERSION"
@@ -87,7 +87,7 @@ jobs:
       - name: Commit and push version bump
         if: steps.version_check.outputs.changed == 'true'
         run: |
-          git add package.json package-lock.json 2>/dev/null || git add package.json
+          git add package.json bun.lock 2>/dev/null || git add package.json
           git commit -m "chore(release): bump version to ${{ steps.new_version.outputs.version }} [skip ci]"
           
           # Retry logic in case branch protection is active

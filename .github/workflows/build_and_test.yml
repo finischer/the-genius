@@ -35,17 +35,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Bun
         uses: ./.github/actions/setup-node
 
       - name: Install dependencies
-        run: npm ci --ignore-scripts
+        run: bun install --frozen-lockfile --ignore-scripts
 
       - name: Generate Prisma Client
-        run: npx prisma generate
+        run: bunx prisma generate
 
       - name: Run Linter
-        run: npm run lint
+        run: bun run lint
 
   typecheck:
     name: TypeScript Check
@@ -56,17 +56,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Bun
         uses: ./.github/actions/setup-node
 
       - name: Install dependencies
-        run: npm ci --ignore-scripts
+        run: bun install --frozen-lockfile --ignore-scripts
 
       - name: Generate Prisma Client
-        run: npx prisma generate
+        run: bunx prisma generate
 
       - name: Run TypeScript check
-        run: npm run tsc
+        run: bun run tsc
 
   test:
     name: Test
@@ -77,17 +77,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Bun
         uses: ./.github/actions/setup-node
 
       - name: Install dependencies
-        run: npm ci --ignore-scripts
+        run: bun install --frozen-lockfile --ignore-scripts
 
       - name: Generate Prisma Client
-        run: npx prisma generate
+        run: bunx prisma generate
 
       - name: Run unit tests
-        run: npm run test:unit
+        run: bun run test:unit
 
   build:
     name: Build
@@ -98,14 +98,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Bun
         uses: ./.github/actions/setup-node
 
       - name: Install dependencies
-        run: npm ci --ignore-scripts
+        run: bun install --frozen-lockfile --ignore-scripts
 
       - name: Generate Prisma Client
-        run: npx prisma generate
+        run: bunx prisma generate
 
       - name: Build application
-        run: npm run build
+        run: bun run build

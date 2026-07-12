@@ -34,7 +34,14 @@ const useTeam = () => {
       return;
     }
 
+    // Check if notefields are currently active (any player has their notefield on)
+    const allPlayers = Object.values(room.teams).flatMap((t) => t.players);
+    const notefieldsCurrentlyActive = allPlayers.some(
+      (p) => p.context.notefield.isActive
+    );
+
     const player = initPlayer(userId, username, teamId);
+    player.context.notefield.isActive = notefieldsCurrentlyActive;
 
     team.players.push(player);
 

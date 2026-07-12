@@ -44,10 +44,7 @@ jobs:
       # - name: Build
       #   run: bun run build
 
-      - name: Install Railway
-        run: bun x @railway/cli
-
       - name: Deploy to ${{ inputs.environmentName }}
-        run: railway up --service the-genius --ci
+        run: bunx @railway/cli up --service the-genius --ci
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}

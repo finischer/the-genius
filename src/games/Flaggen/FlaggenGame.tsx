@@ -74,6 +74,7 @@ const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
             className={classes.flagImg}
             src={`https://flagcdn.com/w640/${shortCode}.png`}
             alt="Image not found"
+            w={400}
             radius="sm"
             opacity={displayFlag ? 1 : isHost ? 0.5 : 0}
             onClick={handleFlagClick}

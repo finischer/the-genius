@@ -13,6 +13,7 @@ const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
   const { isHost, hostFunction } = useUser();
   const displayFlag = game.display.country;
   const currFlag = game.countries[game.qIndex];
+  const shortCode = currFlag ? String(currFlag.shortCode) : null;
   const nxtBtnDisabled = game.qIndex >= game.countries.length - 1;
   const prevBtnDisabled = game.qIndex <= 0;
 
@@ -68,10 +69,10 @@ const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
             onClick={handlePrevFlagClick}
           />
         </ModView>
-        {currFlag && (
+        {currFlag && shortCode && (
           <Image
             className={classes.flagImg}
-            src={`https://flagcdn.com/w640/${currFlag.shortCode}.png`}
+            src={`https://flagcdn.com/w640/${shortCode}.png`}
             alt="Image not found"
             radius="sm"
             opacity={displayFlag ? 1 : isHost ? 0.5 : 0}

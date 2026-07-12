@@ -74,8 +74,7 @@ jobs:
         id: new_version
         run: |
           BUMP_TYPE="${{ steps.bump_type.outputs.bump_type }}"
-          bun version $BUMP_TYPE --no-git-tag-version
-          NEW_VERSION=$(node -p "require('./package.json').version")
+          NEW_VERSION=$(bun pm version $BUMP_TYPE --no-git-tag-version | tr -d 'v')
           echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "✨ New version: $NEW_VERSION"
 

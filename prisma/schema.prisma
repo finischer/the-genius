@@ -27,6 +27,7 @@ model User {
   sessions            Session[]
   isFirstVisit        Boolean      @default(true)
   lastLoginAt         DateTime     @default(now())
+  seenReleaseVersion  String?
   createdAt           DateTime     @default(now())
   updatedAt           DateTime     @updatedAt
 

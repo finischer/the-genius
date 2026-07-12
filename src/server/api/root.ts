@@ -5,6 +5,7 @@ import { gameshowsRouter } from "./routers/gameshows";
 import { feedbacksRouter } from "./routers/feedbacks";
 import { betaTestersRouter } from "./routers/betaTesters";
 import { gamesRouter } from "./routers/games";
+import { releaseNotesRouter } from "./routers/releaseNotes";
 // import { partyRouter } from "./routers/party";
 
 /**
@@ -18,7 +19,8 @@ export const appRouter = createTRPCRouter({
   gameshows: gameshowsRouter,
   feedbacks: feedbacksRouter,
   betaTesters: betaTestersRouter,
-  games: gamesRouter
+  games: gamesRouter,
+  releaseNotes: releaseNotesRouter
   // parties: partyRouter,
 });
 

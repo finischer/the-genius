@@ -51,8 +51,51 @@ jobs:
       environment: production
     secrets: inherit
 
-  deploy-to-production:
+  generate-release-notes:
     needs: [check-deployment-needed, build-and-test]
+    if: needs.check-deployment-needed.outputs.should_deploy == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: production
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Bun
+        uses: ./.github/actions/setup-node
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile --ignore-scripts
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Generate release notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: bun run scripts/generate-release-notes.ts
+
+      - name: Commit and push release notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          CURRENT_VERSION="${{ needs.check-deployment-needed.outputs.app_version }}"
+          git add public/release-notes/
+          if git diff --staged --quiet; then
+            echo "ℹ️  No release note changes to commit"
+            exit 0
+          fi
+          git commit -m "chore: generate release notes for v$CURRENT_VERSION [skip ci]"
+          git push origin production
+          echo "✅ Release notes committed and pushed"
+
+  deploy-to-production:
+    needs: [check-deployment-needed, build-and-test, generate-release-notes]
     if: needs.check-deployment-needed.outputs.should_deploy == 'true'
     uses: ./.github/workflows/deploy_railway_template.yml
     with:
@@ -83,4 +126,3 @@ jobs:
           git tag -a $TAG_NAME -m "Release $TAG_NAME"
           git push origin $TAG_NAME
           echo "✅ Tag $TAG_NAME created and pushed"
-

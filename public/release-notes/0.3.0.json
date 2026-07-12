@@ -1,0 +1,30 @@
+{
+  "version": "0.3.0",
+  "date": "2026-07-12T00:00:00+00:00",
+  "changes": [
+    {
+      "category": "feature",
+      "description": "ModPanel: Detach-Funktionalität – Moderations-Panel kann jetzt in einem separaten Fenster geöffnet werden"
+    },
+    {
+      "category": "feature",
+      "description": "RoomHeader: Spielstand-Reset mit Bestätigungs-Modal – Spielstände können direkt im Raumheader zurückgesetzt werden"
+    },
+    {
+      "category": "feature",
+      "description": "Release Notes System eingeführt – Änderungen werden ab sofort transparent im Footer und bei neuen Releases als Modal angezeigt"
+    },
+    {
+      "category": "bugfix",
+      "description": "Notefields: Host kann Notefields jetzt korrekt einsehen"
+    },
+    {
+      "category": "bugfix",
+      "description": "Merken-Spiel: Icon-Darstellung korrigiert"
+    },
+    {
+      "category": "bugfix",
+      "description": "FlaggenGame: Ländercode für Sint Maarten korrigiert und Bildbreite ergänzt"
+    }
+  ]
+}

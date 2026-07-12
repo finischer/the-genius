@@ -1,6 +1,5 @@
 import { Group, Text } from "@mantine/core";
 import Link from "next/link";
-import React from "react";
 
 const LegalLinks = () => {
   return (
@@ -14,6 +13,12 @@ const LegalLinks = () => {
       <Link href="/datenschutz">
         <Text c="dimmed" fz="xs">
           Datenschutz
+        </Text>
+      </Link>
+
+      <Link href="/release-notes">
+        <Text c="dimmed" fz="xs">
+          Release Notes
         </Text>
       </Link>
     </Group>

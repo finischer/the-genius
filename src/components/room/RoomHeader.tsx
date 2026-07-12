@@ -50,7 +50,7 @@ const RoomHeader = () => {
     }
 
     assignObjectKeyByKey(
-      defaultState as Record<string, unknown>,
+      defaultState as unknown as Record<string, unknown>,
       room.context.currentGame as unknown as Record<string, unknown>
     );
 

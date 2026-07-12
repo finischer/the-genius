@@ -90,7 +90,7 @@ const CustomTooltip: FC<CustomTooltipProps> = ({ tourId, ...props }) => {
           )}
           {continuous && (
             <Button {...primaryProps}>
-              {primaryProps.title} ({index + 1}/{size})
+              Weiter ({index + 1}/{size})
             </Button>
           )}
         </Group>

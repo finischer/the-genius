@@ -61,6 +61,12 @@ const steps: Step[] = [
     title: "Musik",
     content:
       "Für eine spannenende Atmosphäre im Spiel kannst du Musik abspielen. Wähle einfach ein Lied aus und jeder im Raum wird es hören. Ich empfehle dir die Musik zwischen den Spielen auszuschalten"
+  },
+  {
+    target: ".game-reset-banner",
+    title: "Spiel zurücksetzen",
+    content:
+      "Klicke auf den Spielnamen oben rechts, um das aktuelle Spiel zurückzusetzen."
   }
 ];
 

@@ -1,8 +1,12 @@
-import { Box, Flex } from "@mantine/core";
+import { Box, Flex, Tooltip } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { type RoomSounds } from "@prisma/client";
-import { IconArrowRight, IconCheck } from "@tabler/icons-react";
+import {
+  IconArrowRight,
+  IconArrowUpRight,
+  IconCheck
+} from "@tabler/icons-react";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -121,10 +125,34 @@ const RoomUI = () => {
               openModPanel={modPanelDisclosure[1].open}
               // callback={handleInteractiveModerationTourCallback}
             />
-            <Box pos="absolute" bottom="50%" className="mod-panel-btn">
-              <ActionIcon variant="filled" toolTip="Mod-Panel öffnen">
-                <IconArrowRight onClick={modPanelDisclosure[1].open} />
-              </ActionIcon>
+            <Box
+              pos="absolute"
+              bottom="50%"
+              className="mod-panel-btn"
+              style={{ display: "flex", flexDirection: "column", gap: 4 }}
+            >
+              <Tooltip label="Mod-Panel öffnen" position="right">
+                <ActionIcon variant="filled">
+                  <IconArrowRight onClick={modPanelDisclosure[1].open} />
+                </ActionIcon>
+              </Tooltip>
+              <Tooltip
+                label="Mod-Panel in neuem Fenster öffnen"
+                position="right"
+              >
+                <ActionIcon
+                  variant="subtle"
+                  onClick={() =>
+                    window.open(
+                      `/room/${roomId}/mod-panel`,
+                      "mod-panel",
+                      "width=420,height=800,menubar=no,toolbar=no,location=no,status=no"
+                    )
+                  }
+                >
+                  <IconArrowUpRight />
+                </ActionIcon>
+              </Tooltip>
             </Box>
             <ModPanel disclosure={modPanelDisclosure} />
           </ModView>

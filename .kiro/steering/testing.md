@@ -1,5 +1,9 @@
 # Testing
 
+## Wichtig: Tests nur auf explizite Anfrage
+
+**Tests werden nur geschrieben, wenn der User dies explizit verlangt.** Kein automatisches Schreiben von Tests als Teil von Feature-Implementierungen, Refactorings oder anderen Aufgaben.
+
 ## Framework
 
 **Vitest v2** — konfiguriert in `vitest.config.ts`.

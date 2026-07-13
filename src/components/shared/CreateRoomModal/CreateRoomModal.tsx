@@ -80,11 +80,14 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({
       loaderMsg: "Raum wird erstellt ..."
     });
 
+    const maxPlayersPerTeam = values.modus === GameshowMode.DUELL ? 1 : 2;
+
     const room = initRoom(
       values.name,
       values.password,
       gameshow.games as GameState[],
-      user.id
+      user.id,
+      maxPlayersPerTeam
     );
 
     store.room.state = room;

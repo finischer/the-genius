@@ -54,6 +54,7 @@ interface IScorebarModMenuProps {
   onKickRequest: (target: TKickTarget) => void;
   onResetRequest: () => void;
   onRenameCommit: (newName: string) => void;
+  isDuellMode?: boolean;
 }
 
 const ScorebarModMenu: React.FC<IScorebarModMenuProps> = ({
@@ -61,7 +62,8 @@ const ScorebarModMenu: React.FC<IScorebarModMenuProps> = ({
   closeMenu,
   onKickRequest,
   onResetRequest,
-  onRenameCommit
+  onRenameCommit,
+  isDuellMode = false
 }) => {
   const { user } = useUser();
 
@@ -122,7 +124,9 @@ const ScorebarModMenu: React.FC<IScorebarModMenuProps> = ({
           leftSection={
             <IconSettings style={{ width: rem(14), height: rem(14) }} />
           }
+          disabled={isDuellMode}
           onClick={() => {
+            if (isDuellMode) return;
             setRenameValue(team.name);
             setRenameError(null);
             setRenameOpen(true);

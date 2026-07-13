@@ -50,6 +50,7 @@ export type Room = {
   creatorId: string;
   name: string;
   password: string;
+  maxPlayersPerTeam: number;
   teams: RoomTeams;
   games: GameState[];
   context: {

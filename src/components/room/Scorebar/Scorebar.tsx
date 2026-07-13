@@ -67,6 +67,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
   const [resetOpen, setResetOpen] = useState(false);
   const teamFn = useTeam();
   const room = useSyncedRoom();
+  const { isDuellMode } = room;
 
   const { user, isHost, player } = useUser();
 
@@ -288,7 +289,9 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
                 })}
               >
                 <span>
-                  {team.name} · ({team.players.length}/2)
+                  {isDuellMode
+                    ? (team.players[0]?.name ?? team.name)
+                    : `${team.name} · (${team.players.length}/2)`}
                 </span>
               </UnstyledButton>
             </Menu.Target>
@@ -301,6 +304,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
                   onKickRequest={setKickTarget}
                   onResetRequest={() => setResetOpen(true)}
                   onRenameCommit={handleRenameCommit}
+                  isDuellMode={isDuellMode}
                 />
               </Menu.Dropdown>
             </ModView>
@@ -386,34 +390,36 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
           p="0.5rem 1rem"
           pos="relative"
         >
-          {/* Player names */}
-          <Box
-            style={() => ({
-              width: "50%",
-              height: "100%",
-              display: "inline-block",
-              position: "relative"
-            })}
-          >
-            <Tooltip label={team.players.map((p) => p.name).join(", ")}>
-              <Text
-                truncate
-                lineClamp={1}
-                style={() => ({
-                  width: "100%",
-                  overflow: "hidden",
-                  whiteSpace: "nowrap",
-                  textOverflow: "ellipsis",
-                  position: "absolute",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  display: "flex"
-                })}
-              >
-                {team.players.map((p) => p.name).join("/") || "Keiner da"}
-              </Text>
-            </Tooltip>
-          </Box>
+          {/* Player names — only in team mode */}
+          {!isDuellMode && (
+            <Box
+              style={() => ({
+                width: "50%",
+                height: "100%",
+                display: "inline-block",
+                position: "relative"
+              })}
+            >
+              <Tooltip label={team.players.map((p) => p.name).join(", ")}>
+                <Text
+                  truncate
+                  lineClamp={1}
+                  style={() => ({
+                    width: "100%",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                    position: "absolute",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    display: "flex"
+                  })}
+                >
+                  {team.players.map((p) => p.name).join("/") || "Keiner da"}
+                </Text>
+              </Tooltip>
+            </Box>
+          )}
 
           {/* Score circles */}
           {room.context.view === RoomView.GAME && (

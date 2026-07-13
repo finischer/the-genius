@@ -15,20 +15,7 @@ import {
 } from "@tabler/icons-react";
 import React, { useState } from "react";
 import { useUser } from "~/hooks/useUser";
-import type { Player, Team } from "~/types/gameshow.types";
-
-// Pure mutation functions — operate on plain object copies, no Yjs/Store context needed.
-// The React component (ScorebarModMenu) uses these for validation and then mutates
-// the Yjs proxy directly.
-
-export function applyKick(team: Team, userId: string, isHost?: boolean): Team {
-  if (isHost === false) return team;
-
-  return {
-    ...team,
-    players: team.players.filter((p: Player) => p.userId !== userId)
-  };
-}
+import type { Team } from "~/types/gameshow.types";
 
 export function applyRename(
   team: Team,
@@ -48,12 +35,6 @@ export function applyRename(
   }
 
   return { team: { ...team, name: trimmed }, error: null };
-}
-
-export function applyReset(team: Team, isHost?: boolean): Team {
-  if (isHost === false) return team;
-
-  return { ...team, gameScore: 0, players: [] };
 }
 
 // ---------------------------------------------------------------------------

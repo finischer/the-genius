@@ -440,7 +440,8 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
         opened={kickTarget !== null}
         onClose={() => setKickTarget(null)}
         title="Spieler entfernen"
-        centered
+        size="sm"
+        yOffset="10vh"
       >
         <Stack gap="md">
           <Text>
@@ -463,7 +464,8 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
         opened={resetOpen}
         onClose={() => setResetOpen(false)}
         title="Team zurücksetzen"
-        centered
+        size="sm"
+        yOffset="10vh"
       >
         <Text mb="sm">
           Bist du sicher, dass du <strong>{team.name}</strong> zurücksetzen

@@ -1,4 +1,4 @@
-import { Drawer, Flex, ScrollArea, Text } from "@mantine/core";
+import { Drawer, Flex, Text } from "@mantine/core";
 import { IconArrowUpRight } from "@tabler/icons-react";
 import { useParams } from "next/navigation";
 import React from "react";
@@ -45,7 +45,6 @@ const ModPanel: React.FC<IModPanelProps> = ({ disclosure }) => {
       overlayProps={{
         opacity: 0.15
       }}
-      scrollAreaComponent={ScrollArea.Autosize}
       className="mod-panel-explanation"
     >
       <ModPanelContent />

@@ -16,12 +16,14 @@ export const initRoom = (
   name: string,
   password: string,
   games: GameState[],
-  creatorId: string
+  creatorId: string,
+  maxPlayersPerTeam: number = 1
 ): Room => ({
   id: randomId(),
   creatorId,
   name,
   password,
+  maxPlayersPerTeam,
   teams: {
     teamOne: initTeam("Team 1", "t1"),
     teamTwo: initTeam("Team 2", "t2")

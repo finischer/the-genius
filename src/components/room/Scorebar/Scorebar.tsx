@@ -6,20 +6,22 @@ import {
   Flex,
   Group,
   Menu,
+  Modal,
+  Stack,
   Text,
   UnstyledButton,
-  rem,
   useMantineTheme
 } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { notifications } from "@mantine/notifications";
+import { filterArray } from "@syncedstore/core";
 import {
   IconExposureMinus1,
   IconExposurePlus1,
-  IconMessageCircle,
-  IconSettings,
   IconTargetArrow
 } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
-import React from "react";
+import React, { useState } from "react";
 import ActionIcon from "~/components/shared/ActionIcon";
 import ModView from "~/components/shared/ModView";
 import Tooltip from "~/components/shared/Tooltip";
@@ -31,6 +33,7 @@ import { RoomView } from "~/types/gameshow.types";
 import { animations } from "~/utils/animations";
 import { createRandomUserName } from "~/utils/helpers";
 import Notefield from "../Notefield/Notefield";
+import ScorebarModMenu, { type TKickTarget } from "./ScorebarModMenu";
 import { type IScoreCircleProps, type IScorebarProps } from "./scorebar.types";
 
 const stretchAnimation = undefined;
@@ -58,6 +61,10 @@ const ScoreCircle: React.FC<IScoreCircleProps> = ({ filled }) => (
 
 const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
   const theme = useMantineTheme();
+  const [menuOpened, { open: openMenu, close: closeMenu }] =
+    useDisclosure(false);
+  const [kickTarget, setKickTarget] = useState<TKickTarget | null>(null);
+  const [resetOpen, setResetOpen] = useState(false);
   const teamFn = useTeam();
   const room = useSyncedRoom();
 
@@ -153,6 +160,47 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
     });
   };
 
+  const handleKickConfirm = () => {
+    if (!isHost || !kickTarget) return;
+    const stillInTeam = team.players.some(
+      (p) => p.userId === kickTarget.userId
+    );
+    if (!stillInTeam) {
+      setKickTarget(null);
+      return;
+    }
+    const kickedName = kickTarget.name;
+    filterArray(team.players, (p) => p.userId !== kickTarget.userId);
+    setKickTarget(null);
+    notifications.show({
+      title: "Spieler entfernt",
+      message: `${kickedName} wurde entfernt`,
+      color: "green"
+    });
+  };
+
+  const handleResetConfirm = () => {
+    if (!isHost) return;
+    const teamName = team.name;
+    team.gameScore = 0;
+    filterArray(team.players, () => false);
+    setResetOpen(false);
+    notifications.show({
+      title: "Team zurückgesetzt",
+      message: `${teamName} wurde zurückgesetzt`,
+      color: "green"
+    });
+  };
+
+  const handleRenameCommit = (newName: string) => {
+    team.name = newName;
+    notifications.show({
+      title: "Umbenannt",
+      message: `Team heißt jetzt: ${newName}`,
+      color: "green"
+    });
+  };
+
   return (
     <Flex align="flex-end" gap="lg" pos="relative" className="scorebar">
       {/* Left Scorbar timer */}
@@ -210,7 +258,13 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
         />
 
         <Flex gap="lg" align="flex-end">
-          <Menu disabled={!isHost}>
+          <Menu
+            disabled={!isHost}
+            closeOnItemClick={false}
+            opened={menuOpened}
+            onOpen={openMenu}
+            onClose={closeMenu}
+          >
             <Menu.Target>
               <UnstyledButton
                 bg={theme.primaryColor}
@@ -241,25 +295,13 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
             <ModView>
               <Menu.Dropdown>
                 <Menu.Label>Optionen</Menu.Label>
-                <Menu.Item
-                  leftSection={
-                    <IconSettings style={{ width: rem(14), height: rem(14) }} />
-                  }
-                  disabled
-                >
-                  Team umbenennen
-                </Menu.Item>
-                <Menu.Item
-                  leftSection={
-                    <IconMessageCircle
-                      style={{ width: rem(14), height: rem(14) }}
-                    />
-                  }
-                  disabled
-                >
-                  Spieler entfernen
-                </Menu.Item>
-                <Menu.Item disabled>Team zurücksetzen</Menu.Item>
+                <ScorebarModMenu
+                  team={team}
+                  closeMenu={closeMenu}
+                  onKickRequest={setKickTarget}
+                  onResetRequest={() => setResetOpen(true)}
+                  onRenameCommit={handleRenameCommit}
+                />
               </Menu.Dropdown>
             </ModView>
           </Menu>
@@ -392,6 +434,61 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Kick confirmation modal — rendered outside the Menu to avoid FocusTrap conflict */}
+      <Modal
+        opened={kickTarget !== null}
+        onClose={() => setKickTarget(null)}
+        title="Spieler entfernen"
+        size="sm"
+        yOffset="10vh"
+      >
+        <Stack gap="md">
+          <Text>
+            Möchtest du <strong>{kickTarget?.name}</strong> wirklich aus dem
+            Team entfernen?
+          </Text>
+          <Group justify="flex-end">
+            <Button variant="default" onClick={() => setKickTarget(null)}>
+              Abbrechen
+            </Button>
+            <Button color="red" onClick={handleKickConfirm}>
+              Bestätigen
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
+
+      {/* Reset confirmation modal — rendered outside the Menu to avoid FocusTrap conflict */}
+      <Modal
+        opened={resetOpen}
+        onClose={() => setResetOpen(false)}
+        title="Team zurücksetzen"
+        size="sm"
+        yOffset="10vh"
+      >
+        <Text mb="sm">
+          Bist du sicher, dass du <strong>{team.name}</strong> zurücksetzen
+          möchtest?
+        </Text>
+        <Text size="sm" c="dimmed" mb="xs">
+          Folgende Änderungen werden vorgenommen:
+        </Text>
+        <Text size="sm" mb="xs">
+          • Score wird auf 0 zurückgesetzt
+        </Text>
+        <Text size="sm" mb="lg">
+          • Alle Spieler werden aus dem Team entfernt
+        </Text>
+        <Group justify="flex-end">
+          <Button variant="default" onClick={() => setResetOpen(false)}>
+            Abbrechen
+          </Button>
+          <Button color="red" onClick={handleResetConfirm}>
+            Zurücksetzen
+          </Button>
+        </Group>
+      </Modal>
     </Flex>
   );
 };

@@ -117,10 +117,33 @@ const ModPanelContent: React.FC = () => {
     room.context.display.confetti = !room.context.display.confetti;
   };
 
-  const gameBtns = room.games.map((g) => {
+  const gameBtns = room.games.map((g, index) => {
     const btnDisabled =
       g.identifier === room.context.currentGame?.identifier &&
       room.context.view === RoomView.GAME;
+
+    const isFirst = index === 0;
+    const isLast = index === room.games.length - 1;
+    const r = "var(--mantine-radius-sm)";
+
+    // top-left, top-right, bottom-right, bottom-left
+    const mainBtnRadius =
+      isFirst && isLast
+        ? `${r} 0 0 ${r}`
+        : isFirst
+          ? `${r} 0 0 0`
+          : isLast
+            ? `0 0 0 ${r}`
+            : "0";
+
+    const iconBtnRadius =
+      isFirst && isLast
+        ? `0 ${r} ${r} 0`
+        : isFirst
+          ? `0 ${r} 0 0`
+          : isLast
+            ? `0 0 ${r} 0`
+            : "0";
 
     return (
       <Button.Group key={g.identifier}>
@@ -129,12 +152,17 @@ const ModPanelContent: React.FC = () => {
           disabled={btnDisabled}
           onClick={() => startGame(g)}
           w="100%"
+          style={{ borderRadius: mainBtnRadius }}
         >
           {g.name} {btnDisabled && "(Läuft gerade)"}
         </Button>
 
         <Tooltip label="Regeln anzeigen" openDelay={500}>
-          <Button {...btnVariantDefault} onClick={() => handleOpenGameRules(g)}>
+          <Button
+            {...btnVariantDefault}
+            onClick={() => handleOpenGameRules(g)}
+            style={{ borderRadius: iconBtnRadius }}
+          >
             <IconQuestionMark />
           </Button>
         </Tooltip>
@@ -227,7 +255,7 @@ const ModPanelContent: React.FC = () => {
         />
       )}
 
-      <Flex h="100%" direction="column" gap="xl" justify="space-between">
+      <Flex direction="column" gap="xl">
         <Flex direction="column" gap="sm">
           <Accordion
             defaultValue={openedItems}
@@ -248,7 +276,7 @@ const ModPanelContent: React.FC = () => {
                 </Title>
               </Accordion.Control>
               <Accordion.Panel>
-                <Button.Group orientation="vertical">{gameBtns}</Button.Group>
+                <Flex direction="column">{gameBtns}</Flex>
               </Accordion.Panel>
             </Accordion.Item>
 

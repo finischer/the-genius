@@ -16,7 +16,6 @@ import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { useUser } from "~/hooks/useUser";
 import { animations } from "~/utils/animations";
 import { goToNextQuestion, goToPreviousQuestion } from "~/utils/helpers";
-import { FRAGENHAGEL_INTERVALS } from "./config";
 import type { IFragenhagelGameProps } from "./fragenhagel.types";
 import useFragenhagelBuzzer from "./useFragenhagelBuzzer";
 import ScoreBox from "./components/ScoreBox";
@@ -142,20 +141,20 @@ const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
                   Intervall
                 </Text>
                 <ButtonGroup>
-                  {FRAGENHAGEL_INTERVALS.map((interval) => {
+                  {game.configuredIntervals.map((interval) => {
                     const isActive =
                       game.intervalState.start === interval.start &&
                       game.intervalState.end === interval.end;
                     return (
                       <Button
-                        key={interval.label}
+                        key={interval.id}
                         size="xs"
                         variant={isActive ? "filled" : "default"}
                         onClick={() =>
                           handleSetInterval(interval.start, interval.end)
                         }
                       >
-                        {interval.label}
+                        {interval.label} ({interval.start}–{interval.end}s)
                       </Button>
                     );
                   })}

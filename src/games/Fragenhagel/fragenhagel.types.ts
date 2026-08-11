@@ -5,6 +5,13 @@ export interface IFragenhagelGameProps {
   game: TFragenhagelGameState;
 }
 
+export type TFragenhagelInterval = {
+  id: string;
+  label: string;
+  start: number;
+  end: number;
+};
+
 export type TFragenhagelQuestion = {
   id: string;
   question: string;
@@ -24,6 +31,7 @@ export type TFragenhagelTimerState = {
 export interface IFragenhagelState {
   identifier: Game.FRAGENHAGEL;
   questions: TFragenhagelQuestion[];
+  configuredIntervals: TFragenhagelInterval[];
   qIndex: number;
   currentScore: number;
   buzzerCount: number; // 0 = idle, 1 = timer running, 2 = locked until round ends

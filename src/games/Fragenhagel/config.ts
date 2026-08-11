@@ -1,18 +1,17 @@
 import { Game, type IGameGeneralState } from "../core/types";
-import type { IFragenhagelState } from "./fragenhagel.types";
+import type {
+  IFragenhagelState,
+  TFragenhagelInterval
+} from "./fragenhagel.types";
 
 export type TFragenhagelGameState = IFragenhagelState & IGameGeneralState;
 
 export const FRAGENHAGEL_BAR_COUNT = 52;
 
-export const FRAGENHAGEL_INTERVALS: Array<{
-  label: string;
-  start: number;
-  end: number;
-}> = [
-  { label: "Intervall 1 (25–30 Sek.)", start: 25, end: 30 },
-  { label: "Intervall 2 (32–37 Sek.)", start: 32, end: 37 },
-  { label: "Intervall 3 (41–46 Sek.)", start: 41, end: 46 }
+export const DEFAULT_FRAGENHAGEL_INTERVALS: TFragenhagelInterval[] = [
+  { id: "1", label: "Intervall 1", start: 25, end: 30 },
+  { id: "2", label: "Intervall 2", start: 32, end: 37 },
+  { id: "3", label: "Intervall 3", start: 41, end: 46 }
 ];
 
 export const DEFAULT_FRAGENHAGEL_STATE: TFragenhagelGameState = {
@@ -22,6 +21,7 @@ export const DEFAULT_FRAGENHAGEL_STATE: TFragenhagelGameState = {
   maxPoints: 20,
   scorebarMode: "number",
   questions: [],
+  configuredIntervals: DEFAULT_FRAGENHAGEL_INTERVALS,
   qIndex: 0,
   currentScore: 0,
   buzzerCount: 0,

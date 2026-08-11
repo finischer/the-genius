@@ -1,0 +1,16 @@
+.wrapper {
+  height: 6rem;
+  width: 6rem;
+  background: var(--mantine-color-dark-6);
+  border-radius: var(--mantine-radius-md);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  box-shadow: 4px 7px 16px -6px rgba(0, 0, 0, 0.73);
+}
+
+.scoreText {
+  font-size: 2.5rem;
+  color: var(--mantine-color-white);
+}

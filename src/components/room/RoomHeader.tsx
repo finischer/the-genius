@@ -9,6 +9,7 @@ import useNotification from "~/hooks/useNotification";
 import { RoomView } from "~/types/gameshow.types";
 import { animations } from "~/utils/animations";
 import { GAME_STATE_MAP } from "~/games/core/games.config";
+import { Game } from "~/games/core/types";
 import { assignObjectKeyByKey } from "~/utils/helpers";
 import ActionIcon from "../shared/ActionIcon";
 import ContainerBox from "../shared/ContainerBox";
@@ -101,6 +102,12 @@ const RoomHeader = () => {
     );
   };
 
+  // Games that manage their own buzzer: RoomHeader fires a named custom event
+  // instead of the standard useBuzzer flow. The game listens and handles it.
+  const GAME_BUZZ_EVENTS: Partial<Record<Game, string>> = {
+    [Game.FRAGENHAGEL]: "fragenhagel-buzz"
+  };
+
   const handleClickOnCurrentGame = () => {
     if (isHost) {
       modals.openConfirmModal({
@@ -118,6 +125,13 @@ const RoomHeader = () => {
       });
       return;
     }
+
+    if (currGame && currGame.identifier in GAME_BUZZ_EVENTS) {
+      const eventName = GAME_BUZZ_EVENTS[currGame.identifier];
+      if (eventName) window.dispatchEvent(new Event(eventName));
+      return;
+    }
+
     buzzer({ withTimer: true });
   };
 

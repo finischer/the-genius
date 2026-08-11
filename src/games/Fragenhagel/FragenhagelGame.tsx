@@ -16,19 +16,25 @@ import { animations } from "~/utils/animations";
 import { goToNextQuestion, goToPreviousQuestion } from "~/utils/helpers";
 import { FRAGENHAGEL_INTERVALS } from "./config";
 import type { IFragenhagelGameProps } from "./fragenhagel.types";
+import useFragenhagelBuzzer from "./useFragenhagelBuzzer";
 import ScoreBox from "./components/ScoreBox";
 import TimerBar from "./components/TimerBar";
-
 const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
   const room = useSyncedRoom();
-  const { hostFunction } = useUser();
+  const { isHost, hostFunction } = useUser();
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const currQuestion = game.questions.at(game.qIndex);
   const activeTeam = Object.values(room.teams).find((t) => t.isActiveTurn);
 
-  // Sync timer via interval — host drives the tick client-side via Yjs
+  // Fragenhagel-specific buzzer: spacebar + game-title click toggle the timer
+  useFragenhagelBuzzer(game);
+
+  // Only the host drives the timer tick to prevent multiple clients from
+  // each incrementing the shared Yjs state simultaneously.
   useEffect(() => {
+    if (!isHost) return;
+
     if (game.timerState.isActive) {
       intervalRef.current = setInterval(() => {
         game.timerState.seconds += 1;
@@ -46,18 +52,14 @@ const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
         intervalRef.current = null;
       }
     };
-  }, [game.timerState.isActive]);
+  }, [game.timerState.isActive, isHost]);
 
   const handleStartTimer = hostFunction(() => {
-    if (!game.timerState.isActive) {
-      game.timerState.isActive = true;
-    }
+    game.timerState.isActive = true;
   });
 
   const handleStopTimer = hostFunction(() => {
-    if (game.timerState.isActive) {
-      game.timerState.isActive = false;
-    }
+    game.timerState.isActive = false;
   });
 
   const handleSetInterval = hostFunction((start: number, end: number) => {
@@ -80,33 +82,69 @@ const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
   });
 
   const handleApplyScoreToTeam = hostFunction(() => {
+    const timerInInterval =
+      game.intervalState.start !== -1 &&
+      game.timerState.seconds >= game.intervalState.start &&
+      game.timerState.seconds <= game.intervalState.end;
+
     if (activeTeam) {
-      activeTeam.gameScore += game.currentScore;
+      activeTeam.gameScore += timerInInterval ? game.currentScore : 0;
+      activeTeam.isActiveTurn = false;
+      activeTeam.scorebarTimer.active = false;
     }
-    // Reset round state
     game.currentScore = 0;
+    game.buzzerCount = 0;
     game.timerState.isActive = false;
     game.timerState.seconds = 0;
     game.qIndex = 0;
   });
 
+  const handleSelectPlayer = hostFunction((teamId: string) => {
+    // Toggle: clicking the already-active team deselects it
+    Object.values(room.teams).forEach((t) => {
+      t.isActiveTurn = t.id === teamId ? !t.isActiveTurn : false;
+      t.scorebarTimer.active = false;
+    });
+  });
+
   return (
     <AnimatePresence>
       <Stack align="center" gap="xl">
-        {/* Score + Timer bar row */}
+        {/* Host sees score + timer bar; players only see the score */}
         <motion.div layout {...animations.fadeInOut}>
-          <Flex align="center" gap="md" w="100%">
+          {isHost ? (
+            <Flex align="center" gap="md" w="100%">
+              <ScoreBox score={game.currentScore} />
+              <TimerBar
+                seconds={game.timerState.seconds}
+                intervalState={game.intervalState}
+              />
+            </Flex>
+          ) : (
             <ScoreBox score={game.currentScore} />
-            <TimerBar
-              seconds={game.timerState.seconds}
-              intervalState={game.intervalState}
-            />
-          </Flex>
+          )}
         </motion.div>
 
         {/* Moderator controls */}
         <ModView>
           <Stack align="center" gap="md">
+            {/* Active player picker */}
+            <Stack gap="xs" align="center">
+              <Text size="sm" c="dimmed">
+                Aktiver Spieler
+              </Text>
+              <ButtonGroup>
+                {Object.values(room.teams).map((t) => (
+                  <Button
+                    key={t.id}
+                    variant={t.isActiveTurn ? "filled" : "default"}
+                    onClick={() => handleSelectPlayer(t.id)}
+                  >
+                    {t.players[0]?.name ?? t.name}
+                  </Button>
+                ))}
+              </ButtonGroup>
+            </Stack>
             {/* Interval buttons */}
             <ButtonGroup>
               {FRAGENHAGEL_INTERVALS.map((interval) => {
@@ -184,14 +222,24 @@ const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
             {/* Apply score to active team */}
             {activeTeam && (
               <Box>
-                <Button
-                  variant="light"
-                  color="blue"
-                  onClick={handleApplyScoreToTeam}
-                >
-                  Score ({game.currentScore} Pkt.) an {activeTeam.name} vergeben
-                  & Runde beenden
-                </Button>
+                {(() => {
+                  const timerInInterval =
+                    game.intervalState.start !== -1 &&
+                    game.timerState.seconds >= game.intervalState.start &&
+                    game.timerState.seconds <= game.intervalState.end;
+                  const pointsToGive = timerInInterval ? game.currentScore : 0;
+                  return (
+                    <Button
+                      variant="light"
+                      color={timerInInterval ? "blue" : "red"}
+                      onClick={handleApplyScoreToTeam}
+                    >
+                      {timerInInterval
+                        ? `${pointsToGive} Pkt. an ${activeTeam.name} vergeben & Runde beenden`
+                        : `Timer außerhalb – 0 Pkt. für ${activeTeam.name} & Runde beenden`}
+                    </Button>
+                  );
+                })()}
               </Box>
             )}
           </Stack>

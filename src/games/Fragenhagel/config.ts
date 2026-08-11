@@ -24,6 +24,7 @@ export const DEFAULT_FRAGENHAGEL_STATE: TFragenhagelGameState = {
   questions: [],
   qIndex: 0,
   currentScore: 0,
+  buzzerCount: 0,
   timerState: {
     isActive: false,
     seconds: 0

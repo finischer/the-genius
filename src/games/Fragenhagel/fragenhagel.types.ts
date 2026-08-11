@@ -26,6 +26,7 @@ export interface IFragenhagelState {
   questions: TFragenhagelQuestion[];
   qIndex: number;
   currentScore: number;
+  buzzerCount: number; // 0 = idle, 1 = timer running, 2 = locked until round ends
   timerState: TFragenhagelTimerState;
   intervalState: TFragenhagelIntervalState;
 }

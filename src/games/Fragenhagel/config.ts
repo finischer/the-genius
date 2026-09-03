@@ -24,6 +24,7 @@ export const DEFAULT_FRAGENHAGEL_STATE: TFragenhagelGameState = {
   configuredIntervals: DEFAULT_FRAGENHAGEL_INTERVALS,
   qIndex: 0,
   currentScore: 0,
+  activePlayerId: null,
   buzzerCount: 0,
   timerState: {
     isActive: false,

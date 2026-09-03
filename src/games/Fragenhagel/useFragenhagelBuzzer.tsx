@@ -1,35 +1,46 @@
 import { useEffect } from "react";
 import useAudio from "~/hooks/useAudio";
-import useBuzzer from "~/hooks/useBuzzer";
+import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { useUser } from "~/hooks/useUser";
 import type { TFragenhagelGameState } from "./config";
 
 /**
  * Handles the Fragenhagel-specific buzzer behaviour:
- * - Deactivates the standard useBuzzer spacebar listener for the lifetime
- *   of this hook (re-activates on unmount)
- * - Only the active player (isActiveTurn) may buzz
- * - First press starts the timer, second press stops it
- * - Plays the buzzer sound on every press
- * - Also listens for the "fragenhagel-buzz" custom event fired by RoomHeader
- *   when the player clicks the game title
+ * - Locks the standard room buzzer for all teams on mount (unlocks on unmount)
+ *   so that the default useBuzzer flow in RoomHeader never fires
+ * - Only the active player (isActiveTurn on their team) may buzz
+ * - First press: buzzer sound + timer starts
+ * - Second press: buzzer sound + timer stops → further presses blocked
+ *   until the host ends the round (buzzerCount reset)
+ * - Triggered by Spacebar or by the "fragenhagel-buzz" custom event that
+ *   RoomHeader dispatches when the player clicks the game title
  */
 const useFragenhagelBuzzer = (game: TFragenhagelGameState) => {
-  const { isPlayer, team } = useUser();
+  const { isPlayer, team, player } = useUser();
   const { triggerAudioEvent } = useAudio();
-  const { deactivateBuzzer, activateBuzzer } = useBuzzer();
+  const room = useSyncedRoom();
 
   const isActiveTurn = team?.isActiveTurn ?? false;
+  // Only the specifically selected player may buzz, not just anyone on the active team
+  const isActivePlayer = isActiveTurn && player?.userId === game.activePlayerId;
   const isLocked = game.buzzerCount >= 2;
 
-  // Disable the standard buzzer for the entire lifetime of this game
+  // Lock the shared room buzzer state so the default useBuzzer flow
+  // (spacebar → isActiveTurn + scorebarTimer) can never fire while this
+  // game is active. Unlock everything when the component unmounts.
   useEffect(() => {
-    deactivateBuzzer();
-    return () => activateBuzzer();
+    Object.values(room.teams).forEach((t) => {
+      t.buzzer.isLocked = true;
+    });
+    return () => {
+      Object.values(room.teams).forEach((t) => {
+        t.buzzer.isLocked = false;
+      });
+    };
   }, []);
 
   const handleBuzz = () => {
-    if (!isPlayer || !isActiveTurn || isLocked) return;
+    if (!isPlayer || !isActivePlayer || isLocked) return;
 
     triggerAudioEvent("playSound", "buzzer");
     game.timerState.isActive = !game.timerState.isActive;
@@ -53,7 +64,7 @@ const useFragenhagelBuzzer = (game: TFragenhagelGameState) => {
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [isPlayer, isActiveTurn, isLocked, game.timerState.isActive]);
+  }, [isPlayer, isActivePlayer, isLocked, game.timerState.isActive]);
 
   // Game-title click dispatched by RoomHeader
   useEffect(() => {
@@ -62,7 +73,7 @@ const useFragenhagelBuzzer = (game: TFragenhagelGameState) => {
     const onTitleClick = () => handleBuzz();
     window.addEventListener("fragenhagel-buzz", onTitleClick);
     return () => window.removeEventListener("fragenhagel-buzz", onTitleClick);
-  }, [isPlayer, isActiveTurn, isLocked, game.timerState.isActive]);
+  }, [isPlayer, isActivePlayer, isLocked, game.timerState.isActive]);
 };
 
 export default useFragenhagelBuzzer;

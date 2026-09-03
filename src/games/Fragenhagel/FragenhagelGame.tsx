@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   ButtonGroup,
   Divider,
@@ -28,6 +27,7 @@ const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
 
   const currQuestion = game.questions.at(game.qIndex);
   const activeTeam = Object.values(room.teams).find((t) => t.isActiveTurn);
+  const activePlayerId = game.activePlayerId;
 
   const timerInInterval =
     game.intervalState.start !== -1 &&
@@ -93,6 +93,7 @@ const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
       activeTeam.isActiveTurn = false;
       activeTeam.scorebarTimer.active = false;
     }
+    game.activePlayerId = null;
     game.currentScore = 0;
     game.buzzerCount = 0;
     game.timerState.isActive = false;
@@ -100,12 +101,144 @@ const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
     game.qIndex = 0;
   });
 
-  const handleSelectPlayer = hostFunction((teamId: string) => {
+  const handleSelectPlayer = hostFunction((playerId: string) => {
+    const owningTeam = Object.values(room.teams).find((t) =>
+      t.players.some((p) => p.userId === playerId)
+    );
+    const isAlreadyActive =
+      owningTeam?.isActiveTurn && game.activePlayerId === playerId;
+
     Object.values(room.teams).forEach((t) => {
-      t.isActiveTurn = t.id === teamId ? !t.isActiveTurn : false;
+      const owns = t.players.some((p) => p.userId === playerId);
+      t.isActiveTurn = owns ? !isAlreadyActive : false;
       t.scorebarTimer.active = false;
     });
+
+    game.activePlayerId = isAlreadyActive ? null : playerId;
+    game.buzzerCount = 0;
+    game.timerState.isActive = false;
+    game.timerState.seconds = 0;
   });
+
+  const ActivePlayersView = () => {
+    const teams = Object.values(room.teams);
+
+    return (
+      <Stack gap={6}>
+        <Text size="xs" c="dimmed" tt="uppercase" fw={600}>
+          Aktiver Spieler
+        </Text>
+        <Group gap="sm" wrap="nowrap" align="flex-start">
+          {teams.map((t, i) => (
+            <>
+              <Stack key={t.id} gap={4} align="center">
+                <Text size="xs" c="dimmed">
+                  {t.name}
+                </Text>
+                {t.players.length === 0 ? (
+                  <Text size="xs" c="dimmed" fs="italic">
+                    Leer
+                  </Text>
+                ) : (
+                  t.players.map((p) => (
+                    <Button
+                      key={p.userId}
+                      size="xs"
+                      variant={
+                        p.userId === activePlayerId ? "filled" : "default"
+                      }
+                      onClick={() => handleSelectPlayer(p.userId)}
+                    >
+                      {p.name}
+                    </Button>
+                  ))
+                )}
+              </Stack>
+              {i < teams.length - 1 && (
+                <Divider key={`div-${t.id}`} orientation="vertical" />
+              )}
+            </>
+          ))}
+        </Group>
+      </Stack>
+    );
+  };
+
+  const IntervalView = () => (
+    <Stack gap={6}>
+      <Text size="xs" c="dimmed" tt="uppercase" fw={600}>
+        Intervall
+      </Text>
+      <ButtonGroup>
+        {game.configuredIntervals.map((interval) => {
+          const isActive =
+            game.intervalState.start === interval.start &&
+            game.intervalState.end === interval.end;
+          return (
+            <Button
+              key={interval.id}
+              size="xs"
+              variant={isActive ? "filled" : "default"}
+              onClick={() => handleSetInterval(interval.start, interval.end)}
+            >
+              {interval.label} ({interval.start}–{interval.end}s)
+            </Button>
+          );
+        })}
+      </ButtonGroup>
+    </Stack>
+  );
+
+  const TimerView = () => (
+    <Stack gap={6}>
+      <Text size="xs" c="dimmed" tt="uppercase" fw={600}>
+        Timer
+      </Text>
+      <ButtonGroup>
+        <Button
+          size="xs"
+          variant="default"
+          disabled={game.timerState.isActive}
+          onClick={handleStartTimer}
+        >
+          Starten
+        </Button>
+        <Button
+          size="xs"
+          variant="default"
+          disabled={!game.timerState.isActive}
+          onClick={handleStopTimer}
+        >
+          Stoppen
+        </Button>
+      </ButtonGroup>
+    </Stack>
+  );
+
+  const QuestionNavigationView = () => (
+    <Group justify="center" gap="sm">
+      <Button size="sm" variant="default" onClick={handlePrevQuestion}>
+        ← Zurück
+      </Button>
+      <Button size="sm" color="red" onClick={() => handleNextQuestion(false)}>
+        Falsch
+      </Button>
+      <Button size="sm" color="green" onClick={() => handleNextQuestion(true)}>
+        Richtig +1
+      </Button>
+      <Button
+        size="sm"
+        variant="default"
+        onClick={() =>
+          goToNextQuestion(game.questions, game.qIndex, () => {
+            game.qIndex += 1;
+          })
+        }
+      >
+        Weiter →
+      </Button>
+    </Group>
+  );
 
   return (
     <AnimatePresence>
@@ -114,84 +247,15 @@ const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
         <ModView>
           <Paper p="md" radius="md" bg="dark.7" w="100%" maw={900}>
             <Group justify="space-between" align="flex-start" wrap="nowrap">
-              {/* Aktiver Spieler */}
-              <Stack gap={6}>
-                <Text size="xs" c="dimmed" tt="uppercase" fw={600}>
-                  Aktiver Spieler
-                </Text>
-                <ButtonGroup>
-                  {Object.values(room.teams).map((t) => (
-                    <Button
-                      key={t.id}
-                      size="xs"
-                      variant={t.isActiveTurn ? "filled" : "default"}
-                      onClick={() => handleSelectPlayer(t.id)}
-                    >
-                      {t.players[0]?.name ?? t.name}
-                    </Button>
-                  ))}
-                </ButtonGroup>
-              </Stack>
-
+              <ActivePlayersView />
               <Divider orientation="vertical" />
-
-              {/* Intervall */}
-              <Stack gap={6}>
-                <Text size="xs" c="dimmed" tt="uppercase" fw={600}>
-                  Intervall
-                </Text>
-                <ButtonGroup>
-                  {game.configuredIntervals.map((interval) => {
-                    const isActive =
-                      game.intervalState.start === interval.start &&
-                      game.intervalState.end === interval.end;
-                    return (
-                      <Button
-                        key={interval.id}
-                        size="xs"
-                        variant={isActive ? "filled" : "default"}
-                        onClick={() =>
-                          handleSetInterval(interval.start, interval.end)
-                        }
-                      >
-                        {interval.label} ({interval.start}–{interval.end}s)
-                      </Button>
-                    );
-                  })}
-                </ButtonGroup>
-              </Stack>
-
+              <IntervalView />
               <Divider orientation="vertical" />
-
-              {/* Timer */}
-              <Stack gap={6}>
-                <Text size="xs" c="dimmed" tt="uppercase" fw={600}>
-                  Timer
-                </Text>
-                <ButtonGroup>
-                  <Button
-                    size="xs"
-                    variant="default"
-                    disabled={game.timerState.isActive}
-                    onClick={handleStartTimer}
-                  >
-                    Starten
-                  </Button>
-                  <Button
-                    size="xs"
-                    variant="default"
-                    disabled={!game.timerState.isActive}
-                    onClick={handleStopTimer}
-                  >
-                    Stoppen
-                  </Button>
-                </ButtonGroup>
-              </Stack>
+              <TimerView />
             </Group>
           </Paper>
         </ModView>
 
-        {/* ── Timer bar (host) / Score (players) ── */}
         <motion.div layout {...animations.fadeInOut}>
           {isHost ? (
             <Flex align="center" gap="md">
@@ -230,60 +294,29 @@ const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
               )}
 
               <Divider />
-
-              {/* Navigation + judgement */}
-              <Group justify="center" gap="sm">
-                <Button
-                  size="sm"
-                  variant="default"
-                  onClick={handlePrevQuestion}
-                >
-                  ← Zurück
-                </Button>
-                <Button
-                  size="sm"
-                  color="red"
-                  onClick={() => handleNextQuestion(false)}
-                >
-                  Falsch
-                </Button>
-                <Button
-                  size="sm"
-                  color="green"
-                  onClick={() => handleNextQuestion(true)}
-                >
-                  Richtig +1
-                </Button>
-                <Button
-                  size="sm"
-                  variant="default"
-                  onClick={() =>
-                    goToNextQuestion(game.questions, game.qIndex, () => {
-                      game.qIndex += 1;
-                    })
-                  }
-                >
-                  Weiter →
-                </Button>
-              </Group>
-
-              {/* Round end */}
-              {activeTeam && (
-                <Box>
-                  <Button
-                    fullWidth
-                    variant="light"
-                    color={timerInInterval ? "blue" : "red"}
-                    onClick={handleApplyScoreToTeam}
-                  >
-                    {timerInInterval
-                      ? `${game.currentScore} Pkt. an ${activeTeam.name} vergeben & Runde beenden`
-                      : `Timer außerhalb – 0 Pkt. für ${activeTeam.name} & Runde beenden`}
-                  </Button>
-                </Box>
-              )}
+              <QuestionNavigationView />
             </Stack>
           </Paper>
+        </ModView>
+
+        {/* ── Round-end button — appears after player buzzes twice ── */}
+        <ModView>
+          <AnimatePresence>
+            {activeTeam && game.buzzerCount >= 2 && (
+              <motion.div {...animations.fadeInOut}>
+                <Button
+                  size="sm"
+                  mb={10}
+                  color={timerInInterval ? "green" : "red"}
+                  onClick={handleApplyScoreToTeam}
+                >
+                  {timerInInterval
+                    ? `✓ Runde beenden & ${game.currentScore} Pkt. an ${activeTeam.name} vergeben`
+                    : `✗ Runde beenden — Timer außerhalb, 0 Pkt. für ${activeTeam.name}`}
+                </Button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </ModView>
       </Stack>
     </AnimatePresence>

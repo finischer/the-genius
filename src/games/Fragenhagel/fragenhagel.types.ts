@@ -34,6 +34,7 @@ export interface IFragenhagelState {
   configuredIntervals: TFragenhagelInterval[];
   qIndex: number;
   currentScore: number;
+  activePlayerId: string | null; // userId of the currently active player
   buzzerCount: number; // 0 = idle, 1 = timer running, 2 = locked until round ends
   timerState: TFragenhagelTimerState;
   intervalState: TFragenhagelIntervalState;

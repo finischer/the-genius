@@ -1,5 +1,5 @@
-import { UserRole } from "~/generated/prisma/client";
 import NextAuthCredentialsProvider from "next-auth/providers/credentials";
+import { UserRole } from "~/generated/prisma/enums";
 import { prisma } from "~/server/db";
 
 export default NextAuthCredentialsProvider({

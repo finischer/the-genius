@@ -1,4 +1,4 @@
-import type { GameshowDifficulty } from "~/generated/prisma/client";
+import type { GameshowDifficulty } from "~/generated/prisma/enums";
 
 export type TTheGeniusConfig = {
   socialMedia: {

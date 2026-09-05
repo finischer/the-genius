@@ -1,4 +1,4 @@
-import type { GameshowDifficulty } from "~/generated/prisma/client";
+import type { GameshowDifficulty } from "~/generated/prisma/enums";
 import { getYjsValue } from "@syncedstore/core";
 import { TheGeniusConfig } from "~/config/the-genius";
 import type { RoomTeams, TeamShortNames } from "~/types/gameshow.types";

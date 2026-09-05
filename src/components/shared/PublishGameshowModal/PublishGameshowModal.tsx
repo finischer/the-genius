@@ -9,7 +9,7 @@ import {
   type SegmentedControlItem
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { GameshowDifficulty } from "~/generated/prisma/client";
+import { GameshowDifficulty } from "~/generated/prisma/enums";
 import React, { useEffect, type FC } from "react";
 import { TheGeniusConfig } from "~/config/the-genius";
 import useNotification from "~/hooks/useNotification";

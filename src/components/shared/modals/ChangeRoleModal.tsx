@@ -1,7 +1,7 @@
 import { Button, Flex, Select } from "@mantine/core";
 import type { ContextModalProps } from "@mantine/modals";
-import { UserRole } from "~/generated/prisma/client";
 import React, { useState } from "react";
+import type { UserRole } from "~/generated/prisma/enums";
 import useNotification from "~/hooks/useNotification";
 import { api } from "~/utils/api";
 

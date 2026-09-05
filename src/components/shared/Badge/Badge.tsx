@@ -7,7 +7,7 @@ import {
 import { IconCrown, IconDiamond } from "@tabler/icons-react";
 import React from "react";
 import Tooltip from "../Tooltip";
-import type { UserRole } from "~/generated/prisma/client";
+import type { UserRole } from "~/generated/prisma/enums";
 
 interface IBadgeProps extends BadgeProps {
   tooltip?: string;

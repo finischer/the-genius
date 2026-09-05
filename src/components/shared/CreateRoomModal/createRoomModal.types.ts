@@ -1,4 +1,4 @@
-import { type GameshowMode } from "@prisma/client";
+import { type GameshowMode } from "~/generated/prisma/client";
 import type { SafedGameshow } from "~/server/api/routers/gameshows";
 
 export interface ICreateRoomModalProps {

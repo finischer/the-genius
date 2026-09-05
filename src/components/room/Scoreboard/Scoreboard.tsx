@@ -6,7 +6,7 @@ import {
   getGradient,
   useMantineTheme
 } from "@mantine/core";
-import type { TeamAvatarImage } from "@prisma/client";
+import type { TeamAvatarImage } from "~/types/gameshow.types";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
 import React from "react";
 import ActionIcon from "~/components/shared/ActionIcon/ActionIcon";

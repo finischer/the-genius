@@ -10,7 +10,7 @@ import {
   type SegmentedControlItem
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { GameshowMode } from "@prisma/client";
+import { GameshowMode } from "~/generated/prisma/client";
 import { useSyncedStore } from "@syncedstore/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";

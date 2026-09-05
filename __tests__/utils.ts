@@ -3,7 +3,7 @@ import { createInnerTRPCContext, t } from "~/server/api/trpc";
 import { appRouter } from "~/server/api/root";
 import { prisma } from "~/server/db";
 import type { vi } from "vitest";
-import type { Gameshow } from "@prisma/client";
+import type { Gameshow } from "~/generated/prisma/client";
 
 export function getTestCaller(session: Session | null) {
   const ctx = createInnerTRPCContext({ session });

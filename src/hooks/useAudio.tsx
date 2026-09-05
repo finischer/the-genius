@@ -1,4 +1,4 @@
-import type { RoomSounds } from "@prisma/client";
+import type { RoomSounds } from "~/types/gameshow.types";
 import path from "path";
 import { useEffect, useState } from "react";
 import { assignObjectKeyByKey } from "~/utils/helpers";
@@ -49,7 +49,7 @@ const useAudio = () => {
   useEffect(() => {
     for (const [soundId, path] of Object.entries(SOUND_PATHS)) {
       const newElem: TAudioSound = {
-        id: soundId as TSoundId,
+        id: soundId,
         audio: new Audio(path)
       };
       setAudioList((oldState) => [...oldState, newElem]);

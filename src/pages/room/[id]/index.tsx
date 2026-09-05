@@ -1,6 +1,6 @@
 import { Button, Modal, TextInput, type ModalProps } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { UserRole } from "@prisma/client";
+import { UserRole } from "~/generated/prisma/client";
 import { useSession } from "next-auth/react";
 import { type FC } from "react";
 import SyncedRoomProvider from "~/context/SyncedRoomContext";

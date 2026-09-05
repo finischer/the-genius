@@ -1,4 +1,4 @@
-import { UserRole } from "@prisma/client";
+import { UserRole } from "~/generated/prisma/client";
 import NextAuthCredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "~/server/db";
 

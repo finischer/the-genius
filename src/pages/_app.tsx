@@ -9,7 +9,6 @@ import { DefaultSeo } from "next-seo";
 import { type AppType } from "next/app";
 import { modals } from "~/components/shared/modals/modalComponents";
 import SEO from "~/config/next-seo.config";
-import { RoomProvider } from "~/hooks/useRoom";
 import { UserProvider } from "~/hooks/useUser";
 import { THEME, cssResolver } from "~/styles/constants";
 
@@ -64,11 +63,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
           <Notifications position="top-center" />
 
           <SessionProvider session={session}>
-            <RoomProvider>
-              <UserProvider>
-                <Component {...pageProps} />
-              </UserProvider>
-            </RoomProvider>
+            <UserProvider>
+              <Component {...pageProps} />
+            </UserProvider>
           </SessionProvider>
         </ModalsProvider>
       </MantineProvider>

@@ -31,7 +31,17 @@ const TeamBox = ({
     <Flex direction="column" gap="xl" align="center">
       <Flex gap="xl">
         {teamBoxes.map((box, index) => {
-          const player = room.teams[team].players.at(index);
+          type TTeamWithPlayers = {
+            players: {
+              userId: string;
+              context: { duSagst: { answer: number } };
+              name: string;
+            }[];
+          };
+          const teamsMap = room.teams as Record<string, TTeamWithPlayers>;
+          const teamKey = team as string;
+          const teamPlayers = teamsMap[teamKey]?.players ?? [];
+          const player = teamPlayers.at(index);
 
           return (
             <AnswerBox

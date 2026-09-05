@@ -1,6 +1,6 @@
 import { Avatar, Flex, Text } from "@mantine/core";
 import type { ContextModalProps } from "@mantine/modals";
-import type { User } from "@prisma/client";
+import type { User } from "~/generated/prisma/client";
 import React from "react";
 import { formatTimestamp } from "~/utils/dates";
 

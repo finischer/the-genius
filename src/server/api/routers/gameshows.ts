@@ -1,4 +1,3 @@
-import { GameshowDifficulty, GameshowVisbility } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { ObjectId } from "bson";
 import { z } from "zod";
@@ -8,6 +7,10 @@ import {
   createTRPCRouter,
   protectedProcedure
 } from "../trpc";
+import {
+  GameshowDifficulty,
+  GameshowVisbility
+} from "~/generated/prisma/enums";
 
 export const safedGameshowSchema = z.object({
   id: z.string(),
@@ -110,7 +113,7 @@ export const gameshowsRouter = createTRPCRouter({
         where: {
           visibility: GameshowVisbility.PUBLIC,
           user: {
-            isNot: null
+            isNot: undefined
           }
         },
         select: {
@@ -132,11 +135,16 @@ export const gameshowsRouter = createTRPCRouter({
       });
 
       const returnedGameshows = gameshows.map((gameshow) => ({
-        ...gameshow,
-        difficulty: gameshow.difficulty ?? GameshowDifficulty.MEDIUM,
+        id: gameshow.id,
+        name: gameshow.name,
         description: gameshow.description ?? "",
+        games: gameshow.games,
+        difficulty: gameshow.difficulty ?? GameshowDifficulty.MEDIUM,
+        originalCreatorId: gameshow.originalCreatorId,
+        originalGameshowId: gameshow.originalGameshowId,
+        importedGameshow: gameshow.importedGameshow,
         user: {
-          ...gameshow.user,
+          id: gameshow.user.id,
           username: gameshow.user.username ?? "UNKNOWN_USER"
         }
       }));
@@ -150,9 +158,7 @@ export const gameshowsRouter = createTRPCRouter({
       const gameshow = await ctx.prisma.gameshow.create({
         data: {
           name: config.name,
-          // workaround until prisma type is set correctly
-          // @ts-expect-error - Prisma game schema type mismatch, needs to be fixed in schema
-          games: config.games, // TODO: fix game schema in prisma
+          games: config.games,
           creatorId: ctx.session.user.id
         }
       });
@@ -186,9 +192,7 @@ export const gameshowsRouter = createTRPCRouter({
       const updatedGameshow = await ctx.prisma.gameshow.update({
         data: {
           name: config.name,
-          // workaround until prisma type is set correctly
-          // @ts-expect-error Prisma type mismatch for games field
-          games: config.games, // TODO: fix game schema in prisma
+          games: config.games,
           // Mark imported gameshow as modified when updated
           ...(gameshow.importedGameshow && { isModified: true })
         },

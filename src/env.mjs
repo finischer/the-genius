@@ -9,7 +9,7 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
-    MONGODB_URI: z.string().min(1),
+    DATABASE_URL: z.string().min(1),
     NODE_ENV: environments,
     APP_ENV: environments,
     NEXTAUTH_SECRET:
@@ -46,7 +46,7 @@ export const env = createEnv({
    * middlewares) or client-side so we need to destruct manually.
    */
   runtimeEnv: {
-    MONGODB_URI: process.env.MONGODB_URI,
+    DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     APP_ENV: process.env.APP_ENV,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,

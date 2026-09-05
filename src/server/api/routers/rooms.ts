@@ -1,4 +1,4 @@
-import { GameshowMode } from "@prisma/client";
+import { GameshowMode } from "~/generated/prisma/client";
 import { TRPCError } from "@trpc/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";

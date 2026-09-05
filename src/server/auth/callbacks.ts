@@ -7,7 +7,7 @@ import { prisma } from "../db";
 import { updateLoginTimestamp } from "../db/users";
 import { GOOGLE_MAIL_SUFFIXES } from "./providers/GoogleProvider";
 import type { JWT } from "next-auth/jwt";
-import { UserRole } from "@prisma/client";
+import { UserRole } from "~/generated/prisma/client";
 import { isDevelopmentServer } from "~/utils/environment";
 
 const isOtherProviderAlreadyInUse = async (

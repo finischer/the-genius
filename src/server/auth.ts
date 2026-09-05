@@ -5,7 +5,7 @@ import {
   type DefaultSession,
   type NextAuthOptions
 } from "next-auth";
-import { UserRole } from "@prisma/client";
+import { UserRole } from "~/generated/prisma/client";
 import { prisma } from "~/server/db";
 import { jwtCallback, sessionCallback, signInCallback } from "./auth/callbacks";
 import DiscordProvider from "./auth/providers/DiscordProvider";

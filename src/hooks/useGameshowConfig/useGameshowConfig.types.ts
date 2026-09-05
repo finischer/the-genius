@@ -1,4 +1,4 @@
-import type { Game as PrismaGame } from "@prisma/client";
+import type { Game as PrismaGame } from "~/generated/prisma/client";
 import type { Game, GameState, TGameSettingsMap } from "~/games";
 
 export type TGameshowConfig = {

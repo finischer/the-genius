@@ -1,5 +1,5 @@
 import { Badge, Button, Card, Group, Stack, Text } from "@mantine/core";
-import type { Game } from "@prisma/client";
+import type { Game } from "~/generated/prisma/client";
 import { type FC } from "react";
 import useNotification from "~/hooks/useNotification";
 import { useUser } from "~/hooks/useUser";

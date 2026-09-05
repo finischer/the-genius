@@ -1,7 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import type { User } from "~/generated/prisma/client";
+import { UserRole } from "~/generated/prisma/enums";
 
-import { UserRole, type User } from "@prisma/client";
 import {
   adminProcedure,
   createTRPCRouter,

@@ -1,7 +1,7 @@
 import { Flex, Menu, Table, Text, Title, useMantineTheme } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
-import { GameshowVisbility } from "@prisma/client";
+import { GameshowVisbility } from "~/generated/prisma/enums";
 import {
   IconDots,
   IconDownload,

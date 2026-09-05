@@ -58,9 +58,21 @@ const useMusic = () => {
   const [currentSongId, setCurrentSongId] =
     useState<TSongId>("lightsDisappear");
 
-  const musicState = room.context?.audio.music ?? {
-    isActive: false,
-    title: "lightsDisappear"
+  const rawMusicState = room.context?.audio.music;
+  const musicState: { isActive: boolean; title: string } = {
+    isActive:
+      rawMusicState != null &&
+      typeof rawMusicState === "object" &&
+      "isActive" in rawMusicState
+        ? Boolean((rawMusicState as { isActive: unknown }).isActive)
+        : false,
+    title:
+      rawMusicState != null &&
+      typeof rawMusicState === "object" &&
+      "title" in rawMusicState
+        ? String((rawMusicState as { title: unknown }).title) ||
+          "lightsDisappear"
+        : "lightsDisappear"
   };
 
   // Validate and sanitize the music title

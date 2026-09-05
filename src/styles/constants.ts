@@ -8,7 +8,7 @@ import {
   rem,
   type MantineColorsTuple
 } from "@mantine/core";
-import { GameshowMode } from "@prisma/client";
+import { GameshowMode } from "~/generated/prisma/enums";
 
 export const sizes = {
   base: 25,

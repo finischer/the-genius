@@ -1,5 +1,5 @@
-import type { Gameshow } from "@prisma/client";
-import type { Prisma } from "@prisma/client";
+import type { Gameshow } from "~/generated/prisma/client";
+import type { Prisma } from "~/generated/prisma/client";
 import { MOCK_USERS } from "__mock__/mockUsers";
 import { vi } from "vitest";
 

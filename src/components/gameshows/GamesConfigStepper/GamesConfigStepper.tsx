@@ -1,6 +1,6 @@
 import type { StepperStepProps } from "@mantine/core";
 import { Box, Center, Flex, Stepper, TextInput, Title } from "@mantine/core";
-import type { Game as PrismaGame } from "@prisma/client";
+import type { Game as PrismaGame } from "~/generated/prisma/client";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";

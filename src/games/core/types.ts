@@ -1,4 +1,4 @@
-import type { GameshowMode } from "@prisma/client";
+import type { GameshowMode } from "~/generated/prisma/enums";
 import type { TFlaggenGameState } from "../Flaggen/config";
 import type { TMerkenGameState } from "../Merken/config";
 import type { TGeheimwörterGameState } from "../Geheimwörter/config";

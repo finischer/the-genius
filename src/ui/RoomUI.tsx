@@ -1,7 +1,6 @@
 import { Box, Flex } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
-import { type RoomSounds } from "@prisma/client";
 import { IconArrowRight, IconCheck } from "@tabler/icons-react";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/router";
@@ -21,6 +20,7 @@ import useMusic from "~/hooks/useMusic";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { useUser } from "~/hooks/useUser";
 import { sizes } from "~/styles/constants";
+import type { RoomSounds } from "~/types/gameshow.types";
 
 const RoomUI = () => {
   const params = useParams();
@@ -31,10 +31,21 @@ const RoomUI = () => {
   const { isPlayer } = useUser();
 
   const room = useSyncedRoom();
-  const sounds = room.context?.audio.sounds ?? [];
-  const musicState = room.context?.audio.music ?? {
-    isActive: false,
-    title: "lightsDisappear"
+  const sounds = room.context?.audio.sounds ?? {};
+  const rawMusicState = room.context?.audio.music;
+  const musicState: { isActive: boolean; title: string } = {
+    isActive:
+      rawMusicState != null &&
+      typeof rawMusicState === "object" &&
+      "isActive" in rawMusicState
+        ? Boolean((rawMusicState as { isActive: unknown }).isActive)
+        : false,
+    title:
+      rawMusicState != null &&
+      typeof rawMusicState === "object" &&
+      "title" in rawMusicState
+        ? String((rawMusicState as { title: unknown }).title)
+        : "lightsDisappear"
   };
 
   // Ensure we have a valid title, fallback to lightsDisappear if empty

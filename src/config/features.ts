@@ -1,4 +1,4 @@
-import type { UserRole } from "@prisma/client";
+import type { UserRole } from "~/generated/prisma/enums";
 
 type TFeaturesMap = {
   [index in UserRole]: {

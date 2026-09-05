@@ -47,10 +47,10 @@ const useAudio = () => {
   const [audioList, setAudioList] = useState<TAudioSound[]>([]);
 
   useEffect(() => {
-    for (const [soundId, path] of Object.entries(SOUND_PATHS)) {
+    for (const soundId of Object.keys(SOUND_PATHS) as TSoundId[]) {
       const newElem: TAudioSound = {
         id: soundId,
-        audio: new Audio(path)
+        audio: new Audio(SOUND_PATHS[soundId])
       };
       setAudioList((oldState) => [...oldState, newElem]);
     }

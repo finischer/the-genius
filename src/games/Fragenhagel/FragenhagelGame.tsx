@@ -4,7 +4,6 @@ import {
   Divider,
   Flex,
   Group,
-  Paper,
   Stack,
   Text
 } from "@mantine/core";
@@ -19,6 +18,7 @@ import type { IFragenhagelGameProps } from "./fragenhagel.types";
 import useFragenhagelBuzzer from "./useFragenhagelBuzzer";
 import ScoreBox from "./components/ScoreBox";
 import TimerBar from "./components/TimerBar";
+import type { Team } from "~/types/gameshow.types";
 
 const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
   const room = useSyncedRoom();
@@ -98,7 +98,6 @@ const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
     game.buzzerCount = 0;
     game.timerState.isActive = false;
     game.timerState.seconds = 0;
-    game.qIndex = 0;
   });
 
   const handleSelectPlayer = hostFunction((playerId: string) => {
@@ -120,44 +119,47 @@ const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
     game.timerState.seconds = 0;
   });
 
-  const ActivePlayersView = () => {
-    const teams = Object.values(room.teams);
+  const ActivePlayersView = ({ team }: { team: Team }) => {
+    return (
+      <Stack gap={6}>
+        <Group gap="sm" align="flex-start">
+          <>
+            <Stack gap={4} align="center">
+              <Text size="xs" c="dimmed">
+                {team.name}
+              </Text>
+              {team.players.length === 0 ? (
+                <Text size="xs" c="dimmed" fs="italic">
+                  Leer
+                </Text>
+              ) : (
+                team.players.map((p) => (
+                  <Button
+                    key={p.userId}
+                    size="xs"
+                    variant={p.userId === activePlayerId ? "filled" : "default"}
+                    onClick={() => handleSelectPlayer(p.userId)}
+                  >
+                    {p.name}
+                  </Button>
+                ))
+              )}
+            </Stack>
+          </>
+        </Group>
+      </Stack>
+    );
+  };
 
+  const SelectPlayerListView = () => {
     return (
       <Stack gap={6}>
         <Text size="xs" c="dimmed" tt="uppercase" fw={600}>
-          Aktiver Spieler
+          Aktiven Spieler auswählen
         </Text>
-        <Group gap="sm" wrap="nowrap" align="flex-start">
-          {teams.map((t, i) => (
-            <>
-              <Stack key={t.id} gap={4} align="center">
-                <Text size="xs" c="dimmed">
-                  {t.name}
-                </Text>
-                {t.players.length === 0 ? (
-                  <Text size="xs" c="dimmed" fs="italic">
-                    Leer
-                  </Text>
-                ) : (
-                  t.players.map((p) => (
-                    <Button
-                      key={p.userId}
-                      size="xs"
-                      variant={
-                        p.userId === activePlayerId ? "filled" : "default"
-                      }
-                      onClick={() => handleSelectPlayer(p.userId)}
-                    >
-                      {p.name}
-                    </Button>
-                  ))
-                )}
-              </Stack>
-              {i < teams.length - 1 && (
-                <Divider key={`div-${t.id}`} orientation="vertical" />
-              )}
-            </>
+        <Group gap="sm" align="flex-start">
+          {Object.values(room.teams).map((team) => (
+            <ActivePlayersView key={team.id} team={team} />
           ))}
         </Group>
       </Stack>
@@ -224,7 +226,7 @@ const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
         Falsch
       </Button>
       <Button size="sm" color="green" onClick={() => handleNextQuestion(true)}>
-        Richtig +1
+        Richtig
       </Button>
       <Button
         size="sm"
@@ -245,15 +247,10 @@ const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
       <Stack align="center" gap="lg">
         {/* ── Moderator setup panel ── */}
         <ModView>
-          <Paper p="md" radius="md" bg="dark.7" w="100%" maw={900}>
-            <Group justify="space-between" align="flex-start" wrap="nowrap">
-              <ActivePlayersView />
-              <Divider orientation="vertical" />
-              <IntervalView />
-              <Divider orientation="vertical" />
-              <TimerView />
-            </Group>
-          </Paper>
+          <Divider orientation="vertical" />
+          <TimerView />
+          <Divider orientation="vertical" />
+          <IntervalView />
         </ModView>
 
         <motion.div layout {...animations.fadeInOut}>
@@ -264,15 +261,15 @@ const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
                 seconds={game.timerState.seconds}
                 intervalState={game.intervalState}
               />
+              <SelectPlayerListView />
             </Flex>
           ) : (
             <ScoreBox score={game.currentScore} />
           )}
         </motion.div>
 
-        {/* ── Question panel (moderator only) ── */}
         <ModView>
-          <Paper p="md" radius="md" bg="dark.7" w="100%" maw={900}>
+          <Group>
             <Stack gap="md">
               {/* Question text */}
               {currQuestion ? (
@@ -296,7 +293,7 @@ const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
               <Divider />
               <QuestionNavigationView />
             </Stack>
-          </Paper>
+          </Group>
         </ModView>
 
         {/* ── Round-end button — appears after player buzzes twice ── */}

@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import useAudio from "~/hooks/useAudio";
-import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { useUser } from "~/hooks/useUser";
 import type { TFragenhagelGameState } from "./config";
+import useBuzzer from "~/hooks/useBuzzer";
 
 /**
  * Handles the Fragenhagel-specific buzzer behaviour:
@@ -18,7 +18,7 @@ import type { TFragenhagelGameState } from "./config";
 const useFragenhagelBuzzer = (game: TFragenhagelGameState) => {
   const { isPlayer, team, player } = useUser();
   const { triggerAudioEvent } = useAudio();
-  const room = useSyncedRoom();
+  const { deactivateBuzzer, activateBuzzer } = useBuzzer();
 
   const isActiveTurn = team?.isActiveTurn ?? false;
   // Only the specifically selected player may buzz, not just anyone on the active team
@@ -27,15 +27,12 @@ const useFragenhagelBuzzer = (game: TFragenhagelGameState) => {
 
   // Lock the shared room buzzer state so the default useBuzzer flow
   // (spacebar → isActiveTurn + scorebarTimer) can never fire while this
-  // game is active. Unlock everything when the component unmounts.
+  // game is active. Activate everything when the component unmounts.
   useEffect(() => {
-    Object.values(room.teams).forEach((t) => {
-      t.buzzer.isLocked = true;
-    });
+    deactivateBuzzer();
+
     return () => {
-      Object.values(room.teams).forEach((t) => {
-        t.buzzer.isLocked = false;
-      });
+      activateBuzzer();
     };
   }, []);
 

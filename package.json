@@ -83,6 +83,7 @@
     "react-dom": "^18.3.1",
     "react-joyride": "^2.8.2",
     "react-markdown": "^9.0.1",
+    "prisma-json-types-generator": "5.1.1",
     "superjson": "1.12.2",
     "use-immer": "^0.9.0",
     "use-sound": "^4.0.1",
@@ -125,8 +126,6 @@
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.2.8",
     "prisma": "7.10.0",
-    "@prisma/internals": "7.10.0",
-    "prisma-json-types-generator": "5.1.1",
     "typescript": "^5.3.3",
     "vite": "^5.4.11",
     "vitest": "^2.1.8"

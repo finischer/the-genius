@@ -12,9 +12,14 @@ src/server/api/
 ```
 
 **Router erstellen:**
+
 ```ts
 // src/server/api/routers/example.ts
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure
+} from "~/server/api/trpc";
 import { z } from "zod";
 
 export const exampleRouter = createTRPCRouter({
@@ -33,6 +38,7 @@ export const exampleRouter = createTRPCRouter({
 ```
 
 **Client-seitig verwenden:**
+
 ```ts
 const { data } = api.example.getById.useQuery({ id: "123" });
 const mutation = api.example.create.useMutation();
@@ -62,9 +68,11 @@ const { store, room } = useSyncedRoom();
 ```
 
 PartyKit lokal starten:
+
 ```bash
 bun run partykit
 ```
+
 Host für lokale Entwicklung in `.env.local` als `NEXT_PUBLIC_PARTYKIT_HOST` setzen.
 
 ## Auth: NextAuth
@@ -76,17 +84,18 @@ Host für lokale Entwicklung in `.env.local` als `NEXT_PUBLIC_PARTYKIT_HOST` set
 
 ```ts
 // Rolle prüfen
-if (session.user.role !== UserRole.ADMIN) throw new TRPCError({ code: "FORBIDDEN" });
+if (session.user.role !== UserRole.ADMIN)
+  throw new TRPCError({ code: "FORBIDDEN" });
 ```
 
 ## State Management
 
-| Scope | Lösung |
-|---|---|
-| Server State (API) | React Query via tRPC |
-| Realtime Room State | Yjs / SyncedStore via PartyKit |
+| Scope                 | Lösung                           |
+| --------------------- | -------------------------------- |
+| Server State (API)    | React Query via tRPC             |
+| Realtime Room State   | Yjs / SyncedStore via PartyKit   |
 | Gameshow-Konfigurator | `useGameshowConfig` Hook + Immer |
-| Lokaler UI State | `useState` / `useImmer` |
+| Lokaler UI State      | `useState` / `useImmer`          |
 
 ## Umgebungsvariablen
 
@@ -94,7 +103,7 @@ Immer über `~/env.mjs` importieren — niemals direkt `process.env`:
 
 ```ts
 import { env } from "~/env.mjs";
-const uri = env.MONGODB_URI; // type-safe, validiert via Zod
+const uri = env.DATABASE_URL; // type-safe, validiert via Zod
 ```
 
 Neue Env-Vars müssen in `src/env.mjs` im Schema und in `runtimeEnv` eingetragen werden.

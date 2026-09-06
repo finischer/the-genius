@@ -1,18 +1,19 @@
-import { Box, Button, Flex, SimpleGrid, useMantineTheme } from "@mantine/core";
+import { Box, Flex, SimpleGrid, useMantineTheme } from "@mantine/core";
 import { IconEye, IconEyeOff } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { Fragment } from "react";
 import CodeList from "~/components/gameshows/GeheimwörterConfigurator/components/CodeList";
 import AnswerBanner from "~/components/room/AnswerBanner";
 import ActionIcon from "~/components/shared/ActionIcon";
+import GameNavControls from "~/components/shared/GameNavControls";
+import ModView from "~/components/shared/ModView";
+import RevealButton from "~/components/shared/RevealButton";
+import useAudio from "~/hooks/useAudio";
 import { useUser } from "~/hooks/useUser";
 import { animations } from "~/utils/animations";
-import type { IGeheimwörterGameProps } from "./geheimwörter.types";
-import ArrowActionButton from "~/components/shared/ArrowActionButton";
-import ModView from "~/components/shared/ModView";
-import useAudio from "~/hooks/useAudio";
 import { slug } from "~/utils/strings";
 import { goToNextQuestion, goToPreviousQuestion, sleep } from "~/utils/helpers";
+import type { IGeheimwörterGameProps } from "./geheimwörter.types";
 
 const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
   const theme = useMantineTheme();
@@ -102,20 +103,6 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
     </Flex>
   );
 
-  const ShowAnswerButton = () => {
-    if (showAnswer || !isHost) return <></>;
-
-    return (
-      <Button
-        variant="default"
-        onClick={handleShowAnswer}
-        disabled={!showWords}
-      >
-        Antwort anzeigen
-      </Button>
-    );
-  };
-
   return (
     <Flex align="center" gap="5rem" justify="center">
       <SimpleGrid
@@ -160,33 +147,30 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
                 <Flex gap="md" justify="center" align="center">
                   <WordList />
                 </Flex>
-                <Flex align="center" gap="md">
+
+                {!showAnswer ? (
                   <ModView>
-                    <ArrowActionButton
-                      arrowDirection="left"
-                      onClick={handlePrevQuestion}
-                      tooltip="Vorherige Frage"
-                      disabled={game.qIndex <= 0}
+                    <RevealButton
+                      onReveal={handleShowAnswer}
+                      revealed={showAnswer}
+                      label="Antwort"
+                      disabled={!showWords}
                     />
                   </ModView>
-                  {!showAnswer ? (
-                    <ShowAnswerButton />
-                  ) : (
-                    <AnswerBanner
-                      answer={question.answer}
-                      showAnswer={showWords && showAnswer}
-                      miw={0}
-                    />
-                  )}
-                  <ModView>
-                    <ArrowActionButton
-                      arrowDirection="right"
-                      onClick={handleNextQuestion}
-                      tooltip="Nächste Frage"
-                      disabled={game.qIndex >= game.questions.length - 1}
-                    />
-                  </ModView>
-                </Flex>
+                ) : (
+                  <AnswerBanner
+                    answer={question.answer}
+                    showAnswer={showWords && showAnswer}
+                    miw={0}
+                  />
+                )}
+
+                <GameNavControls
+                  currentIndex={game.qIndex}
+                  total={game.questions.length}
+                  onPrev={handlePrevQuestion}
+                  onNext={handleNextQuestion}
+                />
               </motion.div>
             </Flex>
           )}

@@ -9,6 +9,7 @@ import {
 } from "@mantine/core";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, type FC } from "react";
+import GameNavControls from "~/components/shared/GameNavControls";
 import ModView from "~/components/shared/ModView";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { useUser } from "~/hooks/useUser";
@@ -218,28 +219,30 @@ const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
   );
 
   const QuestionNavigationView = () => (
-    <Group justify="center" gap="sm">
-      <Button size="sm" variant="default" onClick={handlePrevQuestion}>
-        ← Zurück
-      </Button>
-      <Button size="sm" color="red" onClick={() => handleNextQuestion(false)}>
-        Falsch
-      </Button>
-      <Button size="sm" color="green" onClick={() => handleNextQuestion(true)}>
-        Richtig
-      </Button>
-      <Button
-        size="sm"
-        variant="default"
-        onClick={() =>
+    <Stack gap="xs" align="center">
+      <Group justify="center" gap="sm">
+        <Button size="sm" color="red" onClick={() => handleNextQuestion(false)}>
+          Falsch
+        </Button>
+        <Button
+          size="sm"
+          color="green"
+          onClick={() => handleNextQuestion(true)}
+        >
+          Richtig
+        </Button>
+      </Group>
+      <GameNavControls
+        currentIndex={game.qIndex}
+        total={game.questions.length}
+        onPrev={handlePrevQuestion}
+        onNext={() =>
           goToNextQuestion(game.questions, game.qIndex, () => {
             game.qIndex += 1;
           })
         }
-      >
-        Weiter →
-      </Button>
-    </Group>
+      />
+    </Stack>
   );
 
   return (

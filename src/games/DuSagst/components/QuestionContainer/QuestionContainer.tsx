@@ -1,8 +1,7 @@
 import { Button, Flex, Text, useMantineTheme } from "@mantine/core";
-import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
-import ActionIcon from "~/components/shared/ActionIcon";
+import GameNavControls from "~/components/shared/GameNavControls";
 import ModView from "~/components/shared/ModView";
 import QuestionBox from "~/components/shared/QuestionBox";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
@@ -182,38 +181,20 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({
 
           <ModView>
             <Flex direction="column" gap="md" w="100%" align="center">
-              <Button
-                mt="xl"
-                // disabled={isTimerActive || !allAnswersShown}
-                onClick={handleStartTimer}
-              >
+              <Button mt="xl" onClick={handleStartTimer}>
                 Timer starten
               </Button>
-
-              <Flex gap="lg">
-                <ActionIcon
-                  toolTip="Vorherige Frage"
-                  variant="default"
-                  onClick={handlePrevQuestion}
-                  disabled={isPrevBtnDisabled}
-                >
-                  <IconArrowLeft />
-                </ActionIcon>
-                <ActionIcon
-                  toolTip="Nächste Frage"
-                  variant="default"
-                  onClick={handleNextQuestion}
-                  disabled={isNxtBtnDisabled}
-                >
-                  <IconArrowRight />
-                </ActionIcon>
-              </Flex>
-
-              <p>
-                Frage {game.qIndex + 1} / {game.questions.length}
-              </p>
             </Flex>
           </ModView>
+
+          <GameNavControls
+            currentIndex={game.qIndex}
+            total={game.questions.length}
+            onPrev={handlePrevQuestion}
+            onNext={handleNextQuestion}
+            disablePrev={isPrevBtnDisabled}
+            disableNext={isNxtBtnDisabled}
+          />
         </Flex>
       </AnimatePresence>
     </Flex>

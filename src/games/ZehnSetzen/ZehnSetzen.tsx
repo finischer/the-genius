@@ -1,6 +1,8 @@
-import { Button, ButtonGroup, Stack, Text } from "@mantine/core";
+import { Button, Stack } from "@mantine/core";
 import { AnimatePresence, motion } from "framer-motion";
 import { type FC } from "react";
+import GameNavControls from "~/components/shared/GameNavControls";
+import ModControlBar from "~/components/shared/ModControlBar";
 import ModView from "~/components/shared/ModView";
 import QuestionBox from "~/components/shared/QuestionBox";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
@@ -126,9 +128,7 @@ const ZehnSetzen: FC<IZehnSetzenGameProps> = ({ game }) => {
             />
           </Stack>
         </motion.div>
-        <Text c="dimmed">
-          {game.qIndex + 1}/{game.questions.length}
-        </Text>
+
         <ModView>
           {submittedTeams.map((team) => {
             const roomTeam = getTeamByShortName(room.teams, team.teamName);
@@ -143,23 +143,24 @@ const ZehnSetzen: FC<IZehnSetzenGameProps> = ({ game }) => {
               </motion.span>
             );
           })}
-
-          <ButtonGroup>
-            <Button variant="default" onClick={handlePrevQuestion}>
-              Vorherige Frage
-            </Button>
-            <Button
-              disabled={!allTeamsSubbmitted}
-              variant="default"
-              onClick={handleToggleCorrectAnswer}
-            >
-              Lösung {game.display.correctAnswer ? "ausblenden" : "anzeigen"}
-            </Button>
-            <Button variant="default" onClick={handleNextQuestion}>
-              Nächste Frage
-            </Button>
-          </ButtonGroup>
         </ModView>
+
+        <ModControlBar>
+          <Button
+            disabled={!allTeamsSubbmitted}
+            variant="default"
+            onClick={handleToggleCorrectAnswer}
+          >
+            Lösung {game.display.correctAnswer ? "ausblenden" : "anzeigen"}
+          </Button>
+        </ModControlBar>
+
+        <GameNavControls
+          currentIndex={game.qIndex}
+          total={game.questions.length}
+          onPrev={handlePrevQuestion}
+          onNext={handleNextQuestion}
+        />
       </Stack>
     </AnimatePresence>
   );

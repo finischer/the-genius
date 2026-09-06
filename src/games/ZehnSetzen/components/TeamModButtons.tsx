@@ -17,7 +17,7 @@ const TeamModButtons: FC<TeamModButtonsProps> = ({ team, game }) => {
   const displayTeamScores = game.display.teamScores[team.shortName];
 
   return (
-    <Stack px="md" w={250} align="center">
+    <Stack px="md" w={250} align="center" m="md">
       <Text fw="bold">{team.name}</Text>
       <ButtonGroup>
         <Button variant="default" onClick={toggleAnswerScores}>

@@ -1,7 +1,8 @@
-import { Button, Flex, Image, Text } from "@mantine/core";
+import { Flex, Image } from "@mantine/core";
 import React from "react";
-import ArrowActionButton from "~/components/shared/ArrowActionButton";
-import ModView from "~/components/shared/ModView";
+import GameNavControls from "~/components/shared/GameNavControls";
+import ModControlBar from "~/components/shared/ModControlBar";
+import RevealButton from "~/components/shared/RevealButton";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { useUser } from "~/hooks/useUser";
 import { goToNextQuestion, goToPreviousQuestion, sleep } from "~/utils/helpers";
@@ -14,8 +15,6 @@ const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
   const displayFlag = game.display.country;
   const currFlag = game.countries[game.qIndex];
   const shortCode = currFlag ? String(currFlag.shortCode) : null;
-  const nxtBtnDisabled = game.qIndex >= game.countries.length - 1;
-  const prevBtnDisabled = game.qIndex <= 0;
 
   const handleFlagClick = hostFunction(() => {
     if (displayFlag) return;
@@ -55,53 +54,39 @@ const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
 
   return (
     <Flex direction="column" gap="md" align="center">
-      <ModView>
-        <Text>
-          Flagge {game.qIndex + 1} / {game.countries.length}
-        </Text>
-      </ModView>
-      <Flex gap="4rem" align="center" pos="relative">
-        <ModView>
-          <ArrowActionButton
-            arrowDirection="left"
-            tooltip="Vorherige Flagge zeigen"
-            disabled={prevBtnDisabled}
-            onClick={handlePrevFlagClick}
-          />
-        </ModView>
-        {currFlag && shortCode && (
-          <Image
-            className={classes.flagImg}
-            src={`https://flagcdn.com/w640/${shortCode}.png`}
-            alt="Image not found"
-            w={400}
-            radius="sm"
-            opacity={displayFlag ? 1 : isHost ? 0.5 : 0}
-            onClick={handleFlagClick}
-            data-hostandnoflag={isHost && !displayFlag}
-            style={{
-              transform: `scale(${displayFlag ? "1" : "0.9"})`,
-              transition: "all 500ms",
-              userSelect: "none"
-            }}
-          />
-        )}
-        <ModView>
-          <ArrowActionButton
-            arrowDirection="right"
-            tooltip="Nächste Flagge zeigen"
-            disabled={nxtBtnDisabled}
-            onClick={handleNextFlagClick}
-          />
-        </ModView>
-      </Flex>
-      <ModView>
-        <Flex gap="lg" direction="column" align="center" justify="center">
-          <Text>Antwort: {currFlag?.country}</Text>
+      {currFlag && shortCode && (
+        <Image
+          className={classes.flagImg}
+          src={`https://flagcdn.com/w640/${shortCode}.png`}
+          alt="Image not found"
+          w={400}
+          radius="sm"
+          opacity={displayFlag ? 1 : isHost ? 0.5 : 0}
+          onClick={handleFlagClick}
+          data-hostandnoflag={isHost && !displayFlag}
+          style={{
+            transform: `scale(${displayFlag ? "1" : "0.9"})`,
+            transition: "all 500ms",
+            userSelect: "none"
+          }}
+        />
+      )}
 
-          <Button onClick={handleShowAnswerClick}>Antwort aufdecken</Button>
-        </Flex>
-      </ModView>
+      <ModControlBar>
+        <RevealButton
+          onReveal={handleShowAnswerClick}
+          revealed={game.display.answer}
+          label="Antwort"
+        />
+      </ModControlBar>
+
+      <GameNavControls
+        currentIndex={game.qIndex}
+        total={game.countries.length}
+        onPrev={handlePrevFlagClick}
+        onNext={handleNextFlagClick}
+        label="Flagge"
+      />
     </Flex>
   );
 };

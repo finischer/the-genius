@@ -1,4 +1,4 @@
-import type { GameshowMode } from "@prisma/client";
+import type { GameshowMode } from "~/generated/prisma/enums";
 import type { TFlaggenGameState } from "../Flaggen/config";
 import type { TMerkenGameState } from "../Merken/config";
 import type { TGeheimwörterGameState } from "../Geheimwörter/config";
@@ -6,6 +6,7 @@ import type { TSetGameState } from "../Set/config";
 import type { TDuSagstGameState } from "../DuSagst/config";
 import type { TReferatBingoGameState } from "../ReferatBingo/config";
 import type { TZehnSetzenGameState } from "../ZehnSetzen/config";
+import type { TFragenhagelGameState } from "../Fragenhagel/config";
 
 export type TScorebarMode = "number" | "circle";
 
@@ -16,7 +17,8 @@ export enum Game {
   SET = "set",
   DUSAGST = "duSagst",
   REFERATBINGO = "referatBingo",
-  ZEHN_SETZEN = "zehnSetzen"
+  ZEHN_SETZEN = "zehnSetzen",
+  FRAGENHAGEL = "fragenhagel"
 }
 
 export interface IGameGeneralState {
@@ -43,6 +45,7 @@ export interface TGameSettingsMap {
   [Game.DUSAGST]: TDuSagstGameState;
   [Game.REFERATBINGO]: TReferatBingoGameState;
   [Game.ZEHN_SETZEN]: TZehnSetzenGameState;
+  [Game.FRAGENHAGEL]: TFragenhagelGameState;
 }
 
 export type GameState = TGameSettingsMap[Game];

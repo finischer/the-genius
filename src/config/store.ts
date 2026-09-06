@@ -1,5 +1,5 @@
 import { randomId } from "@mantine/hooks";
-import type { RoomSounds } from "@prisma/client";
+import type { RoomSounds } from "~/types/gameshow.types";
 import { getYjsValue, syncedStore, type Y } from "@syncedstore/core";
 import { WebsocketProvider } from "y-partykit/provider";
 import {

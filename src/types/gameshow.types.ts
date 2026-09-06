@@ -1,9 +1,3 @@
-import type {
-  BuzzerState,
-  RoomMusic,
-  RoomSounds,
-  TeamAvatarImage
-} from "@prisma/client";
 import type { GameState } from "~/games";
 
 export enum RoomView {
@@ -100,4 +94,99 @@ export type NoteFieldState = {
 export type RoomAnswerState = {
   isAnswerDisplayed: boolean;
   answer: string;
+};
+
+export type TeamAvatarImage = {
+  img: string;
+  userId: string;
+};
+
+export type BuzzerState = {
+  isLocked: boolean;
+  isPressed: boolean;
+  playersBuzzered: string[];
+};
+
+export type RoomSounds = {
+  bass: boolean;
+  bell: boolean;
+  buzzer: boolean;
+  winning: boolean;
+  intro: boolean;
+  shimmer: boolean;
+  typewriter: boolean;
+  warningBuzzer: boolean;
+  whoosh_1: boolean;
+};
+
+export type RoomMusic = {
+  title: string;
+  isActive: boolean;
+};
+
+export type RoomState = {
+  currentView: string;
+  answerState: {
+    showAnswer: boolean;
+    answer: string;
+    withSound: boolean;
+  };
+  gameshowStarted: boolean;
+  teamWithTurn: string;
+  display: {
+    confetti: boolean;
+    gameIntro: {
+      alreadyPlayed: boolean;
+      flippedTitleBanner: boolean;
+      milliseconds: number;
+    };
+    game: boolean;
+    notefields: boolean;
+    clock: {
+      isActive: boolean;
+      currentSeconds: number;
+      to: number;
+      variant: "COUNTDOWN" | "TIMER";
+    };
+  };
+  sounds: RoomSounds;
+  music: RoomMusic;
+  view: "EMPTY" | "GAME" | "SCOREBOARD";
+};
+
+export type PlayerStates = {
+  notefield: NoteFieldState;
+};
+
+export type PlayerSharedState = {
+  duSagst: {
+    answer: number;
+  };
+};
+
+export type PrismaPlayer = {
+  id: string;
+  name: string;
+  userId: string;
+  teamId: string;
+  states: PlayerStates;
+  shared: PlayerSharedState;
+};
+
+export type ScorebarTimerState = {
+  isActive: boolean;
+  seconds: number;
+};
+
+export type PrismaTeam = {
+  id: string;
+  name: string;
+  totalScore: number;
+  gameScore: number;
+  avatarImage: string;
+  avatarImageList: TeamAvatarImage[];
+  players: PrismaPlayer[];
+  buzzer: BuzzerState;
+  scorebarTimer: ScorebarTimerState;
+  isActiveTurn: boolean;
 };

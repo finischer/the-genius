@@ -17,6 +17,7 @@ import { DEFAULT_SET_STATE } from "../Set/config";
 import { DEFAULT_DUSAGST_STATE } from "../DuSagst/config";
 import { DEFAULT_REFERAT_BINGO_STATE } from "../ReferatBingo/config";
 import { DEFAULT_ZEHN_SETZEN_STATE } from "../ZehnSetzen/config";
+import { DEFAULT_FRAGENHAGEL_STATE } from "../Fragenhagel/config";
 
 // Import aller Konfiguratoren
 import MerkenConfigurator from "~/components/gameshows/MerkenConfigurator/MerkenConfigurator";
@@ -26,6 +27,7 @@ import SetConfigurator from "~/components/gameshows/SetConfigurator/SetConfigura
 import DuSagstConfigurator from "~/components/gameshows/DuSagstConfigurator/DuSagstConfigurator";
 import ReferatBingoConfigurator from "~/components/gameshows/ReferatBingoConfigurator/ReferatBingoConfigurator";
 import ZehnSetzenConfigurator from "~/components/gameshows/ZehnSetzenConfigurator/ZehnSetzenConfigurator";
+import FragenhagelConfigurator from "~/components/gameshows/FragenhagelConfigurator/FragenhagelConfigurator";
 
 // Import aller Game-Komponenten
 import MerkenGame from "../Merken/MerkenGame";
@@ -35,6 +37,7 @@ import SetGame from "../Set/SetGame";
 import DuSagstGame from "../DuSagst/DuSagstGame";
 import ReferatBingoGame from "../ReferatBingo/ReferatBingoGame";
 import ZehnSetzenGame from "../ZehnSetzen/ZehnSetzen";
+import FragenhagelGame from "../Fragenhagel/FragenhagelGame";
 
 /**
  * GAME-KONFIGURATION
@@ -95,6 +98,13 @@ export const GAME_CONFIGS: Array<{
     defaultState: DEFAULT_ZEHN_SETZEN_STATE,
     configurator: ZehnSetzenConfigurator,
     gameComponent: ZehnSetzenGame as React.ComponentType<unknown>
+  },
+  {
+    identifier: Game.FRAGENHAGEL,
+    name: "Fragenhagel",
+    defaultState: DEFAULT_FRAGENHAGEL_STATE,
+    configurator: FragenhagelConfigurator,
+    gameComponent: FragenhagelGame as React.ComponentType<unknown>
   }
   // 🎯 BEISPIEL: So einfach ist es, ein neues Spiel hinzuzufügen!
   // Siehe /src/examples/ für vollständige Implementierung:

@@ -13,6 +13,7 @@ module.exports = [
             "**/.next/**",
             "src/**/env.mjs",
             "src/examples/**/*",
+            "src/generated/**/*"
         ]
     },
     {

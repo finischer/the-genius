@@ -104,7 +104,7 @@ const useTeam = () => {
       return;
     }
 
-    return team.players.length >= 2;
+    return team.players.length >= room.maxPlayersPerTeam;
   };
 
   /**

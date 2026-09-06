@@ -1,4 +1,4 @@
-import type { Game as PrismaGame } from "@prisma/client";
+import type { Game as PrismaGame } from "~/generated/prisma/client";
 import { useSearchParams } from "next/navigation";
 import { createContext, type FC, type ReactNode } from "react";
 import { useImmer, type Updater } from "use-immer";

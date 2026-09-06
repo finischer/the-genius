@@ -1,0 +1,36 @@
+model Game {
+  id              String       @id @default(cuid())
+  name            String
+  slug            String       @unique
+  mode            GameshowMode
+  forPremiumUsers Boolean
+  isNew           Boolean
+  rules           String
+  active          Boolean      @default(true)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@map("games")
+}
+
+model Gameshow {
+  id                 String              @id @default(cuid())
+  importedGameshow   Boolean?            @default(false)
+  description        String?             @default("")
+  name               String
+  /// [GameConfig[]]
+  games              Json                @default("[]")
+  creatorId          String
+  user               User                @relation("gameshowCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+  isFavorite         Boolean             @default(false)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  visibility         GameshowVisbility   @default(PRIVATE)
+  originalCreatorId  String?
+  originalCreator    User?               @relation("originalCreator", fields: [originalCreatorId], references: [id])
+  originalGameshowId String?
+  difficulty         GameshowDifficulty? @default(MEDIUM)
+  isModified         Boolean?            @default(false)
+
+  @@map("gameshows")
+}

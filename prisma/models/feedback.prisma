@@ -1,0 +1,25 @@
+model BetaTester {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  accessKey String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("betaTesters")
+}
+
+model Feedback {
+  id                      String   @id @default(cuid())
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+  creator                 User     @relation("feedbackCreator", fields: [creatorId], references: [id])
+  creatorId               String
+  comment                 String
+  ratingGeneralExperience Int
+  ratingControlModerator  Int
+  ratingDesign            Int
+  browser                 String
+  os                      String
+
+  @@map("feedbacks")
+}

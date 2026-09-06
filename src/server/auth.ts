@@ -5,13 +5,13 @@ import {
   type DefaultSession,
   type NextAuthOptions
 } from "next-auth";
-import { UserRole } from "@prisma/client";
 import { prisma } from "~/server/db";
 import { jwtCallback, sessionCallback, signInCallback } from "./auth/callbacks";
 import DiscordProvider from "./auth/providers/DiscordProvider";
 import GoogleProvider from "./auth/providers/GoogleProvider";
 import LocalCredentialsProvider from "./auth/providers/LocalCredentialsProvider";
 import { isDevelopmentServer } from "~/utils/environment";
+import { UserRole } from "~/generated/prisma/enums";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`

@@ -1,0 +1,35 @@
+enum UserRole {
+  USER
+  ADMIN
+  PREMIUM
+  GUEST
+}
+
+enum GameshowMode {
+  DUELL
+  TEAM
+}
+
+enum RoomViews {
+  EMPTY
+  GAME
+  SCOREBOARD
+}
+
+enum RoomClockVariants {
+  COUNTDOWN
+  TIMER
+}
+
+enum GameshowVisbility {
+  PUBLIC
+  PRIVATE
+}
+
+enum GameshowDifficulty {
+  VERY_EASY
+  EASY
+  MEDIUM
+  HARD
+  VERY_HARD
+}

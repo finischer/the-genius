@@ -4,20 +4,20 @@ import React from "react";
 import ActionIcon from "~/components/shared/ActionIcon";
 import ModView from "~/components/shared/ModView";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
-import type { TeamOptions } from "~/server/classes/Room/room.types";
 import AnswerBox from "./components/AnswerBox";
 import QuestionContainer from "./components/QuestionContainer";
 import type {
   IDuSagstGameProps,
   TDuSagstAnswerBoxState
 } from "./duSagst.types";
+import type { RoomTeams } from "~/types/gameshow.types";
 
 const TeamBox = ({
   teamBoxes,
   team
 }: {
   teamBoxes: TDuSagstAnswerBoxState[];
-  team: TeamOptions;
+  team: keyof RoomTeams;
 }) => {
   const room = useSyncedRoom();
 
@@ -31,7 +31,17 @@ const TeamBox = ({
     <Flex direction="column" gap="xl" align="center">
       <Flex gap="xl">
         {teamBoxes.map((box, index) => {
-          const player = room.teams[team].players.at(index);
+          type TTeamWithPlayers = {
+            players: {
+              userId: string;
+              context: { duSagst: { answer: number } };
+              name: string;
+            }[];
+          };
+          const teamsMap = room.teams as Record<string, TTeamWithPlayers>;
+          const teamKey = team as string;
+          const teamPlayers = teamsMap[teamKey]?.players ?? [];
+          const player = teamPlayers.at(index);
 
           return (
             <AnswerBox

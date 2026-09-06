@@ -79,7 +79,7 @@ export const GameshowCard: FC<IGameshowCardProps> = ({
           </Stack>
 
           <Text fz="xs" c="dimmed">
-            Erstellt von {creator.username}
+            Erstellt von {creator?.username ?? "Offiziell"}
           </Text>
         </Stack>
         <Text fz="sm" mt="md">
@@ -96,7 +96,7 @@ export const GameshowCard: FC<IGameshowCardProps> = ({
         </Group>
       </Card.Section>
 
-      {creator.id !== user?.id && (
+      {creator?.id !== user?.id && (
         <Group mt="xs">
           <Button
             radius="md"

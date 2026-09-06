@@ -14,7 +14,7 @@ import {
 
 export const safedGameshowSchema = z.object({
   id: z.string(),
-  creatorId: z.string(),
+  creatorId: z.string().nullable(),
   name: z.string(),
   numOfGames: z.number(),
   createdAt: z.date(),
@@ -35,10 +35,13 @@ export const safedPublicGameshowSchema = z.object({
   description: z.string(),
   difficulty: z.nativeEnum(GameshowDifficulty),
   games: z.array(z.any()),
-  user: z.object({
-    username: z.string(),
-    id: z.string()
-  }),
+  user: z
+    .object({
+      username: z.string(),
+      id: z.string()
+    })
+    .optional(),
+  isOfficial: z.boolean(),
   originalCreatorId: z.string().nullable(),
   originalGameshowId: z.string().nullable(),
   importedGameshow: z.boolean().nullable()
@@ -111,10 +114,7 @@ export const gameshowsRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       const gameshows = await ctx.prisma.gameshow.findMany({
         where: {
-          visibility: GameshowVisbility.PUBLIC,
-          user: {
-            isNot: undefined
-          }
+          visibility: GameshowVisbility.PUBLIC
         },
         select: {
           id: true,
@@ -122,6 +122,7 @@ export const gameshowsRouter = createTRPCRouter({
           description: true,
           games: true,
           difficulty: true,
+          isOfficial: true,
           originalCreatorId: true,
           originalGameshowId: true,
           importedGameshow: true,
@@ -140,13 +141,16 @@ export const gameshowsRouter = createTRPCRouter({
         description: gameshow.description ?? "",
         games: gameshow.games,
         difficulty: gameshow.difficulty ?? GameshowDifficulty.MEDIUM,
+        isOfficial: gameshow.isOfficial,
         originalCreatorId: gameshow.originalCreatorId,
         originalGameshowId: gameshow.originalGameshowId,
         importedGameshow: gameshow.importedGameshow,
-        user: {
-          id: gameshow.user.id,
-          username: gameshow.user.username ?? "UNKNOWN_USER"
-        }
+        user: gameshow.user
+          ? {
+              id: gameshow.user.id,
+              username: gameshow.user.username ?? "UNKNOWN_USER"
+            }
+          : undefined
       }));
 
       return returnedGameshows;

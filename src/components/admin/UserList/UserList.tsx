@@ -57,9 +57,10 @@ const userColumns: TColumnDef<User>[] = [
 
 const UserList: React.FC = () => {
   const openUserDetails = (user: User) => {
+    if (!user.role) return;
     modals.openContextModal({
       modal: "userDetails",
-      innerProps: { user }
+      innerProps: { user: { ...user, role: user.role } }
     });
   };
 

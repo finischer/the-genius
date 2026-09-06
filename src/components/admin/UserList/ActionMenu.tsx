@@ -18,16 +18,18 @@ const ActionMenu = ({ user }: { user: User }) => {
   const { user: myself } = useUser();
   const disableAction = user.id === myself.id;
 
-  const openUserDetails = () =>
+  const openUserDetails = () => {
+    if (!user.role) return;
     modals.openContextModal({
       modal: "userDetails",
       w: "100%",
       h: "100%",
       bg: "blue",
       innerProps: {
-        user
+        user: { ...user, role: user.role }
       }
     });
+  };
 
   const openChangeRoleModal = () => {
     modals.openContextModal({

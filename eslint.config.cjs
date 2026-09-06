@@ -61,4 +61,10 @@ module.exports = [
             ...(typescriptEslint.configs?.["recommended-requiring-type-checking"]?.rules || {}),
         },
     },
+    {
+        files: ["**/__tests__/**/*.ts", "**/*.test.ts", "**/*.spec.ts"],
+        rules: {
+            "@typescript-eslint/unbound-method": "off",
+        },
+    },
 ];

@@ -10,7 +10,7 @@ TheGenius ist eine **Multiplayer-Gameshow-Plattform**. Nutzer erstellen eigene G
 | Sprache | TypeScript (strict) |
 | Package Manager | **Bun** (nicht npm/yarn) |
 | API | tRPC v10 + React Query v4 |
-| Datenbank | MongoDB über Prisma v4 |
+| Datenbank | PostgreSQL über Prisma v5 |
 | Auth | NextAuth v4 (Google, Discord; Local nur in Dev) |
 | Realtime | PartyKit + Yjs (CRDTs) |
 | UI | **Mantine v7** (kein Tailwind) |
@@ -21,7 +21,7 @@ TheGenius ist eine **Multiplayer-Gameshow-Plattform**. Nutzer erstellen eigene G
 
 ## Kernkonzepte
 
-- **Gameshow**: Eine vom User erstellte Sammlung von Spielen (gespeichert als `Json[]` in MongoDB)
+- **Gameshow**: Eine vom User erstellte Sammlung von Spielen (gespeichert als `Json[]` in PostgreSQL)
 - **Room**: Eine Live-Spielsitzung mit Teams, Buzzer, Scoreboard, Sounds und Moderator-Controls
 - **Game**: Ein einzelnes Minispiel (z. B. DuSagst, Flaggen, ZehnSetzen) mit eigenem State und Konfigurator
 - **PartyKit + Yjs**: Echtzeit-CRDT-State-Sync zwischen allen Room-Teilnehmern
@@ -40,7 +40,7 @@ src/
 ├── server/         Server-only Code (tRPC-Router, Auth, Prisma, Classes)
 ├── types/          Geteilte TypeScript-Typen
 └── utils/          Hilfsfunktionen
-prisma/             Prisma Schema (MongoDB)
+prisma/             Prisma Schema (PostgreSQL, aufgeteilt in models/)
 party/              PartyKit Server
 __tests__/          Vitest Setup + Utilities
 __mock__/           Mock-Daten für Tests
@@ -48,14 +48,14 @@ __mock__/           Mock-Daten für Tests
 
 ## Umgebungen
 
-- `development` – lokale Entwicklung mit Docker MongoDB, JWT-Sessions, Local-Credentials-Provider
+- `development` – lokale Entwicklung mit Docker PostgreSQL, JWT-Sessions, Local-Credentials-Provider
 - `staging` – Railway Staging (`the-genius-staging.up.railway.app`)
 - `production` – Railway Production, Database-Sessions
 
 ## Lokale Entwicklung starten
 
 ```bash
-# MongoDB starten
+# PostgreSQL starten
 docker-compose -f local/compose.yml up -d
 
 # Dependencies installieren
@@ -68,4 +68,4 @@ bun run dev
 bun run partykit
 ```
 
-Ports: Next.js auf 3000, MongoDB auf 27017, Prisma Studio auf 4466.
+Ports: Next.js auf 3000, PostgreSQL auf 5432, Prisma Studio auf 4466.

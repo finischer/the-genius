@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Box, Table, Center, Text, Loader } from "@mantine/core";
+import { Box, Table, Center, Text, Loader, Button, Group } from "@mantine/core";
+import { IconFilterOff } from "@tabler/icons-react";
 import type { IDataTableProps } from "./dataTable.types";
 import { DataTableHeader } from "./DataTableHeader";
 import { DataTablePagination } from "./DataTablePagination";
@@ -42,6 +43,13 @@ function DataTable<T extends { id: string }>({
     setCursorStack([]);
   };
 
+  const handleClearAllFilters = () => {
+    updateUrl({}, sortState, null);
+    setCursorStack([]);
+  };
+
+  const hasActiveFilters = Object.keys(filterState).length > 0;
+
   // ── Pagination ────────────────────────────────────────────────────────────
 
   const handleNext = () => {
@@ -63,6 +71,20 @@ function DataTable<T extends { id: string }>({
 
   return (
     <Box>
+      {hasActiveFilters && (
+        <Group justify="flex-end" mb="xs">
+          <Button
+            variant="subtle"
+            size="xs"
+            color="red"
+            leftSection={<IconFilterOff size={14} />}
+            onClick={handleClearAllFilters}
+          >
+            Alle Filter zurücksetzen
+          </Button>
+        </Group>
+      )}
+
       {isLoading && (
         <Center py="md">
           <Loader size="sm" />

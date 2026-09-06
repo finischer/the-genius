@@ -21,6 +21,19 @@ export enum FilterOperator {
   OnDate = "onDate"
 }
 
+// ─── Operator labels ──────────────────────────────────────────────────────────
+
+export const OPERATOR_LABELS: Record<FilterOperator, string> = {
+  [FilterOperator.Equals]: "Gleich",
+  [FilterOperator.NotEquals]: "Ungleich",
+  [FilterOperator.Contains]: "Enthält",
+  [FilterOperator.StartsWith]: "Beginnt mit",
+  [FilterOperator.EndsWith]: "Endet mit",
+  [FilterOperator.Before]: "Vor",
+  [FilterOperator.After]: "Nach",
+  [FilterOperator.OnDate]: "Genau am"
+};
+
 // ─── Operator map ─────────────────────────────────────────────────────────────
 
 // Allowed operators per ColumnType; Custom has no filter operators.
@@ -128,7 +141,11 @@ export interface TQueryResult<T> {
   error: unknown;
 }
 
-export type TQueryFn<T> = (input: TQueryInput<T>) => TQueryResult<T>;
+// Defined as an interface (not a type alias) so typescript-eslint can fully
+// resolve the call signature and avoid spurious no-unsafe-call errors.
+export interface TQueryFn<T> {
+  (input: TQueryInput<T>): TQueryResult<T>;
+}
 
 // ─── DataTable Props ─────────────────────────────────────────────────────────
 

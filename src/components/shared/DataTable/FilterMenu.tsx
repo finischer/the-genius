@@ -7,11 +7,12 @@ import {
   Stack,
   Group
 } from "@mantine/core";
-import { DatePicker } from "@mantine/dates";
+import { DatePickerInput } from "@mantine/dates";
 import type { TColumnDef, TFilterEntry } from "./dataTable.types";
 import {
   ColumnType,
   FilterOperator,
+  OPERATOR_LABELS,
   OPERATORS_BY_TYPE
 } from "./dataTable.types";
 
@@ -71,7 +72,6 @@ function FilterMenu<T>({
       shadow="md"
     >
       <Popover.Target>
-        {/* Wrap in a span to ensure a single DOM element and attach the toggle handler */}
         <span
           style={{ display: "inline-flex" }}
           onClick={() => setOpened((o) => !o)}
@@ -82,19 +82,30 @@ function FilterMenu<T>({
 
       <Popover.Dropdown>
         <Stack gap="xs" w={260}>
+          {/* withinPortal: false keeps the dropdown in the same DOM tree as the
+              Popover so outside-click detection works correctly */}
           <Select
             label="Operator"
             size="xs"
             value={operator}
             onChange={(v) => v && setOperator(v as FilterOperator)}
+            comboboxProps={{ withinPortal: false }}
             data={availableOperators.map((op) => ({
               value: op,
-              label: op
+              label: OPERATOR_LABELS[op]
             }))}
           />
 
           {isDate ? (
-            <DatePicker value={dateValue} onChange={setDateValue} />
+            <DatePickerInput
+              label="Datum"
+              size="xs"
+              value={dateValue}
+              onChange={setDateValue}
+              placeholder="Datum wählen"
+              clearable
+              popoverProps={{ withinPortal: false }}
+            />
           ) : (
             <TextInput
               label="Wert"

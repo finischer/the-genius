@@ -114,6 +114,7 @@ const AnswerElement: FC<AnswerElementProps> = ({
         <QuestionBox
           py="xs"
           px="md"
+          w="25rem"
           contentCentered={false}
           opacity={answerOpacity}
           onClick={toggleAnswer}

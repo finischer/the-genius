@@ -62,7 +62,8 @@ export const initRoom = (
       roomTimer: false,
       gameIntro: false,
       game: false
-    }
+    },
+    componentVisibility: {}
   }
 });
 

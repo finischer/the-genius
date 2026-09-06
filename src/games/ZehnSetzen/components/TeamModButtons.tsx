@@ -1,29 +1,36 @@
+import { Stack, Text } from "@mantine/core";
 import React, { type FC } from "react";
+import VisibilityToggle from "~/components/shared/VisibilityToggle";
 import type { TZehnSetzenGameState } from "../config";
 import type { Team } from "~/types/gameshow.types";
-import { Button, ButtonGroup, Stack, Text } from "@mantine/core";
 
 interface TeamModButtonsProps {
   team: Team;
   game: TZehnSetzenGameState;
 }
 
+/**
+ * Per-team mod control for toggling score visibility inside answer elements.
+ * Uses game.display.teamScores (existing Yjs game state) — not componentVisibility —
+ * because this is game-specific score display logic, not generic UI visibility.
+ */
 const TeamModButtons: FC<TeamModButtonsProps> = ({ team, game }) => {
-  const toggleAnswerScores = () => {
-    game.display.teamScores[team.shortName] =
-      !game.display.teamScores[team.shortName];
-  };
-
   const displayTeamScores = game.display.teamScores[team.shortName];
 
+  const toggleAnswerScores = () => {
+    game.display.teamScores[team.shortName] = !displayTeamScores;
+  };
+
   return (
-    <Stack px="md" w={250} align="center" m="md">
-      <Text fw="bold">{team.name}</Text>
-      <ButtonGroup>
-        <Button variant="default" onClick={toggleAnswerScores}>
-          Punkteverteilung {displayTeamScores ? "ausblenden" : "anzeigen"}
-        </Button>
-      </ButtonGroup>
+    <Stack align="center" gap="xs">
+      <Text size="sm" fw="bold">
+        {team.name}
+      </Text>
+      <VisibilityToggle
+        label="Scores"
+        visible={displayTeamScores}
+        onToggle={toggleAnswerScores}
+      />
     </Stack>
   );
 };

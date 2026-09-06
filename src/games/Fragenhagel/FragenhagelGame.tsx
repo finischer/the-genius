@@ -233,6 +233,7 @@ const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
         </Button>
       </Group>
       <GameNavControls
+        mt="xl"
         currentIndex={game.qIndex}
         total={game.questions.length}
         onPrev={handlePrevQuestion}
@@ -282,9 +283,6 @@ const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
                   </Text>
                   <Text c="green.4" fw={500} ta="center">
                     {currQuestion.answer}
-                  </Text>
-                  <Text c="dimmed" size="xs" ta="center">
-                    {game.qIndex + 1} / {game.questions.length}
                   </Text>
                 </Stack>
               ) : (

@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { type FC } from "react";
 import GameNavControls from "~/components/shared/GameNavControls";
 import ModControlBar from "~/components/shared/ModControlBar";
+import ModToggle from "~/components/shared/ModToggle";
 import ModView from "~/components/shared/ModView";
 import QuestionBox from "~/components/shared/QuestionBox";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
@@ -18,19 +19,12 @@ import {
 import type { IZehnSetzenGameProps } from "./zehnSetzen.types";
 import AnswerGroup from "./components/AnswerGroup";
 
-const INACTIVE_OPACITY = 0.5;
-
 const ZehnSetzen: FC<IZehnSetzenGameProps> = ({ game }) => {
   const currQuestion = game.questions.at(game.qIndex);
   const teamState = game.teamStates;
   const room = useSyncedRoom();
 
   const { team, isHost, hostFunction } = useUser();
-
-  const showQuestion = game.display.question;
-  const inactiveOpacity = isHost ? INACTIVE_OPACITY : 0;
-  const questionBoxOpacity = showQuestion ? 1 : inactiveOpacity;
-
   const hasSubmittedAnswer = team?.shortName
     ? teamState[team.shortName].submitted
     : false;
@@ -112,15 +106,11 @@ const ZehnSetzen: FC<IZehnSetzenGameProps> = ({ game }) => {
       <Stack align="center">
         <motion.div layout>
           <Stack align="center">
-            <QuestionBox
-              cursor={isHost ? "pointer" : "default"}
-              onClick={hostFunction(() => {
-                game.display.question = !game.display.question;
-              })}
-              opacity={questionBoxOpacity}
-            >
-              {currQuestion?.question}
-            </QuestionBox>
+            <ModToggle id="zehnsetzen-question" label="Frage">
+              <QuestionBox cursor={isHost ? "pointer" : "default"}>
+                {currQuestion?.question}
+              </QuestionBox>
+            </ModToggle>
             <AnswerGroup
               game={game}
               question={currQuestion}

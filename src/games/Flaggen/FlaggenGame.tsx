@@ -1,7 +1,8 @@
-import { Flex, Image } from "@mantine/core";
+import { Flex } from "@mantine/core";
 import React from "react";
 import GameNavControls from "~/components/shared/GameNavControls";
 import ModControlBar from "~/components/shared/ModControlBar";
+import ModToggle from "~/components/shared/ModToggle";
 import RevealButton from "~/components/shared/RevealButton";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { useUser } from "~/hooks/useUser";
@@ -11,24 +12,15 @@ import { type IFlaggenGameProps } from "./flaggen.types";
 
 const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
   const room = useSyncedRoom();
-  const { isHost, hostFunction } = useUser();
-  const displayFlag = game.display.country;
+  const { hostFunction } = useUser();
   const currFlag = game.countries[game.qIndex];
   const shortCode = currFlag ? String(currFlag.shortCode) : null;
 
-  const handleFlagClick = hostFunction(() => {
-    if (displayFlag) return;
-    game.display.country = true;
-  });
-
   const prepareQuestion = async () => {
     game.display.answer = false;
-    game.display.country = false;
     room.context.answerState.answer = "";
     room.context.answerState.isAnswerDisplayed = false;
-    if (displayFlag) {
-      await sleep(800);
-    }
+    await sleep(800);
   };
 
   const handleNextFlagClick = hostFunction(async () => {
@@ -55,21 +47,19 @@ const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
   return (
     <Flex direction="column" gap="md" align="center">
       {currFlag && shortCode && (
-        <Image
-          className={classes.flagImg}
-          src={`https://flagcdn.com/w640/${shortCode}.png`}
-          alt="Image not found"
-          w={400}
-          radius="sm"
-          opacity={displayFlag ? 1 : isHost ? 0.5 : 0}
-          onClick={handleFlagClick}
-          data-hostandnoflag={isHost && !displayFlag}
-          style={{
-            transform: `scale(${displayFlag ? "1" : "0.9"})`,
-            transition: "all 500ms",
-            userSelect: "none"
-          }}
-        />
+        <ModToggle id="flaggen-flag" label="Flagge">
+          <img
+            className={classes.flagImg}
+            src={`https://flagcdn.com/w640/${shortCode}.png`}
+            alt={currFlag.country ?? "Flagge"}
+            width={400}
+            style={{
+              borderRadius: "var(--mantine-radius-sm)",
+              userSelect: "none",
+              display: "block"
+            }}
+          />
+        </ModToggle>
       )}
 
       <ModControlBar>

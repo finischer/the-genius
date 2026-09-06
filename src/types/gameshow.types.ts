@@ -70,6 +70,8 @@ export type Room = {
       roomTimer: boolean;
       game: boolean;
     };
+    /** Tracks visibility of individually togglable UI components by ID. */
+    componentVisibility: Record<string, boolean>;
   };
 };
 

@@ -2,6 +2,7 @@ import { Button, Flex, Text, useMantineTheme } from "@mantine/core";
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 import GameNavControls from "~/components/shared/GameNavControls";
+import ModToggle from "~/components/shared/ModToggle";
 import ModView from "~/components/shared/ModView";
 import QuestionBox from "~/components/shared/QuestionBox";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
@@ -50,9 +51,6 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({
   const isPrevBtnDisabled = isTimerActive || game.qIndex <= 0;
   const isNxtBtnDisabled =
     isTimerActive || game.qIndex >= game.questions.length - 1;
-  const showQuestion = game.display.question;
-
-  const questionOpacity = isHost && !showQuestion ? 0.7 : 0;
 
   const AnswerRow: React.FC<AnswerRowProps> = ({ index, answer }) => {
     const theme = useMantineTheme();
@@ -90,19 +88,11 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({
     allBoxes.forEach((box) => (box.submitted = false));
   };
 
-  const handleShowAnswer = hostFunction((answerIndex: number) => {
-    game.display.answers.push(answerIndex);
-  });
-
   const handleClickAnswer = (answerIndex: number) => {
     if (!player || allAnswersSubmitted) return;
 
     player.context.duSagst.answer = answerIndex;
   };
-
-  const handleShowQuestion = hostFunction(() => {
-    game.display.question = true;
-  });
 
   const prepareQuestion = () => {
     game.display.answers = [];
@@ -129,20 +119,18 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({
 
   return (
     <Flex direction="column" gap="xl">
-      <Flex direction="column" pos="relative" align="center" gap="md">
-        <ModView>
-          <Button
-            variant="default"
-            onClick={handleShowQuestion}
-            disabled={showQuestion}
-          >
-            Frage anzeigen
-          </Button>
-        </ModView>
-        <QuestionBox opacity={game.display.question ? 1 : questionOpacity}>
-          {q}
-        </QuestionBox>
-      </Flex>
+      <ModToggle
+        id="dusagst-question"
+        label="Frage"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "var(--mantine-spacing-md)"
+        }}
+      >
+        <QuestionBox cursor={isHost ? "pointer" : "default"}>{q}</QuestionBox>
+      </ModToggle>
 
       <AnimatePresence>
         <Flex direction="column" gap="sm" style={{ fontWeight: "bold" }}>
@@ -150,32 +138,33 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({
             const showAnswer = game.display.answers.includes(index);
             const rotateValue = showAnswer ? 0 : 90;
 
-            if (isHost && !showAnswer) {
-              return (
-                <Flex
-                  key={a.id}
-                  p="0.5rem 2rem"
-                  justify="center"
-                  onClick={() => handleShowAnswer(index)}
-                >
-                  <Button variant="default">
-                    Antwort {index + 1} aufdecken
-                  </Button>
-                </Flex>
-              );
-            }
+            const handleToggleAnswer = hostFunction(() => {
+              if (showAnswer) {
+                game.display.answers = game.display.answers.filter(
+                  (i) => i !== index
+                );
+              } else {
+                game.display.answers.push(index);
+              }
+            });
 
             return (
-              <motion.div
+              <ModToggle
                 key={a.id}
-                whileHover={{ opacity: isAnswerClickable ? 0.7 : 1 }}
-                initial={{ opacity: 1, rotateX: 90 }}
-                animate={{ opacity: 1, rotateX: rotateValue }}
-                exit={{ opacity: 1, rotateX: -90 }}
-                transition={{ type: "tween" }}
+                label={`Antwort ${index + 1}`}
+                visible={showAnswer}
+                onToggle={handleToggleAnswer}
               >
-                <AnswerRow index={index} answer={a.text} />
-              </motion.div>
+                <motion.div
+                  whileHover={{ opacity: isAnswerClickable ? 0.7 : 1 }}
+                  initial={{ opacity: 1, rotateX: isHost ? 0 : 90 }}
+                  animate={{ opacity: 1, rotateX: isHost ? 0 : rotateValue }}
+                  exit={{ opacity: 1, rotateX: isHost ? 0 : -90 }}
+                  transition={{ type: "tween" }}
+                >
+                  <AnswerRow index={index} answer={a.text} />
+                </motion.div>
+              </ModToggle>
             );
           })}
 

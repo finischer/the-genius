@@ -1,9 +1,9 @@
-import { Button, Group, Text } from "@mantine/core";
+import { Button, Group, type GroupProps, Text } from "@mantine/core";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import React from "react";
 import ModView from "../ModView";
 
-interface GameNavControlsProps {
+interface GameNavControlsProps extends Omit<GroupProps, "children"> {
   currentIndex: number;
   total: number;
   onPrev: () => void;
@@ -26,14 +26,18 @@ const GameNavControls: React.FC<GameNavControlsProps> = ({
   onNext,
   label = "Frage",
   disablePrev,
-  disableNext
+  disableNext,
+  gap = "sm",
+  align = "center",
+  justify = "center",
+  ...rest
 }) => {
   const isPrevDisabled = disablePrev ?? currentIndex <= 0;
   const isNextDisabled = disableNext ?? currentIndex >= total - 1;
 
   return (
     <ModView>
-      <Group gap="sm" align="center" justify="center">
+      <Group gap={gap} align={align} justify={justify} {...rest}>
         <Button
           variant="default"
           size="sm"

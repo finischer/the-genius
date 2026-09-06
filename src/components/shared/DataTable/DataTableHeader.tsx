@@ -3,6 +3,7 @@ import { Table, Group, ActionIcon, Text } from "@mantine/core";
 import {
   IconChevronUp,
   IconChevronDown,
+  IconSelector,
   IconFilter,
   IconFilterFilled
 } from "@tabler/icons-react";
@@ -25,35 +26,49 @@ function DataTableHeader<T>({
   onFilterChange
 }: IDataTableHeaderProps<T>) {
   return (
-    <Table.Thead>
+    <Table.Thead
+      style={{
+        backgroundColor: "var(--mantine-color-dark-6)",
+        borderBottom: "2px solid var(--mantine-color-dark-4)"
+      }}
+    >
       <Table.Tr>
         {columns.map((col) => {
           const isActiveSortColumn = sortState?.key === col.key;
           const hasActiveFilter = Boolean(filterState[col.key]);
 
           return (
-            <Table.Th key={String(col.key)}>
-              <Group gap={4} wrap="nowrap">
+            <Table.Th
+              key={String(col.key)}
+              style={{ paddingTop: 12, paddingBottom: 12 }}
+            >
+              <Group gap={6} wrap="nowrap">
                 {/* Sort icon — only for sortable columns */}
                 {col.sortable ? (
                   <ActionIcon
                     variant="subtle"
-                    size="sm"
+                    size="md"
                     onClick={() => onSort(col.key)}
                     aria-label={`Sortieren nach ${col.label}`}
                   >
                     {isActiveSortColumn && sortState?.direction === "asc" ? (
-                      <IconChevronUp size={14} />
+                      <IconChevronUp size={16} />
                     ) : isActiveSortColumn &&
                       sortState?.direction === "desc" ? (
-                      <IconChevronDown size={14} />
+                      <IconChevronDown size={16} />
                     ) : (
-                      <IconChevronUp size={14} style={{ opacity: 0.3 }} />
+                      <IconSelector size={16} style={{ opacity: 0.3 }} />
                     )}
                   </ActionIcon>
                 ) : null}
 
-                <Text size="sm" fw={600}>
+                <Text
+                  size="xs"
+                  fw={700}
+                  tt="uppercase"
+                  style={{ letterSpacing: "0.06em" }}
+                  c="dimmed"
+                >
                   {col.label}
                 </Text>
 
@@ -73,13 +88,14 @@ function DataTableHeader<T>({
                   >
                     <ActionIcon
                       variant="subtle"
-                      size="sm"
+                      size="md"
+                      color={hasActiveFilter ? "blue" : "gray"}
                       aria-label={`Filter für ${col.label}`}
                     >
                       {hasActiveFilter ? (
-                        <IconFilterFilled size={14} />
+                        <IconFilterFilled size={16} />
                       ) : (
-                        <IconFilter size={14} />
+                        <IconFilter size={16} />
                       )}
                     </ActionIcon>
                   </FilterMenu>

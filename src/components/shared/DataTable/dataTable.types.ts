@@ -114,6 +114,7 @@ interface TColumnDefBase<T> {
   label: string;
   sortable?: boolean;
   filterable?: boolean;
+  width?: number | string; // e.g. 200 (px) or "20%"
 }
 
 // For type !== "custom": render is optional.

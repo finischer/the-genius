@@ -1,10 +1,40 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Box, Table, Center, Text, Loader, Button, Group } from "@mantine/core";
 import { IconFilterOff } from "@tabler/icons-react";
 import type { IDataTableProps } from "./dataTable.types";
 import { DataTableHeader } from "./DataTableHeader";
 import { DataTablePagination } from "./DataTablePagination";
 import { useDataTableUrlState } from "~/hooks/useDataTableUrlState";
+import Tooltip from "../Tooltip";
+
+// Only shows a tooltip when the text is actually truncated (scrollWidth > offsetWidth).
+const EllipsisCell: React.FC<{ content: string }> = ({ content }) => {
+  const ref = useRef<HTMLSpanElement>(null);
+  const [isTruncated, setIsTruncated] = useState(false);
+
+  const checkTruncation = () => {
+    if (ref.current) {
+      setIsTruncated(ref.current.scrollWidth > ref.current.offsetWidth);
+    }
+  };
+
+  return (
+    <Tooltip label={content} disabled={!isTruncated} withArrow>
+      <span
+        ref={ref}
+        onMouseEnter={checkTruncation}
+        style={{
+          display: "block",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap"
+        }}
+      >
+        {content}
+      </span>
+    </Tooltip>
+  );
+};
 
 function DataTable<T extends { id: string }>({
   columns,
@@ -91,7 +121,20 @@ function DataTable<T extends { id: string }>({
         </Center>
       )}
 
-      <Table verticalSpacing="sm" stickyHeader>
+      <Table
+        verticalSpacing="md"
+        stickyHeader
+        highlightOnHover
+        style={{ tableLayout: "fixed", width: "100%" }}
+      >
+        <colgroup>
+          {columns.map((col) => (
+            <col
+              key={String(col.key)}
+              style={{ width: col.width ?? undefined }}
+            />
+          ))}
+        </colgroup>
         <DataTableHeader
           columns={columns}
           sortState={sortState}
@@ -113,7 +156,11 @@ function DataTable<T extends { id: string }>({
               <Table.Tr key={row.id}>
                 {columns.map((col) => (
                   <Table.Td key={String(col.key)}>
-                    {col.render ? col.render(row) : String(row[col.key] ?? "-")}
+                    {col.render ? (
+                      col.render(row)
+                    ) : (
+                      <EllipsisCell content={String(row[col.key] ?? "-")} />
+                    )}
                   </Table.Td>
                 ))}
               </Table.Tr>

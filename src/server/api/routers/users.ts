@@ -8,6 +8,10 @@ import {
   createTRPCRouter,
   protectedProcedure
 } from "~/server/api/trpc";
+import {
+  dataTableInputSchema,
+  buildPrismaWhereClause
+} from "~/server/api/utils/dataTableInput";
 
 export const safedUserSchema = z.object({
   id: z.string(),
@@ -29,10 +33,35 @@ type UserPropertiesUpdatebaleByUser = Partial<
 >; // only these properties can be updated by user
 
 export const usersRouter = createTRPCRouter({
-  getAll: adminProcedure.query(async ({ ctx }) => {
-    const userList = await ctx.prisma.user.findMany();
-    return userList;
-  }),
+  getAll: adminProcedure
+    .input(dataTableInputSchema)
+    .query(async ({ ctx, input }) => {
+      const { filter, sort, pagination } = input ?? {};
+      const pageSize = pagination?.pageSize ?? 25;
+      const cursor = pagination?.cursor ?? null;
+
+      const where = buildPrismaWhereClause(filter);
+
+      // Always include id as tiebreaker for stable cursor pagination
+      const orderBy: Record<string, string>[] = sort
+        ? [{ [sort.key]: sort.direction }, { id: "asc" }]
+        : [{ createdAt: "desc" }, { id: "asc" }];
+
+      const users = await ctx.prisma.user.findMany({
+        where,
+        orderBy,
+        take: pageSize + 1,
+        ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {})
+      });
+
+      const hasNextPage = users.length > pageSize;
+      const items = hasNextPage ? users.slice(0, pageSize) : users;
+      const nextCursor = hasNextPage
+        ? (items[items.length - 1]?.id ?? null)
+        : null;
+
+      return { items, nextCursor, hasNextPage };
+    }),
   updateUserByAdmin: adminProcedure
     .input(
       z.object({

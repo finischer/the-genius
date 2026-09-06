@@ -4,7 +4,7 @@ import {
   rem,
   type BadgeProps
 } from "@mantine/core";
-import { IconCrown, IconDiamond } from "@tabler/icons-react";
+import { IconCrown, IconDiamond, IconUser } from "@tabler/icons-react";
 import React from "react";
 import Tooltip from "../Tooltip";
 import type { UserRole } from "~/generated/prisma/enums";
@@ -29,10 +29,16 @@ const PremimumBadge = () => (
   </Badge>
 );
 
+const UserBadge = () => (
+  <Badge color="gray" tooltip="User">
+    <IconUser style={{ width: rem(18), height: rem(18) }} />
+  </Badge>
+);
+
 const RoleBadge = ({ role }: { role: UserRole }) => {
   if (role === "PREMIUM") return <PremimumBadge />;
   if (role === "ADMIN") return <AdminBadge />;
-  return <></>;
+  return <UserBadge />;
 };
 
 const Badge: React.FC<IBadgeProps> = ({ tooltip, ...props }) => {
@@ -47,4 +53,4 @@ const Badge: React.FC<IBadgeProps> = ({ tooltip, ...props }) => {
   );
 };
 
-export { AdminBadge, PremimumBadge, RoleBadge };
+export { AdminBadge, PremimumBadge, UserBadge, RoleBadge };

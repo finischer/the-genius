@@ -47,10 +47,10 @@ const mutation = api.example.create.useMutation();
 ## Datenbankzugriff: Prisma
 
 - Prisma Client Singleton in `src/server/db/`
-- MongoDB als Provider
+- PostgreSQL als Provider
 - Schema in `prisma/schema.prisma`
 - Nach Schema-Änderungen: `bunx prisma generate` ausführen
-- Neue Spiele müssen **manuell** in die MongoDB `Game`-Collection eingetragen werden (slug muss exakt mit `Game`-Enum übereinstimmen)
+- Neue Spiele müssen manuell in die Postgres `Game`-Tabelle eingetragen werden (slug muss exakt mit `Game`-Enum übereinstimmen)
 
 ## Realtime: PartyKit + Yjs
 
@@ -117,6 +117,6 @@ Ein neues Spiel erfordert diese Schritte (in dieser Reihenfolge):
 3. `TGameSettingsMap` in `src/games/core/types.ts` erweitern
 4. In `src/games/core/games.config.ts` registrieren
 5. Konfigurator unter `src/components/gameshows/GameNameConfigurator/` anlegen
-6. MongoDB `Game`-Collection: Dokument manuell einfügen (slug = Enum-Wert, `active: true`, `rules: ""`)
+6. Postgres `Game`-Tabelle: Zeile manuell einfügen (slug = Enum-Wert, `active: true`, `rules: ""`)
 
 Ohne Schritt 6 erscheint das Spiel **nicht** im GamesPicker.

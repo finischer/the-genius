@@ -1,42 +1,34 @@
-import { Box, Button, Flex, SimpleGrid, useMantineTheme } from "@mantine/core";
-import { IconEye, IconEyeOff } from "@tabler/icons-react";
+import { Flex, SimpleGrid, useMantineTheme } from "@mantine/core";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { Fragment } from "react";
 import CodeList from "~/components/gameshows/GeheimwörterConfigurator/components/CodeList";
 import AnswerBanner from "~/components/room/AnswerBanner";
-import ActionIcon from "~/components/shared/ActionIcon";
+import GameNavControls from "~/components/shared/GameNavControls";
+import ModToggle from "~/components/shared/ModToggle";
+import RevealButton from "~/components/shared/RevealButton";
+import useComponentVisibility from "~/hooks/useComponentVisibility";
+import useAudio from "~/hooks/useAudio";
 import { useUser } from "~/hooks/useUser";
 import { animations } from "~/utils/animations";
-import type { IGeheimwörterGameProps } from "./geheimwörter.types";
-import ArrowActionButton from "~/components/shared/ArrowActionButton";
-import ModView from "~/components/shared/ModView";
-import useAudio from "~/hooks/useAudio";
 import { slug } from "~/utils/strings";
 import { goToNextQuestion, goToPreviousQuestion, sleep } from "~/utils/helpers";
+import type { IGeheimwörterGameProps } from "./geheimwörter.types";
+import ModView from "~/components/shared/ModView";
 
 const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
   const theme = useMantineTheme();
   const question = game.questions[game.qIndex];
   const showAnswer = game.display.answer;
-  const showWords = game.display.words;
   const { isHost, hostFunction } = useUser();
   const { triggerAudioEvent } = useAudio();
 
-  const ToggleIcon = ({ action }: { action: keyof typeof game.display }) => {
-    if (game.display[action]) {
-      return <IconEyeOff size={32} />;
-    }
-
-    return <IconEye size={32} />;
-  };
-
-  const toggleCodeList = hostFunction(() => {
-    game.display.codeList = !game.display.codeList;
-  });
-
-  const toggleWords = hostFunction(() => {
-    game.display.words = !game.display.words;
-  });
+  // Visibility state managed via the generic componentVisibility system
+  const { visible: showWords } = useComponentVisibility(
+    "geheimwoerter-wordlist"
+  );
+  const { visible: showCodeList } = useComponentVisibility(
+    "geheimwoerter-codelist"
+  );
 
   const handleShowAnswer = hostFunction(() => {
     triggerAudioEvent("playSound", "bell");
@@ -44,7 +36,6 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
   });
 
   const prepareQuestion = async () => {
-    game.display.words = false;
     if (showAnswer) {
       await sleep(200);
     }
@@ -68,53 +59,27 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
   if (!question) return <></>;
 
   const WordList = () => (
-    <Flex direction="column" gap="md">
-      <ModView>
-        <ActionIcon
-          onClick={toggleWords}
-          size={32}
-          toolTip={`Wörter ${showWords ? "ausblenden" : "einblenden"}`}
-        >
-          <ToggleIcon action="words" />
-        </ActionIcon>
-      </ModView>
-      <Flex
-        direction="column"
-        bg={theme.primaryColor}
-        p="md"
-        style={{ borderRadius: theme.radius.md }}
-        opacity={showWords ? 1 : 0.4}
-      >
-        <SimpleGrid cols={showAnswer ? 2 : 1} verticalSpacing={0} spacing="md">
-          {question.words.map((word, index) => (
-            <Fragment key={slug([word.word, index])}>
-              <span style={{ fontWeight: "bold" }}>{word.word}</span>
-              {showAnswer && (
-                <span>
-                  <span style={{ fontWeight: "bold" }}>{word.category[0]}</span>
-                  <span>{word.category.slice(1)}</span>
-                </span>
-              )}
-            </Fragment>
-          ))}
-        </SimpleGrid>
-      </Flex>
+    <Flex
+      direction="column"
+      bg={theme.primaryColor}
+      p="md"
+      style={{ borderRadius: theme.radius.md }}
+    >
+      <SimpleGrid cols={showAnswer ? 2 : 1} verticalSpacing={0} spacing="md">
+        {question.words.map((word, index) => (
+          <Fragment key={slug([word.word, index])}>
+            <span style={{ fontWeight: "bold" }}>{word.word}</span>
+            {showAnswer && (
+              <span>
+                <span style={{ fontWeight: "bold" }}>{word.category[0]}</span>
+                <span>{word.category.slice(1)}</span>
+              </span>
+            )}
+          </Fragment>
+        ))}
+      </SimpleGrid>
     </Flex>
   );
-
-  const ShowAnswerButton = () => {
-    if (showAnswer || !isHost) return <></>;
-
-    return (
-      <Button
-        variant="default"
-        onClick={handleShowAnswer}
-        disabled={!showWords}
-      >
-        Antwort anzeigen
-      </Button>
-    );
-  };
 
   return (
     <Flex align="center" gap="5rem" justify="center">
@@ -125,21 +90,11 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
         spacing="5rem"
       >
         <AnimatePresence>
-          {(game.display.codeList || isHost) && (
+          {(showCodeList || isHost) && (
             <Flex direction="column" gap="sm" w="50%">
-              <ModView>
-                <ActionIcon
-                  onClick={toggleCodeList}
-                  size={32}
-                  toolTip={`Codelist ${game.display.codeList ? "ausblenden" : "einblenden"}`}
-                >
-                  <ToggleIcon action="codeList" />
-                </ActionIcon>
-              </ModView>
-
-              <Box opacity={game.display.codeList ? 1 : 0.4}>
+              <ModToggle id="geheimwoerter-codelist" label="Codelist">
                 <CodeList codeList={game.codeList} showTitle={false} />
-              </Box>
+              </ModToggle>
             </Flex>
           )}
         </AnimatePresence>
@@ -157,36 +112,33 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
                   alignItems: "center"
                 }}
               >
-                <Flex gap="md" justify="center" align="center">
+                <ModToggle id="geheimwoerter-wordlist" label="Wörter">
                   <WordList />
-                </Flex>
-                <Flex align="center" gap="md">
+                </ModToggle>
+
+                {!showAnswer ? (
                   <ModView>
-                    <ArrowActionButton
-                      arrowDirection="left"
-                      onClick={handlePrevQuestion}
-                      tooltip="Vorherige Frage"
-                      disabled={game.qIndex <= 0}
+                    <RevealButton
+                      onReveal={handleShowAnswer}
+                      revealed={showAnswer}
+                      label="Antwort"
+                      disabled={!showWords}
                     />
                   </ModView>
-                  {!showAnswer ? (
-                    <ShowAnswerButton />
-                  ) : (
-                    <AnswerBanner
-                      answer={question.answer}
-                      showAnswer={showWords && showAnswer}
-                      miw={0}
-                    />
-                  )}
-                  <ModView>
-                    <ArrowActionButton
-                      arrowDirection="right"
-                      onClick={handleNextQuestion}
-                      tooltip="Nächste Frage"
-                      disabled={game.qIndex >= game.questions.length - 1}
-                    />
-                  </ModView>
-                </Flex>
+                ) : (
+                  <AnswerBanner
+                    answer={question.answer}
+                    showAnswer={showWords && showAnswer}
+                    miw={0}
+                  />
+                )}
+
+                <GameNavControls
+                  currentIndex={game.qIndex}
+                  total={game.questions.length}
+                  onPrev={handlePrevQuestion}
+                  onNext={handleNextQuestion}
+                />
               </motion.div>
             </Flex>
           )}

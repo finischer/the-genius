@@ -39,7 +39,8 @@ const EllipsisCell: React.FC<{ content: string }> = ({ content }) => {
 function DataTable<T extends { id: string }>({
   columns,
   queryFn,
-  defaultPageSize = 25
+  defaultPageSize = 25,
+  onRowClick
 }: IDataTableProps<T>) {
   const { filterState, sortState, paginationState, updateUrl } =
     useDataTableUrlState<T>(defaultPageSize);
@@ -153,7 +154,11 @@ function DataTable<T extends { id: string }>({
             </Table.Tr>
           ) : (
             data?.items.map((row) => (
-              <Table.Tr key={row.id}>
+              <Table.Tr
+                key={row.id}
+                onClick={onRowClick ? () => onRowClick(row) : undefined}
+                style={onRowClick ? { cursor: "pointer" } : undefined}
+              >
                 {columns.map((col) => (
                   <Table.Td key={String(col.key)}>
                     {col.render ? (

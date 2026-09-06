@@ -7,6 +7,7 @@ import { RoleBadge } from "~/components/shared/Badge/Badge";
 import { formatTimestamp } from "~/utils/dates";
 import { api } from "~/utils/api";
 import ActionMenu from "./ActionMenu";
+import { modals } from "@mantine/modals";
 
 const userColumns: TColumnDef<User>[] = [
   {
@@ -55,11 +56,19 @@ const userColumns: TColumnDef<User>[] = [
 ];
 
 const UserList: React.FC = () => {
+  const openUserDetails = (user: User) => {
+    modals.openContextModal({
+      modal: "userDetails",
+      innerProps: { user }
+    });
+  };
+
   return (
     <DataTable<User>
       columns={userColumns}
       queryFn={(input) => api.users.getAll.useQuery(input)}
       defaultPageSize={25}
+      onRowClick={openUserDetails}
     />
   );
 };

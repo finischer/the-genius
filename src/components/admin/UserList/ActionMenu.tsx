@@ -21,7 +21,6 @@ const ActionMenu = ({ user }: { user: User }) => {
   const openUserDetails = () =>
     modals.openContextModal({
       modal: "userDetails",
-      title: `Details zu: ${user.username ?? NOT_FOUND_LITERAL}`,
       w: "100%",
       h: "100%",
       bg: "blue",

@@ -155,4 +155,5 @@ export interface IDataTableProps<T extends { id: string }> {
   columns: TColumnDef<T>[];
   queryFn: TQueryFn<T>;
   defaultPageSize?: number; // Default: 25
+  onRowClick?: (row: T) => void;
 }

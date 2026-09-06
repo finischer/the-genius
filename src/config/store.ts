@@ -14,7 +14,6 @@ import type { GameState } from "~/games";
 
 export const initRoom = (
   name: string,
-  password: string,
   games: GameState[],
   creatorId: string,
   maxPlayersPerTeam: number = 1
@@ -22,7 +21,6 @@ export const initRoom = (
   id: randomId(),
   creatorId,
   name,
-  password,
   maxPlayersPerTeam,
   teams: {
     teamOne: initTeam("Team 1", "t1"),

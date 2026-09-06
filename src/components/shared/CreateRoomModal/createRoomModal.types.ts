@@ -11,6 +11,5 @@ export interface ICreateRoomConfig {
   name: string;
   modus: GameshowMode;
   isPrivate: boolean;
-  password: string;
   games: unknown[]; // TODO: Create Game Type
 }

@@ -40,7 +40,6 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({
       name: "",
       modus: hasGameForOnlyTeamMode ? GameshowMode.TEAM : GameshowMode.DUELL,
       isPrivate: true,
-      password: "",
       games: []
     }
   });
@@ -84,7 +83,6 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({
 
     const room = initRoom(
       values.name,
-      values.password,
       gameshow.games as GameState[],
       user.id,
       maxPlayersPerTeam

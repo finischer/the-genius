@@ -69,6 +69,10 @@ const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
     game.timerState.isActive = false;
   });
 
+  const handleResetTimer = hostFunction(() => {
+    game.timerState.seconds = 0;
+  });
+
   const handleSetInterval = hostFunction((start: number, end: number) => {
     game.intervalState = { start, end };
   });
@@ -198,6 +202,14 @@ const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
         Timer
       </Text>
       <ButtonGroup>
+        <Button
+          size="xs"
+          variant="default"
+          disabled={game.timerState.isActive}
+          onClick={handleResetTimer}
+        >
+          Zurücksetzen
+        </Button>
         <Button
           size="xs"
           variant="default"

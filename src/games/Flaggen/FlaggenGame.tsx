@@ -6,6 +6,7 @@ import ModToggle from "~/components/shared/ModToggle";
 import RevealButton from "~/components/shared/RevealButton";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { useUser } from "~/hooks/useUser";
+import useComponentVisibility from "~/hooks/useComponentVisibility";
 import { goToNextQuestion, goToPreviousQuestion, sleep } from "~/utils/helpers";
 import classes from "./flaggen.module.css";
 import { type IFlaggenGameProps } from "./flaggen.types";
@@ -15,12 +16,19 @@ const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
   const { hostFunction } = useUser();
   const currFlag = game.countries[game.qIndex];
   const shortCode = currFlag ? String(currFlag.shortCode) : null;
+  const { visible: flagVisible, toggle: toggleFlag } =
+    useComponentVisibility("flaggen-flag");
 
   const prepareQuestion = async () => {
+    // Hide the flag first if it is currently visible, then wait for the
+    // transition to finish so players don't see the next flag peek through.
+    if (flagVisible) {
+      toggleFlag();
+      await sleep(300);
+    }
     game.display.answer = false;
     room.context.answerState.answer = "";
     room.context.answerState.isAnswerDisplayed = false;
-    await sleep(800);
   };
 
   const handleNextFlagClick = hostFunction(async () => {
@@ -50,9 +58,8 @@ const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
         <ModToggle id="flaggen-flag" label="Flagge">
           <img
             className={classes.flagImg}
-            src={`https://flagcdn.com/w640/${shortCode}.png`}
+            src={`https://flagcdn.com/h240/${shortCode}.png`}
             alt={currFlag.country ?? "Flagge"}
-            width={400}
             style={{
               borderRadius: "var(--mantine-radius-sm)",
               userSelect: "none",

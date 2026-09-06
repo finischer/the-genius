@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import useAudio from "~/hooks/useAudio";
 import { useUser } from "~/hooks/useUser";
 import type { TFragenhagelGameState } from "./config";
@@ -44,6 +44,11 @@ const useFragenhagelBuzzer = (game: TFragenhagelGameState) => {
     game.buzzerCount += 1;
   };
 
+  // Keep a stable ref so event listeners always call the latest version
+  // without needing to re-register on every render.
+  const handleBuzzRef = useRef(handleBuzz);
+  handleBuzzRef.current = handleBuzz;
+
   // Spacebar
   useEffect(() => {
     if (!isPlayer) return;
@@ -55,22 +60,22 @@ const useFragenhagelBuzzer = (game: TFragenhagelGameState) => {
         document.activeElement?.tagName !== "TEXTAREA"
       ) {
         e.preventDefault();
-        handleBuzz();
+        handleBuzzRef.current();
       }
     };
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [isPlayer, isActivePlayer, isLocked, game.timerState.isActive]);
+  }, [isPlayer]);
 
   // Game-title click dispatched by RoomHeader
   useEffect(() => {
     if (!isPlayer) return;
 
-    const onTitleClick = () => handleBuzz();
+    const onTitleClick = () => handleBuzzRef.current();
     window.addEventListener("fragenhagel-buzz", onTitleClick);
     return () => window.removeEventListener("fragenhagel-buzz", onTitleClick);
-  }, [isPlayer, isActivePlayer, isLocked, game.timerState.isActive]);
+  }, [isPlayer]);
 };
 
 export default useFragenhagelBuzzer;

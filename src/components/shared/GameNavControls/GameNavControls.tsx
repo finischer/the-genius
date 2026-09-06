@@ -1,6 +1,7 @@
 import { Button, Group, type GroupProps, Text } from "@mantine/core";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import React from "react";
+import useBuzzerActions from "~/hooks/useBuzzer/useBuzzerActions";
 import ModView from "../ModView";
 
 interface GameNavControlsProps extends Omit<GroupProps, "children"> {
@@ -34,6 +35,17 @@ const GameNavControls: React.FC<GameNavControlsProps> = ({
 }) => {
   const isPrevDisabled = disablePrev ?? currentIndex <= 0;
   const isNextDisabled = disableNext ?? currentIndex >= total - 1;
+  const { unlockAllBuzzers } = useBuzzerActions();
+
+  const handlePrev = () => {
+    unlockAllBuzzers();
+    onPrev();
+  };
+
+  const handleNext = () => {
+    unlockAllBuzzers();
+    onNext();
+  };
 
   return (
     <ModView>
@@ -43,12 +55,12 @@ const GameNavControls: React.FC<GameNavControlsProps> = ({
           size="sm"
           leftSection={<IconChevronLeft size={16} />}
           disabled={isPrevDisabled}
-          onClick={onPrev}
+          onClick={handlePrev}
         >
           Zurück
         </Button>
 
-        <Text size="sm" c="dimmed" w={90} ta="center">
+        <Text size="sm" c="dimmed" w={150} ta="center">
           {label} {currentIndex + 1} / {total}
         </Text>
 
@@ -57,7 +69,7 @@ const GameNavControls: React.FC<GameNavControlsProps> = ({
           size="sm"
           rightSection={<IconChevronRight size={16} />}
           disabled={isNextDisabled}
-          onClick={onNext}
+          onClick={handleNext}
         >
           Weiter
         </Button>

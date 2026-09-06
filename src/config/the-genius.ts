@@ -1,6 +1,7 @@
 import type { TTheGeniusConfig } from "~/types/config.types";
 
 export const TheGeniusConfig: TTheGeniusConfig = {
+  appTitle: "TheGenius",
   socialMedia: {
     buyMeACoffee: "https://www.buymeacoffee.com/niklasfischer"
   },

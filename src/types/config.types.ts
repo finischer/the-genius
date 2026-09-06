@@ -1,6 +1,7 @@
 import type { GameshowDifficulty } from "~/generated/prisma/enums";
 
 export type TTheGeniusConfig = {
+  appTitle: string;
   socialMedia: {
     buyMeACoffee: string;
   };

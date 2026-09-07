@@ -63,7 +63,7 @@ __mock__/           Mock-Daten für Tests
 
 ```bash
 # PostgreSQL starten
-docker-compose -f local/compose.yml up -d
+bun run db:start
 
 # Dependencies installieren
 bun install

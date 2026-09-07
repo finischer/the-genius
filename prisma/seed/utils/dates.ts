@@ -6,8 +6,11 @@
  * Dates are spread across a 2-year window ending 2025-01-01.
  */
 
-// Fixed reference point – never changes
-const BASE_DATE = new Date("2025-01-01T00:00:00.000Z").getTime();
+// Fixed reference point – end of current year, never in the future
+const BASE_DATE = Math.min(
+  new Date(`${new Date().getFullYear()}-12-31T23:59:59.000Z`).getTime(),
+  Date.now()
+);
 const TWO_YEARS_MS = 2 * 365 * 24 * 60 * 60 * 1000;
 
 function djb2Hash(s: string): number {
@@ -27,5 +30,6 @@ export function seededUpdatedAt(seed: string): Date {
   const created = seededDate(seed);
   const maxDeltaMs = 30 * 24 * 60 * 60 * 1000; // up to 30 days after createdAt
   const delta = djb2Hash(seed + "_updated") % maxDeltaMs;
-  return new Date(created.getTime() + delta);
+  const updated = new Date(created.getTime() + delta);
+  return updated.getTime() > Date.now() ? new Date() : updated;
 }

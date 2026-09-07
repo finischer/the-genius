@@ -1,11 +1,11 @@
 import { Button, Stack } from "@mantine/core";
 import { AnimatePresence, motion } from "framer-motion";
 import { type FC } from "react";
-import GameNavControls from "~/components/shared/GameNavControls";
-import ModControlBar from "~/components/shared/ModControlBar";
-import ModToggle from "~/components/shared/ModToggle";
-import ModView from "~/components/shared/ModView";
-import QuestionBox from "~/components/shared/QuestionBox";
+import GameNavControls from "~/compositions/GameNavControls";
+import ModControlBar from "~/compositions/ModControlBar";
+import ModToggle from "~/compositions/ModToggle";
+import ModView from "~/compositions/ModView";
+import QuestionBox from "~/components/QuestionBox";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { useUser } from "~/hooks/useUser";
 import type { TeamShortNames } from "~/types/gameshow.types";

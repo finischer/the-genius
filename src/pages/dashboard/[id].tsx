@@ -1,5 +1,5 @@
 import React from "react";
-import PageLayout from "~/components/layout/PageLayout";
+import PageLayout from "~/compositions/layout/PageLayout";
 
 const Dashboard = () => {
   return <PageLayout>Dashboard</PageLayout>;

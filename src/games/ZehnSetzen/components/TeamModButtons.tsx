@@ -1,6 +1,6 @@
 import { Stack, Text } from "@mantine/core";
 import React, { type FC } from "react";
-import VisibilityToggle from "~/components/shared/VisibilityToggle";
+import VisibilityToggle from "~/compositions/VisibilityToggle";
 import type { TZehnSetzenGameState } from "../config";
 import type { Team } from "~/types/gameshow.types";
 

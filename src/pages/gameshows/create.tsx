@@ -1,6 +1,6 @@
-import GamesConfigStepper from "~/components/gameshows/GamesConfigStepper";
-import PageLayout from "~/components/layout/PageLayout";
-import NextHead from "~/components/shared/NextHead";
+import GamesConfigStepper from "~/compositions/gameshows/GamesConfigStepper";
+import PageLayout from "~/compositions/layout/PageLayout";
+import NextHead from "~/compositions/NextHead";
 import { GameConfigProvider } from "~/context/GameConfigProvider";
 
 const CreateGameshowPage = () => {

@@ -12,7 +12,7 @@ import { useForm } from "@mantine/form";
 import { useOs } from "@mantine/hooks";
 import React from "react";
 import { browserName } from "react-device-detect";
-import PageLayout from "~/components/layout/PageLayout";
+import PageLayout from "~/compositions/layout/PageLayout";
 import { MAX_TEXTAREA_LENGTH } from "~/config/forms";
 import useNotification from "~/hooks/useNotification";
 import { api } from "~/utils/api";

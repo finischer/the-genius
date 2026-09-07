@@ -13,17 +13,17 @@ import {
 } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import PageLayout from "~/components/layout/PageLayout";
-import ActionIcon from "~/components/shared/ActionIcon";
-import CreateRoomModal from "~/components/shared/CreateRoomModal";
-import NextHead from "~/components/shared/NextHead";
-import PublishGameshowModal from "~/components/shared/PublishGameshowModal";
+import PageLayout from "~/compositions/layout/PageLayout";
+import ActionIcon from "~/components/ActionIcon";
+import CreateRoomModal from "~/compositions/CreateRoomModal";
+import NextHead from "~/compositions/NextHead";
+import PublishGameshowModal from "~/compositions/PublishGameshowModal";
 import useLoadingState from "~/hooks/useLoadingState/useLoadingState";
 import useNotification from "~/hooks/useNotification";
 import type { SafedGameshow } from "~/server/api/routers/gameshows";
 import { api } from "~/utils/api";
 import { formatTimestamp } from "~/utils/dates";
-import InteractiveTour from "~/components/shared/Tours/InteractiveTour";
+import InteractiveTour from "~/compositions/Tours/InteractiveTour";
 import type { Step } from "react-joyride";
 import { LOCAL_STORAGE_KEYS } from "~/config/localStorage";
 

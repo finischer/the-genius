@@ -1,5 +1,5 @@
 import { Flex } from "@mantine/core";
-import AuthenticationModal from "~/components/shared/modals/AuthenticationModal";
+import AuthenticationModal from "~/compositions/modals/AuthenticationModal";
 
 const SignInPage = () => {
   return (

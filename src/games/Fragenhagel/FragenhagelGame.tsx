@@ -9,8 +9,8 @@ import {
 } from "@mantine/core";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, type FC } from "react";
-import GameNavControls from "~/components/shared/GameNavControls";
-import ModView from "~/components/shared/ModView";
+import GameNavControls from "~/compositions/GameNavControls";
+import ModView from "~/compositions/ModView";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { useUser } from "~/hooks/useUser";
 import { animations } from "~/utils/animations";

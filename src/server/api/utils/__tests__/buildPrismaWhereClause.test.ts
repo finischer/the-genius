@@ -2,7 +2,7 @@ import { expect } from "vitest";
 import { it } from "vitest";
 import { describe } from "vitest";
 import * as fc from "fast-check";
-import { FilterOperator } from "~/components/shared/DataTable/dataTable.types";
+import { FilterOperator } from "~/components/DataTable/dataTable.types";
 import { buildPrismaWhereClause } from "~/server/api/utils/dataTableInput";
 
 // ── Arbitraries ───────────────────────────────────────────────────────────────

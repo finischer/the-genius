@@ -1,8 +1,8 @@
 import { Flex } from "@mantine/core";
 import { IconSwitchHorizontal } from "@tabler/icons-react";
 import React from "react";
-import ActionIcon from "~/components/shared/ActionIcon";
-import ModView from "~/components/shared/ModView";
+import ActionIcon from "~/components/ActionIcon";
+import ModView from "~/compositions/ModView";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import AnswerBox from "./components/AnswerBox";
 import QuestionContainer from "./components/QuestionContainer";

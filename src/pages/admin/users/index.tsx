@@ -1,6 +1,6 @@
-import UserList from "~/components/admin/UserList";
-import withAdminAuth from "~/components/admin/withAdminAuth";
-import PageLayout from "~/components/layout/PageLayout";
+import UserList from "~/compositions/admin/UserList";
+import withAdminAuth from "~/compositions/admin/withAdminAuth";
+import PageLayout from "~/compositions/layout/PageLayout";
 
 const UsersPage = () => {
   return (

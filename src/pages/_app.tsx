@@ -8,7 +8,7 @@ import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { DefaultSeo } from "next-seo";
 import { type AppType } from "next/app";
-import { modals } from "~/components/shared/modals/modalComponents";
+import { modals } from "~/compositions/modals/modalComponents";
 import SEO from "~/config/next-seo.config";
 import { UserProvider } from "~/hooks/useUser";
 import { THEME, cssResolver } from "~/styles/constants";

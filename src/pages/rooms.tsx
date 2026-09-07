@@ -2,9 +2,9 @@ import { Center, Stack, TextInput } from "@mantine/core";
 import { IconDoorEnter } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import PageLayout from "~/components/layout/PageLayout";
-import ActionIcon from "~/components/shared/ActionIcon";
-import NextHead from "~/components/shared/NextHead";
+import PageLayout from "~/compositions/layout/PageLayout";
+import ActionIcon from "~/components/ActionIcon";
+import NextHead from "~/compositions/NextHead";
 import useNotification from "~/hooks/useNotification";
 import { api } from "~/utils/api";
 

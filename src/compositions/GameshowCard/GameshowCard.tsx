@@ -80,11 +80,7 @@ export const GameshowCard: FC<IGameshowCardProps> = ({
           </Stack>
 
           <Text fz="xs" c="dimmed">
-<<<<<<< HEAD
             Erstellt von {creator?.username ?? TheGeniusConfig.appTitle}
-=======
-            Erstellt von {creator?.username ?? "Offiziell"}
->>>>>>> d324860 (feat(gameshows): add official gameshow support with nullable creator)
           </Text>
         </Stack>
         <Text fz="sm" mt="md">

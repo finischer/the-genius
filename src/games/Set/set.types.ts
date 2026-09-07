@@ -1,4 +1,4 @@
-import type { IListItem } from "~/components/shared/List/components/ListItem/listItem.types";
+import type { IListItem } from "~/components/List/components/ListItem/listItem.types";
 import type { Game } from "../core/types";
 
 export enum SET_COLORS {

@@ -1,6 +1,6 @@
 import { Button, Flex } from "@mantine/core";
 import React from "react";
-import ModView from "~/components/shared/ModView";
+import ModView from "~/compositions/ModView";
 import useAudio from "~/hooks/useAudio";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import useTimer from "~/hooks/useTimer";

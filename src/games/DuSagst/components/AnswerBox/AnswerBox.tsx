@@ -1,7 +1,7 @@
 import { Box, Button, Flex, Text, useMantineTheme } from "@mantine/core";
 import React from "react";
-import ModView from "~/components/shared/ModView";
-import Tooltip from "~/components/shared/Tooltip";
+import ModView from "~/compositions/ModView";
+import Tooltip from "~/components/Tooltip";
 import { useUser } from "~/hooks/useUser";
 import {
   ANSWER_BACKGROUND_COLORS,

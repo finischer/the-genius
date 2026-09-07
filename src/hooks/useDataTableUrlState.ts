@@ -5,8 +5,8 @@ import type {
   TFilterState,
   TPaginationState,
   TSortState
-} from "~/components/shared/DataTable/dataTable.types";
-import { FilterOperator } from "~/components/shared/DataTable/dataTable.types";
+} from "~/components/DataTable/dataTable.types";
+import { FilterOperator } from "~/components/DataTable/dataTable.types";
 
 // ── Serialization ─────────────────────────────────────────────────────────────
 

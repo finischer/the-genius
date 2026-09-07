@@ -3,7 +3,7 @@ import useSound from "use-sound";
 import type {
   TSongId,
   TSongMap
-} from "~/components/room/MediaPlayer/mediaPlayer.types";
+} from "~/compositions/room/MediaPlayer/mediaPlayer.types";
 import useSettings from "./useSettings/useSettings";
 import useSyncedRoom from "./useSyncedRoom";
 

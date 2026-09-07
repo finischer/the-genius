@@ -1,9 +1,9 @@
 import { Flex } from "@mantine/core";
 import React from "react";
-import GameNavControls from "~/components/shared/GameNavControls";
-import ModControlBar from "~/components/shared/ModControlBar";
-import ModToggle from "~/components/shared/ModToggle";
-import RevealButton from "~/components/shared/RevealButton";
+import GameNavControls from "~/compositions/GameNavControls";
+import ModControlBar from "~/compositions/ModControlBar";
+import ModToggle from "~/compositions/ModToggle";
+import RevealButton from "~/components/RevealButton";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { useUser } from "~/hooks/useUser";
 import useComponentVisibility from "~/hooks/useComponentVisibility";

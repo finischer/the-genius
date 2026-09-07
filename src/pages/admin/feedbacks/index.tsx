@@ -1,9 +1,9 @@
 import { Divider, Flex, Text, useMantineTheme } from "@mantine/core";
 import { IconRefresh } from "@tabler/icons-react";
-import FeedbackList from "~/components/admin/feedbacks/FeedbackList";
-import withAdminAuth from "~/components/admin/withAdminAuth";
-import PageLayout from "~/components/layout/PageLayout";
-import ActionIcon from "~/components/shared/ActionIcon";
+import FeedbackList from "~/compositions/admin/feedbacks/FeedbackList";
+import withAdminAuth from "~/compositions/admin/withAdminAuth";
+import PageLayout from "~/compositions/layout/PageLayout";
+import ActionIcon from "~/components/ActionIcon";
 import { api } from "~/utils/api";
 
 const FeedbackPage = () => {

@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "next build",
-    "dev": "next dev",
+    "dev": "bun run db:seed && next dev",
     "postinstall": "prisma generate --schema prisma",
     "db:start": "docker compose up -d",
     "db:stop": "docker compose down",
@@ -18,7 +18,8 @@
     "db:migrate:deploy": "prisma migrate deploy --schema prisma",
     "db:migrate:status": "prisma migrate status --schema prisma",
     "db:migrate:reset": "prisma migrate reset --schema prisma",
-    "db:seed:local": "bun prisma/seed.local.ts",
+    "db:seed": "bun prisma/seed/index.ts",
+    "db:seed:local": "bun prisma/seed/index.ts",
     "start:migrate": "bun run db:migrate:deploy && next start",
     "lint": "eslint --config eslint.config.cjs 'src/**/*.{js,jsx,ts,tsx}'",
     "lint:fix": "eslint --config eslint.config.cjs --fix 'src/**/*.{js,jsx,ts,tsx}'",

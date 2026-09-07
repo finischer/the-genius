@@ -72,12 +72,12 @@ const SignInButton = () => {
         <Button
           onClick={() =>
             signIn("credentials", {
-              email: "dummyuser@example.com",
+              email: "walter@thegenius.local",
               password: "password"
             })
           }
         >
-          Offline-Login (Credentials)
+          Als Walter White einloggen
         </Button>
       )}
     </>

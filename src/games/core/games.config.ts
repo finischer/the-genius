@@ -36,7 +36,7 @@ import GeheimwörterGame from "../Geheimwörter/GeheimwörterGame";
 import SetGame from "../Set/SetGame";
 import DuSagstGame from "../DuSagst/DuSagstGame";
 import ReferatBingoGame from "../ReferatBingo/ReferatBingoGame";
-import ZehnSetzenGame from "../ZehnSetzen/ZehnSetzen";
+import ZehnSetzenGame from "../ZehnSetzen/ZehnSetzenGame";
 import FragenhagelGame from "../Fragenhagel/FragenhagelGame";
 
 /**

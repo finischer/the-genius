@@ -9,7 +9,7 @@ All technologies you should be familiar with.
 - [Next.JS](https://nextjs.org/)
 - [Prisma](https://www.prisma.io/)
 - [TRPC](https://trpc.io/)
-- [MongoDB](https://www.mongodb.com/de-de)
+- [PostgreSQL](https://www.postgresql.org/)
 - [ReactJS](https://react.dev/)
 - [Partykit](https://www.partykit.io/)
 - [Typescript](https://www.typescriptlang.org/)
@@ -29,7 +29,7 @@ Step 1: Create a file called .env.local
 Step 2: Insert the following environment variables
 
 ```
-MONGODB_URI="mongodb://admin:password@localhost:27017/db?authSource=admin&retryWrites=true&w=majority"
+DATABASE_URL="postgresql://admin:password@localhost:5432/db"
 ```
 
 Step 3: Create a file called .env.development
@@ -37,7 +37,7 @@ Step 4: Insert the following environment variables
 
 ```
 NODE_ENV="development"
-MONGODB_URI="<FILL_IN>"
+DATABASE_URL="<FILL_IN>"
 NEXTAUTH_SECRET="<FILL_IN>"
 ```
 
@@ -106,8 +106,8 @@ Make sure to follow the commit message guidelines specified in the project.
 ### Additional hints
 
 Prisma will run on Port: 4466  
-Webiste will run on Port: 3000  
-MongoDB will run on Port: 27017
+Website will run on Port: 3000  
+PostgreSQL will run on Port: 5432
 
 ## 🎮 Game Development Guide
 
@@ -291,50 +291,29 @@ export type { IYourGameState } from "./yourgame.types";
 }
 ```
 
-#### Step 6: 🗄️ Register Game in MongoDB Database
+#### Step 6: 🗄️ Register Game in Database via Prisma Migration
 
 **⚠️ WICHTIG: Ohne diesen Schritt erscheint das Spiel NICHT im GamesPicker!**
 
-Das neue Spiel muss in der MongoDB-Datenbank registriert werden, um im GamesPicker verfügbar zu sein.
+Neues Spiel über eine dedizierte Prisma-Migration eintragen. Eine neue Migration-Datei anlegen:
 
-**MongoDB Document Format:**
-
-```javascript
-// Collection: "Game"
-{
-  "name": "Your Game Name",           // Display Name im UI
-  "slug": "yourGame",                 // MUSS exakt mit Game Enum Wert übereinstimmen!
-  "mode": "DUELL",                   // "DUELL", "TEAM", oder beide Modi
-  "forPremiumUsers": false,          // true für Premium-Features
-  "isNew": true,                     // true = wird als "NEU" Badge angezeigt
-  "rules": "",                       // Immer leer lassen (wird automatisch generiert)
-  "active": true,                    // false = Spiel wird ausgeblendet
-  "createdAt": ISODate("..."),       // Automatisch
-  "updatedAt": ISODate("...")        // Automatisch
-}
+```bash
+bunx prisma migrate dev --name add_game_your_game_name
 ```
 
-**Beispiel für "Zehn Setzen":**
-```javascript
-{
-  "_id": ObjectId("66c9cbae470bf05c9c2e0b09"),
-  "name": "Zehn Setzen",
-  "slug": "zehnSetzen",              // ← Entspricht Game.ZEHN_SETZEN
-  "mode": "DUELL",
-  "forPremiumUsers": false,
-  "isNew": true,
-  "rules": "",
-  "active": true,
-  "createdAt": ISODate("2024-08-24T14:01:44.748Z"),
-  "updatedAt": ISODate("2024-08-24T14:01:44.748Z")
-}
+In der generierten `migration.sql` den INSERT hinzufügen:
+
+```sql
+INSERT INTO "games" ("id", "name", "slug", "mode", "forPremiumUsers", "isNew", "rules", "active", "createdAt", "updatedAt")
+VALUES (gen_random_uuid()::text, 'Your Game Name', 'yourGame', 'DUELL', false, true, '', true, NOW(), NOW());
 ```
+
+Siehe `prisma/migrations/20260905204908_seed_games/migration.sql` als Referenz.
 
 **🔑 Kritische Anforderungen:**
-- ✅ `slug` MUSS exakt mit Game Enum Wert übereinstimmen
-- ✅ `active: true` um das Spiel zu aktivieren  
-- ✅ `rules: ""` immer leer lassen
-- ✅ Manuell in MongoDB hinzufügen (wird nicht automatisch erstellt)
+- ✅ `slug` MUSS exakt mit dem Game Enum Wert übereinstimmen
+- ✅ `active: true` um das Spiel zu aktivieren
+- ✅ `rules: ""` immer leer lassen (wird automatisch generiert)
 
 #### Step 7: Verify Integration
 
@@ -376,13 +355,13 @@ updateGame((draft) => {
 3. **Follow naming conventions** (PascalCase for components)
 4. **Add comprehensive rules** in the config template
 5. **Test configurator thoroughly** before deploying
-6. **🗄️ Database First:** Always add the game to MongoDB before testing
-7. **🔗 Slug Consistency:** Ensure Game Enum value matches MongoDB slug exactly
+6. **🗄️ Database First:** Spiel via dedizierter Prisma-Migration in die `games`-Tabelle eintragen bevor du testest
+7. **🔗 Slug Consistency:** Ensure Game Enum value matches the database `slug` exactly
 
 ### 🚨 Common Issues & Solutions
 
 **Problem: "Game doesn't appear in GamesPicker"**
-- ✅ Check if game exists in MongoDB `Game` collection
+- ✅ Check if game exists in PostgreSQL `games` table (via `bunx prisma studio` oder direkt in der DB)
 - ✅ Verify `active: true` in database
 - ✅ Ensure `slug` matches Game Enum value exactly
 
@@ -401,6 +380,6 @@ updateGame((draft) => {
 1. **Code** → Implement game + configurator
 2. **Enum** → Add to Game enum & TGameSettingsMap
 3. **Register** → Add to games.config.ts  
-4. **Database** → Manually add MongoDB document
+4. **Database** → Prisma-Migration anlegen und Spiel in `games`-Tabelle eintragen
 5. **Test** → Verify in GamesPicker
 6. **Deploy** → Ready for production!

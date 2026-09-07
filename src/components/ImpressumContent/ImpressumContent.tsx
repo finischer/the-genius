@@ -1,6 +1,6 @@
 import { Text, Title } from "@mantine/core";
 import Link from "next/link";
-import Section from "./Section";
+import Section from "~/components/Section";
 
 const ImpressumContent = () => {
   return (

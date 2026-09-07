@@ -30,11 +30,18 @@ TheGenius ist eine **Multiplayer-Gameshow-Plattform**. Nutzer erstellen eigene G
 
 ```
 src/
-├── components/     UI-Komponenten (nach Feature gruppiert)
+├── components/     Generische, wiederverwendbare UI-Bausteine (keine tRPC, kein App-Context)
+├── compositions/   Feature-spezifische Kompositionen (kennen tRPC, Room-State, Auth)
+│   ├── room/       Live-Room-Feature (Scorebar, ModPanel, Game, ...)
+│   ├── gameshows/  Konfigurator-Feature (Configuratoren, GamesConfigStepper, ...)
+│   ├── admin/      Admin-Bereich
+│   ├── layout/     Layout-Komponenten (PageLayout, AuthLayout, ...)
+│   ├── modals/     App-weite Modals
+│   └── ...         Weitere Feature-Kompositionen
 ├── config/         App-weite Konfigurationen
 ├── context/        React Contexts (GameConfig, SyncedRoom, Stepper)
 ├── games/          Spiellogik – core/ + je ein Ordner pro Spiel
-├── hooks/          Custom React Hooks
+├── hooks/          Custom React Hooks (jeder Hook in eigenem Verzeichnis mit index.ts)
 ├── pages/          Next.js Pages Router
 │   └── api/        tRPC-Handler + NextAuth
 ├── server/         Server-only Code (tRPC-Router, Auth, Prisma, Classes)

@@ -116,7 +116,7 @@ Ein neues Spiel erfordert diese Schritte (in dieser Reihenfolge):
 2. `Game`-Enum in `src/games/core/types.ts` erweitern
 3. `TGameSettingsMap` in `src/games/core/types.ts` erweitern
 4. In `src/games/core/games.config.ts` registrieren
-5. Konfigurator unter `src/components/gameshows/GameNameConfigurator/` anlegen
+5. Konfigurator unter `src/compositions/gameshows/GameNameConfigurator/` anlegen
 6. Postgres `Game`-Tabelle: Zeile manuell einfügen (slug = Enum-Wert, `active: true`, `rules: ""`)
 
 Ohne Schritt 6 erscheint das Spiel **nicht** im GamesPicker.

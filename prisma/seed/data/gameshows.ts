@@ -25,8 +25,8 @@ export function createGameshowSeed(
   return { games: [], ...overrides };
 }
 
-// ─── Niklas (Admin / local dev user) ────────────────────────────────────────
-const NIKLAS_GAMESHOWS: SeedGameshow[] = [
+// Gameshows of admin local dev user
+const DEFAULT_USER_GAMESHOWS: SeedGameshow[] = [
   createGameshowSeed({
     creatorEmail: "walter@thegenius.local",
     name: "Die ultimative Wissensshow",
@@ -283,7 +283,7 @@ function generateCommunityGameshows(): SeedGameshow[] {
 }
 
 export const SEED_GAMESHOWS: SeedGameshow[] = [
-  ...NIKLAS_GAMESHOWS,
+  ...DEFAULT_USER_GAMESHOWS,
   ...NAMED_USER_GAMESHOWS,
   ...generateCommunityGameshows()
 ];

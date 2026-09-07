@@ -8,6 +8,7 @@ import { getDifficultLevel } from "~/utils/helpers";
 import Tooltip from "../../components/Tooltip";
 import classes from "./gameshowCard.module.css";
 import type { IGameshowCardProps } from "./gameshowCard.types";
+import { TheGeniusConfig } from "~/config/the-genius";
 
 export const GameshowCard: FC<IGameshowCardProps> = ({
   id,
@@ -79,7 +80,7 @@ export const GameshowCard: FC<IGameshowCardProps> = ({
           </Stack>
 
           <Text fz="xs" c="dimmed">
-            Erstellt von {creator.username}
+            Erstellt von {creator?.username ?? TheGeniusConfig.appTitle}
           </Text>
         </Stack>
         <Text fz="sm" mt="md">
@@ -96,7 +97,7 @@ export const GameshowCard: FC<IGameshowCardProps> = ({
         </Group>
       </Card.Section>
 
-      {creator.id !== user?.id && (
+      {creator?.id !== user?.id && (
         <Group mt="xs">
           <Button
             radius="md"

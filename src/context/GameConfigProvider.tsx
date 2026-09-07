@@ -1,6 +1,6 @@
 import type { Game as PrismaGame } from "~/generated/prisma/client";
 import { useSearchParams } from "next/navigation";
-import { createContext, type FC, type ReactNode } from "react";
+import { createContext, useEffect, type FC, type ReactNode } from "react";
 import { useImmer, type Updater } from "use-immer";
 import type { GameState } from "~/games";
 import type { TGameshowConfig } from "~/hooks/useGameshowConfig/useGameshowConfig.types";
@@ -32,7 +32,6 @@ const GameConfigProvider: FC<IGameConfigProviderProps> = ({ children }) => {
   const { handleZodError } = useNotification();
 
   const gameshowId = searchParams.get("gameshowId");
-  // const action: TApiActions = (searchParams.get("action") as TApiActions) ?? "create";
 
   const [availableGames, setAvailableGames] = useImmer<PrismaGame[]>([]);
   const [gameshow, setGameshow] = useImmer<TGameshowConfig>(
@@ -40,28 +39,40 @@ const GameConfigProvider: FC<IGameConfigProviderProps> = ({ children }) => {
   );
 
   // api
-  api.games.getAll.useQuery(undefined, {
-    enabled: true,
-    onError: (error) => handleZodError(error.data?.zodError, error.message),
-    onSuccess(data) {
-      setAvailableGames(data);
-    }
-  });
-
-  api.gameshows.getById.useQuery(
-    { gameshowId: gameshowId ?? "" },
-    {
-      enabled: !!gameshowId,
-      onError: (error) => handleZodError(error.data?.zodError, error.message),
-      onSuccess(data) {
-        const gameshowConfig: TGameshowConfig = {
-          name: data.name,
-          games: data.games as GameState[]
-        };
-        setGameshow(gameshowConfig);
-      }
-    }
+  const { data: gamesData, error: gamesError } = api.games.getAll.useQuery(
+    undefined,
+    { enabled: true }
   );
+
+  const { data: gameshowData, error: gameshowError } =
+    api.gameshows.getById.useQuery(
+      { gameshowId: gameshowId ?? "" },
+      { enabled: !!gameshowId }
+    );
+
+  useEffect(() => {
+    if (gamesError)
+      handleZodError(gamesError.data?.zodError, gamesError.message);
+  }, [gamesError]);
+
+  useEffect(() => {
+    if (gamesData) setAvailableGames(gamesData);
+  }, [gamesData]);
+
+  useEffect(() => {
+    if (gameshowError)
+      handleZodError(gameshowError.data?.zodError, gameshowError.message);
+  }, [gameshowError]);
+
+  useEffect(() => {
+    if (gameshowData) {
+      const gameshowConfig: TGameshowConfig = {
+        name: gameshowData.name,
+        games: gameshowData.games as GameState[]
+      };
+      setGameshow(gameshowConfig);
+    }
+  }, [gameshowData]);
 
   return (
     <GameConfigContext.Provider

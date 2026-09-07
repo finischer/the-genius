@@ -7,8 +7,8 @@ import { animations } from "~/utils/animations";
 import { Box, Button, Group, Stack } from "@mantine/core";
 import { motion } from "framer-motion";
 import { displayObject } from "~/utils/helpers";
-import ModToggle from "~/components/shared/ModToggle";
-import ModView from "~/components/shared/ModView";
+import ModToggle from "~/compositions/ModToggle";
+import ModView from "~/compositions/ModView";
 import TeamModButtons from "./TeamModButtons";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 

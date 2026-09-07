@@ -1,7 +1,7 @@
 import { Container } from "@mantine/core";
 import { useSession } from "next-auth/react";
-import PageLayout from "~/components/layout/PageLayout";
-import ImpressumContent from "~/components/shared/ImpressumContent";
+import PageLayout from "~/compositions/layout/PageLayout";
+import ImpressumContent from "~/components/ImpressumContent";
 
 const ImpressumPage = () => {
   const { status } = useSession();

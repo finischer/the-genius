@@ -14,7 +14,7 @@ import {
 
 export const safedGameshowSchema = z.object({
   id: z.string(),
-  creatorId: z.string(),
+  creatorId: z.string().nullable(),
   name: z.string(),
   numOfGames: z.number(),
   createdAt: z.date(),
@@ -144,8 +144,8 @@ export const gameshowsRouter = createTRPCRouter({
         originalGameshowId: gameshow.originalGameshowId,
         importedGameshow: gameshow.importedGameshow,
         user: {
-          id: gameshow.user.id,
-          username: gameshow.user.username ?? "UNKNOWN_USER"
+          id: gameshow.user?.id ?? "",
+          username: gameshow.user?.username ?? "UNKNOWN_USER"
         }
       }));
 

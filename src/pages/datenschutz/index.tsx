@@ -1,7 +1,7 @@
 import { Container } from "@mantine/core";
 import { useSession } from "next-auth/react";
-import PageLayout from "~/components/layout/PageLayout";
-import DatenschutzerklaerungContent from "~/components/shared/DatenschutzerklaerungContent";
+import PageLayout from "~/compositions/layout/PageLayout";
+import DatenschutzerklaerungContent from "~/components/DatenschutzerklaerungContent";
 
 const DatenschutzPage = () => {
   const { status } = useSession();

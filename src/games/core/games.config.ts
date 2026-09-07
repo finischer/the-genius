@@ -20,14 +20,14 @@ import { DEFAULT_ZEHN_SETZEN_STATE } from "../ZehnSetzen/config";
 import { DEFAULT_FRAGENHAGEL_STATE } from "../Fragenhagel/config";
 
 // Import aller Konfiguratoren
-import MerkenConfigurator from "~/components/gameshows/MerkenConfigurator/MerkenConfigurator";
-import FlaggenConfigurator from "~/components/gameshows/FlaggenConfigurator/FlaggenConfigurator";
-import GeheimwörterConfigurator from "~/components/gameshows/GeheimwörterConfigurator/GeheimwörterConfigurator";
-import SetConfigurator from "~/components/gameshows/SetConfigurator/SetConfigurator";
-import DuSagstConfigurator from "~/components/gameshows/DuSagstConfigurator/DuSagstConfigurator";
-import ReferatBingoConfigurator from "~/components/gameshows/ReferatBingoConfigurator/ReferatBingoConfigurator";
-import ZehnSetzenConfigurator from "~/components/gameshows/ZehnSetzenConfigurator/ZehnSetzenConfigurator";
-import FragenhagelConfigurator from "~/components/gameshows/FragenhagelConfigurator/FragenhagelConfigurator";
+import MerkenConfigurator from "~/compositions/gameshows/MerkenConfigurator/MerkenConfigurator";
+import FlaggenConfigurator from "~/compositions/gameshows/FlaggenConfigurator/FlaggenConfigurator";
+import GeheimwörterConfigurator from "~/compositions/gameshows/GeheimwörterConfigurator/GeheimwörterConfigurator";
+import SetConfigurator from "~/compositions/gameshows/SetConfigurator/SetConfigurator";
+import DuSagstConfigurator from "~/compositions/gameshows/DuSagstConfigurator/DuSagstConfigurator";
+import ReferatBingoConfigurator from "~/compositions/gameshows/ReferatBingoConfigurator/ReferatBingoConfigurator";
+import ZehnSetzenConfigurator from "~/compositions/gameshows/ZehnSetzenConfigurator/ZehnSetzenConfigurator";
+import FragenhagelConfigurator from "~/compositions/gameshows/FragenhagelConfigurator/FragenhagelConfigurator";
 
 // Import aller Game-Komponenten
 import MerkenGame from "../Merken/MerkenGame";
@@ -36,7 +36,7 @@ import GeheimwörterGame from "../Geheimwörter/GeheimwörterGame";
 import SetGame from "../Set/SetGame";
 import DuSagstGame from "../DuSagst/DuSagstGame";
 import ReferatBingoGame from "../ReferatBingo/ReferatBingoGame";
-import ZehnSetzenGame from "../ZehnSetzen/ZehnSetzen";
+import ZehnSetzenGame from "../ZehnSetzen/ZehnSetzenGame";
 import FragenhagelGame from "../Fragenhagel/FragenhagelGame";
 
 /**

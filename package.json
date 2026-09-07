@@ -10,6 +10,8 @@
     "build": "next build",
     "dev": "next dev",
     "postinstall": "prisma generate --schema prisma",
+    "db:start": "docker compose up -d",
+    "db:stop": "docker compose down",
     "db:generate": "prisma generate --schema prisma",
     "db:migrate": "prisma migrate dev --schema prisma",
     "db:migrate:create": "prisma migrate dev --schema prisma --create-only",

@@ -1,8 +1,8 @@
 import { Button, Flex, SimpleGrid, Stack, Text } from "@mantine/core";
 import React from "react";
-import { findSets } from "~/components/gameshows/SetConfigurator/helpers";
-import GameNavControls from "~/components/shared/GameNavControls";
-import ModView from "~/components/shared/ModView";
+import { findSets } from "~/compositions/gameshows/SetConfigurator/helpers";
+import GameNavControls from "~/compositions/GameNavControls";
+import ModView from "~/compositions/ModView";
 import { useUser } from "~/hooks/useUser";
 import { goToNextQuestion, goToPreviousQuestion, sleep } from "~/utils/helpers";
 import SetCard from "./components/SetCard";

@@ -1,6 +1,6 @@
 import type { TimerState } from "~/types/gameshow.types";
 import type { TDuSagstGameState } from "./config";
-import type { IListItem } from "~/components/shared/List/components/ListItem/listItem.types";
+import type { IListItem } from "~/components/List/components/ListItem/listItem.types";
 import type { Game } from "../core/types";
 
 export interface IDuSagstGameProps {
@@ -10,11 +10,7 @@ export interface IDuSagstGameProps {
 export type TDuSagstAnswerOptions = "A" | "B" | "C" | "D" | "Keine Antwort";
 
 export type TDuSagstAnswerColors =
-  | "green"
-  | "blue"
-  | "yellow"
-  | "pink"
-  | "transparent";
+  "green" | "blue" | "yellow" | "pink" | "transparent";
 
 export type TDuSagstAnswerSelectMapValue = {
   label: TDuSagstAnswerOptions;

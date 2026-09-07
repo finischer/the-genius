@@ -1,11 +1,11 @@
 import { Flex, SimpleGrid, useMantineTheme } from "@mantine/core";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { Fragment } from "react";
-import CodeList from "~/components/gameshows/GeheimwörterConfigurator/components/CodeList";
-import AnswerBanner from "~/components/room/AnswerBanner";
-import GameNavControls from "~/components/shared/GameNavControls";
-import ModToggle from "~/components/shared/ModToggle";
-import RevealButton from "~/components/shared/RevealButton";
+import CodeList from "~/compositions/gameshows/GeheimwörterConfigurator/components/CodeList";
+import AnswerBanner from "~/compositions/room/AnswerBanner";
+import GameNavControls from "~/compositions/GameNavControls";
+import ModToggle from "~/compositions/ModToggle";
+import RevealButton from "~/components/RevealButton";
 import useComponentVisibility from "~/hooks/useComponentVisibility";
 import useAudio from "~/hooks/useAudio";
 import { useUser } from "~/hooks/useUser";
@@ -13,7 +13,7 @@ import { animations } from "~/utils/animations";
 import { slug } from "~/utils/strings";
 import { goToNextQuestion, goToPreviousQuestion, sleep } from "~/utils/helpers";
 import type { IGeheimwörterGameProps } from "./geheimwörter.types";
-import ModView from "~/components/shared/ModView";
+import ModView from "~/compositions/ModView";
 
 const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
   const theme = useMantineTheme();

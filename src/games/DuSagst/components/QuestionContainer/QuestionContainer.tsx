@@ -1,10 +1,10 @@
 import { Button, Flex, Text, useMantineTheme } from "@mantine/core";
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
-import GameNavControls from "~/components/shared/GameNavControls";
-import ModToggle from "~/components/shared/ModToggle";
-import ModView from "~/components/shared/ModView";
-import QuestionBox from "~/components/shared/QuestionBox";
+import GameNavControls from "~/compositions/GameNavControls";
+import ModToggle from "~/compositions/ModToggle";
+import ModView from "~/compositions/ModView";
+import QuestionBox from "~/components/QuestionBox";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import useTimer from "~/hooks/useTimer";
 import { useUser } from "~/hooks/useUser";

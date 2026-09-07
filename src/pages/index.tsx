@@ -2,11 +2,11 @@ import { Box, Flex, Group } from "@mantine/core";
 import { IconCategory, IconSearch, IconUsers } from "@tabler/icons-react";
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
-import InfoSection from "~/components/home/InfoSection/InfoSection";
-import PageLayout from "~/components/layout/PageLayout";
-import Card from "~/components/shared/Card/Card";
-import IntroductionBanner from "~/components/shared/IntroductionBanner";
-import NextHead from "~/components/shared/NextHead";
+import InfoSection from "~/compositions/home/InfoSection/InfoSection";
+import Card from "~/components/Card/Card";
+import NextHead from "~/compositions/NextHead";
+import IntroductionBanner from "~/compositions/IntroductionBanner";
+import PageLayout from "~/compositions/layout/PageLayout";
 
 const Home: NextPage = () => {
   const { push: goTo } = useRouter();

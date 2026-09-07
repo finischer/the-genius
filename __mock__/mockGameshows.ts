@@ -18,7 +18,7 @@ export const MOCK_GAMESHOWS: Gameshow[] = [
     originalCreatorId: null,
     originalGameshowId: null,
     importedGameshow: false,
-    isModified: null
+    isModified: null,
   },
   {
     id: "2",
@@ -34,7 +34,7 @@ export const MOCK_GAMESHOWS: Gameshow[] = [
     originalCreatorId: null,
     originalGameshowId: null,
     importedGameshow: false,
-    isModified: null
+    isModified: null,
   },
   {
     id: "3",
@@ -50,7 +50,7 @@ export const MOCK_GAMESHOWS: Gameshow[] = [
     originalCreatorId: null,
     originalGameshowId: null,
     importedGameshow: true,
-    isModified: false
+    isModified: false,
   },
   {
     id: "4",
@@ -66,7 +66,7 @@ export const MOCK_GAMESHOWS: Gameshow[] = [
     originalCreatorId: null,
     originalGameshowId: null,
     importedGameshow: false,
-    isModified: null
+    isModified: null,
   },
   {
     id: "5",
@@ -82,7 +82,7 @@ export const MOCK_GAMESHOWS: Gameshow[] = [
     originalCreatorId: "2",
     originalGameshowId: "4",
     importedGameshow: true,
-    isModified: true
+    isModified: true,
   }
 ];
 

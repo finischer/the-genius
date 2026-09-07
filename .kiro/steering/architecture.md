@@ -50,7 +50,7 @@ const mutation = api.example.create.useMutation();
 - PostgreSQL als Provider
 - Schema in `prisma/schema.prisma`
 - Nach Schema-Änderungen: `bunx prisma generate` ausführen
-- Neue Spiele müssen manuell in die Postgres `Game`-Tabelle eingetragen werden (slug muss exakt mit `Game`-Enum übereinstimmen)
+- Neue Spiele werden via dedizierter Prisma-Migration in die `games`-Tabelle eingetragen (slug muss exakt mit `Game`-Enum übereinstimmen)
 
 ## Realtime: PartyKit + Yjs
 
@@ -116,7 +116,7 @@ Ein neues Spiel erfordert diese Schritte (in dieser Reihenfolge):
 2. `Game`-Enum in `src/games/core/types.ts` erweitern
 3. `TGameSettingsMap` in `src/games/core/types.ts` erweitern
 4. In `src/games/core/games.config.ts` registrieren
-5. Konfigurator unter `src/components/gameshows/GameNameConfigurator/` anlegen
-6. Postgres `Game`-Tabelle: Zeile manuell einfügen (slug = Enum-Wert, `active: true`, `rules: ""`)
+5. Konfigurator unter `src/compositions/gameshows/GameNameConfigurator/` anlegen
+6. Prisma-Migration anlegen und Spiel in `games`-Tabelle eintragen (slug = Enum-Wert, `active: true`, `rules: ""`)
 
 Ohne Schritt 6 erscheint das Spiel **nicht** im GamesPicker.

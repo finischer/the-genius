@@ -145,10 +145,12 @@ export const gameshowsRouter = createTRPCRouter({
         originalCreatorId: gameshow.originalCreatorId,
         originalGameshowId: gameshow.originalGameshowId,
         importedGameshow: gameshow.importedGameshow,
-        user: {
-          id: gameshow.user?.id ?? "",
-          username: gameshow.user?.username ?? "UNKNOWN_USER"
-        }
+        user: gameshow.user
+          ? {
+              id: gameshow.user.id,
+              username: gameshow.user.username ?? "UNKNOWN_USER"
+            }
+          : undefined
       }));
 
       return returnedGameshows;

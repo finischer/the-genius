@@ -2,8 +2,8 @@ import type { RoomSounds } from "~/types/gameshow.types";
 import path from "path";
 import { useEffect, useState } from "react";
 import { assignObjectKeyByKey } from "~/utils/helpers";
-import useSettings from "./useSettings/useSettings";
-import useSyncedRoom from "./useSyncedRoom";
+import useSettings from "~/hooks/useSettings/useSettings";
+import useSyncedRoom from "~/hooks/useSyncedRoom";
 
 type TSoundId = keyof RoomSounds;
 

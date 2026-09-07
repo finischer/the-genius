@@ -1,5 +1,5 @@
-import useSyncedRoom from "./useSyncedRoom";
-import { useUser } from "./useUser";
+import useSyncedRoom from "~/hooks/useSyncedRoom";
+import { useUser } from "~/hooks/useUser";
 
 /**
  * Manages the shared visibility state for a toggleable UI component.

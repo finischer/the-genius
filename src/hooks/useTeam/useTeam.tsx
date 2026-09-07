@@ -1,7 +1,7 @@
 import { initPlayer } from "~/config/store";
-import useSyncedRoom from "./useSyncedRoom";
+import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { filterArray } from "@syncedstore/core";
-import { useUser } from "./useUser";
+import { useUser } from "~/hooks/useUser";
 import type { Team } from "~/types/gameshow.types";
 
 const useTeam = () => {

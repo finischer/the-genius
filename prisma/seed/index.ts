@@ -23,6 +23,11 @@ async function main(): Promise<void> {
     return;
   }
 
+  if (process.env.NEXT_PUBLIC_THE_GENIUS_ENV === "production") {
+    console.log("⛔ Seed blocked (environment is production).");
+    return;
+  }
+
   console.log("🌱 Starting seed...\n");
 
   await seedUsers(prisma);

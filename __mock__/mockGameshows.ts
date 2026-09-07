@@ -135,6 +135,7 @@ export const GAMESHOW_MOCK_FUNCTIONS = {
       originalGameshowId: null,
       importedGameshow: false,
       isModified: null,
+      isOfficial: false,
       ...args.data
     };
   }),

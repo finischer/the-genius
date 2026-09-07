@@ -4,8 +4,8 @@ import type {
   TSongId,
   TSongMap
 } from "~/compositions/room/MediaPlayer/mediaPlayer.types";
-import useSettings from "./useSettings/useSettings";
-import useSyncedRoom from "./useSyncedRoom";
+import useSettings from "~/hooks/useSettings/useSettings";
+import useSyncedRoom from "~/hooks/useSyncedRoom";
 
 /**
  * NOTE: This hook previously used Howler.js sprites to play multiple songs from a single audio file.

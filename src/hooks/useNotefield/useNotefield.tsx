@@ -1,4 +1,4 @@
-import useSyncedRoom from "./useSyncedRoom";
+import useSyncedRoom from "~/hooks/useSyncedRoom";
 
 const useNotefield = () => {
   const room = useSyncedRoom();

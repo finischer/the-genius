@@ -1,17 +1,19 @@
 import type { Prisma } from "~/generated/prisma/client";
+import { seededDate, seededUpdatedAt } from "../utils/dates";
 
 export function createUserSeed(
   overrides: Partial<Prisma.UserCreateInput> &
     Pick<Prisma.UserCreateInput, "email" | "name" | "username">
 ): Prisma.UserCreateInput {
+  const email = overrides.email;
   return {
     role: "USER",
     isEmailVerified: true,
     password: "password",
     isFirstVisit: false,
-    lastLoginAt: new Date(),
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    lastLoginAt: seededDate(email + "_login"),
+    createdAt: seededDate(email),
+    updatedAt: seededUpdatedAt(email),
     ...overrides
   };
 }

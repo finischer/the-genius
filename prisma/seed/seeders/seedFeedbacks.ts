@@ -1,5 +1,6 @@
 import type { PrismaClient } from "~/generated/prisma/client";
 import { SEED_FEEDBACKS } from "../data/feedbacks";
+import { seededDate, seededUpdatedAt } from "../utils/dates";
 
 export async function seedFeedbacks(prisma: PrismaClient): Promise<void> {
   let created = 0;
@@ -11,12 +12,13 @@ export async function seedFeedbacks(prisma: PrismaClient): Promise<void> {
     });
 
     if (!user) {
-      console.warn(`  ⚠ Skipping feedback: user ${feedback.creatorEmail} not found`);
+      console.warn(
+        `  ⚠ Skipping feedback: user ${feedback.creatorEmail} not found`
+      );
       skipped++;
       continue;
     }
 
-    // Feedbacks sind nicht unique – nur einmal pro User anlegen
     const exists = await prisma.feedback.findFirst({
       where: { creatorId: user.id }
     });
@@ -27,9 +29,15 @@ export async function seedFeedbacks(prisma: PrismaClient): Promise<void> {
     }
 
     const { creatorEmail: _, ...data } = feedback;
+    const seedKey = `feedback:${feedback.creatorEmail}`;
 
     await prisma.feedback.create({
-      data: { ...data, creatorId: user.id }
+      data: {
+        ...data,
+        creatorId: user.id,
+        createdAt: seededDate(seedKey),
+        updatedAt: seededUpdatedAt(seedKey)
+      }
     });
     created++;
   }

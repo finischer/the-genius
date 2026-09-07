@@ -1,5 +1,6 @@
 import type { PrismaClient } from "~/generated/prisma/client";
 import { SEED_GAMESHOWS } from "../data/gameshows";
+import { seededDate, seededUpdatedAt } from "../utils/dates";
 
 export async function seedGameshows(prisma: PrismaClient): Promise<void> {
   let created = 0;
@@ -26,9 +27,15 @@ export async function seedGameshows(prisma: PrismaClient): Promise<void> {
     }
 
     const { creatorEmail: _, ...data } = gameshow;
+    const seedKey = `${gameshow.creatorEmail}:${gameshow.name}`;
 
     await prisma.gameshow.create({
-      data: { ...data, creatorId: user.id }
+      data: {
+        ...data,
+        creatorId: user.id,
+        createdAt: seededDate(seedKey),
+        updatedAt: seededUpdatedAt(seedKey)
+      }
     });
     created++;
   }

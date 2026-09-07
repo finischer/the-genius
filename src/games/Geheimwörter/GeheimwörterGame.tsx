@@ -23,7 +23,7 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
   const { triggerAudioEvent } = useAudio();
 
   // Visibility state managed via the generic componentVisibility system
-  const { visible: showWords } = useComponentVisibility(
+  const { visible: showWords, toggle: toggleWords } = useComponentVisibility(
     "geheimwoerter-wordlist"
   );
   const { visible: showCodeList } = useComponentVisibility(
@@ -36,8 +36,11 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
   });
 
   const prepareQuestion = async () => {
-    if (showAnswer) {
-      await sleep(200);
+    // Hide the word list first if visible so players don't see the next
+    // question peek through. If already hidden, navigate instantly.
+    if (showWords) {
+      toggleWords();
+      await sleep(300);
     }
     game.display.answer = false;
   };
@@ -109,7 +112,8 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
                   gap: "1rem",
                   flexDirection: "column",
                   justifyContent: "center",
-                  alignItems: "center"
+                  alignItems: "center",
+                  width: 500
                 }}
               >
                 <ModToggle id="geheimwoerter-wordlist" label="Wörter">

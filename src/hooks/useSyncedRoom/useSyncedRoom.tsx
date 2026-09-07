@@ -7,10 +7,6 @@ const useSyncedRoom = () => {
     room: { state: Room };
   };
 
-  // if (context === undefined) {
-  //   throw Error("useSyncedRoom must be used within SyncedRoomProvider");
-  // }
-
   return {
     ...room.state,
     isLoaded: !!room.state?.id,

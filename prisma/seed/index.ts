@@ -15,6 +15,7 @@ const SKIP_TABLES = new Set([
   "sessions",
   "accounts",
   "verificationTokens",
+  "users"
 ]);
 
 async function clearDatabase(): Promise<void> {

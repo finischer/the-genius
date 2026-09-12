@@ -40,6 +40,38 @@ const useBuzzer = () => {
     roomConfig.timeAfterBuzzerPressedSeconds
   );
 
+  const handleBuzzerClick = useCallback(
+    ({ withTimer }: { withTimer: boolean }) =>
+      playerFunction((team, player) => {
+        if (team.buzzer.isLocked) {
+          showInfoNotification({ message: "Buzzer ist gesperrt!" });
+          return;
+        }
+
+        const wasAlreadyBuzzered = Object.values(room.teams).some(
+          (team) => team.isActiveTurn
+        );
+        if (wasAlreadyBuzzered || !isActive) return;
+        triggerAudioEvent("playSound", "buzzer");
+
+        team.isActiveTurn = true;
+        team.buzzer.isPressed = true;
+        team.buzzer.playersBuzzered.push(player.id);
+        if (withTimer) {
+          triggerAudioEvent("playSound", "warningBuzzer");
+          startTimer();
+        }
+      }),
+    [
+      isActive,
+      playerFunction,
+      room.teams,
+      showInfoNotification,
+      triggerAudioEvent,
+      startTimer
+    ]
+  );
+
   useEffect(() => {
     function handleBuzzerEvent(e: KeyboardEvent, withTimer = true) {
       // only listen to space
@@ -62,7 +94,7 @@ const useBuzzer = () => {
     return () => {
       window.removeEventListener("keydown", handleBuzzerEvent);
     };
-  }, [isPlayer, isActive]);
+  }, [isPlayer, isActive, handleBuzzerClick]);
 
   const deactivateBuzzer = () => {
     setIsActive(false);
@@ -87,31 +119,6 @@ const useBuzzer = () => {
       team.buzzer.isLocked = false;
     });
   };
-
-  const handleBuzzerClick = useCallback(
-    ({ withTimer }: { withTimer: boolean }) =>
-      playerFunction((team, player) => {
-        if (team.buzzer.isLocked) {
-          showInfoNotification({ message: "Buzzer ist gesperrt!" });
-          return;
-        }
-
-        const wasAlreadyBuzzered = Object.values(room.teams).some(
-          (team) => team.isActiveTurn
-        );
-        if (wasAlreadyBuzzered || !isActive) return;
-        triggerAudioEvent("playSound", "buzzer");
-
-        team.isActiveTurn = true;
-        team.buzzer.isPressed = true;
-        team.buzzer.playersBuzzered.push(player.id);
-        if (withTimer) {
-          triggerAudioEvent("playSound", "warningBuzzer");
-          startTimer();
-        }
-      }),
-    [isActive]
-  );
 
   const areAllBuzzersLocked = Object.values(room.teams).every(
     (team) => team.buzzer.isLocked

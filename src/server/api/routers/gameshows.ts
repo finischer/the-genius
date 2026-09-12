@@ -97,7 +97,7 @@ export const gameshowsRouter = createTRPCRouter({
       if (!gameshow) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Gameshow not found"
+          message: "Spielshow existiert nicht."
         });
       }
 
@@ -187,7 +187,7 @@ export const gameshowsRouter = createTRPCRouter({
       if (!gameshow) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Gameshow konnte nicht gespeichert werden"
+          message: "Spielshow konnte nicht gespeichert werden"
         });
       }
 
@@ -305,14 +305,14 @@ export const gameshowsRouter = createTRPCRouter({
       if (gameshow.importedGameshow) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "You can't import an imported gameshow."
+          message: "Diese Spielshow wurde bereits importiert."
         });
       }
 
       if (gameshow.visibility === GameshowVisbility.PRIVATE) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "You can't import a private gameshow."
+          message: "Du kannst keine private Spielshow importieren"
         });
       }
 

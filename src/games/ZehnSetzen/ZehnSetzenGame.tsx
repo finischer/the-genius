@@ -6,6 +6,8 @@ import ModControlBar from "~/compositions/ModControlBar";
 import ModToggle from "~/compositions/ModToggle";
 import ModView from "~/compositions/ModView";
 import QuestionBox from "~/components/QuestionBox";
+import useAudio from "~/hooks/useAudio";
+import useMusic from "~/hooks/useMusic";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { useUser } from "~/hooks/useUser";
 import type { TeamShortNames } from "~/types/gameshow.types";
@@ -25,6 +27,8 @@ const ZehnSetzen: FC<IZehnSetzenGameProps> = ({ game }) => {
   const room = useSyncedRoom();
 
   const { team, isHost, hostFunction } = useUser();
+  const { triggerAudioEvent } = useAudio();
+  const { emitPauseMusic } = useMusic();
   const hasSubmittedAnswer = team?.shortName
     ? teamState[team.shortName].submitted
     : false;
@@ -45,10 +49,6 @@ const ZehnSetzen: FC<IZehnSetzenGameProps> = ({ game }) => {
 
     applyPointsToTeamScores();
   });
-
-  const allTeamsSubbmitted = Object.values(teamState).every(
-    (team) => team.submitted
-  );
 
   const prepareQuestion = async () => {
     const sleepTimeout =
@@ -99,6 +99,13 @@ const ZehnSetzen: FC<IZehnSetzenGameProps> = ({ game }) => {
     if (pointsTeamTwo) {
       room.teams.teamTwo.gameScore += pointsTeamTwo;
     }
+
+    // Winner sound after the last question (ZehnSetzen has no fixed maxPoints winner)
+    const isLastQuestion = game.qIndex >= game.questions.length - 1;
+    if (isLastQuestion) {
+      emitPauseMusic();
+      triggerAudioEvent("playSound", "winning");
+    }
   });
 
   return (
@@ -136,11 +143,7 @@ const ZehnSetzen: FC<IZehnSetzenGameProps> = ({ game }) => {
         </ModView>
 
         <ModControlBar>
-          <Button
-            disabled={!allTeamsSubbmitted}
-            variant="default"
-            onClick={handleToggleCorrectAnswer}
-          >
+          <Button variant="default" onClick={handleToggleCorrectAnswer}>
             Lösung {game.display.correctAnswer ? "ausblenden" : "anzeigen"}
           </Button>
         </ModControlBar>

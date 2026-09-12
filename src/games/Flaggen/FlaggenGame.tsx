@@ -4,6 +4,7 @@ import GameNavControls from "~/compositions/GameNavControls";
 import ModControlBar from "~/compositions/ModControlBar";
 import ModToggle from "~/compositions/ModToggle";
 import RevealButton from "~/components/RevealButton";
+import useAudio from "~/hooks/useAudio";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { useUser } from "~/hooks/useUser";
 import useComponentVisibility from "~/hooks/useComponentVisibility";
@@ -14,6 +15,7 @@ import { type IFlaggenGameProps } from "./flaggen.types";
 const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
   const room = useSyncedRoom();
   const { hostFunction } = useUser();
+  const { triggerAudioEvent } = useAudio();
   const currFlag = game.countries[game.qIndex];
   const shortCode = currFlag ? String(currFlag.shortCode) : null;
   const { visible: flagVisible, toggle: toggleFlag } =
@@ -47,6 +49,7 @@ const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
 
   const handleShowAnswerClick = hostFunction(() => {
     if (!currFlag?.country) return;
+    triggerAudioEvent("playSound", "bell");
     game.display.answer = true;
     room.context.answerState.answer = currFlag.country;
     room.context.answerState.isAnswerDisplayed = true;

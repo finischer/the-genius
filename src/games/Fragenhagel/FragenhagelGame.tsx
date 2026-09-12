@@ -11,6 +11,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, type FC } from "react";
 import GameNavControls from "~/compositions/GameNavControls";
 import ModView from "~/compositions/ModView";
+import useAudio from "~/hooks/useAudio";
+import useMusic from "~/hooks/useMusic";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { useUser } from "~/hooks/useUser";
 import { animations } from "~/utils/animations";
@@ -24,6 +26,8 @@ import type { Team } from "~/types/gameshow.types";
 const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
   const room = useSyncedRoom();
   const { isHost, hostFunction } = useUser();
+  const { triggerAudioEvent } = useAudio();
+  const { emitPauseMusic } = useMusic();
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const currQuestion = game.questions.at(game.qIndex);
@@ -97,6 +101,12 @@ const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
       activeTeam.gameScore += timerInInterval ? game.currentScore : 0;
       activeTeam.isActiveTurn = false;
       activeTeam.scorebarTimer.active = false;
+
+      const currGame = room.context.currentGame;
+      if (currGame && activeTeam.gameScore >= currGame.maxPoints) {
+        emitPauseMusic();
+        triggerAudioEvent("playSound", "winning");
+      }
     }
     game.activePlayerId = null;
     game.currentScore = 0;

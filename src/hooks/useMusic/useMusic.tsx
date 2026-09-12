@@ -108,12 +108,14 @@ const useMusic = () => {
   }, [musicTitle, currentSongId, isPlaying, stop]);
 
   const emitPlayMusic = ({ songId }: { songId: TSongId }) => {
-    musicState.isActive = true;
-    musicState.title = songId;
+    const music = room.context.audio.music;
+    music.isActive = true;
+    music.title = songId;
   };
 
   const emitPauseMusic = () => {
-    musicState.isActive = false;
+    const music = room.context.audio.music;
+    music.isActive = false;
   };
 
   const playNextSong = () => {

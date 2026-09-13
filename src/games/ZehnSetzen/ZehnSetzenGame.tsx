@@ -6,6 +6,7 @@ import ModControlBar from "~/compositions/ModControlBar";
 import ModToggle from "~/compositions/ModToggle";
 import ModView from "~/compositions/ModView";
 import QuestionBox from "~/components/QuestionBox";
+import useWinnerSound from "~/hooks/useWinnerSound";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { useUser } from "~/hooks/useUser";
 import type { TeamShortNames } from "~/types/gameshow.types";
@@ -25,6 +26,11 @@ const ZehnSetzen: FC<IZehnSetzenGameProps> = ({ game }) => {
   const room = useSyncedRoom();
 
   const { team, isHost, hostFunction } = useUser();
+
+  useWinnerSound({
+    qIndex: game.qIndex,
+    totalQuestions: game.questions.length
+  });
   const hasSubmittedAnswer = team?.shortName
     ? teamState[team.shortName].submitted
     : false;
@@ -45,10 +51,6 @@ const ZehnSetzen: FC<IZehnSetzenGameProps> = ({ game }) => {
 
     applyPointsToTeamScores();
   });
-
-  const allTeamsSubbmitted = Object.values(teamState).every(
-    (team) => team.submitted
-  );
 
   const prepareQuestion = async () => {
     const sleepTimeout =
@@ -136,11 +138,7 @@ const ZehnSetzen: FC<IZehnSetzenGameProps> = ({ game }) => {
         </ModView>
 
         <ModControlBar>
-          <Button
-            disabled={!allTeamsSubbmitted}
-            variant="default"
-            onClick={handleToggleCorrectAnswer}
-          >
+          <Button variant="default" onClick={handleToggleCorrectAnswer}>
             Lösung {game.display.correctAnswer ? "ausblenden" : "anzeigen"}
           </Button>
         </ModControlBar>

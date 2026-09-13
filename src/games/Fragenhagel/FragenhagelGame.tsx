@@ -13,6 +13,7 @@ import GameNavControls from "~/compositions/GameNavControls";
 import ModView from "~/compositions/ModView";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { useUser } from "~/hooks/useUser";
+import useWinnerSound from "~/hooks/useWinnerSound";
 import { animations } from "~/utils/animations";
 import { goToNextQuestion, goToPreviousQuestion } from "~/utils/helpers";
 import type { IFragenhagelGameProps } from "./fragenhagel.types";
@@ -24,6 +25,11 @@ import type { Team } from "~/types/gameshow.types";
 const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
   const room = useSyncedRoom();
   const { isHost, hostFunction } = useUser();
+
+  useWinnerSound({
+    qIndex: game.qIndex,
+    totalQuestions: game.questions.length
+  });
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const currQuestion = game.questions.at(game.qIndex);

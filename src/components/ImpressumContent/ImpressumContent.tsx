@@ -18,7 +18,7 @@ const ImpressumContent = () => {
       <Section>
         <Title order={2}>Kontaktmöglichkeiten</Title>
         <Text>E-Mail-Adresse: </Text>
-        <Text>suport@the-genius.de</Text>
+        <Text>support@the-genius.de</Text>
       </Section>
 
       {/* UmSt-ID Section */}

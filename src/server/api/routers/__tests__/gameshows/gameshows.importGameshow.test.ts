@@ -44,7 +44,7 @@ describe("gameshowsRouter -> importGameshow", () => {
     ).rejects.toThrowError(
       new TRPCError({
         code: "FORBIDDEN",
-        message: "You can't import an imported gameshow."
+        message: "Diese Spielshow wurde bereits importiert."
       })
     );
   });
@@ -61,7 +61,7 @@ describe("gameshowsRouter -> importGameshow", () => {
     ).rejects.toThrowError(
       new TRPCError({
         code: "FORBIDDEN",
-        message: "You can't import a private gameshow."
+        message: "Du kannst keine private Spielshow importieren"
       })
     );
   });

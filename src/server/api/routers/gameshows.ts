@@ -255,7 +255,7 @@ export const gameshowsRouter = createTRPCRouter({
       if (!gameshow) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Gameshow konnte nicht gespeichert werden"
+          message: "Spielshow konnte nicht gespeichert werden"
         });
       }
 

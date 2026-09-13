@@ -6,8 +6,7 @@ import ModControlBar from "~/compositions/ModControlBar";
 import ModToggle from "~/compositions/ModToggle";
 import ModView from "~/compositions/ModView";
 import QuestionBox from "~/components/QuestionBox";
-import useAudio from "~/hooks/useAudio";
-import useMusic from "~/hooks/useMusic";
+import useWinnerSound from "~/hooks/useWinnerSound";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { useUser } from "~/hooks/useUser";
 import type { TeamShortNames } from "~/types/gameshow.types";
@@ -27,8 +26,11 @@ const ZehnSetzen: FC<IZehnSetzenGameProps> = ({ game }) => {
   const room = useSyncedRoom();
 
   const { team, isHost, hostFunction } = useUser();
-  const { triggerAudioEvent } = useAudio();
-  const { emitPauseMusic } = useMusic();
+
+  useWinnerSound({
+    qIndex: game.qIndex,
+    totalQuestions: game.questions.length
+  });
   const hasSubmittedAnswer = team?.shortName
     ? teamState[team.shortName].submitted
     : false;
@@ -98,13 +100,6 @@ const ZehnSetzen: FC<IZehnSetzenGameProps> = ({ game }) => {
 
     if (pointsTeamTwo) {
       room.teams.teamTwo.gameScore += pointsTeamTwo;
-    }
-
-    // Winner sound after the last question (ZehnSetzen has no fixed maxPoints winner)
-    const isLastQuestion = game.qIndex >= game.questions.length - 1;
-    if (isLastQuestion) {
-      emitPauseMusic();
-      triggerAudioEvent("playSound", "winning");
     }
   });
 

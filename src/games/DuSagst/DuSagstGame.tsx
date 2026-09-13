@@ -4,6 +4,7 @@ import React from "react";
 import ActionIcon from "~/components/ActionIcon";
 import ModView from "~/compositions/ModView";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
+import useWinnerSound from "~/hooks/useWinnerSound";
 import AnswerBox from "./components/AnswerBox";
 import QuestionContainer from "./components/QuestionContainer";
 import type {
@@ -70,6 +71,11 @@ const TeamBox = ({
 
 const DuSagstGame: React.FC<IDuSagstGameProps> = ({ game }) => {
   const currQuestion = game.questions[game.qIndex];
+
+  useWinnerSound({
+    qIndex: game.qIndex,
+    totalQuestions: game.questions.length
+  });
 
   const t1BoxStates = game.teamStates.t1.boxStates;
   const t2BoxStates = game.teamStates.t2.boxStates;

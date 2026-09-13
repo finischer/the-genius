@@ -4,6 +4,7 @@ import { findSets } from "~/compositions/gameshows/SetConfigurator/helpers";
 import GameNavControls from "~/compositions/GameNavControls";
 import ModView from "~/compositions/ModView";
 import { useUser } from "~/hooks/useUser";
+import useWinnerSound from "~/hooks/useWinnerSound";
 import { goToNextQuestion, goToPreviousQuestion, sleep } from "~/utils/helpers";
 import SetCard from "./components/SetCard";
 import type { ISetGameProps } from "./set.types";
@@ -12,6 +13,11 @@ const SetGame: React.FC<ISetGameProps> = ({ game }) => {
   const { isHost, hostFunction } = useUser();
   const currQuestion = game.questions[game.qIndex];
   const possibleSets = findSets(currQuestion?.cards ?? []);
+
+  useWinnerSound({
+    qIndex: game.qIndex,
+    totalQuestions: game.questions.length
+  });
 
   const handleSelectCard = hostFunction((cardIndex: number) => {
     if (game.display.markedCards) return;

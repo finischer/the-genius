@@ -8,6 +8,7 @@ import useAudio from "~/hooks/useAudio";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { useUser } from "~/hooks/useUser";
 import useComponentVisibility from "~/hooks/useComponentVisibility";
+import useWinnerSound from "~/hooks/useWinnerSound";
 import { goToNextQuestion, goToPreviousQuestion, sleep } from "~/utils/helpers";
 import classes from "./flaggen.module.css";
 import { type IFlaggenGameProps } from "./flaggen.types";
@@ -20,6 +21,11 @@ const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
   const shortCode = currFlag ? String(currFlag.shortCode) : null;
   const { visible: flagVisible, toggle: toggleFlag } =
     useComponentVisibility("flaggen-flag");
+
+  useWinnerSound({
+    qIndex: game.qIndex,
+    totalQuestions: game.countries.length
+  });
 
   const prepareQuestion = async () => {
     // Hide the flag first if it is currently visible, then wait for the

@@ -25,8 +25,6 @@ import React, { useState } from "react";
 import ActionIcon from "~/components/ActionIcon";
 import ModView from "~/compositions/ModView";
 import Tooltip from "~/components/Tooltip";
-import useAudio from "~/hooks/useAudio";
-import useMusic from "~/hooks/useMusic";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import useTeam from "~/hooks/useTeam";
 import { useUser } from "~/hooks/useUser";
@@ -70,8 +68,6 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
   const teamFn = useTeam();
   const room = useSyncedRoom();
   const { isDuellMode } = room;
-  const { triggerAudioEvent } = useAudio();
-  const { emitPauseMusic } = useMusic();
 
   const { user, isHost, player } = useUser();
 
@@ -143,11 +139,6 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
     if (!currGame || team.gameScore >= currGame?.maxPoints) return;
 
     team.gameScore += step;
-
-    if (team.gameScore >= currGame.maxPoints) {
-      emitPauseMusic();
-      triggerAudioEvent("playSound", "winning");
-    }
   };
 
   const decreaseGameScore = (step = 1) => {

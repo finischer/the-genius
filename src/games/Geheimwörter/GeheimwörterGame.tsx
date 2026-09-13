@@ -9,6 +9,7 @@ import RevealButton from "~/components/RevealButton";
 import useComponentVisibility from "~/hooks/useComponentVisibility";
 import useAudio from "~/hooks/useAudio";
 import { useUser } from "~/hooks/useUser";
+import useWinnerSound from "~/hooks/useWinnerSound";
 import { animations } from "~/utils/animations";
 import { slug } from "~/utils/strings";
 import { goToNextQuestion, goToPreviousQuestion, sleep } from "~/utils/helpers";
@@ -21,6 +22,11 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
   const showAnswer = game.display.answer;
   const { isHost, hostFunction } = useUser();
   const { triggerAudioEvent } = useAudio();
+
+  useWinnerSound({
+    qIndex: game.qIndex,
+    totalQuestions: game.questions.length
+  });
 
   // Visibility state managed via the generic componentVisibility system
   const { visible: showWords, toggle: toggleWords } = useComponentVisibility(

@@ -6,7 +6,7 @@ const ReferatBingoGame: React.FC<IReferatBingoGameProps> = ({ game }) => {
     console.log(game);
   }, []);
 
-  return <div>ReferatBingoGame</div>;
+  return <div data-game="referatBingo">ReferatBingoGame</div>;
 };
 
 export default ReferatBingoGame;

@@ -91,7 +91,7 @@ const Game: React.FC<IGameProps> = ({ gameName }) => {
     <>
       <AnimatePresence>
         {showGame && !introIsPlaying && (
-          <motion.div {...animations.fadeInOut}>
+          <motion.div data-testid="game-area" {...animations.fadeInOut}>
             {getGame(game.identifier)}
           </motion.div>
         )}

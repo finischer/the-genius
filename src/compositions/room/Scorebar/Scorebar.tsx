@@ -202,8 +202,17 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
     });
   };
 
+  const testId =
+    team.shortName === "t1" ? "scorebar-teamOne" : "scorebar-teamTwo";
+
   return (
-    <Flex align="flex-end" gap="lg" pos="relative" className="scorebar">
+    <Flex
+      align="flex-end"
+      gap="lg"
+      pos="relative"
+      className="scorebar"
+      data-testid={testId}
+    >
       {/* Left Scorbar timer */}
       <AnimatePresence>
         {timerPosition === "left" && team.scorebarTimer.active && (
@@ -235,6 +244,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
       <Flex direction="column" pos="relative">
         {/* Highlight container to represent that it is the turn of this team  */}
         <motion.div
+          className="scorebar-highlight"
           animate={{
             scale: [0.75, 1.25, 0.75]
           }}

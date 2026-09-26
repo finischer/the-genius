@@ -17,7 +17,8 @@ const List = <T,>({
   itemName = "Frage",
   showIndex = false,
   clickable = false,
-  listItem
+  listItem,
+  itemTestId
 }: IListProps<T>) => {
   // const [selectedItems, setSelectedItems] = useImmer<string[]>([]);
 
@@ -94,6 +95,7 @@ const List = <T,>({
             index={index}
             clickable={onClickItem ? true : false}
             highlight={false}
+            testId={itemTestId}
           />
         );
       })}

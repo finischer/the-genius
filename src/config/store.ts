@@ -2,6 +2,7 @@ import { randomId } from "@mantine/hooks";
 import type { RoomSounds } from "~/types/gameshow.types";
 import { getYjsValue, syncedStore, type Y } from "@syncedstore/core";
 import { WebsocketProvider } from "y-partykit/provider";
+import { PARTYKIT_HOST } from "~/utils/env";
 import {
   RoomView,
   type Player,
@@ -120,7 +121,7 @@ export const connectToSocket = (roomId: string) => {
   if (!roomId) return;
 
   return new WebsocketProvider(
-    "wss://yjs.threepointone.partykit.dev/party",
+    PARTYKIT_HOST,
     roomId,
     getYjsValue(roomStore) as Y.Doc
   ); // sync via partykit

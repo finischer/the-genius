@@ -17,4 +17,5 @@ export interface IListItemProps<T> {
   clickable: boolean;
   highlight: boolean;
   itemContent?: ReactNode | string;
+  testId?: string;
 }

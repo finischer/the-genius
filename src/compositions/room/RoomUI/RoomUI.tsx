@@ -133,8 +133,13 @@ const RoomUI = () => {
               // callback={handleInteractiveModerationTourCallback}
             />
             <Box pos="absolute" bottom="50%" className="mod-panel-btn">
-              <ActionIcon variant="filled" toolTip="Mod-Panel öffnen">
-                <IconArrowRight onClick={modPanelDisclosure[1].open} />
+              <ActionIcon
+                variant="filled"
+                toolTip="Mod-Panel öffnen"
+                data-testid="mod-panel-btn"
+                onClick={modPanelDisclosure[1].open}
+              >
+                <IconArrowRight />
               </ActionIcon>
             </Box>
             <ModPanel disclosure={modPanelDisclosure} />

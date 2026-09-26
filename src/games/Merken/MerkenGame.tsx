@@ -45,7 +45,7 @@ const MerkenGame: React.FC<IMerkenGameProps> = ({ game }) => {
   });
 
   return (
-    <Flex direction="column" gap="lg">
+    <Flex data-game="merken" direction="column" gap="lg">
       <MerkenPlayground
         cards={game.cards}
         openCards={game.openCards}

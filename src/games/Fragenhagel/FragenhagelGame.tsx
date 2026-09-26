@@ -266,7 +266,7 @@ const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
 
   return (
     <AnimatePresence>
-      <Stack align="center" gap="lg">
+      <Stack data-game="fragenhagel" align="center" gap="lg">
         {/* ── Moderator setup panel ── */}
         <ModView>
           <Divider orientation="vertical" />

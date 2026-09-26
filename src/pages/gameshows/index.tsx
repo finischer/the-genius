@@ -210,7 +210,7 @@ const GameshowsPage = () => {
   const rows =
     gameshows?.map((gameshow) => {
       return (
-        <Table.Tr key={gameshow.id}>
+        <Table.Tr key={gameshow.id} data-testid="gameshow-card">
           <Table.Td>{gameshow.name}</Table.Td>
           <Table.Td>{gameshow.numOfGames}</Table.Td>
           <Table.Td>{formatTimestamp(gameshow.createdAt)}</Table.Td>
@@ -269,6 +269,7 @@ const GameshowsPage = () => {
             variant="filled"
             onClick={handleCreateGameshow}
             loading={pageIsLoading}
+            data-testid="create-gameshow-btn"
           >
             <IconPlus />
           </ActionIcon>

@@ -238,6 +238,7 @@ const GamesConfigStepper = () => {
                 }
                 id="name"
                 value={gameshow.name}
+                data-testid="gameshow-name-input"
               />
             </Box>
           </Stepper.Step>

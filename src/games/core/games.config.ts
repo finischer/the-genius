@@ -18,6 +18,7 @@ import { DEFAULT_DUSAGST_STATE } from "../DuSagst/config";
 import { DEFAULT_REFERAT_BINGO_STATE } from "../ReferatBingo/config";
 import { DEFAULT_ZEHN_SETZEN_STATE } from "../ZehnSetzen/config";
 import { DEFAULT_FRAGENHAGEL_STATE } from "../Fragenhagel/config";
+import { DEFAULT_AUF_DEN_KOPF_GESTELLT_STATE } from "../AufDenKopfGestellt/config";
 
 // Import aller Konfiguratoren
 import MerkenConfigurator from "~/compositions/gameshows/MerkenConfigurator/MerkenConfigurator";
@@ -28,6 +29,7 @@ import DuSagstConfigurator from "~/compositions/gameshows/DuSagstConfigurator/Du
 import ReferatBingoConfigurator from "~/compositions/gameshows/ReferatBingoConfigurator/ReferatBingoConfigurator";
 import ZehnSetzenConfigurator from "~/compositions/gameshows/ZehnSetzenConfigurator/ZehnSetzenConfigurator";
 import FragenhagelConfigurator from "~/compositions/gameshows/FragenhagelConfigurator/FragenhagelConfigurator";
+import AufDenKopfGestelltConfigurator from "~/compositions/gameshows/AufDenKopfGestelltConfigurator/AufDenKopfGestelltConfigurator";
 
 // Import aller Game-Komponenten
 import MerkenGame from "../Merken/MerkenGame";
@@ -38,6 +40,7 @@ import DuSagstGame from "../DuSagst/DuSagstGame";
 import ReferatBingoGame from "../ReferatBingo/ReferatBingoGame";
 import ZehnSetzenGame from "../ZehnSetzen/ZehnSetzenGame";
 import FragenhagelGame from "../Fragenhagel/FragenhagelGame";
+import AufDenKopfGestelltGame from "../AufDenKopfGestellt/AufDenKopfGestelltGame";
 
 /**
  * GAME-KONFIGURATION
@@ -105,6 +108,13 @@ export const GAME_CONFIGS: Array<{
     defaultState: DEFAULT_FRAGENHAGEL_STATE,
     configurator: FragenhagelConfigurator,
     gameComponent: FragenhagelGame as React.ComponentType<unknown>
+  },
+  {
+    identifier: Game.AUF_DEN_KOPF_GESTELLT,
+    name: "Auf den Kopf gestellt",
+    defaultState: DEFAULT_AUF_DEN_KOPF_GESTELLT_STATE,
+    configurator: AufDenKopfGestelltConfigurator,
+    gameComponent: AufDenKopfGestelltGame as React.ComponentType<unknown>
   }
   // 🎯 BEISPIEL: So einfach ist es, ein neues Spiel hinzuzufügen!
   // Siehe /src/examples/ für vollständige Implementierung:

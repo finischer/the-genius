@@ -7,6 +7,7 @@ import type { TDuSagstGameState } from "../DuSagst/config";
 import type { TReferatBingoGameState } from "../ReferatBingo/config";
 import type { TZehnSetzenGameState } from "../ZehnSetzen/config";
 import type { TFragenhagelGameState } from "../Fragenhagel/config";
+import type { TAufDenKopfGestelltGameState } from "../AufDenKopfGestellt/config";
 
 export type TScorebarMode = "number" | "circle";
 
@@ -18,7 +19,8 @@ export enum Game {
   DUSAGST = "duSagst",
   REFERATBINGO = "referatBingo",
   ZEHN_SETZEN = "zehnSetzen",
-  FRAGENHAGEL = "fragenhagel"
+  FRAGENHAGEL = "fragenhagel",
+  AUF_DEN_KOPF_GESTELLT = "aufDenKopfGestellt"
 }
 
 export interface IGameGeneralState {
@@ -46,6 +48,7 @@ export interface TGameSettingsMap {
   [Game.REFERATBINGO]: TReferatBingoGameState;
   [Game.ZEHN_SETZEN]: TZehnSetzenGameState;
   [Game.FRAGENHAGEL]: TFragenhagelGameState;
+  [Game.AUF_DEN_KOPF_GESTELLT]: TAufDenKopfGestelltGameState;
 }
 
 export type GameState = TGameSettingsMap[Game];

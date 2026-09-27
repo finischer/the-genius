@@ -1,0 +1,29 @@
+.svgWrapper {
+  flex: 1;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--mantine-color-dark-7);
+  border-radius: var(--mantine-radius-md);
+  padding: var(--mantine-spacing-lg);
+}
+
+.countrySvg {
+  max-height: 340px;
+  max-width: 100%;
+  fill: #83a978;
+  stroke: white;
+  filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.7));
+  transition: transform 1.5s ease;
+}
+
+.previewEmpty {
+  flex: 1;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--mantine-color-dark-7);
+  border-radius: var(--mantine-radius-md);
+}

@@ -20,6 +20,7 @@ import type {
 } from "./aufDenKopfGestellt.types";
 import { CountrySvg } from "./components/CountrySvg";
 import classes from "./AufDenKopfGestelltGame.module.css";
+import useBuzzer from "~/hooks/useBuzzer";
 
 // Must match the CSS transition duration in CountrySvg.module.css
 const ROTATION_DURATION_MS = 1500;
@@ -36,6 +37,7 @@ const AufDenKopfGestelltGame: React.FC<IAufDenKopfGestelltGameProps> = ({
   game
 }) => {
   const room = useSyncedRoom();
+  const { unlockAllBuzzers } = useBuzzer();
   const { hostFunction } = useUser();
   const { triggerAudioEvent } = useAudio();
   const pathRef = useRef<SVGPathElement>(null);
@@ -101,6 +103,7 @@ const AufDenKopfGestelltGame: React.FC<IAufDenKopfGestelltGameProps> = ({
     game.animation = { isDone: false, state: "" };
     room.context.answerState.answer = "";
     room.context.answerState.isAnswerDisplayed = false;
+    unlockAllBuzzers();
   };
 
   const handleStart = hostFunction(() => {

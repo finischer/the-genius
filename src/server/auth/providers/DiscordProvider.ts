@@ -33,6 +33,10 @@ const buildImageUrl = (
 export default NextAuthDiscordProvider({
   clientId: process.env.DISCORD_CLIENT_ID ?? "",
   clientSecret: process.env.DISCORD_CLIENT_SECRET ?? "",
+  // Discord now includes an `iss` param in OAuth callbacks (RFC 9207).
+  // openid-client validates it against the configured issuer — without this,
+  // the check throws "issuer must be configured on the issuer".
+  issuer: "https://discord.com",
   profile(profile: DiscordProfile) {
     profile.image_url = buildImageUrl(
       profile.id,

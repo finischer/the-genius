@@ -2,8 +2,8 @@ import { Group, Text, useMantineTheme } from "@mantine/core";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { type FC } from "react";
-import ActionIcon from "~/components/shared/ActionIcon";
-import QuestionBox from "~/components/shared/QuestionBox";
+import ActionIcon from "~/components/ActionIcon";
+import QuestionBox from "~/components/QuestionBox";
 import TeamScore from "./TeamScore";
 import { useUser } from "~/hooks/useUser";
 import type { TZehnSetzenAnswer } from "../zehnSetzen.types";
@@ -114,6 +114,7 @@ const AnswerElement: FC<AnswerElementProps> = ({
         <QuestionBox
           py="xs"
           px="md"
+          w="25rem"
           contentCentered={false}
           opacity={answerOpacity}
           onClick={toggleAnswer}

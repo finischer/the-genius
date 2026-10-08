@@ -1,7 +1,7 @@
 import { Grid, GridCol } from "@mantine/core";
 import { useEffect } from "react";
-import PageLayout from "~/components/layout/PageLayout";
-import { GameshowCard } from "~/components/shared/GameshowCard/GameshowCard";
+import PageLayout from "~/compositions/layout/PageLayout";
+import { GameshowCard } from "~/compositions/GameshowCard/GameshowCard";
 import useNotification from "~/hooks/useNotification";
 import { api } from "~/utils/api";
 

@@ -1,6 +1,6 @@
-import type { TCodeList } from "~/components/gameshows/GeheimwörterConfigurator/components/CodeList/codeList.types";
+import type { TCodeList } from "~/compositions/gameshows/GeheimwörterConfigurator/components/CodeList/codeList.types";
 import { type TGeheimwörterGameState } from "./config";
-import type { IListItem } from "~/components/shared/List/components/ListItem/listItem.types";
+import type { IListItem } from "~/components/List/components/ListItem/listItem.types";
 import type { Game } from "../core/types";
 
 export type TGeheimWoerterQuestionsWordsItem = {

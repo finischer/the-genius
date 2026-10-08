@@ -6,7 +6,7 @@ import {
 } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import { motion } from "framer-motion";
-import ActionIcon from "~/components/shared/ActionIcon";
+import ActionIcon from "~/components/ActionIcon";
 import { useUser } from "~/hooks/useUser";
 import type { TSetCard, TSetGameMarkedCardsState } from "../../set.types";
 import SetForm from "../SetForm";

@@ -36,7 +36,7 @@ describe("gameshowsRouter -> getById", () => {
     ).rejects.toThrowError(
       new TRPCError({
         code: "NOT_FOUND",
-        message: "Gameshow not found"
+        message: "Spielshow existiert nicht."
       })
     );
   });

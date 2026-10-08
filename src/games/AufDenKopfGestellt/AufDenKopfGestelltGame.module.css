@@ -1,0 +1,13 @@
+.svgWrapper {
+  height: 65vh;
+  width: 50vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Size override for the CountrySvg inside the game room */
+.countrySvg {
+  height: 100%;
+  width: 100%;
+}

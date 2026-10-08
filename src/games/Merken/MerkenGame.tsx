@@ -1,10 +1,11 @@
 import { Button, Flex } from "@mantine/core";
 import React from "react";
-import ModView from "~/components/shared/ModView";
+import ModView from "~/compositions/ModView";
 import useAudio from "~/hooks/useAudio";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import useTimer from "~/hooks/useTimer";
 import { useUser } from "~/hooks/useUser";
+import useWinnerSound from "~/hooks/useWinnerSound";
 import { TimerType } from "~/types/gameshow.types";
 import MerkenPlayground from "./components/MerkenPlayground/MerkenPlayground";
 import { type IMerkenGameProps } from "./merken.types";
@@ -13,6 +14,9 @@ const MerkenGame: React.FC<IMerkenGameProps> = ({ game }) => {
   const { isHost, hostFunction } = useUser();
   const { triggerAudioEvent } = useAudio();
   const room = useSyncedRoom();
+
+  // Merken has no qIndex — winner fires when a team reaches maxPoints (circle mode)
+  useWinnerSound();
   const { startTimer, active: isTimerActive } = useTimer(
     room.context.header.timer,
     TimerType.COUNTDOWN,

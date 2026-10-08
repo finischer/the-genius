@@ -60,13 +60,12 @@ bun run lint:fix      # Automatisch fixen
 ## Komponenten-Struktur
 
 ```
-src/components/FeatureName/
-├── ComponentName/
-│   ├── ComponentName.tsx     # Haupt-Komponente
-│   └── index.ts              # Re-export
+src/components/ComponentName/
+├── ComponentName.tsx     # Haupt-Komponente
+└── index.ts              # Re-export
 ```
 
-Jede Komponente in eigenem Verzeichnis, Export über `index.ts`.
+Generische, wiederverwendbare UI-Bausteine (keine tRPC-Calls, kein App-Context) liegen in `src/components/`. Feature-spezifische Kompositionen (kennen tRPC, Room-State, Auth) liegen in `src/compositions/`.
 
 ## Spiel-Architektur
 
@@ -81,8 +80,8 @@ src/games/YourGame/
 
 Der dazugehörige Konfigurator liegt unter:
 ```
-src/components/gameshows/YourGameConfigurator/
-└── YourGameConfigurator.tsx
+src/compositions/gameshows/GameNameConfigurator/
+└── GameNameConfigurator.tsx
 ```
 
 ## Kommentare

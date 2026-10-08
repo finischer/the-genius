@@ -16,10 +16,6 @@ const SyncedRoomProvider = ({ children }: { children: React.ReactNode }) => {
     room: { state: Room };
   };
 
-  // const startGame = (gameIdentifier: Game) => {};
-
-  // const changeView = (newView: RoomViews) => {};
-
   return (
     <SyncedRoomContext.Provider
       value={{

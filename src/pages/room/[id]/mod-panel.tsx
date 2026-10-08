@@ -5,7 +5,7 @@ import SyncedRoomProvider from "~/context/SyncedRoomContext";
 import { connectToSocket } from "~/config/store";
 import { useUser } from "~/hooks/useUser";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
-import ModPanelContent from "~/components/room/ModPanel/ModPanelContent";
+import ModPanelContent from "~/compositions/room/ModPanel/ModPanelContent";
 
 const ModPanelInner = () => {
   const params = useParams();

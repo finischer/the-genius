@@ -20,17 +20,18 @@ model Gameshow {
   name               String
   /// [GameConfig[]]
   games              Json                @default("[]")
-  creatorId          String
-  user               User                @relation("gameshowCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId          String?
+  user               User?               @relation("gameshowCreator", fields: [creatorId], references: [id], onDelete: SetNull)
   isFavorite         Boolean             @default(false)
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
   visibility         GameshowVisbility   @default(PRIVATE)
   originalCreatorId  String?
-  originalCreator    User?               @relation("originalCreator", fields: [originalCreatorId], references: [id])
+  originalCreator    User?               @relation("originalCreator", fields: [originalCreatorId], references: [id], onDelete: SetNull)
   originalGameshowId String?
   difficulty         GameshowDifficulty? @default(MEDIUM)
   isModified         Boolean?            @default(false)
+  isOfficial         Boolean             @default(false)
 
   @@map("gameshows")
 }

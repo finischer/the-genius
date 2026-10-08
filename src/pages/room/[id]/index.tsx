@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { type FC } from "react";
 import SyncedRoomProvider from "~/context/SyncedRoomContext";
 import { useUser } from "~/hooks/useUser";
-import RoomUI from "~/ui/RoomUI";
+import RoomUI from "~/compositions/room/RoomUI";
 
 const MIN_USERNAME_LENGTH = 3;
 const MAX_USERNAME_LENGTH = 20;

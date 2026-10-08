@@ -1,6 +1,6 @@
 import { Box, Center, SimpleGrid, Text } from "@mantine/core";
 import React from "react";
-import FlipCard from "~/components/shared/FlipCard/FlipCard";
+import FlipCard from "~/components/FlipCard/FlipCard";
 import type { IMerkenPlaygroundProps } from "./merkenPlayground.types";
 import Image from "next/image";
 import type { MantineStyleProp } from "@mantine/core";

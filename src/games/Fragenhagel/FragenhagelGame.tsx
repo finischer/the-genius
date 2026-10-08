@@ -9,9 +9,11 @@ import {
 } from "@mantine/core";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, type FC } from "react";
-import ModView from "~/components/shared/ModView";
+import GameNavControls from "~/compositions/GameNavControls";
+import ModView from "~/compositions/ModView";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { useUser } from "~/hooks/useUser";
+import useWinnerSound from "~/hooks/useWinnerSound";
 import { animations } from "~/utils/animations";
 import { goToNextQuestion, goToPreviousQuestion } from "~/utils/helpers";
 import type { IFragenhagelGameProps } from "./fragenhagel.types";
@@ -23,6 +25,11 @@ import type { Team } from "~/types/gameshow.types";
 const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
   const room = useSyncedRoom();
   const { isHost, hostFunction } = useUser();
+
+  useWinnerSound({
+    qIndex: game.qIndex,
+    totalQuestions: game.questions.length
+  });
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const currQuestion = game.questions.at(game.qIndex);
@@ -66,6 +73,10 @@ const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
 
   const handleStopTimer = hostFunction(() => {
     game.timerState.isActive = false;
+  });
+
+  const handleResetTimer = hostFunction(() => {
+    game.timerState.seconds = 0;
   });
 
   const handleSetInterval = hostFunction((start: number, end: number) => {
@@ -201,6 +212,14 @@ const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
           size="xs"
           variant="default"
           disabled={game.timerState.isActive}
+          onClick={handleResetTimer}
+        >
+          Zurücksetzen
+        </Button>
+        <Button
+          size="xs"
+          variant="default"
+          disabled={game.timerState.isActive}
           onClick={handleStartTimer}
         >
           Starten
@@ -218,28 +237,31 @@ const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
   );
 
   const QuestionNavigationView = () => (
-    <Group justify="center" gap="sm">
-      <Button size="sm" variant="default" onClick={handlePrevQuestion}>
-        ← Zurück
-      </Button>
-      <Button size="sm" color="red" onClick={() => handleNextQuestion(false)}>
-        Falsch
-      </Button>
-      <Button size="sm" color="green" onClick={() => handleNextQuestion(true)}>
-        Richtig
-      </Button>
-      <Button
-        size="sm"
-        variant="default"
-        onClick={() =>
+    <Stack gap="xs" align="center">
+      <Group justify="center" gap="sm">
+        <Button size="sm" color="red" onClick={() => handleNextQuestion(false)}>
+          Falsch
+        </Button>
+        <Button
+          size="sm"
+          color="green"
+          onClick={() => handleNextQuestion(true)}
+        >
+          Richtig
+        </Button>
+      </Group>
+      <GameNavControls
+        mt="xl"
+        currentIndex={game.qIndex}
+        total={game.questions.length}
+        onPrev={handlePrevQuestion}
+        onNext={() =>
           goToNextQuestion(game.questions, game.qIndex, () => {
             game.qIndex += 1;
           })
         }
-      >
-        Weiter →
-      </Button>
-    </Group>
+      />
+    </Stack>
   );
 
   return (
@@ -279,9 +301,6 @@ const FragenhagelGame: FC<IFragenhagelGameProps> = ({ game }) => {
                   </Text>
                   <Text c="green.4" fw={500} ta="center">
                     {currQuestion.answer}
-                  </Text>
-                  <Text c="dimmed" size="xs" ta="center">
-                    {game.qIndex + 1} / {game.questions.length}
                   </Text>
                 </Stack>
               ) : (

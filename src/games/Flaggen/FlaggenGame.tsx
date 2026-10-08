@@ -1,35 +1,42 @@
-import { Button, Flex, Image, Text } from "@mantine/core";
+import { Flex } from "@mantine/core";
 import React from "react";
-import ArrowActionButton from "~/components/shared/ArrowActionButton";
-import ModView from "~/components/shared/ModView";
+import GameNavControls from "~/compositions/GameNavControls";
+import ModControlBar from "~/compositions/ModControlBar";
+import ModToggle from "~/compositions/ModToggle";
+import RevealButton from "~/components/RevealButton";
+import useAudio from "~/hooks/useAudio";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { useUser } from "~/hooks/useUser";
+import useComponentVisibility from "~/hooks/useComponentVisibility";
+import useWinnerSound from "~/hooks/useWinnerSound";
 import { goToNextQuestion, goToPreviousQuestion, sleep } from "~/utils/helpers";
 import classes from "./flaggen.module.css";
 import { type IFlaggenGameProps } from "./flaggen.types";
 
 const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
   const room = useSyncedRoom();
-  const { isHost, hostFunction } = useUser();
-  const displayFlag = game.display.country;
+  const { hostFunction } = useUser();
+  const { triggerAudioEvent } = useAudio();
   const currFlag = game.countries[game.qIndex];
   const shortCode = currFlag ? String(currFlag.shortCode) : null;
-  const nxtBtnDisabled = game.qIndex >= game.countries.length - 1;
-  const prevBtnDisabled = game.qIndex <= 0;
+  const { visible: flagVisible, toggle: toggleFlag } =
+    useComponentVisibility("flaggen-flag");
 
-  const handleFlagClick = hostFunction(() => {
-    if (displayFlag) return;
-    game.display.country = true;
+  useWinnerSound({
+    qIndex: game.qIndex,
+    totalQuestions: game.countries.length
   });
 
   const prepareQuestion = async () => {
+    // Hide the flag first if it is currently visible, then wait for the
+    // transition to finish so players don't see the next flag peek through.
+    if (flagVisible) {
+      toggleFlag();
+      await sleep(300);
+    }
     game.display.answer = false;
-    game.display.country = false;
     room.context.answerState.answer = "";
     room.context.answerState.isAnswerDisplayed = false;
-    if (displayFlag) {
-      await sleep(800);
-    }
   };
 
   const handleNextFlagClick = hostFunction(async () => {
@@ -48,6 +55,7 @@ const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
 
   const handleShowAnswerClick = hostFunction(() => {
     if (!currFlag?.country) return;
+    triggerAudioEvent("playSound", "bell");
     game.display.answer = true;
     room.context.answerState.answer = currFlag.country;
     room.context.answerState.isAnswerDisplayed = true;
@@ -55,53 +63,36 @@ const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
 
   return (
     <Flex direction="column" gap="md" align="center">
-      <ModView>
-        <Text>
-          Flagge {game.qIndex + 1} / {game.countries.length}
-        </Text>
-      </ModView>
-      <Flex gap="4rem" align="center" pos="relative">
-        <ModView>
-          <ArrowActionButton
-            arrowDirection="left"
-            tooltip="Vorherige Flagge zeigen"
-            disabled={prevBtnDisabled}
-            onClick={handlePrevFlagClick}
-          />
-        </ModView>
-        {currFlag && shortCode && (
-          <Image
+      {currFlag && shortCode && (
+        <ModToggle id="flaggen-flag" label="Flagge">
+          <img
             className={classes.flagImg}
-            src={`https://flagcdn.com/w640/${shortCode}.png`}
-            alt="Image not found"
-            w={400}
-            radius="sm"
-            opacity={displayFlag ? 1 : isHost ? 0.5 : 0}
-            onClick={handleFlagClick}
-            data-hostandnoflag={isHost && !displayFlag}
+            src={`https://flagcdn.com/h240/${shortCode}.png`}
+            alt={currFlag.country ?? "Flagge"}
             style={{
-              transform: `scale(${displayFlag ? "1" : "0.9"})`,
-              transition: "all 500ms",
-              userSelect: "none"
+              borderRadius: "var(--mantine-radius-sm)",
+              userSelect: "none",
+              display: "block"
             }}
           />
-        )}
-        <ModView>
-          <ArrowActionButton
-            arrowDirection="right"
-            tooltip="Nächste Flagge zeigen"
-            disabled={nxtBtnDisabled}
-            onClick={handleNextFlagClick}
-          />
-        </ModView>
-      </Flex>
-      <ModView>
-        <Flex gap="lg" direction="column" align="center" justify="center">
-          <Text>Antwort: {currFlag?.country}</Text>
+        </ModToggle>
+      )}
 
-          <Button onClick={handleShowAnswerClick}>Antwort aufdecken</Button>
-        </Flex>
-      </ModView>
+      <ModControlBar>
+        <RevealButton
+          onReveal={handleShowAnswerClick}
+          revealed={game.display.answer}
+          label="Antwort"
+        />
+      </ModControlBar>
+
+      <GameNavControls
+        currentIndex={game.qIndex}
+        total={game.countries.length}
+        onPrev={handlePrevFlagClick}
+        onNext={handleNextFlagClick}
+        label="Flagge"
+      />
     </Flex>
   );
 };

@@ -1,6 +1,12 @@
 import { randomId } from "@mantine/hooks";
 import { useSession } from "next-auth/react";
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState
+} from "react";
 import type { Player, Team } from "~/types/gameshow.types";
 import { type TUserReduced } from "~/types/user.types";
 import type { FunctionToWrap } from "~/types/types";
@@ -109,11 +115,16 @@ const UserProvider: React.FC<IUseUserProvider> = ({ children }) => {
     return (...args: T) => func(...args);
   }
 
-  function playerFunction(func: (team: Team, player: Player) => void): void {
-    if (!isPlayer || !team) return;
+  // useCallback so consumers (e.g. useBuzzer) can safely include playerFunction
+  // in their own dependency arrays without triggering infinite re-renders.
+  const playerFunction = useCallback(
+    (func: (team: Team, player: Player) => void): void => {
+      if (!isPlayer || !team) return;
 
-    func(team, player);
-  }
+      func(team, player);
+    },
+    [isPlayer, team, player]
+  );
 
   useEffect(() => {
     setUser(initUser());

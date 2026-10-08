@@ -1,0 +1,1 @@
+export { GameshowCard } from "./GameshowCard";

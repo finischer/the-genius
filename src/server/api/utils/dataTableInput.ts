@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { FilterOperator } from "~/components/shared/DataTable/dataTable.types";
+import { FilterOperator } from "~/components/DataTable/dataTable.types";
 
 // ── Schemas ───────────────────────────────────────────────────────────────────
 

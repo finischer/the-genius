@@ -1,13 +1,18 @@
 import {
+  Button,
   Flex,
   Group,
   Image,
+  NumberInput,
+  Paper,
   ScrollArea,
   Stack,
   Text,
   Title
 } from "@mantine/core";
-import { useContext, useEffect, useMemo } from "react";
+import { IconDice, IconSelectAll } from "@tabler/icons-react";
+import { useContext, useEffect, useMemo, useState } from "react";
+import SearchInput from "~/components/SearchInput";
 import React from "react";
 import { useImmer } from "use-immer";
 import { COUNTRIES } from "~/games/Flaggen/config";
@@ -42,22 +47,25 @@ const FlaggenConfigurator = () => {
   );
   const { flaggen, updateGame } = useGameshowConfig(Game.FLAGGEN);
 
-  const [countries, setCountries] = useImmer(flaggen.countries);
   const [selectedCountries, setSelectedCountries] = useImmer<TCountry[]>([]);
+  const [randomCount, setRandomCount] = useState<number | string>(
+    availableCountries.length
+  );
+  const [availableSearch, setAvailableSearch] = useState("");
+  const [selectedSearch, setSelectedSearch] = useState("");
 
   const notSelectedCountries = availableCountries.filter(
     (c) => !selectedCountries.map((c) => c.shortCode).includes(c.shortCode)
   );
 
   useEffect(() => {
-    const selectedCountries: TCountry[] = flaggen.countries.map((c) => ({
+    const savedCountries: TCountry[] = flaggen.countries.map((c) => ({
       id: c.shortCode,
       country: c.country,
       shortCode: c.shortCode
     }));
 
-    setCountries(notSelectedCountries);
-    setSelectedCountries(selectedCountries);
+    setSelectedCountries(savedCountries);
   }, []);
 
   useEffect(() => {
@@ -81,10 +89,6 @@ const FlaggenConfigurator = () => {
     setSelectedCountries((draft) => {
       draft.push(country);
     });
-
-    setCountries((draft) => {
-      return draft.filter((c) => c.shortCode !== country.shortCode);
-    });
   };
 
   const handleDeselectCountry = (country: TCountry | undefined) => {
@@ -98,61 +102,130 @@ const FlaggenConfigurator = () => {
     setSelectedCountries((draft) => {
       return draft.filter((c) => c.shortCode !== country.shortCode);
     });
-
-    setCountries((draft) => {
-      draft.push(country);
-    });
   };
 
+  const handleRandomSelect = (count: number) => {
+    const shuffled = [...availableCountries].sort(() => Math.random() - 0.5);
+    const picked = shuffled.slice(0, count);
+
+    setSelectedCountries(picked);
+  };
+
+  const filteredAvailable = useMemo(() => {
+    const q = availableSearch.toLowerCase();
+    return notSelectedCountries.filter((c) =>
+      c.country.toLowerCase().includes(q)
+    );
+  }, [notSelectedCountries, availableSearch]);
+
+  const filteredSelected = useMemo(() => {
+    const q = selectedSearch.toLowerCase();
+    return selectedCountries.filter((c) => c.country.toLowerCase().includes(q));
+  }, [selectedCountries, selectedSearch]);
+
   const availableListItems = useMemo(
-    () =>
-      notSelectedCountries.map((c) => <CountryItem key={c.id} country={c} />),
-    [notSelectedCountries]
+    () => filteredAvailable.map((c) => <CountryItem key={c.id} country={c} />),
+    [filteredAvailable]
   );
 
   const selectedListItems = useMemo(
-    () => selectedCountries.map((c) => <CountryItem key={c.id} country={c} />),
-    [selectedCountries]
+    () => filteredSelected.map((c) => <CountryItem key={c.id} country={c} />),
+    [filteredSelected]
   );
 
   return (
-    <Flex
-      gap="md"
-      justify="center"
-      direction={{ base: "column", md: "row", lg: "row" }}
-    >
-      <Stack w="100%">
-        <Title order={3}>Verfügbare Flaggen</Title>
-        <ScrollArea mah={800} type="auto">
-          <List
-            data={countries.filter(
-              (c) =>
-                !selectedCountries.map((c) => c.shortCode).includes(c.shortCode)
-            )}
-            setData={setCountries}
-            listItem={availableListItems}
-            renderValueByKey="country"
-            onClickItem={handleSelectCountry}
-            onDeleteItem={handleDeselectCountry}
-            clickable
+    <Stack gap="md">
+      <Paper withBorder p="md" radius="md">
+        <Stack gap="xs">
+          <Text fw={600} size="sm">
+            Zufällige Auswahl
+          </Text>
+          <Group align="flex-end" gap="sm" wrap="wrap">
+            <NumberInput
+              label="Anzahl Flaggen"
+              min={1}
+              max={availableCountries.length}
+              value={randomCount}
+              onChange={setRandomCount}
+              w={160}
+            />
+            <Button
+              leftSection={<IconDice size={16} />}
+              variant="light"
+              onClick={() =>
+                handleRandomSelect(
+                  typeof randomCount === "number"
+                    ? randomCount
+                    : availableCountries.length
+                )
+              }
+            >
+              Zufällig befüllen
+            </Button>
+            <Button
+              leftSection={<IconSelectAll size={16} />}
+              variant="subtle"
+              onClick={() => {
+                setRandomCount(availableCountries.length);
+                handleRandomSelect(availableCountries.length);
+              }}
+            >
+              Max Anzahl ({availableCountries.length})
+            </Button>
+          </Group>
+        </Stack>
+      </Paper>
+
+      <Flex
+        gap="md"
+        justify="center"
+        direction={{ base: "column", md: "row", lg: "row" }}
+      >
+        <Stack w="100%">
+          <Title order={3}>Verfügbare Flaggen</Title>
+          <SearchInput
+            value={availableSearch}
+            onChange={setAvailableSearch}
+            placeholder="Flagge suchen..."
           />
-        </ScrollArea>
-      </Stack>
-      <Stack w="100%">
-        <Title order={3}>Ausgewählte Flaggen</Title>
-        <ScrollArea mah={800} type="auto">
-          <List
-            emptyListText="Füge deine erste Flagge hinzu!"
-            data={selectedCountries}
-            setData={setSelectedCountries}
-            listItem={selectedListItems}
-            renderValueByKey="country"
-            editable
-            deletableItems
+          <ScrollArea mah={800} type="auto">
+            <List
+              data={filteredAvailable}
+              setData={() => undefined}
+              listItem={availableListItems}
+              renderValueByKey="country"
+              onClickItem={handleSelectCountry}
+              onDeleteItem={handleDeselectCountry}
+              emptyListText="Keine Flaggen gefunden."
+              clickable
+            />
+          </ScrollArea>
+        </Stack>
+        <Stack w="100%">
+          <Title order={3}>Ausgewählte Flaggen</Title>
+          <SearchInput
+            value={selectedSearch}
+            onChange={setSelectedSearch}
+            placeholder="Flagge suchen..."
           />
-        </ScrollArea>
-      </Stack>
-    </Flex>
+          <ScrollArea mah={800} type="auto">
+            <List
+              emptyListText={
+                selectedSearch.length > 0
+                  ? "Keine Flaggen gefunden."
+                  : "Füge deine erste Flagge hinzu!"
+              }
+              data={filteredSelected}
+              setData={setSelectedCountries}
+              listItem={selectedListItems}
+              renderValueByKey="country"
+              editable
+              deletableItems
+            />
+          </ScrollArea>
+        </Stack>
+      </Flex>
+    </Stack>
   );
 };
 

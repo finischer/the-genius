@@ -38,7 +38,7 @@ const AufDenKopfGestelltGame: React.FC<IAufDenKopfGestelltGameProps> = ({
 }) => {
   const room = useSyncedRoom();
   const { unlockAllBuzzers } = useBuzzer();
-  const { hostFunction } = useUser();
+  const { hostFunction, isHost } = useUser();
   const { triggerAudioEvent } = useAudio();
   const pathRef = useRef<SVGPathElement>(null);
   const [pathLength, setPathLength] = useState(0);
@@ -72,7 +72,7 @@ const AufDenKopfGestelltGame: React.FC<IAufDenKopfGestelltGameProps> = ({
 
   // When animation finishes: rotate → fill → (if resolving) reveal answer
   useEffect(() => {
-    if (!game.animation.isDone || !game.showCountry) return;
+    if (!game.animation.isDone || !game.showCountry || !isHost) return;
 
     game.rotateCountry = true;
 

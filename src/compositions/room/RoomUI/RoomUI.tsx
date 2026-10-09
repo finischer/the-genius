@@ -4,7 +4,7 @@ import { notifications } from "@mantine/notifications";
 import { IconArrowRight, IconCheck } from "@tabler/icons-react";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Confetti from "~/compositions/room/Confetti/Confetti";
 import ModPanel from "~/compositions/room/ModPanel";
 import RoomBody from "~/compositions/room/RoomBody";
@@ -27,8 +27,9 @@ const RoomUI = () => {
   const { playAudio } = useAudio();
   const { play: playMusic, stop: stopMusic, pause: pauseMusic } = useMusic();
   const roomId = params?.id as string;
+  const playedSoundsRef = useRef<Record<string, string> | null>(null);
   const router = useRouter();
-  const { isPlayer } = useUser();
+  const { isPlayer, isHost } = useUser();
 
   const room = useSyncedRoom();
   const sounds = room.context?.audio.sounds ?? {};
@@ -71,14 +72,53 @@ const RoomUI = () => {
   }, [room.isClosed]);
 
   // Handle Sound Effects
+  // Each trigger writes a unique nonce. Every client plays a sound locally when
+  // the nonce changes, so no client has to reset shared state (which would
+  // swallow the event for the others).
   useEffect(() => {
-    for (const [key, sound] of Object.entries(sounds)) {
-      if (sound) {
-        playAudio(key as unknown as keyof RoomSounds);
-        sounds[key as unknown as keyof RoomSounds] = false;
-      }
+    if (!room.isLoaded) return;
+
+    const isInitialRun = playedSoundsRef.current === null;
+    const played = playedSoundsRef.current ?? {};
+
+    for (const [key, nonce] of Object.entries(sounds)) {
+      if (!nonce || played[key] === nonce) continue;
+      played[key] = nonce;
+      if (!isInitialRun) playAudio(key as keyof RoomSounds);
     }
-  }, [Object.values(sounds)]);
+
+    playedSoundsRef.current = played;
+  }, [room.isLoaded, Object.values(sounds).join("|")]);
+
+  // Simultaneous presses merge into multiple active teams (CRDT). The host
+  // picks one winner (earliest press, team id as tie-break) and resets the rest.
+  const activeTeamsKey = room.isLoaded
+    ? Object.values(room.teams)
+        .filter((t) => t.isActiveTurn)
+        .map((t) => t.id)
+        .join("|")
+    : "";
+  useEffect(() => {
+    if (!isHost || !room.isLoaded) return;
+
+    const activeTeams = Object.values(room.teams).filter((t) => t.isActiveTurn);
+    if (activeTeams.length < 2) return;
+
+    const [winner, ...losers] = [...activeTeams].sort(
+      (a, b) =>
+        (a.buzzer.pressedAt ?? Infinity) - (b.buzzer.pressedAt ?? Infinity) ||
+        a.id.localeCompare(b.id)
+    );
+    if (!winner) return;
+
+    losers.forEach((team) => {
+      team.isActiveTurn = false;
+      team.buzzer.isPressed = false;
+      team.buzzer.playersBuzzered = [];
+      team.scorebarTimer.active = false;
+      team.scorebarTimer.currSeconds = team.scorebarTimer.initSeconds;
+    });
+  }, [isHost, room.isLoaded, activeTeamsKey]);
 
   // Handle Music
   useEffect(() => {

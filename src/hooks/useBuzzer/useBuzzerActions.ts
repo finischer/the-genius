@@ -22,7 +22,10 @@ const useBuzzerActions = () => {
 
   const unlockAllBuzzers = () => {
     Object.values(room.teams).forEach((team) => {
+      team.isActiveTurn = false;
       team.buzzer.isLocked = false;
+      team.buzzer.isPressed = false;
+      team.buzzer.playersBuzzered = [];
     });
   };
 

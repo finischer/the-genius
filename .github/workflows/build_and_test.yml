@@ -69,7 +69,7 @@ jobs:
         run: bun run tsc
 
   test:
-    name: Test
+    name: Run Unit & Integration tests
     runs-on: ubuntu-latest
     environment:
       name: ${{ inputs.environment }}
@@ -114,7 +114,7 @@ jobs:
         run: bun run build
 
   e2e:
-    name: E2E (${{ matrix.suite.name }})
+    name: e2e (${{ matrix.suite.name }})
     runs-on: ubuntu-latest
     timeout-minutes: 20
     # Every suite runs on its own runner with its own database container

@@ -2,14 +2,15 @@ import type { Page } from "@playwright/test";
 import { expect, test } from "@e2e/fixtures";
 import type { IResourceTracker } from "@e2e/fixtures/cleanup";
 import { getE2ePrisma } from "@e2e/helpers/db";
+import { FLAGGEN_GAME } from "@e2e/helpers/roomGames";
 import { createGameshowViaApi } from "@e2e/helpers/trpc";
 import { GameshowEditorPage } from "@e2e/pages/GameshowEditorPage";
 import { GameshowListPage } from "@e2e/pages/GameshowListPage";
 import { createE2eName } from "@e2e/support/names";
+import { DEFAULT_MERKEN_STATE } from "~/games/Merken/config";
 
 const REDIRECT_TIMEOUT = 10_000;
 const MERKEN = "merken";
-const FLAGGEN = "set";
 const MERKEN_TIME_TO_THINK = "45";
 const SUCCESS_MESSAGE = "Spielshow wurde gespeichert";
 const NAME_REQUIRED_MESSAGE = "Name ist erforderlich";
@@ -72,6 +73,24 @@ async function createGameshowViaUi(
   return id;
 }
 
+/**
+ * Creates a gameshow with two valid games (Merken, Flaggen) through the API.
+ * Every configurator validates its input, so building such a show in the UI
+ * would need game-specific data entry that is irrelevant for these tests.
+ */
+async function createTwoGameShowViaApi(
+  page: Page,
+  tracker: IResourceTracker,
+  name: string
+): Promise<string> {
+  const { id } = await createGameshowViaApi(page.request, {
+    name,
+    games: [DEFAULT_MERKEN_STATE, FLAGGEN_GAME]
+  });
+  tracker.trackGameshow(id);
+  return id;
+}
+
 async function openForEdit(
   page: Page,
   gameshowId: string
@@ -101,29 +120,26 @@ test.describe("Gameshow-Verwaltung", { tag: "@gameshows" }, () => {
     tracker
   }) => {
     const name = createE2eName();
-    const editor = new GameshowEditorPage(workerSession);
-    await editor.goto();
-    await pickGames(editor, [MERKEN, FLAGGEN]);
+    const id = await createTwoGameShowViaApi(workerSession, tracker, name);
+
+    const editor = await openForEdit(workerSession, id);
+    await expect(editor.gameListItems()).toHaveCount(2);
     await editor.next();
     const timeInput = workerSession.getByLabel("Nachdenkzeit");
     await timeInput.fill(MERKEN_TIME_TO_THINK);
     await expect(timeInput).toHaveValue(MERKEN_TIME_TO_THINK);
     await editor.next();
     await editor.next();
-    await editor.setName(name);
     await editor.next();
     await editor.save();
     await expect(workerSession).toHaveURL(/\/gameshows$/, {
       timeout: REDIRECT_TIMEOUT
     });
-    const id = await findGameshowId(name);
-    tracker.trackGameshow(id);
 
     const reopened = await openForEdit(workerSession, id);
     await expect(reopened.gameListItems()).toHaveCount(2);
     await expect(reopened.gameListItems().nth(0)).toContainText("Merken");
-    await expect(reopened.gameListItems().nth(1)).toContainText("Set");
-
+    await expect(reopened.gameListItems().nth(1)).toContainText("Flaggen");
     await reopened.next();
     await expect(workerSession.getByLabel("Nachdenkzeit")).toHaveValue(
       MERKEN_TIME_TO_THINK
@@ -132,16 +148,12 @@ test.describe("Gameshow-Verwaltung", { tag: "@gameshows" }, () => {
     await reopened.next();
     await expect(reopened.nameInput).toHaveValue(name);
   });
-
   test("geänderte Reihenfolge der Spiele bleibt nach Neuladen erhalten", async ({
     workerSession,
     tracker
   }) => {
     const name = createE2eName();
-    const id = await createGameshowViaUi(workerSession, tracker, name, [
-      MERKEN,
-      FLAGGEN
-    ]);
+    const id = await createTwoGameShowViaApi(workerSession, tracker, name);
 
     const editor = await openForEdit(workerSession, id);
     const items = editor.gameListItems();
@@ -163,7 +175,7 @@ test.describe("Gameshow-Verwaltung", { tag: "@gameshows" }, () => {
       { steps: 15 }
     );
     await workerSession.mouse.up();
-    await expect(items.nth(0)).toContainText("Set");
+    await expect(items.nth(0)).toContainText("Flaggen");
     await expect(items.nth(1)).toContainText("Merken");
 
     await goToDetailsStep(editor, 2);
@@ -175,7 +187,7 @@ test.describe("Gameshow-Verwaltung", { tag: "@gameshows" }, () => {
 
     const reloaded = await openForEdit(workerSession, id);
     await workerSession.reload();
-    await expect(reloaded.gameListItems().nth(0)).toContainText("Set");
+    await expect(reloaded.gameListItems().nth(0)).toContainText("Flaggen");
     await expect(reloaded.gameListItems().nth(1)).toContainText("Merken");
   });
 

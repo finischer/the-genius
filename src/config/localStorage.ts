@@ -6,5 +6,6 @@ export enum LOCAL_STORAGE_KEYS {
   SETTINGS = "settings",
   MOD_TOUR = "moderator-tour",
   PLAYER_TOUR = "player-tour",
-  IMPORT_GAMESHOW_TOUR = "import-gameshow-tour"
+  IMPORT_GAMESHOW_TOUR = "import-gameshow-tour",
+  SKIP_GAME_INTRO = "skip-game-intro"
 }

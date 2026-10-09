@@ -2,7 +2,7 @@ import type { Locator, Page } from "@playwright/test";
 import { ModPanel } from "./ModPanel";
 import { ScorebarPanel } from "./ScorebarPanel";
 
-const GAME_INTRO_TIMEOUT_MS = 20_000;
+const GAME_START_TIMEOUT_MS = 10_000;
 
 type TTeamId = "teamOne" | "teamTwo";
 
@@ -69,11 +69,11 @@ export class RoomPage {
       state: "visible"
     });
     await this.modPanel.close();
-    // The game component renders only after the game intro has finished
+    // Without the intro (see e2e/helpers/gameIntro.ts) the game renders right away
     await this.gameArea
       .locator('[data-testid^="game-"]')
       .first()
-      .waitFor({ state: "visible", timeout: GAME_INTRO_TIMEOUT_MS });
+      .waitFor({ state: "visible", timeout: GAME_START_TIMEOUT_MS });
   }
 
   // Compatibility wrappers for specs migrated in task 8.1

@@ -25,9 +25,21 @@ async function loginAccount(
     // so the whole login sequence is retried
     await expect(async () => {
       const csrfResponse = await context.get("/api/auth/csrf");
-      const { csrfToken } = (await csrfResponse.json()) as ICsrfResponse;
+      const bodyText = await csrfResponse.text();
+      let csrfToken: string | undefined;
+      try {
+        csrfToken = (JSON.parse(bodyText) as ICsrfResponse).csrfToken;
+      } catch {
+        // Non-JSON answer, e.g. the HTML error page of the dev server
+      }
       if (!csrfResponse.ok() || !csrfToken) {
-        throw new Error(`CSRF-Token nicht abrufbar (${csrfResponse.status()})`);
+        const excerpt = bodyText
+          .replace(/<[^>]*>/g, " ")
+          .replace(/\s+/g, " ")
+          .slice(0, 300);
+        throw new Error(
+          `CSRF-Token nicht abrufbar (HTTP ${csrfResponse.status()}): ${excerpt}`
+        );
       }
       await context.post("/api/auth/callback/credentials", {
         form: {

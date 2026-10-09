@@ -11,10 +11,7 @@ vi.mock("@prisma/adapter-pg", () => ({
   PrismaPg: vi.fn()
 }));
 
-import {
-  cleanupUserData,
-  disconnectE2ePrisma
-} from "../../db";
+import { cleanupUserData, disconnectE2ePrisma } from "../../db";
 
 describe("cleanupUserData", () => {
   beforeEach(async () => {

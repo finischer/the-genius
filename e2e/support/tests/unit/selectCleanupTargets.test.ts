@@ -1,9 +1,6 @@
 import fc from "fast-check";
 
-import {
-  type ICleanupGameshow,
-  selectCleanupTargets
-} from "../../cleanup";
+import { type ICleanupGameshow, selectCleanupTargets } from "../../cleanup";
 
 const userIdArb = fc.constantFrom("user-a", "user-b", "user-c");
 

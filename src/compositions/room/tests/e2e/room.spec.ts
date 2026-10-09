@@ -1,8 +1,6 @@
 import { expect, test } from "@e2e/fixtures";
 import { FLAGGEN_GAME, FLAGGEN_GAME_NAME } from "@e2e/helpers/roomGames";
 
-const GAME_INTRO_TIMEOUT_MS = 20_000;
-
 test.describe("Room", () => {
   test("Raum wird mit eindeutiger URL und Grundelementen geöffnet", async ({
     createRoomWithPlayers
@@ -55,10 +53,7 @@ test.describe("Room", () => {
     ).toBeVisible();
     const [player] = players;
     if (!player) throw new Error("Spieler fehlt");
-    // The game area renders only after the ~10s game intro
-    await expect(player.roomPage.game("flaggen")).toBeVisible({
-      timeout: GAME_INTRO_TIMEOUT_MS
-    });
+    await expect(player.roomPage.game("flaggen")).toBeVisible();
   });
 
   test("Moderator vergibt Punkte und der Stand überlebt einen Reload", async ({

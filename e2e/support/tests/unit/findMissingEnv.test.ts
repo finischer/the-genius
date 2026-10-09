@@ -60,7 +60,9 @@ describe("Property 4: Fehlende Umgebungsvariablen werden vollständig gemeldet",
         }),
         (states) => {
           const env = buildEnv(E2E_REQUIRED_ENV, states);
-          const missing = E2E_REQUIRED_ENV.filter((_, i) => states[i] !== "set");
+          const missing = E2E_REQUIRED_ENV.filter(
+            (_, i) => states[i] !== "set"
+          );
 
           if (missing.length === 0) {
             expect(() => assertE2eEnv(env, missingFilePath)).not.toThrow();

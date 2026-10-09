@@ -19,9 +19,8 @@ import { DEFAULT_SET_STATE } from "~/games/Set/config";
 import { DEFAULT_ZEHN_SETZEN_STATE } from "~/games/ZehnSetzen/config";
 import { Game } from "~/games/core/types";
 
-// Game intro runs ~10s before the game area is rendered
-const GAME_AREA_TIMEOUT_MS = 20_000;
-const ROOM_TEST_TIMEOUT_MS = 90_000;
+const GAME_AREA_TIMEOUT_MS = 10_000;
+const ROOM_TEST_TIMEOUT_MS = 45_000;
 
 // The game renders nothing without a question
 const GEHEIMWOERTER_ROOM_STATE = {

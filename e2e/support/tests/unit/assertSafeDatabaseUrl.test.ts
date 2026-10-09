@@ -1,8 +1,5 @@
 import fc from "fast-check";
-import {
-  ALLOWED_DB_SUFFIXES,
-  assertSafeDatabaseUrl
-} from "../../database";
+import { ALLOWED_DB_SUFFIXES, assertSafeDatabaseUrl } from "../../database";
 
 const word = (minLength: number, maxLength: number) =>
   fc.stringMatching(new RegExp(`^[a-z0-9_]{${minLength},${maxLength}}$`));

@@ -1,6 +1,7 @@
 import { test as base, type BrowserContext, type Page } from "@playwright/test";
 import path from "path";
 import { muteAudio } from "../helpers/audio";
+import { skipGameIntro } from "../helpers/gameIntro";
 import fs from "fs";
 
 export type TE2eRole = "USER" | "ADMIN" | "PREMIUM";
@@ -69,13 +70,14 @@ const TOUR_STORAGE_KEYS = [
 ] as const;
 
 /**
- * Blocks third-party requests, mutes audio and disables the onboarding
+ * Blocks third-party requests, mutes audio, skips the game intro and disables the onboarding
  * tours, whose overlay would otherwise intercept pointer events.
  */
 export async function blockExternalServices(
   context: BrowserContext
 ): Promise<void> {
   await muteAudio(context);
+  await skipGameIntro(context);
   await context.addInitScript((keys) => {
     for (const key of keys) window.localStorage.setItem(key, "false");
   }, TOUR_STORAGE_KEYS);

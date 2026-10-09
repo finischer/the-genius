@@ -44,6 +44,9 @@ interface IGroup {
   expected: number;
   tests: Map<string, ITestState>;
   printed: boolean;
+  /** Wall-clock span of the group; tests run in parallel, so no sum. */
+  startedAt?: number;
+  endedAt?: number;
 }
 
 interface IFailure {
@@ -151,6 +154,7 @@ export default class E2eReporter implements Reporter {
     const note = test.annotations.find(
       (annotation) => annotation.type === EXPECTED_ERROR_ANNOTATION
     )?.description;
+    group.startedAt ??= Date.now();
     group.tests.set(test.id, {
       title: test.title,
       status: "running",
@@ -184,6 +188,7 @@ export default class E2eReporter implements Reporter {
       return;
     }
 
+    group.endedAt = Date.now();
     state.durationMs = result.duration;
     state.attempt = result.retry + 1;
     if (result.status === "skipped") {
@@ -280,12 +285,10 @@ export default class E2eReporter implements Reporter {
   private renderGroup(group: IGroup, live: boolean): string[] {
     const tests = [...group.tests.values()];
     const finished = tests.filter((t) => t.status !== "running");
-    const total = tests.reduce(
-      (sum, t) =>
-        sum +
-        (t.status === "running" ? Date.now() - t.startedAt : t.durationMs),
-      0
-    );
+    const total =
+      group.startedAt === undefined
+        ? 0
+        : (live ? Date.now() : (group.endedAt ?? Date.now())) - group.startedAt;
     const hasFailure = tests.some((t) => t.status === "failed");
     const count = live
       ? `${finished.length}/${group.expected} tests`

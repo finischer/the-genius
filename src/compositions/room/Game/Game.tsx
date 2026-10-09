@@ -7,6 +7,7 @@ import {
   type Game as GameEnum,
   type IGameProps
 } from "~/games";
+import { LOCAL_STORAGE_KEYS } from "~/config/localStorage";
 import useAudio from "~/hooks/useAudio";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 import { animations } from "~/utils/animations";
@@ -14,6 +15,10 @@ import { animations } from "~/utils/animations";
 const SECONDS_TO_ROTATE_TITLE_BANNER = 4;
 const SECONDS_TOTAL_INTRO_DURATION = 8;
 const SECONDS_DELAY_BEFORE_GAME_DISPLAYS = 2;
+
+// The intro costs ~10s per game start; automated tests switch it off
+const shouldSkipIntro = () =>
+  window.localStorage.getItem(LOCAL_STORAGE_KEYS.SKIP_GAME_INTRO) === "true";
 
 // Wrapper for the games
 // Handles also the intro sequence
@@ -43,6 +48,12 @@ const Game: React.FC<IGameProps> = ({ gameName }) => {
   };
 
   useEffect(() => {
+    if (introIsPlaying && shouldSkipIntro()) {
+      room.context.display.game = true;
+      room.context.display.gameIntro = false;
+      introState.alreadyPlayed = true;
+      return;
+    }
     if (introIsPlaying) {
       triggerAudioEvent("playSound", "intro");
       room.context.display.game = false;

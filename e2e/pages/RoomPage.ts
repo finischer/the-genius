@@ -1,112 +1,115 @@
-import type { Page } from "@playwright/test";
-import { expect } from "@playwright/test";
+import type { Locator, Page } from "@playwright/test";
+import { ModPanel } from "./ModPanel";
+import { ScorebarPanel } from "./ScorebarPanel";
+
+const GAME_INTRO_TIMEOUT_MS = 20_000;
+
+type TTeamId = "teamOne" | "teamTwo";
 
 export class RoomPage {
-  constructor(private page: Page) {}
+  readonly header: Locator;
+  readonly footer: Locator;
+  readonly gameArea: Locator;
+  readonly buzzerButton: Locator;
+  readonly guestDialog: Locator;
+  readonly guestUsernameInput: Locator;
+  readonly guestJoinButton: Locator;
+  readonly modPanel: ModPanel;
+  readonly teamOne: ScorebarPanel;
+  readonly teamTwo: ScorebarPanel;
 
-  async goto(roomId: string) {
+  constructor(private readonly page: Page) {
+    this.header = page.getByTestId("room-header");
+    this.footer = page.getByTestId("room-footer");
+    this.gameArea = page.getByTestId("game-area");
+    this.buzzerButton = page.getByTestId("buzzer-btn");
+    this.guestDialog = page.getByRole("dialog");
+    this.guestUsernameInput = this.guestDialog.getByLabel("Username");
+    this.guestJoinButton = this.guestDialog.getByRole("button", {
+      name: "Beitreten"
+    });
+    this.modPanel = new ModPanel(page);
+    this.teamOne = new ScorebarPanel(page, "team-one");
+    this.teamTwo = new ScorebarPanel(page, "team-two");
+  }
+
+  async goto(roomId: string): Promise<void> {
     await this.page.goto(`/room/${roomId}`);
   }
 
-  async waitForRoomLoaded() {
-    await expect(this.page.locator('[data-testid="room-header"]')).toBeVisible({
-      timeout: 5000
-    });
-    await expect(this.page.locator(".scorebar")).toHaveCount(2, {
-      timeout: 5000
-    });
-    await expect(this.page.locator('[data-testid="room-footer"]')).toBeVisible({
-      timeout: 5000
-    });
+  game(slug: string): Locator {
+    return this.gameArea.getByTestId(`game-${slug}`);
   }
 
-  async openModPanel() {
-    await this.page.locator('[data-testid="mod-panel-btn"]').click();
-    await expect(this.page.locator(".mod-panel-explanation")).toBeVisible({
-      timeout: 2000
-    });
+  team(teamId: TTeamId): ScorebarPanel {
+    return teamId === "teamOne" ? this.teamOne : this.teamTwo;
   }
 
-  async expandStartGameAccordion() {
-    const accordion = this.page.locator(".mod-panel-start-games-accordion");
-    await expect(accordion).toBeVisible({ timeout: 2000 });
-    // Expand the accordion item if it is not already open
-    const panel = accordion.locator(".mantine-Accordion-panel");
-    const isVisible = await panel.isVisible().catch(() => false);
-    if (!isVisible) {
-      await accordion.locator(".mantine-Accordion-control").click();
-      await expect(panel).toBeVisible({ timeout: 2000 });
-    }
+  async joinAsGuest(username: string): Promise<void> {
+    await this.guestUsernameInput.fill(username);
+    await this.guestJoinButton.click();
   }
 
-  /**
-   * Click the game button for a specific game (by display name) inside the
-   * "Spiel starten" accordion. Throws if the button is not found within the
-   * timeout.
-   */
-  async activateGameByName(displayName: string, timeout = 3000): Promise<void> {
-    await this.expandStartGameAccordion();
-    const panel = this.page.locator(
-      ".mod-panel-start-games-accordion .mantine-Accordion-panel"
-    );
-    const gameBtn = panel
-      .locator(".mantine-ButtonGroup")
-      .filter({ hasText: displayName })
-      .locator(".mantine-Button-root")
-      .first();
-    await expect(gameBtn).toBeVisible({ timeout });
-    await gameBtn.click();
+  async pressBuzzerViaButton(): Promise<void> {
+    await this.buzzerButton.click();
   }
 
-  /**
-   * Click the first available (non-disabled) game button inside the "Spiel starten"
-   * accordion. Returns the game name from the button label.
-   */
-  async activateFirstGame(): Promise<string> {
-    await this.expandStartGameAccordion();
-    const panel = this.page
-      .locator(".mod-panel-start-games-accordion .mantine-Accordion-panel");
-    // Each game is a Button.Group; click the main (first) button of the first group
-    const firstGameBtn = panel.locator(".mantine-ButtonGroup").first()
-      .locator(".mantine-Button-root").first();
-    const label = (await firstGameBtn.innerText()).trim();
-    await firstGameBtn.click();
-    return label;
-  }
-
-  /**
-   * After activating a game, the ModPanel button for that game becomes disabled
-   * and gains the "(Läuft gerade)" suffix. This is the "active game indicator"
-   * that updates within 2 seconds of activation (Requirement 5.3).
-   */
-  async waitForActiveGameIndicator(gameName: string, timeout = 2000) {
-    const panel = this.page
-      .locator(".mod-panel-start-games-accordion .mantine-Accordion-panel");
-    // The active game button shows "{name} (Läuft gerade)"
-    await expect(
-      panel.locator(".mantine-Button-root")
-        .filter({ hasText: `${gameName}` })
-        .filter({ hasText: "(Läuft gerade)" })
-    ).toBeVisible({ timeout });
-  }
-
-  async pressBuzzerViaSpacebar() {
+  async pressBuzzerViaSpacebar(): Promise<void> {
     await this.page.keyboard.press("Space");
   }
 
-  async pressBuzzerViaButton() {
-    await this.page.locator('[data-testid="buzzer-btn"]').click();
+  buzzerBadge(teamId: TTeamId): Locator {
+    return this.team(teamId).buzzerBadge;
   }
 
-  teamHighlight(teamId: "teamOne" | "teamTwo") {
-    return this.page.locator(
-      `[data-testid="scorebar-${teamId}"] .scorebar-highlight`
-    );
+  async startGame(displayName: string): Promise<void> {
+    await this.modPanel.open();
+    await this.modPanel.startGame(displayName);
+    await this.modPanel.activeGameButton(displayName).waitFor({
+      state: "visible"
+    });
+    await this.modPanel.close();
+    // The game component renders only after the game intro has finished
+    await this.gameArea
+      .locator('[data-testid^="game-"]')
+      .first()
+      .waitFor({ state: "visible", timeout: GAME_INTRO_TIMEOUT_MS });
   }
 
-  buzzerBadge(teamId: "teamOne" | "teamTwo") {
-    return this.page.locator(
-      `[data-testid="scorebar-${teamId}"] .mantine-Badge-root`
-    );
+  // Compatibility wrappers for specs migrated in task 8.1
+  async waitForRoomLoaded(): Promise<void> {
+    await this.header.waitFor({ state: "visible" });
+    await this.teamOne.root.waitFor({ state: "visible" });
+    await this.teamTwo.root.waitFor({ state: "visible" });
+    await this.footer.waitFor({ state: "visible" });
+  }
+
+  async openModPanel(): Promise<void> {
+    await this.modPanel.open();
+  }
+
+  async expandStartGameAccordion(): Promise<void> {
+    await this.modPanel.expandStartGames();
+  }
+
+  async activateGameByName(
+    displayName: string,
+    _timeout?: number
+  ): Promise<void> {
+    await this.modPanel.startGame(displayName);
+  }
+
+  async activateFirstGame(): Promise<string> {
+    return this.modPanel.startFirstGame();
+  }
+
+  async waitForActiveGameIndicator(
+    gameName: string,
+    timeout?: number
+  ): Promise<void> {
+    await this.modPanel.activeGameButton(gameName).waitFor({
+      state: "visible",
+      timeout
+    });
   }
 }

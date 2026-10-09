@@ -1,34 +1,105 @@
-import { defineConfig, devices } from "@playwright/test";
+import {
+  defineConfig,
+  devices,
+  type PlaywrightTestConfig
+} from "@playwright/test";
+import { config as loadDotenv } from "dotenv";
+import {
+  resolveBaseUrl,
+  resolveProjectNames,
+  type TProjectName
+} from "./e2e/support/config";
+import { assertSafeDatabaseUrl } from "./e2e/support/database";
+import { assertE2eEnv } from "./e2e/support/env";
+
+loadDotenv({ path: ".env.test" });
+assertE2eEnv(process.env);
+assertSafeDatabaseUrl(process.env.DATABASE_URL);
+
+const PARTYKIT_PORT = 1999;
+const baseURL = resolveBaseUrl(process.env.E2E_BASE_URL);
+const isCi = !!process.env.CI;
+
+const allProjects: Record<
+  TProjectName,
+  NonNullable<PlaywrightTestConfig["projects"]>[number]
+> = {
+  setup: { name: "setup", testMatch: /.*\.setup\.ts/ },
+  chromium: {
+    name: "chromium",
+    testIgnore: /.*\.setup\.ts/,
+    use: {
+      ...devices["Desktop Chrome"],
+      launchOptions: { args: ["--mute-audio"] }
+    },
+    dependencies: ["setup"]
+  },
+  firefox: {
+    name: "firefox",
+    testIgnore: /.*\.setup\.ts/,
+    use: {
+      ...devices["Desktop Firefox"],
+      launchOptions: {
+        firefoxUserPrefs: { "media.volume_scale": "0.0" }
+      }
+    },
+    dependencies: ["setup"]
+  },
+  webkit: {
+    name: "webkit",
+    testIgnore: /.*\.setup\.ts/,
+    use: { ...devices["Desktop Safari"] },
+    dependencies: ["setup"]
+  }
+};
 
 export default defineConfig({
-  testDir: "./e2e/tests",
+  testDir: ".",
+  // Specs live next to the code they cover (`<feature>/tests/e2e/*.spec.ts`);
+  // cross-cutting specs and the auth setup live in the root tests/e2e
+  testMatch: "**/tests/e2e/**/*.{spec,setup}.ts",
+  timeout: 30_000,
+  expect: { timeout: 5_000 },
   fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 1 : 0,
-  workers: process.env.CI ? 4 : undefined,
-  reporter: [["html", { outputFolder: "playwright-report" }]],
+  forbidOnly: isCi,
+  retries: isCi ? 2 : 0,
+  workers: 4,
+  globalSetup: "./e2e/support/globalSetup.ts",
+  reporter: isCi
+    ? [
+        ["github"],
+        ["html", { outputFolder: "playwright-report", open: "never" }],
+        ["json", { outputFile: "test-results/report.json" }]
+      ]
+    : [
+        ["list"],
+        ["html", { outputFolder: "playwright-report", open: "never" }]
+      ],
   use: {
-    baseURL: "http://localhost:3000",
-    trace: "on-first-retry"
+    baseURL,
+    trace: "on-first-retry",
+    screenshot: "only-on-failure",
+    video: "retain-on-failure"
   },
-  projects: [
+  projects: resolveProjectNames(process.env).map((name) => allProjects[name]),
+  webServer: [
     {
-      name: "chromium",
-      use: { ...devices["Desktop Chrome"] }
+      command: "bun run dev:e2e",
+      url: baseURL,
+      timeout: 120_000,
+      reuseExistingServer: !isCi,
+      env: {
+        APP_ENV: "development",
+        NEXT_PUBLIC_DEBUG_MODE: "false",
+        NEXT_PUBLIC_PARTYKIT_HOST: `localhost:${PARTYKIT_PORT}`,
+        DATABASE_URL: process.env.DATABASE_URL ?? ""
+      }
     },
     {
-      name: "firefox",
-      use: { ...devices["Desktop Firefox"] }
-    },
-    {
-      name: "webkit",
-      use: { ...devices["Desktop Safari"] }
+      command: `bunx partykit dev --port ${PARTYKIT_PORT}`,
+      port: PARTYKIT_PORT,
+      timeout: 120_000,
+      reuseExistingServer: !isCi
     }
-  ],
-  webServer: {
-    command: "bun run dev",
-    url: "http://localhost:3000",
-    timeout: 120_000,
-    reuseExistingServer: !process.env.CI
-  }
+  ]
 });

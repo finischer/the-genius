@@ -1,29 +1,55 @@
-import type { Page } from "@playwright/test";
-import { expect } from "@playwright/test";
+import type { Locator, Page } from "@playwright/test";
+import { GamesPickerPanel } from "./GamesPickerPanel";
 
 export class GameshowEditorPage {
-  constructor(private page: Page) {}
+  readonly nameInput: Locator;
+  readonly nextButton: Locator;
+  readonly prevButton: Locator;
+  readonly saveButton: Locator;
+  readonly gamesPicker: GamesPickerPanel;
 
-  async goto(gameshowId: string) {
-    await this.page.goto(`/gameshows/${gameshowId}`);
+  constructor(private readonly page: Page) {
+    this.nameInput = page.getByLabel("Name der Spielshow");
+    this.nextButton = page.getByTestId("stepper-next-btn");
+    this.prevButton = page.getByTestId("stepper-prev-btn");
+    this.saveButton = page.getByRole("button", { name: "Speichern" });
+    this.gamesPicker = new GamesPickerPanel(page);
   }
 
-  async setName(name: string) {
-    await this.page.fill('[data-testid="gameshow-name-input"]', name);
+  async goto(gameshowId?: string): Promise<void> {
+    const url = gameshowId
+      ? `/gameshows/create?gameshowId=${encodeURIComponent(gameshowId)}&action=update`
+      : "/gameshows/create";
+    await this.page.goto(url);
   }
 
-  async save() {
-    await this.page.click('[data-testid="save-gameshow-btn"]');
+  settingsHeading(gameName: string): Locator {
+    return this.page.getByRole("heading", {
+      name: `Einstellungen - ${gameName}`
+    });
   }
 
-  async addGame(gameIdentifier: string) {
-    await this.page.click('[data-testid="games-picker-btn"]');
-    await this.page
-      .locator(`[data-game-id="${gameIdentifier}"]`)
-      .click();
+  gameListItems(): Locator {
+    return this.gamesPicker.selectedGames;
   }
 
-  async getGameListItems() {
-    return this.page.locator('[data-testid="game-list-item"]').all();
+  async setName(name: string): Promise<void> {
+    await this.nameInput.fill(name);
+  }
+
+  async next(): Promise<void> {
+    await this.nextButton.click();
+  }
+
+  async previous(): Promise<void> {
+    await this.prevButton.click();
+  }
+
+  async save(): Promise<void> {
+    await this.saveButton.click();
+  }
+
+  async addGame(gameIdentifier: string): Promise<void> {
+    await this.gamesPicker.addGame(gameIdentifier);
   }
 }

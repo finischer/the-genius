@@ -133,6 +133,8 @@ const SetCard: React.FC<ISetCardProps> = ({
     <motion.div
       className={classes.card}
       data-ishost={isHost}
+      data-testid={`set-card-${index + 1}`}
+      data-marker-state={marked ? markerState : "none"}
       variants={cardVariants}
       animate={isFlipped ? "selected" : "notSelected"}
       onClick={() => onClick(index)}

@@ -91,7 +91,12 @@ const GeheimwörterGame: React.FC<IGeheimwörterGameProps> = ({ game }) => {
   );
 
   return (
-    <Flex data-game="geheimwoerter" align="center" gap="5rem" justify="center">
+    <Flex
+      data-testid="game-geheimwoerter"
+      align="center"
+      gap="5rem"
+      justify="center"
+    >
       <SimpleGrid
         cols={2}
         style={{ display: "flex", alignItems: "center" }}

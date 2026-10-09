@@ -7,6 +7,12 @@ generator client {
   output   = "../src/generated/prisma"
 }
 
+generator e2e {
+  provider     = "prisma-client"
+  output       = "../e2e/.generated/prisma"
+  moduleFormat = "cjs"
+}
+
 generator json {
   provider  = "prisma-json-types-generator"
   namespace = "PrismaJson"

@@ -9,7 +9,11 @@ interface ScoreBoxProps {
 const ScoreBox: FC<ScoreBoxProps> = ({ score }) => {
   return (
     <Box className={classes.wrapper}>
-      <Text className={classes.scoreText} fw={600}>
+      <Text
+        className={classes.scoreText}
+        fw={600}
+        data-testid="fragenhagel-score"
+      >
         {score}
       </Text>
     </Box>

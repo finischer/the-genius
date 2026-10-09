@@ -105,7 +105,7 @@ const ZehnSetzen: FC<IZehnSetzenGameProps> = ({ game }) => {
 
   return (
     <AnimatePresence>
-      <Stack data-game="zehnSetzen" align="center">
+      <Stack data-testid="game-zehn-setzen" align="center">
         <motion.div layout>
           <Stack align="center">
             <ModToggle id="zehnsetzen-question" label="Frage">

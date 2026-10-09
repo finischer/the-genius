@@ -41,6 +41,7 @@ const UserCard = () => {
       <Menu.Target>
         <Box className={classes.userCard}>
           <UnstyledButton
+            data-testid="user-card-menu"
             style={{
               display: "block",
               overflow: "hidden",

@@ -1,13 +1,16 @@
 import { mergeTests } from "@playwright/test";
 import { test as authTest } from "./auth";
-import { test as roomTest } from "./room";
-import { test as roomWithGamesTest } from "./roomWithGames";
-import { test as roomWithAllGamesTest } from "./roomWithAllGames";
+import { test as cleanupTest } from "./cleanup";
+import { test as multiplayerTest } from "./multiplayer";
+import { test as pagesTest } from "./pages";
+import { test as seededRoomTest } from "./seededRoom";
 
 export const test = mergeTests(
   authTest,
-  roomTest,
-  roomWithGamesTest,
-  roomWithAllGamesTest
+  cleanupTest,
+  pagesTest,
+  multiplayerTest,
+  seededRoomTest
 );
+
 export { expect } from "@playwright/test";

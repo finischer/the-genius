@@ -39,6 +39,7 @@ const MediaPlayer = () => {
         borderRadius: theme.radius.md
       })}
       className="mod-panel-media-player"
+      data-testid="mod-panel-media-player"
     >
       <Flex direction="column">
         <Text fw="bold">{songInfo.title}</Text>
@@ -60,8 +61,12 @@ const MediaPlayer = () => {
         <ActionIcon toolTip="Vorheriger Titel" variant="light">
           <IconPlayerSkipBack onClick={playPreviousSong} />
         </ActionIcon>
-        <ActionIcon variant="light">
-          <PlayIcon onClick={toggleMusic} />
+        <ActionIcon
+          variant="light"
+          aria-label={isPlaying ? "Pause" : "Wiedergabe"}
+          onClick={toggleMusic}
+        >
+          <PlayIcon />
         </ActionIcon>
         <ActionIcon toolTip="Nächster Titel" variant="light">
           <IconPlayerSkipForward onClick={playNextSong} />

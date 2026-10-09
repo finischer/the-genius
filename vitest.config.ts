@@ -3,9 +3,13 @@ import { configDefaults, defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
-    exclude: [...configDefaults.exclude, "**/e2e/**"],
+    include: [
+      "**/tests/unit/**/*.test.{ts,tsx}",
+      "**/tests/integration/**/*.test.{ts,tsx}"
+    ],
+    exclude: [...configDefaults.exclude, "e2e/.generated/**"],
     globals: true,
-    setupFiles: ["./__tests__/setup.ts"]
+    setupFiles: ["./tests/setup.ts"]
   },
   resolve: {
     alias: {

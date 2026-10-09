@@ -114,7 +114,7 @@ const ActionMenu = ({
       <Menu>
         <ActionIcon variant="default">
           <Menu.Target>
-            <IconDots />
+            <IconDots data-testid="gameshow-action-menu" />
           </Menu.Target>
         </ActionIcon>
         <Menu.Dropdown>
@@ -227,6 +227,7 @@ const GameshowsPage = () => {
                 toolTip="Raum erstellen"
                 color="green"
                 onClick={() => createRoom(gameshow)}
+                data-testid="gameshow-create-room-btn"
               >
                 <IconPlayerPlay />
               </ActionIcon>

@@ -12,7 +12,12 @@ interface TimerBarProps {
 const TimerBar: FC<TimerBarProps> = ({ seconds, intervalState }) => {
   return (
     <Box className={classes.wrapper}>
-      <Text className={classes.timerText} fw={700} w={60}>
+      <Text
+        className={classes.timerText}
+        fw={700}
+        w={60}
+        data-testid="fragenhagel-timer"
+      >
         {seconds}
       </Text>
       <Flex className={classes.barsContainer}>

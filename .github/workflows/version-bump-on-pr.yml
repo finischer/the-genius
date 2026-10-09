@@ -2,7 +2,7 @@ name: Version Bump on Staging → Production PR
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, edited]
     branches:
       - production
     paths-ignore:

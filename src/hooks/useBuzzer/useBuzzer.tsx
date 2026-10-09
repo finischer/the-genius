@@ -56,6 +56,7 @@ const useBuzzer = () => {
 
         team.isActiveTurn = true;
         team.buzzer.isPressed = true;
+        team.buzzer.pressedAt = Date.now();
         team.buzzer.playersBuzzered.push(player.id);
         if (withTimer) {
           triggerAudioEvent("playSound", "warningBuzzer");

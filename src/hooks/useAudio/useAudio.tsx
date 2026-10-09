@@ -1,7 +1,6 @@
 import type { RoomSounds } from "~/types/gameshow.types";
 import path from "path";
 import { useEffect, useState } from "react";
-import { assignObjectKeyByKey } from "~/utils/helpers";
 import useSettings from "~/hooks/useSettings/useSettings";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
 
@@ -90,13 +89,8 @@ const useAudio = () => {
 
   function triggerAudioEvent(event: TAudioEvent, soundId: TSoundId) {
     if (event === "playSound") {
-      assignObjectKeyByKey(
-        {
-          ...room.context.audio.sounds,
-          [soundId]: true
-        },
-        room.context.audio.sounds
-      );
+      room.context.audio.sounds[soundId] =
+        `${Date.now()}-${Math.random().toString(36).slice(2)}`;
     }
   }
 

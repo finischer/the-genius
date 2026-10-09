@@ -187,7 +187,7 @@ Vorgehen in dieser Reihenfolge:
 2. Den Test mit `test.fixme` markieren.
 3. Ein Ticket anlegen und im Code-Kommentar referenzieren.
 
-Das dauerhafte Erhöhen von Timeouts ist keine zulässige Maßnahme. Die CI wiederholt fehlgeschlagene Tests höchstens zweimal. Der HTML- und JSON-Report weist Tests, die erst im Retry bestehen, als „flaky“ aus.
+Das dauerhafte Erhöhen von Timeouts ist keine zulässige Maßnahme. Die CI wiederholt fehlgeschlagene Tests höchstens zweimal, damit Traces entstehen. Ein Test, der erst im Retry besteht, gilt als „flaky“ und lässt den Job trotzdem fehlschlagen (`failOnFlakyTests`).
 
 ## CI, Secrets und GitHub-Environment
 

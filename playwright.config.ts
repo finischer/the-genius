@@ -63,6 +63,8 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: isCi,
   retries: isCi ? 2 : 0,
+  // A test that only passes on a retry is still a failure in CI
+  failOnFlakyTests: isCi,
   workers: 4,
   globalSetup: "./e2e/support/globalSetup.ts",
   reporter: isCi

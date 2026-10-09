@@ -106,18 +106,19 @@ export type BuzzerState = {
   isLocked: boolean;
   isPressed: boolean;
   playersBuzzered: string[];
+  pressedAt?: number;
 };
 
 export type RoomSounds = {
-  bass: boolean;
-  bell: boolean;
-  buzzer: boolean;
-  winning: boolean;
-  intro: boolean;
-  shimmer: boolean;
-  typewriter: boolean;
-  warningBuzzer: boolean;
-  whoosh_1: boolean;
+  bass: string;
+  bell: string;
+  buzzer: string;
+  winning: string;
+  intro: string;
+  shimmer: string;
+  typewriter: string;
+  warningBuzzer: string;
+  whoosh_1: string;
 };
 
 export type RoomMusic = {

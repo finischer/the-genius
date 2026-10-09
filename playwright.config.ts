@@ -12,7 +12,7 @@ import {
 import { assertSafeDatabaseUrl } from "./e2e/support/database";
 import { assertE2eEnv } from "./e2e/support/env";
 
-loadDotenv({ path: ".env.test" });
+loadDotenv({ path: ".env.test", quiet: true });
 assertE2eEnv(process.env);
 assertSafeDatabaseUrl(process.env.DATABASE_URL);
 
@@ -69,12 +69,13 @@ export default defineConfig({
   globalSetup: "./e2e/support/globalSetup.ts",
   reporter: isCi
     ? [
+        ["./e2e/support/reporter.ts"],
         ["github"],
         ["html", { outputFolder: "playwright-report", open: "never" }],
         ["json", { outputFile: "test-results/report.json" }]
       ]
     : [
-        ["list"],
+        ["./e2e/support/reporter.ts"],
         ["html", { outputFolder: "playwright-report", open: "never" }]
       ],
   use: {

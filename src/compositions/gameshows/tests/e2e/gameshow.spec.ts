@@ -248,87 +248,105 @@ test.describe("Gameshow-Verwaltung", { tag: "@gameshows" }, () => {
     });
   }
 
-  test("fremde Gameshow ist weder les-, änderbar noch löschbar", async ({
-    workerSession,
-    userSession,
-    tracker
-  }) => {
-    const name = createE2eName();
-    const { id } = await createGameshowViaApi(workerSession.request, { name });
-    tracker.trackGameshow(id);
-
-    const input = encodeURIComponent(
-      JSON.stringify({ json: { gameshowId: id } })
-    );
-    const read = await userSession.request.get(
-      `/api/trpc/gameshows.getById?input=${input}`
-    );
-    expect(read.status()).toBe(404);
-    expect(((await read.json()) as ITrpcErrorBody).error.json.data.code).toBe(
-      "NOT_FOUND"
-    );
-
-    const update = await userSession.request.post(
-      "/api/trpc/gameshows.update",
-      {
-        data: {
-          json: {
-            gameshowId: id,
-            updatedGameshow: { name: "e2e-uebernommen", games: [] }
-          }
-        },
-        headers: { "Content-Type": "application/json" }
+  test(
+    "fremde Gameshow ist weder les-, änderbar noch löschbar",
+    {
+      annotation: {
+        type: "expected-error",
+        description:
+          "foreign gameshow returns NOT_FOUND/FORBIDDEN and the UI shows 'Spielshow existiert nicht.'"
       }
-    );
-    expect(update.status()).toBe(404);
+    },
+    async ({ workerSession, userSession, tracker }) => {
+      const name = createE2eName();
+      const { id } = await createGameshowViaApi(workerSession.request, {
+        name
+      });
+      tracker.trackGameshow(id);
 
-    const remove = await userSession.request.post(
-      "/api/trpc/gameshows.delete",
-      {
-        data: { json: { gameshowId: id } },
-        headers: { "Content-Type": "application/json" }
+      const input = encodeURIComponent(
+        JSON.stringify({ json: { gameshowId: id } })
+      );
+      const read = await userSession.request.get(
+        `/api/trpc/gameshows.getById?input=${input}`
+      );
+      expect(read.status()).toBe(404);
+      expect(((await read.json()) as ITrpcErrorBody).error.json.data.code).toBe(
+        "NOT_FOUND"
+      );
+
+      const update = await userSession.request.post(
+        "/api/trpc/gameshows.update",
+        {
+          data: {
+            json: {
+              gameshowId: id,
+              updatedGameshow: { name: "e2e-uebernommen", games: [] }
+            }
+          },
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+      expect(update.status()).toBe(404);
+
+      const remove = await userSession.request.post(
+        "/api/trpc/gameshows.delete",
+        {
+          data: { json: { gameshowId: id } },
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+      expect(remove.status()).toBe(403);
+      expect(
+        ((await remove.json()) as ITrpcErrorBody).error.json.data.code
+      ).toBe("FORBIDDEN");
+
+      const editor = await openForEdit(userSession, id);
+      await expect(
+        userSession.getByText(NOT_FOUND_MESSAGE).first()
+      ).toBeVisible({
+        timeout: 15_000
+      });
+      await expect(editor.gameListItems()).toHaveCount(0);
+
+      const stored = await getE2ePrisma().gameshow.findUnique({
+        where: { id },
+        select: { name: true }
+      });
+      expect(stored?.name).toBe(name);
+    }
+  );
+
+  test(
+    "Speicherfehler zeigt Fehlermeldung, legt nichts an und behält die Eingaben",
+    {
+      annotation: {
+        type: "expected-error",
+        description:
+          "gameshows.create is aborted on purpose, so the browser logs 'Failed to fetch'"
       }
-    );
-    expect(remove.status()).toBe(403);
-    expect(((await remove.json()) as ITrpcErrorBody).error.json.data.code).toBe(
-      "FORBIDDEN"
-    );
+    },
+    async ({ workerSession }) => {
+      await workerSession.route("**/api/trpc/gameshows.create*", (route) =>
+        route.abort()
+      );
+      const name = createE2eName();
+      const editor = new GameshowEditorPage(workerSession);
+      await editor.goto();
+      await pickGames(editor, [MERKEN]);
+      await goToDetailsStep(editor, 1);
+      await editor.setName(name);
+      await editor.next();
+      await editor.save();
 
-    const editor = await openForEdit(userSession, id);
-    await expect(userSession.getByText(NOT_FOUND_MESSAGE).first()).toBeVisible({
-      timeout: 15_000
-    });
-    await expect(editor.gameListItems()).toHaveCount(0);
+      await expect(
+        workerSession.getByRole("alert").filter({ hasText: "Fehler" })
+      ).toBeVisible();
+      await expect(workerSession).toHaveURL(/\/gameshows\/create/);
+      expect(await countGameshows(name)).toBe(0);
 
-    const stored = await getE2ePrisma().gameshow.findUnique({
-      where: { id },
-      select: { name: true }
-    });
-    expect(stored?.name).toBe(name);
-  });
-
-  test("Speicherfehler zeigt Fehlermeldung, legt nichts an und behält die Eingaben", async ({
-    workerSession
-  }) => {
-    await workerSession.route("**/api/trpc/gameshows.create*", (route) =>
-      route.abort()
-    );
-    const name = createE2eName();
-    const editor = new GameshowEditorPage(workerSession);
-    await editor.goto();
-    await pickGames(editor, [MERKEN]);
-    await goToDetailsStep(editor, 1);
-    await editor.setName(name);
-    await editor.next();
-    await editor.save();
-
-    await expect(
-      workerSession.getByRole("alert").filter({ hasText: "Fehler" })
-    ).toBeVisible();
-    await expect(workerSession).toHaveURL(/\/gameshows\/create/);
-    expect(await countGameshows(name)).toBe(0);
-
-    await editor.previous();
-    await expect(editor.nameInput).toHaveValue(name);
-  });
+      await editor.previous();
+      await expect(editor.nameInput).toHaveValue(name);
+    }
+  );
 });

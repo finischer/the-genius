@@ -17,6 +17,9 @@ const ANSI_PATTERN = /\u001b\[[0-9;]*m/g;
 const useColor = process.env.NO_COLOR === undefined;
 const liveLog = process.env.E2E_LIVE_LOG !== "false";
 const isInteractive = Boolean(process.stdout.isTTY) && liveLog;
+// Start lines duplicate the result lines of the group block, so non-interactive
+// output only prints them on request
+const startLines = process.env.E2E_LIVE_LOG === "true";
 
 const paint = (code: number, text: string): string =>
   useColor ? `\u001b[${code}m${text}\u001b[0m` : text;
@@ -166,7 +169,7 @@ export default class E2eReporter implements Reporter {
 
     if (isInteractive) {
       this.redraw();
-    } else if (liveLog) {
+    } else if (startLines) {
       const retry = result.retry > 0 ? ` (retry #${result.retry})` : "";
       this.emit(
         `${dim(timestamp())} ${dim(`▶ running ${group.header} › ${test.title}${retry}`)}\n`

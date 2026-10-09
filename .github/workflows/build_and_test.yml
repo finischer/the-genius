@@ -114,35 +114,38 @@ jobs:
         run: bun run build
 
   e2e:
-    name: E2E Tests
+    name: E2E (${{ matrix.suite.name }})
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    # Every suite runs on its own runner with its own database container
+    strategy:
+      fail-fast: false
+      matrix:
+        suite:
+          - name: smoke
+            path: tests/e2e/smoke
+          - name: auth
+            path: src/server/tests/e2e
+          - name: gameshows
+            path: src/compositions/gameshows/tests/e2e
+          - name: room
+            path: src/compositions/room
+          - name: games
+            path: src/games
     environment:
       name: ${{ inputs.environment }}
-    services:
-      postgres:
-        image: postgres:16-alpine
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: the_genius_e2e
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U postgres"
-          --health-interval 5s
-          --health-timeout 5s
-          --health-retries 10
     env:
       CI: true
       APP_ENV: development
       DATABASE_URL: postgresql://postgres:password@localhost:5432/the_genius_e2e
       NEXT_PUBLIC_PARTYKIT_HOST: localhost:1999
       NEXT_PUBLIC_DEBUG_MODE: "false"
-      E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
-      E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
-      E2E_ADMIN_EMAIL: ${{ secrets.E2E_ADMIN_EMAIL }}
-      E2E_ADMIN_PASSWORD: ${{ secrets.E2E_ADMIN_PASSWORD }}
+      # Accounts only exist in the throwaway CI database, so no secrets are
+      # required; a secret with the same name overrides the default
+      E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL || 'e2e-user@thegenius.e2e' }}
+      E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD || 'e2e-ci-password' }}
+      E2E_ADMIN_EMAIL: ${{ secrets.E2E_ADMIN_EMAIL || 'e2e-admin@thegenius.e2e' }}
+      E2E_ADMIN_PASSWORD: ${{ secrets.E2E_ADMIN_PASSWORD || 'e2e-ci-admin-password' }}
       NEXTAUTH_SECRET: e2e-ci-secret-placeholder
       GOOGLE_CLIENT_ID: placeholder
       GOOGLE_CLIENT_SECRET: placeholder
@@ -167,12 +170,6 @@ jobs:
       - name: Generate Prisma Client
         run: bunx prisma generate
 
-      - name: Run database migrations
-        run: bunx prisma migrate deploy --schema prisma
-
-      - name: Seed E2E database
-        run: bun run db:seed:e2e
-
       - name: Get Playwright version
         id: playwright-version
         run: echo "version=$(bunx playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
@@ -192,14 +189,16 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit == 'true'
         run: bunx playwright install-deps chromium
 
-      - name: Run E2E tests
-        run: bun run test:e2e
+      # Playwright starts the PostgreSQL from docker-compose.yml, creates the
+      # E2E database, runs migrations and the E2E seed (e2e/support/docker.ts)
+      - name: Run E2E tests (${{ matrix.suite.name }})
+        run: bun run test:e2e ${{ matrix.suite.path }}
 
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: playwright-report
+          name: playwright-report-${{ matrix.suite.name }}
           path: playwright-report/
           retention-days: 14
 
@@ -207,6 +206,6 @@ jobs:
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: playwright-traces
+          name: playwright-traces-${{ matrix.suite.name }}
           path: test-results/
           retention-days: 14

@@ -118,7 +118,7 @@ Einmalige Schritte für einen lokalen E2E-Lauf:
    bun run test:e2e
    ```
 
-Datenbank und Container verwaltet Playwright selbst (`e2e/support/docker.ts`): Läuft der PostgreSQL-Container aus `docker-compose.yml` nicht, wird er gestartet. Danach wird die Datenbank `the_genius_e2e` angelegt, migriert und geseedet. Nach dem Lauf wird die Datenbank gelöscht; den Container stoppt Playwright nur, wenn es ihn selbst gestartet hat. Mit `E2E_KEEP_SERVICES=true` bleibt alles stehen, mit `E2E_MANAGE_DOCKER=false` (und in der CI) kümmerst du dich selbst um Datenbank, Migration und `bun run db:seed:e2e`.
+Datenbank und Container verwaltet Playwright selbst (`e2e/support/docker.ts`): Läuft der PostgreSQL-Container aus `docker-compose.yml` nicht, wird er gestartet. Danach wird die Datenbank `the_genius_e2e` angelegt, migriert und geseedet. Nach dem Lauf wird die Datenbank gelöscht; den Container stoppt Playwright nur, wenn es ihn selbst gestartet hat. Mit `E2E_KEEP_SERVICES=true` bleibt alles stehen, mit `E2E_MANAGE_DOCKER=false` kümmerst du dich selbst um Datenbank, Migration und `bun run db:seed:e2e`.
 
 Sicherheitsnetze: Fehlt `.env.test` oder eine Variable aus `.env.test.example`, bricht der Lauf vor dem ersten Test mit den Namen der fehlenden Variablen ab. Zeigt `DATABASE_URL` auf eine Datenbank ohne Suffix `_e2e` oder `_test`, bricht der Lauf ebenfalls ab, bevor eine Schreiboperation stattfindet. Der Dev-Seed (`bun run dev`) wird für E2E nicht benutzt, weil er Tabellen leert.
 
@@ -191,21 +191,9 @@ Das dauerhafte Erhöhen von Timeouts ist keine zulässige Maßnahme. Die CI wied
 
 ## CI, Secrets und GitHub-Environment
 
-Der Workflow `.github/workflows/build_and_test.yml` hat den Job `e2e`. Er läuft ohne `needs` parallel zu den anderen Jobs, mit `timeout-minutes: 20` und einem PostgreSQL-Service (Datenbank `the_genius_e2e`). Das Job-`env` setzt `DATABASE_URL`, `APP_ENV=development`, `NEXT_PUBLIC_PARTYKIT_HOST` und `NEXT_PUBLIC_DEBUG_MODE`. Die Schritte: `prisma generate`, `prisma migrate deploy`, `bun run db:seed:e2e`, Playwright-Browser-Cache (Schlüssel nach Playwright-Version), `bun run test:e2e`. Der HTML-Report wird immer, `test-results/` (Traces) nur bei Fehlschlag als Artefakt hochgeladen (14 Tage Aufbewahrung).
+Der Workflow `.github/workflows/build_and_test.yml` hat den Job `e2e`. Er läuft als Matrix mit einem Job pro Suite (`smoke`, `auth`, `gameshows`, `room`, `games`), jeder auf eigenem Runner mit eigener Datenbank, ohne `needs` parallel zu den anderen Jobs, mit `timeout-minutes: 20`. Die Datenbank kommt wie lokal aus `docker-compose.yml`; Playwright startet sie, legt `the_genius_e2e` an, migriert und seedet. Das Job-`env` setzt `DATABASE_URL`, `APP_ENV=development`, `NEXT_PUBLIC_PARTYKIT_HOST` und `NEXT_PUBLIC_DEBUG_MODE`. Die Schritte: `prisma generate`, Playwright-Browser-Cache (Schlüssel nach Playwright-Version), `bun run test:e2e`. Der HTML-Report wird immer, `test-results/` (Traces) nur bei Fehlschlag als Artefakt hochgeladen (14 Tage Aufbewahrung).
 
-Secrets für E2E:
-
-| Secret | Zweck |
-|---|---|
-| `E2E_TEST_EMAIL`, `E2E_TEST_PASSWORD` | Konto mit Rolle `USER` |
-| `E2E_ADMIN_EMAIL`, `E2E_ADMIN_PASSWORD` | Konto mit Rolle `ADMIN` |
-
-Secrets im GitHub-Environment setzen:
-
-1. Repository öffnen: **Settings → Environments**.
-2. Das Environment wählen, das der Workflow über `inputs.environment` verwendet (Standard: `development`), oder neu anlegen.
-3. Unter **Environment secrets** mit **Add secret** die Namen aus der Tabelle samt Werten eintragen.
-4. Die Werte müssen mit den Werten übereinstimmen, die der E2E-Seed in der Test-Datenbank anlegt.
+Zugangsdaten für E2E: Die Konten existieren nur in der Wegwerf-Datenbank des Jobs. Deshalb braucht die CI keine Secrets; der Workflow setzt feste Standardwerte für `E2E_TEST_EMAIL`, `E2E_TEST_PASSWORD`, `E2E_ADMIN_EMAIL` und `E2E_ADMIN_PASSWORD`. Ein GitHub-Secret mit gleichem Namen (Repository oder Environment, siehe `inputs.environment`) überschreibt den Standardwert.
 
 Wichtig: `DATABASE_URL` des Jobs muss auf die Test-Datenbank zeigen, nicht auf das Secret `DATABASE_URL` der übrigen Jobs. Die Config bricht bei einem Datenbanknamen ohne `_e2e` oder `_test` ab.
 

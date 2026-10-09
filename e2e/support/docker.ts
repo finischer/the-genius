@@ -3,13 +3,13 @@ import { getDatabaseName } from "./database";
 
 /**
  * Locally Playwright owns the E2E database lifecycle on top of the regular
- * `docker-compose.yml` PostgreSQL. CI provides its own PostgreSQL service,
- * and `E2E_MANAGE_DOCKER=false` opts out manually.
+ * `docker-compose.yml` PostgreSQL, locally and in CI.
+ * `E2E_MANAGE_DOCKER=false` opts out.
  */
 export function isDockerManaged(
   env: Record<string, string | undefined>
 ): boolean {
-  return (env.CI ?? "") === "" && env.E2E_MANAGE_DOCKER !== "false";
+  return env.E2E_MANAGE_DOCKER !== "false";
 }
 
 function run(command: string, args: string[]): void {

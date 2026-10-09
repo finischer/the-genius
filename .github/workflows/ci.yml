@@ -1,12 +1,15 @@
 name: CI
 
-# Only run if pushes to staging and changed files are in the src directory
+# Only run if pushes to staging and changed files are relevant for the app or E2E tests
 on:
   push:
     branches:
       - staging
     paths:
       - "src/**"
+      - "e2e/**"
+      - "prisma/**"
+      - "playwright.config.ts"
 
 jobs:
   checks:

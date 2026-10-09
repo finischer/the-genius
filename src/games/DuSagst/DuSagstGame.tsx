@@ -81,7 +81,7 @@ const DuSagstGame: React.FC<IDuSagstGameProps> = ({ game }) => {
   const t2BoxStates = game.teamStates.t2.boxStates;
 
   return (
-    <Flex gap={70} align="flex-end">
+    <Flex data-testid="game-du-sagst" gap={70} align="flex-end">
       {/* Team One answer boxes */}
       <TeamBox teamBoxes={t1BoxStates} team="teamOne" />
 

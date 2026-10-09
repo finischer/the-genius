@@ -54,3 +54,10 @@ yarn-error.log*
 
 
 .kiro/specs
+
+# playwright
+e2e/.auth/
+playwright-report/
+test-results/
+.env.test
+e2e/.generated/

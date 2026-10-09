@@ -46,7 +46,9 @@ const GamesConfigStepper = () => {
 
   const [initSelectedGamesDone, setInitSelectedGamesDone] = useState(false);
 
-  const { handleZodError } = useNotification();
+  const { handleZodError, showSuccessNotification, showErrorNotification } =
+    useNotification();
+  const [nameTouched, setNameTouched] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -62,22 +64,10 @@ const GamesConfigStepper = () => {
   });
 
   // api create gameshow
-  const createGameshowApi = api.gameshows.create.useMutation({
-    onError: (error) =>
-      handleZodError(
-        error.data?.zodError,
-        error.message ?? "Ein Fehler ist aufgetreten"
-      )
-  });
+  const createGameshowApi = api.gameshows.create.useMutation();
 
   // // api update gameshow
-  const updateGameshowApi = api.gameshows.update.useMutation({
-    onError: (error) =>
-      handleZodError(
-        error.data?.zodError,
-        error.message ?? "Ein Fehler ist aufgetreten"
-      )
-  });
+  const updateGameshowApi = api.gameshows.update.useMutation();
 
   const isLoading = createGameshowApi.isLoading || updateGameshowApi.isLoading;
 
@@ -141,10 +131,25 @@ const GamesConfigStepper = () => {
         return;
       }
 
-      // navigate back to gameshows
+      showSuccessNotification({
+        title: "Erfolg",
+        message: "Spielshow wurde gespeichert"
+      });
       void router.push("/gameshows");
-    } catch {
-      // Error handling not needed here
+    } catch (error) {
+      // No redirect on error so the form values stay available for a retry
+      const trpcError = error as {
+        message?: string;
+        data?: { zodError?: Parameters<typeof handleZodError>[0] };
+      };
+      if (trpcError.data?.zodError) {
+        handleZodError(trpcError.data.zodError);
+      } else {
+        showErrorNotification({
+          title: "Fehler",
+          message: trpcError.message ?? "Ein Fehler ist aufgetreten"
+        });
+      }
     }
   };
 
@@ -158,7 +163,7 @@ const GamesConfigStepper = () => {
   // Handle further button state for details gameshow step
   useEffect(() => {
     if (activeStep === STEP_MAP["detailsGameshow"]) {
-      if (gameshow.name === "") {
+      if (gameshow.name.trim() === "") {
         disableContinueButton();
       } else {
         enableContinueButton();
@@ -231,13 +236,21 @@ const GamesConfigStepper = () => {
               <TextInput
                 label="Name der Spielshow"
                 withAsterisk
-                onChange={(e) =>
+                onChange={(e) => {
+                  setNameTouched(true);
                   updateGameshowMetadata((draft) => {
                     draft.name = e.target.value;
-                  })
+                  });
+                }}
+                onBlur={() => setNameTouched(true)}
+                error={
+                  nameTouched && gameshow.name.trim() === ""
+                    ? "Name ist erforderlich"
+                    : undefined
                 }
                 id="name"
                 value={gameshow.name}
+                data-testid="gameshow-name-input"
               />
             </Box>
           </Stepper.Step>

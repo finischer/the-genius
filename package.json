@@ -9,6 +9,7 @@
   "scripts": {
     "build": "next build",
     "dev": "ENABLE_SEED=true bun run db:seed && next dev",
+    "dev:e2e": "next dev",
     "postinstall": "prisma generate --schema prisma",
     "db:start": "docker compose up -d",
     "db:stop": "docker compose down",
@@ -19,16 +20,23 @@
     "db:migrate:status": "prisma migrate status --schema prisma",
     "db:migrate:reset": "prisma migrate reset --schema prisma",
     "db:seed": "ENABLE_SEED=true bun prisma/seed/index.ts",
+    "db:seed:e2e": "bun prisma/seed/e2e.ts",
     "start:migrate": "bun run db:migrate:deploy && bun run db:seed && next start",
-    "lint": "eslint --config eslint.config.cjs 'src/**/*.{js,jsx,ts,tsx}'",
+    "lint": "eslint --config eslint.config.cjs 'src/**/*.{js,jsx,ts,tsx}' 'e2e/**/*.ts' 'tests/**/*.ts'",
     "lint:fix": "eslint --config eslint.config.cjs --fix 'src/**/*.{js,jsx,ts,tsx}'",
     "lint:strict": "eslint --config eslint.config.cjs 'src/**/*.{js,jsx,ts,tsx}'",
     "format:all": "prettier --write src/**/*.{ts,tsx,js,jsx,json,md}",
     "start": "next start",
     "tsc": "tsc",
     "partykit": "npx partykit dev",
-    "test:unit": "vitest run",
-    "test:unit:watch": "vitest"
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "test:unit:watch": "vitest tests/unit",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:smoke": "playwright test --grep @smoke --project=chromium",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:report": "playwright show-report"
   },
   "dependencies": {
     "@emotion/react": "^11.10.8",
@@ -101,6 +109,7 @@
     "@commitlint/config-conventional": "^19.6.0",
     "@eslint/eslintrc": "^3.3.3",
     "@eslint/js": "^9.39.1",
+    "@playwright/test": "^1.63.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/canvas-confetti": "^1.9.0",
     "@types/eslint": "^8.21.3",
@@ -114,6 +123,7 @@
     "@types/react-beautiful-dnd": "^13.1.4",
     "@types/react-dom": "^18.3.5",
     "@types/uuid": "^9.0.3",
+    "@types/ws": "^8.18.1",
     "@typescript-eslint/eslint-plugin": "^8.17.0",
     "@typescript-eslint/parser": "^8.17.0",
     "eslint": "^9.15.0",
@@ -122,6 +132,7 @@
     "eslint-plugin-unused-imports": "^4.1.4",
     "fast-check": "3.22.0",
     "husky": "^9.0.11",
+    "lib0": "^0.2.117",
     "lint-staged": "^15.2.7",
     "partykit": "0.0.96",
     "postcss": "^8.4.32",
@@ -132,7 +143,9 @@
     "prisma": "7.10.0",
     "typescript": "^5.3.3",
     "vite": "^5.4.11",
-    "vitest": "^2.1.8"
+    "vitest": "^2.1.8",
+    "ws": "^8.21.3",
+    "y-protocols": "^1.0.7"
   },
   "ct3aMetadata": {
     "initVersion": "7.12.1"

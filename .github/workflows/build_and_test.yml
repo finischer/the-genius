@@ -69,7 +69,7 @@ jobs:
         run: bun run tsc
 
   test:
-    name: Test
+    name: Run Unit & Integration tests
     runs-on: ubuntu-latest
     environment:
       name: ${{ inputs.environment }}
@@ -88,6 +88,9 @@ jobs:
 
       - name: Run unit tests
         run: bun run test:unit
+
+      - name: Run integration tests
+        run: bun run test:integration
 
   build:
     name: Build
@@ -109,3 +112,100 @@ jobs:
 
       - name: Build application
         run: bun run build
+
+  e2e:
+    name: e2e (${{ matrix.suite.name }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # Every suite runs on its own runner with its own database container
+    strategy:
+      fail-fast: false
+      matrix:
+        suite:
+          - name: smoke
+            path: tests/e2e/smoke
+          - name: auth
+            path: src/server/tests/e2e
+          - name: gameshows
+            path: src/compositions/gameshows/tests/e2e
+          - name: room
+            path: src/compositions/room
+          - name: games
+            path: src/games
+    environment:
+      name: ${{ inputs.environment }}
+    env:
+      CI: true
+      APP_ENV: development
+      DATABASE_URL: postgresql://postgres:password@localhost:5432/the_genius_e2e
+      NEXT_PUBLIC_PARTYKIT_HOST: localhost:1999
+      NEXT_PUBLIC_DEBUG_MODE: "false"
+      # Accounts only exist in the throwaway CI database, so no secrets are
+      # required; a secret with the same name overrides the default
+      E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL || 'e2e-user@thegenius.e2e' }}
+      E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD || 'e2e-ci-password' }}
+      E2E_ADMIN_EMAIL: ${{ secrets.E2E_ADMIN_EMAIL || 'e2e-admin@thegenius.e2e' }}
+      E2E_ADMIN_PASSWORD: ${{ secrets.E2E_ADMIN_PASSWORD || 'e2e-ci-admin-password' }}
+      NEXTAUTH_SECRET: e2e-ci-secret-placeholder
+      GOOGLE_CLIENT_ID: placeholder
+      GOOGLE_CLIENT_SECRET: placeholder
+      DISCORD_CLIENT_ID: placeholder
+      DISCORD_CLIENT_SECRET: placeholder
+      SOCKET_IO_ADMIN_USERNAME: placeholder
+      SOCKET_IO_ADMIN_PASSWORD: placeholder
+      WEBSITE_URL: http://localhost:3000
+      NEXT_PUBLIC_THE_GENIUS_ENV: development
+      NEXT_PUBLIC_POSTHOG_KEY: placeholder
+      NEXT_PUBLIC_POSTHOG_HOST: https://eu.i.posthog.com
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: ./.github/actions/setup-node
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile --ignore-scripts
+
+      - name: Generate Prisma Client
+        run: bunx prisma generate
+
+      - name: Get Playwright version
+        id: playwright-version
+        run: echo "version=$(bunx playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ steps.playwright-version.outputs.version }}-chromium
+
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: bunx playwright install --with-deps chromium
+
+      - name: Install Playwright system dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: bunx playwright install-deps chromium
+
+      # Playwright starts the PostgreSQL from docker-compose.yml, creates the
+      # E2E database, runs migrations and the E2E seed (e2e/support/docker.ts)
+      - name: Run E2E tests (${{ matrix.suite.name }})
+        run: bun run test:e2e ${{ matrix.suite.path }}
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report-${{ matrix.suite.name }}
+          path: playwright-report/
+          retention-days: 14
+
+      - name: Upload Playwright traces
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-traces-${{ matrix.suite.name }}
+          path: test-results/
+          retention-days: 14

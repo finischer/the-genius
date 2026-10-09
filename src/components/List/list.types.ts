@@ -15,4 +15,5 @@ export interface IListProps<T> {
   itemName?: string; // how the item should be called in the list
   showIndex?: boolean;
   clickable?: boolean;
+  itemTestId?: string;
 }

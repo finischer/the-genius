@@ -13,7 +13,8 @@ module.exports = [
             "**/.next/**",
             "src/**/env.mjs",
             "src/examples/**/*",
-            "src/generated/**/*"
+            "src/generated/**/*",
+            "e2e/.generated/**/*"
         ]
     },
     {
@@ -65,6 +66,30 @@ module.exports = [
         files: ["**/__tests__/**/*.ts", "**/*.test.ts", "**/*.spec.ts"],
         rules: {
             "@typescript-eslint/unbound-method": "off",
+        },
+    },
+    {
+        files: ["e2e/**/*.ts", "**/tests/e2e/**/*.ts"],
+        rules: {
+            "no-restricted-properties": ["error", {
+                property: "waitForTimeout",
+                message: "Fixed waits are forbidden in e2e. Use auto-waiting assertions (expect(locator)) instead.",
+            }],
+        },
+    },
+    {
+        files: ["e2e/pages/**/*.ts"],
+        rules: {
+            "no-restricted-syntax": ["error",
+                {
+                    selector: "CallExpression[callee.name='expect']",
+                    message: "Page objects must not contain assertions. Return locators and assert in the test.",
+                },
+                {
+                    selector: "CallExpression[callee.object.name='expect']",
+                    message: "Page objects must not contain assertions. Return locators and assert in the test.",
+                },
+            ],
         },
     },
 ];

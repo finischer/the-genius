@@ -1,6 +1,6 @@
 import { useSyncedStore } from "@syncedstore/react";
 import React from "react";
-import { roomStore } from "~/config/store";
+import { getRoomStore } from "~/config/store";
 import type { Room } from "~/types/gameshow.types";
 
 interface SyncedRoomContextProps extends Room {
@@ -12,7 +12,7 @@ export const SyncedRoomContext = React.createContext<
 >(undefined);
 
 const SyncedRoomProvider = ({ children }: { children: React.ReactNode }) => {
-  const { room } = useSyncedStore(roomStore) as unknown as {
+  const { room } = useSyncedStore(getRoomStore()) as unknown as {
     room: { state: Room };
   };
 

@@ -41,7 +41,7 @@ const Timer = () => {
               boxShadow: theme.shadows.xl
             })}
           >
-            <Text size="2.25rem" c={secondsColor}>
+            <Text size="2.25rem" c={secondsColor} data-testid="room-timer">
               {timerState.currSeconds}
             </Text>
           </Flex>

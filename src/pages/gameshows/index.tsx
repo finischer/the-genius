@@ -114,7 +114,7 @@ const ActionMenu = ({
       <Menu>
         <ActionIcon variant="default">
           <Menu.Target>
-            <IconDots />
+            <IconDots data-testid="gameshow-action-menu" />
           </Menu.Target>
         </ActionIcon>
         <Menu.Dropdown>
@@ -210,7 +210,7 @@ const GameshowsPage = () => {
   const rows =
     gameshows?.map((gameshow) => {
       return (
-        <Table.Tr key={gameshow.id}>
+        <Table.Tr key={gameshow.id} data-testid="gameshow-card">
           <Table.Td>{gameshow.name}</Table.Td>
           <Table.Td>{gameshow.numOfGames}</Table.Td>
           <Table.Td>{formatTimestamp(gameshow.createdAt)}</Table.Td>
@@ -227,6 +227,7 @@ const GameshowsPage = () => {
                 toolTip="Raum erstellen"
                 color="green"
                 onClick={() => createRoom(gameshow)}
+                data-testid="gameshow-create-room-btn"
               >
                 <IconPlayerPlay />
               </ActionIcon>
@@ -269,6 +270,7 @@ const GameshowsPage = () => {
             variant="filled"
             onClick={handleCreateGameshow}
             loading={pageIsLoading}
+            data-testid="create-gameshow-btn"
           >
             <IconPlus />
           </ActionIcon>

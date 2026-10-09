@@ -202,8 +202,18 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
     });
   };
 
+  const teamSuffix = team.shortName === "t1" ? "team-one" : "team-two";
+  const testId = `scorebar-${teamSuffix}`;
+
   return (
-    <Flex align="flex-end" gap="lg" pos="relative" className="scorebar">
+    <Flex
+      align="flex-end"
+      gap="lg"
+      pos="relative"
+      className="scorebar"
+      data-testid={testId}
+      data-buzzer-active={team.buzzer.isPressed}
+    >
       {/* Left Scorbar timer */}
       <AnimatePresence>
         {timerPosition === "left" && team.scorebarTimer.active && (
@@ -235,6 +245,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
       <Flex direction="column" pos="relative">
         {/* Highlight container to represent that it is the turn of this team  */}
         <motion.div
+          className="scorebar-highlight"
           animate={{
             scale: [0.75, 1.25, 0.75]
           }}
@@ -288,7 +299,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
                   }
                 })}
               >
-                <span>
+                <span data-testid={`scorebar-team-name-${teamSuffix}`}>
                   {isDuellMode
                     ? (team.players[0]?.name ?? team.name)
                     : `${team.name} · (${team.players.length}/2)`}
@@ -353,6 +364,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
                 variant="outline"
                 toolTip="Score -1"
                 disabled={disableDecreaseScoreBtn}
+                data-testid="scorebar-score-dec"
                 onClick={() => decreaseGameScore()}
               >
                 <IconExposureMinus1 size={sizes.icon.s} />
@@ -361,6 +373,7 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
                 variant="outline"
                 toolTip="Score +1"
                 disabled={disableIncreaseScoreBtn}
+                data-testid="scorebar-score-inc"
                 onClick={() => increaseGameScore()}
               >
                 <IconExposurePlus1 size={sizes.icon.s} />
@@ -369,7 +382,12 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
               <Flex direction="column" gap="xs" pos="absolute" right={0}>
                 {playerNamesWhoBuzzered.map((p, idx) => (
                   <Tooltip key={idx} label="hat gebuzzert">
-                    <Badge maw="10rem">{p || `Spieler ${idx + 1}`}</Badge>
+                    <Badge
+                      maw="10rem"
+                      data-testid={`scorebar-buzzer-badge-${teamSuffix}`}
+                    >
+                      {p || `Spieler ${idx + 1}`}
+                    </Badge>
                   </Tooltip>
                 ))}
               </Flex>
@@ -423,7 +441,14 @@ const Scorebar: React.FC<IScorebarProps> = ({ team, timerPosition }) => {
 
           {/* Score circles */}
           {room.context.view === RoomView.GAME && (
-            <Flex w="100%" h="100%" justify="center" align="center">
+            <Flex
+              w="100%"
+              h="100%"
+              justify="center"
+              align="center"
+              data-testid={`scorebar-score-${teamSuffix}`}
+              data-score={team.gameScore}
+            >
               {scorebarPoints}
             </Flex>
           )}

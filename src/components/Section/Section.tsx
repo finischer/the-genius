@@ -1,16 +1,8 @@
 import { Flex } from "@mantine/core";
+import classes from "./Section.module.css";
 
 const Section = ({ children }: { children: React.ReactNode }) => (
-  <Flex
-    direction="column"
-    gap="xs"
-    mt="xl"
-    style={{
-      ":first-of-type": {
-        marginTop: 0
-      }
-    }}
-  >
+  <Flex direction="column" gap="xs" mt="xl" className={classes.section}>
     {children}
   </Flex>
 );

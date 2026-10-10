@@ -9,6 +9,7 @@ import {
 import React from "react";
 import GameDetailsModal from "~/compositions/gameshows/GameDetailsModal";
 import { api } from "~/utils/api";
+import { slug } from "~/utils/strings";
 import List from "../../components/List";
 import Paper from "../../components/Paper";
 import Tooltip from "../../components/Tooltip";
@@ -58,6 +59,7 @@ const GamesPicker: React.FC<IGamesPickerProps> = ({
             }}
             disabled={alreadySelected || !game.active}
             opacity={alreadySelected || !game.active ? 0.3 : 1}
+            data-testid={`games-picker-btn-${slug(game.slug)}`}
           >
             <Group gap="md" ml={game.isNew ? "md" : undefined}>
               {game.mode === "DUELL" && <IconUser />}
@@ -111,6 +113,7 @@ const GamesPicker: React.FC<IGamesPickerProps> = ({
         deletableItems
         emptyListText="Füge dein erstes Spiel hinzu"
         showIndex
+        itemTestId="game-list-item"
       />
     </Stack>
   );

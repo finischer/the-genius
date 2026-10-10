@@ -14,7 +14,7 @@ import InteractiveModerationTour from "~/compositions/room/TutorialTours/Interac
 import InteractivePlayerTour from "~/compositions/room/TutorialTours/InteractivePlayerTour";
 import ActionIcon from "~/components/ActionIcon";
 import ModView from "~/compositions/ModView";
-import { connectToSocket } from "~/config/store";
+import { clearBuzzStamp, connectToSocket, getBuzzStamp } from "~/config/store";
 import useAudio from "~/hooks/useAudio";
 import useMusic from "~/hooks/useMusic";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
@@ -91,7 +91,8 @@ const RoomUI = () => {
   }, [room.isLoaded, Object.values(sounds).join("|")]);
 
   // Simultaneous presses merge into multiple active teams (CRDT). The host
-  // picks one winner (earliest press, team id as tie-break) and resets the rest.
+  // picks one winner (earliest server-stamped press, team id as last resort)
+  // and resets the rest.
   const activeTeamsKey = room.isLoaded
     ? Object.values(room.teams)
         .filter((t) => t.isActiveTurn)
@@ -104,14 +105,19 @@ const RoomUI = () => {
     const activeTeams = Object.values(room.teams).filter((t) => t.isActiveTurn);
     if (activeTeams.length < 2) return;
 
-    const [winner, ...losers] = [...activeTeams].sort(
-      (a, b) =>
-        (a.buzzer.pressedAt ?? Infinity) - (b.buzzer.pressedAt ?? Infinity) ||
-        a.id.localeCompare(b.id)
-    );
+    // The server assigns `seq` in arrival order, so it also separates presses
+    // that share the same millisecond.
+    const [winner, ...losers] = [...activeTeams].sort((a, b) => {
+      const stampA = getBuzzStamp(a.id);
+      const stampB = getBuzzStamp(b.id);
+      const seqA = stampA?.seq ?? Number.MAX_SAFE_INTEGER;
+      const seqB = stampB?.seq ?? Number.MAX_SAFE_INTEGER;
+      return seqA - seqB || a.id.localeCompare(b.id);
+    });
     if (!winner) return;
 
     losers.forEach((team) => {
+      clearBuzzStamp(team.id);
       team.isActiveTurn = false;
       team.buzzer.isPressed = false;
       team.buzzer.playersBuzzered = [];
@@ -173,8 +179,13 @@ const RoomUI = () => {
               // callback={handleInteractiveModerationTourCallback}
             />
             <Box pos="absolute" bottom="50%" className="mod-panel-btn">
-              <ActionIcon variant="filled" toolTip="Mod-Panel öffnen">
-                <IconArrowRight onClick={modPanelDisclosure[1].open} />
+              <ActionIcon
+                variant="filled"
+                toolTip="Mod-Panel öffnen"
+                data-testid="mod-panel-btn"
+                onClick={modPanelDisclosure[1].open}
+              >
+                <IconArrowRight />
               </ActionIcon>
             </Box>
             <ModPanel disclosure={modPanelDisclosure} />

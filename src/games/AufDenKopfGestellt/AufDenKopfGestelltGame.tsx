@@ -173,7 +173,12 @@ const AufDenKopfGestelltGame: React.FC<IAufDenKopfGestelltGameProps> = ({
     buzzerActive;
 
   return (
-    <Flex direction="column" gap="md" align="center">
+    <Flex
+      data-testid="game-auf-den-kopf-gestellt"
+      direction="column"
+      gap="md"
+      align="center"
+    >
       {game.showCountry && (
         <Box className={classes.svgWrapper}>
           <CountrySvg

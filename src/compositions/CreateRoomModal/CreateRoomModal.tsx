@@ -14,7 +14,7 @@ import { GameshowMode } from "~/generated/prisma/enums";
 import { useSyncedStore } from "@syncedstore/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { initRoom, roomStore } from "~/config/store";
+import { getRoomStore, initRoom } from "~/config/store";
 import useNotification from "~/hooks/useNotification";
 import { useUser } from "~/hooks/useUser";
 import { GAMESHOW_MODES } from "~/styles/constants";
@@ -52,7 +52,7 @@ const CreateRoomModal: React.FC<ICreateRoomModalProps> = ({
   const router = useRouter();
   const { handleZodError, showErrorNotification } = useNotification();
 
-  const store = useSyncedStore(roomStore);
+  const store = useSyncedStore(getRoomStore());
 
   const selectData: SegmentedControlItem[] = GAMESHOW_MODES.map((m) => ({
     value: m,

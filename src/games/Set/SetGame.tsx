@@ -110,7 +110,7 @@ const SetGame: React.FC<ISetGameProps> = ({ game }) => {
   );
 
   return (
-    <Flex gap="xl" pos="relative">
+    <Flex data-testid="game-set" gap="xl" pos="relative">
       {/* Left content */}
       <Flex direction="column" gap="sm">
         <SimpleGrid

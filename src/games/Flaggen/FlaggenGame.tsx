@@ -62,7 +62,7 @@ const FlaggenGame: React.FC<IFlaggenGameProps> = ({ game }) => {
   });
 
   return (
-    <Flex direction="column" gap="md" align="center">
+    <Flex data-testid="game-flaggen" direction="column" gap="md" align="center">
       {currFlag && shortCode && (
         <ModToggle id="flaggen-flag" label="Flagge">
           <img

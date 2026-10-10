@@ -32,6 +32,7 @@ const StepperButtons: FC<IStepperButtonsProps> = ({
         disabled={disabledButtons}
         {...leftButtonProps}
         size="xl"
+        data-testid="stepper-prev-btn"
       >
         <IconChevronLeft />
       </ActionIcon>
@@ -42,6 +43,7 @@ const StepperButtons: FC<IStepperButtonsProps> = ({
           px="xl"
           disabled={disabledButtons}
           onClick={onSaveClick}
+          data-testid="save-gameshow-btn"
           {...saveButtonProps}
         >
           Speichern
@@ -52,6 +54,7 @@ const StepperButtons: FC<IStepperButtonsProps> = ({
           disabled={disabledButtons}
           {...rightButtonProps}
           size="xl"
+          data-testid="stepper-next-btn"
         >
           <IconChevronRight />
         </ActionIcon>

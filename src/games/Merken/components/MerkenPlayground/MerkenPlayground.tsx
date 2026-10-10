@@ -58,20 +58,25 @@ const MerkenPlayground: React.FC<IMerkenPlaygroundProps> = ({
   return (
     <SimpleGrid cols={{ base: 4, md: 6, lg: 6 }}>
       {cards.map((elem, idx) => (
-        <FlipCard
+        <Box
           key={idx}
-          isFlipped={allCardsFlipped || openCards.includes(idx)}
-          clickable={clickable}
-          onClick={() => onCardClick && onCardClick(idx)}
-          front={<FrontContent content={idx + 1} />}
-          back={<BackContent index={idx} content={elem} />}
-          frontStyle={{
-            ...defaultCardStyle
-          }}
-          backStyle={{
-            ...defaultCardStyle
-          }}
-        />
+          data-testid={`merken-card-${idx + 1}`}
+          data-flipped={allCardsFlipped || openCards.includes(idx)}
+        >
+          <FlipCard
+            isFlipped={allCardsFlipped || openCards.includes(idx)}
+            clickable={clickable}
+            onClick={() => onCardClick && onCardClick(idx)}
+            front={<FrontContent content={idx + 1} />}
+            back={<BackContent index={idx} content={elem} />}
+            frontStyle={{
+              ...defaultCardStyle
+            }}
+            backStyle={{
+              ...defaultCardStyle
+            }}
+          />
+        </Box>
       ))}
     </SimpleGrid>
   );

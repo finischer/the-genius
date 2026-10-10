@@ -110,7 +110,11 @@ const AnswerElement: FC<AnswerElementProps> = ({
           </motion.div>
         )}
       </AnimatePresence>
-      <motion.div layout>
+      <motion.div
+        layout
+        data-testid={`zehn-setzen-answer-${index + 1}`}
+        data-correct={isCorrectAnswer && game.display.correctAnswer}
+      >
         <QuestionBox
           py="xs"
           px="md"

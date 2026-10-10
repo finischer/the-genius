@@ -136,7 +136,7 @@ const RoomHeader = () => {
   };
 
   return (
-    <Box h={125} w="100%" pos="relative">
+    <Box h={125} w="100%" pos="relative" data-testid="room-header">
       <RoomDetailsModal
         room={room}
         openedModal={openedRoomDetails}

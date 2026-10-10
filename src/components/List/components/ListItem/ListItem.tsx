@@ -18,7 +18,8 @@ const ListItem = <T,>({
   index,
   clickable,
   highlight,
-  itemContent
+  itemContent,
+  testId
 }: IListItemProps<T>) => {
   const y = useMotionValue(0);
   const boxShadow = useRaisedShadow(y);
@@ -51,6 +52,7 @@ const ListItem = <T,>({
       }}
       dragControls={controls}
       onClick={() => handleClick(item.id)}
+      data-testid={testId}
     >
       <Flex align="center" gap="md">
         {showIndex && <span>{index + 1}.</span>}

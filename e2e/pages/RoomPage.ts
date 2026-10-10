@@ -10,7 +10,6 @@ export class RoomPage {
   readonly header: Locator;
   readonly footer: Locator;
   readonly gameArea: Locator;
-  readonly buzzerButton: Locator;
   readonly guestDialog: Locator;
   readonly guestUsernameInput: Locator;
   readonly guestJoinButton: Locator;
@@ -22,7 +21,6 @@ export class RoomPage {
     this.header = page.getByTestId("room-header");
     this.footer = page.getByTestId("room-footer");
     this.gameArea = page.getByTestId("game-area");
-    this.buzzerButton = page.getByTestId("buzzer-btn");
     this.guestDialog = page.getByRole("dialog");
     this.guestUsernameInput = this.guestDialog.getByLabel("Username");
     this.guestJoinButton = this.guestDialog.getByRole("button", {
@@ -51,7 +49,7 @@ export class RoomPage {
   }
 
   async pressBuzzerViaButton(): Promise<void> {
-    await this.buzzerButton.click();
+    await this.pressBuzzerViaSpacebar();
   }
 
   async pressBuzzerViaSpacebar(): Promise<void> {

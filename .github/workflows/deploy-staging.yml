@@ -29,8 +29,16 @@ jobs:
       environment: staging
     secrets: inherit
 
-  deploy-to-staging:
+  deploy-partykit:
     needs: build-and-test
+    uses: ./.github/workflows/deploy_partykit.yml
+    with:
+      environment: staging
+      projectName: the-genius-party-staging
+    secrets: inherit
+
+  deploy-to-staging:
+    needs: [build-and-test, deploy-partykit]
     uses: ./.github/workflows/deploy_railway_template.yml
     with:
       environmentName: staging

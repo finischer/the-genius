@@ -3,12 +3,15 @@ export type TBuzzRequest = {
   teamId: string;
 };
 
-export type TBuzzStamp = {
-  type: "buzz-stamp";
+export type TBuzzResult = {
+  type: "buzz-result";
   teamId: string;
-  serverTime: number;
-  seq: number;
+  granted: boolean;
 };
+
+// Presses of different teams within this window count as simultaneous, so the
+// server picks the first one. Later presses are handled by the room state.
+export const BUZZ_CLAIM_WINDOW_MS = 300;
 
 export const isBuzzRequest = (value: unknown): value is TBuzzRequest =>
   typeof value === "object" &&
@@ -16,13 +19,12 @@ export const isBuzzRequest = (value: unknown): value is TBuzzRequest =>
   (value as TBuzzRequest).type === "buzz" &&
   typeof (value as TBuzzRequest).teamId === "string";
 
-export const isBuzzStamp = (value: unknown): value is TBuzzStamp =>
+export const isBuzzResult = (value: unknown): value is TBuzzResult =>
   typeof value === "object" &&
   value !== null &&
-  (value as TBuzzStamp).type === "buzz-stamp" &&
-  typeof (value as TBuzzStamp).teamId === "string" &&
-  typeof (value as TBuzzStamp).serverTime === "number" &&
-  typeof (value as TBuzzStamp).seq === "number";
+  (value as TBuzzResult).type === "buzz-result" &&
+  typeof (value as TBuzzResult).teamId === "string" &&
+  typeof (value as TBuzzResult).granted === "boolean";
 
 // y-partykit ignores unknown binary message types but chokes on text frames
 // from clients, so buzz requests travel as binary frames with their own type.

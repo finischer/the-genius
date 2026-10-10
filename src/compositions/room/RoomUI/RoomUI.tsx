@@ -14,7 +14,7 @@ import InteractiveModerationTour from "~/compositions/room/TutorialTours/Interac
 import InteractivePlayerTour from "~/compositions/room/TutorialTours/InteractivePlayerTour";
 import ActionIcon from "~/components/ActionIcon";
 import ModView from "~/compositions/ModView";
-import { clearBuzzStamp, connectToSocket, getBuzzStamp } from "~/config/store";
+import { connectToSocket } from "~/config/store";
 import useAudio from "~/hooks/useAudio";
 import useMusic from "~/hooks/useMusic";
 import useSyncedRoom from "~/hooks/useSyncedRoom";
@@ -29,7 +29,7 @@ const RoomUI = () => {
   const roomId = params?.id as string;
   const playedSoundsRef = useRef<Record<string, string> | null>(null);
   const router = useRouter();
-  const { isPlayer, isHost } = useUser();
+  const { isPlayer } = useUser();
 
   const room = useSyncedRoom();
   const sounds = room.context?.audio.sounds ?? {};
@@ -89,42 +89,6 @@ const RoomUI = () => {
 
     playedSoundsRef.current = played;
   }, [room.isLoaded, Object.values(sounds).join("|")]);
-
-  // Simultaneous presses merge into multiple active teams (CRDT). The host
-  // picks one winner (earliest server-stamped press, team id as last resort)
-  // and resets the rest.
-  const activeTeamsKey = room.isLoaded
-    ? Object.values(room.teams)
-        .filter((t) => t.isActiveTurn)
-        .map((t) => t.id)
-        .join("|")
-    : "";
-  useEffect(() => {
-    if (!isHost || !room.isLoaded) return;
-
-    const activeTeams = Object.values(room.teams).filter((t) => t.isActiveTurn);
-    if (activeTeams.length < 2) return;
-
-    // The server assigns `seq` in arrival order, so it also separates presses
-    // that share the same millisecond.
-    const [winner, ...losers] = [...activeTeams].sort((a, b) => {
-      const stampA = getBuzzStamp(a.id);
-      const stampB = getBuzzStamp(b.id);
-      const seqA = stampA?.seq ?? Number.MAX_SAFE_INTEGER;
-      const seqB = stampB?.seq ?? Number.MAX_SAFE_INTEGER;
-      return seqA - seqB || a.id.localeCompare(b.id);
-    });
-    if (!winner) return;
-
-    losers.forEach((team) => {
-      clearBuzzStamp(team.id);
-      team.isActiveTurn = false;
-      team.buzzer.isPressed = false;
-      team.buzzer.playersBuzzered = [];
-      team.scorebarTimer.active = false;
-      team.scorebarTimer.currSeconds = team.scorebarTimer.initSeconds;
-    });
-  }, [isHost, room.isLoaded, activeTeamsKey]);
 
   // Handle Music
   useEffect(() => {

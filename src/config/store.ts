@@ -13,9 +13,8 @@ import {
 import { roomConfig } from "./room.config";
 import {
   encodeBuzzRequest,
-  isBuzzStamp,
-  type TBuzzRequest,
-  type TBuzzStamp
+  isBuzzResult,
+  type TBuzzRequest
 } from "./buzzerProtocol";
 import type { GameState } from "~/games";
 
@@ -133,23 +132,43 @@ export const runInTransaction = (fn: () => void) => {
 };
 
 let activeProvider: YPartyKitProvider | undefined;
-const buzzStamps = new Map<string, TBuzzStamp>();
+const BUZZ_RESULT_TIMEOUT_MS = 1500;
+const pendingBuzzes = new Map<string, Array<(granted: boolean) => void>>();
 
-export const getBuzzStamp = (teamId: string) => buzzStamps.get(teamId);
-export const clearBuzzStamp = (teamId: string) => buzzStamps.delete(teamId);
+// Resolves with the server's verdict. Without a connection or answer the
+// press is granted so the buzzer never feels dead.
+export const requestBuzz = (teamId: string): Promise<boolean> => {
+  const socket = activeProvider?.ws;
+  if (!socket || socket.readyState !== WebSocket.OPEN) {
+    return Promise.resolve(true);
+  }
 
-// Must be called before writing the buzz to the Yjs doc: both travel over the
-// same socket, so the stamp reaches the host before the state change does.
-export const sendBuzz = (teamId: string) => {
-  const request: TBuzzRequest = { type: "buzz", teamId };
-  activeProvider?.ws?.send(encodeBuzzRequest(request));
+  return new Promise((resolve) => {
+    const queue = pendingBuzzes.get(teamId) ?? [];
+    const timeout = setTimeout(() => {
+      const index = queue.indexOf(settle);
+      if (index >= 0) queue.splice(index, 1);
+      resolve(true);
+    }, BUZZ_RESULT_TIMEOUT_MS);
+    const settle = (granted: boolean) => {
+      clearTimeout(timeout);
+      resolve(granted);
+    };
+    queue.push(settle);
+    pendingBuzzes.set(teamId, queue);
+
+    const request: TBuzzRequest = { type: "buzz", teamId };
+    socket.send(encodeBuzzRequest(request));
+  });
 };
 
-const handleStampMessage = (event: MessageEvent) => {
+const handleBuzzResultMessage = (event: MessageEvent) => {
   if (typeof event.data !== "string") return;
   try {
     const parsed: unknown = JSON.parse(event.data);
-    if (isBuzzStamp(parsed)) buzzStamps.set(parsed.teamId, parsed);
+    if (isBuzzResult(parsed)) {
+      pendingBuzzes.get(parsed.teamId)?.shift()?.(parsed.granted);
+    }
   } catch {
     // not a buzzer message
   }
@@ -167,7 +186,7 @@ export const connectToSocket = (roomId: string) => {
   // The underlying WebSocket is recreated on every reconnect
   provider.on("status", ({ status }: { status: string }) => {
     if (status === "connected") {
-      provider.ws?.addEventListener("message", handleStampMessage);
+      provider.ws?.addEventListener("message", handleBuzzResultMessage);
     }
   });
 

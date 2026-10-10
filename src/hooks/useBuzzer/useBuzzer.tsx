@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { roomConfig } from "~/config/room.config";
-import { runInTransaction, sendBuzz } from "~/config/store";
+import { requestBuzz, runInTransaction } from "~/config/store";
 import { TimerType, type TimerState } from "~/types/gameshow.types";
 import useAudio from "../useAudio";
 import useNotification from "../useNotification";
@@ -49,24 +49,25 @@ const useBuzzer = () => {
           return;
         }
 
-        const wasAlreadyBuzzered = Object.values(room.teams).some(
-          (team) => team.isActiveTurn
-        );
-        if (wasAlreadyBuzzered || !isActive) return;
-        triggerAudioEvent("playSound", "buzzer");
+        const isAnyTeamActive = () =>
+          Object.values(room.teams).some((team) => team.isActiveTurn);
+        if (isAnyTeamActive() || !isActive) return;
 
-        sendBuzz(team.id);
-        // One transaction = one Yjs update, so the host never sees a
-        // half-written press
-        runInTransaction(() => {
-          team.isActiveTurn = true;
-          team.buzzer.isPressed = true;
-          team.buzzer.playersBuzzered.push(player.id);
+        // The server picks one winner among simultaneous presses
+        void requestBuzz(team.id).then((granted) => {
+          if (!granted || isAnyTeamActive()) return;
+
+          triggerAudioEvent("playSound", "buzzer");
+          runInTransaction(() => {
+            team.isActiveTurn = true;
+            team.buzzer.isPressed = true;
+            team.buzzer.playersBuzzered.push(player.id);
+          });
+          if (withTimer) {
+            triggerAudioEvent("playSound", "warningBuzzer");
+            startTimer();
+          }
         });
-        if (withTimer) {
-          triggerAudioEvent("playSound", "warningBuzzer");
-          startTimer();
-        }
       }),
     [
       isActive,

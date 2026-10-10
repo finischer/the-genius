@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { roomConfig } from "~/config/room.config";
+import { runInTransaction, sendBuzz } from "~/config/store";
 import { TimerType, type TimerState } from "~/types/gameshow.types";
 import useAudio from "../useAudio";
 import useNotification from "../useNotification";
@@ -54,10 +55,14 @@ const useBuzzer = () => {
         if (wasAlreadyBuzzered || !isActive) return;
         triggerAudioEvent("playSound", "buzzer");
 
-        team.isActiveTurn = true;
-        team.buzzer.isPressed = true;
-        team.buzzer.pressedAt = Date.now();
-        team.buzzer.playersBuzzered.push(player.id);
+        sendBuzz(team.id);
+        // One transaction = one Yjs update, so the host never sees a
+        // half-written press
+        runInTransaction(() => {
+          team.isActiveTurn = true;
+          team.buzzer.isPressed = true;
+          team.buzzer.playersBuzzered.push(player.id);
+        });
         if (withTimer) {
           triggerAudioEvent("playSound", "warningBuzzer");
           startTimer();

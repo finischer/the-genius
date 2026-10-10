@@ -106,7 +106,6 @@ export type BuzzerState = {
   isLocked: boolean;
   isPressed: boolean;
   playersBuzzered: string[];
-  pressedAt?: number;
 };
 
 export type RoomSounds = {

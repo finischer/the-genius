@@ -58,7 +58,9 @@ export async function assertPartykitReachable(
 ): Promise<void> {
   const error = new Error(`PartyKit-Server nicht erreichbar (${host})`);
   await new Promise<void>((resolve, reject) => {
-    const socket = new WebSocket(`ws://${host}/party/${createE2eName()}`);
+    const socket = new WebSocket(
+      `ws://${host}/parties/main/${createE2eName()}`
+    );
     const timer = setTimeout(() => {
       socket.terminate();
       reject(error);

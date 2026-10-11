@@ -1,6 +1,6 @@
 import net from "node:net";
 import WebSocketImpl, { WebSocketServer, type WebSocket } from "ws";
-import YPartyKitProvider from "y-partykit/provider";
+import YProvider from "y-partyserver/provider";
 import * as Y from "yjs";
 import * as syncProtocol from "y-protocols/sync";
 import * as encoding from "lib0/encoding";
@@ -35,12 +35,10 @@ const isPortOpen = (port: number): Promise<boolean> =>
 const seedRealServer = async (roomId: string, update: Uint8Array) => {
   const doc = new Y.Doc();
   Y.applyUpdate(doc, update);
-  const provider = new YPartyKitProvider(
-    `localhost:${PARTYKIT_PORT}`,
-    roomId,
-    doc,
-    { WebSocketPolyfill: WebSocketImpl as never, connect: true }
-  );
+  const provider = new YProvider(`localhost:${PARTYKIT_PORT}`, roomId, doc, {
+    WebSocketPolyfill: WebSocketImpl as never,
+    connect: true
+  });
   try {
     await new Promise<void>((resolve, reject) => {
       const timeout = setTimeout(
@@ -75,7 +73,7 @@ export async function startPartykitMock(): Promise<IPartykitMock> {
   }
   if (process.env.E2E_PARTYKIT !== "mock") {
     throw new Error(
-      `PartyKit-Server nicht erreichbar (localhost:${PARTYKIT_PORT}). Server starten (bunx partykit dev --port ${PARTYKIT_PORT}) oder E2E_PARTYKIT=mock setzen.`
+      `PartyKit-Server nicht erreichbar (localhost:${PARTYKIT_PORT}). Server starten (bunx wrangler dev --port ${PARTYKIT_PORT}) oder E2E_PARTYKIT=mock setzen.`
     );
   }
   return startYjsMock(PARTYKIT_PORT);

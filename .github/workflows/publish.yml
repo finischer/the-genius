@@ -57,7 +57,7 @@ jobs:
     uses: ./.github/workflows/deploy_partykit.yml
     with:
       environment: production
-      projectName: the-genius-party-production
+      workerName: the-genius-party-production
     secrets: inherit
 
   deploy-to-production:

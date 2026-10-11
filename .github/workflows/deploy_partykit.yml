@@ -1,20 +1,20 @@
-name: Deploy PartyKit
+name: Deploy Party Server
 
 on:
   workflow_call:
     inputs:
       environment:
         type: string
-        description: "GitHub environment holding the PartyKit credentials"
+        description: "GitHub environment holding the Cloudflare credentials"
         required: true
-      projectName:
+      workerName:
         type: string
-        description: "PartyKit project name (host becomes <name>.<login>.partykit.dev)"
+        description: "Cloudflare Worker name (host becomes <name>.<subdomain>.workers.dev)"
         required: true
 
 jobs:
   deploy:
-    name: Deploy PartyKit (${{ inputs.environment }})
+    name: Deploy Party Server (${{ inputs.environment }})
     runs-on: ubuntu-latest
     environment:
       name: ${{ inputs.environment }}
@@ -28,8 +28,8 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile --ignore-scripts
 
-      - name: Deploy PartyKit server
-        run: bunx partykit deploy --name ${{ inputs.projectName }}
+      - name: Deploy Worker
+        run: bunx wrangler deploy --name ${{ inputs.workerName }}
         env:
-          PARTYKIT_TOKEN: ${{ secrets.PARTYKIT_TOKEN }}
-          PARTYKIT_LOGIN: ${{ secrets.PARTYKIT_LOGIN }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

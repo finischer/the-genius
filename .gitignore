@@ -22,8 +22,12 @@ src/generated/prisma
 /out/
 next-env.d.ts
 
-# partykit
+# legacy partykit dev state
 /.partykit/
+
+# cloudflare / wrangler
+/.wrangler/
+/party/worker-configuration.d.ts
 
 # production
 /build

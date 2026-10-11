@@ -12,7 +12,7 @@ TheGenius ist eine **Multiplayer-Gameshow-Plattform**. Nutzer erstellen eigene G
 | API | tRPC v10 + React Query v4 |
 | Datenbank | PostgreSQL über Prisma v5 |
 | Auth | NextAuth v4 (Google, Discord; Local nur in Dev) |
-| Realtime | PartyKit + Yjs (CRDTs) |
+| Realtime | PartyServer (Cloudflare Workers) + Yjs (CRDTs) |
 | UI | **Mantine v7** (kein Tailwind) |
 | State | useImmer / Immer, SyncedStore |
 | Testing | Vitest v2 |
@@ -48,7 +48,7 @@ src/
 ├── types/          Geteilte TypeScript-Typen
 └── utils/          Hilfsfunktionen
 prisma/             Prisma Schema (PostgreSQL, aufgeteilt in models/)
-party/              PartyKit Server
+party/              PartyServer (Cloudflare Worker)
 __tests__/          Vitest Setup + Utilities
 __mock__/           Mock-Daten für Tests
 ```
@@ -71,8 +71,8 @@ bun install
 # Next.js starten
 bun run dev
 
-# PartyKit lokal starten (separates Terminal)
-bun run partykit
+# Party-Server lokal starten (separates Terminal)
+bun run party:dev
 ```
 
 Ports: Next.js auf 3000, PostgreSQL auf 5432, Prisma Studio auf 4466.

@@ -11,7 +11,7 @@ All technologies you should be familiar with.
 - [TRPC](https://trpc.io/)
 - [PostgreSQL](https://www.postgresql.org/)
 - [ReactJS](https://react.dev/)
-- [Partykit](https://www.partykit.io/)
+- [PartyServer](https://github.com/cloudflare/partykit/tree/main/packages/partyserver) auf Cloudflare Workers
 - [Typescript](https://www.typescriptlang.org/)
 
 Also we use [Mantine](https://mantine.dev/) to customize our UI React Components

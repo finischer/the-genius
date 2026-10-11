@@ -1,0 +1,35 @@
+name: Deploy PartyKit
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        description: "GitHub environment holding the PartyKit credentials"
+        required: true
+      projectName:
+        type: string
+        description: "PartyKit project name (host becomes <name>.<login>.partykit.dev)"
+        required: true
+
+jobs:
+  deploy:
+    name: Deploy PartyKit (${{ inputs.environment }})
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.environment }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: ./.github/actions/setup-node
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile --ignore-scripts
+
+      - name: Deploy PartyKit server
+        run: bunx partykit deploy --name ${{ inputs.projectName }}
+        env:
+          PARTYKIT_TOKEN: ${{ secrets.PARTYKIT_TOKEN }}
+          PARTYKIT_LOGIN: ${{ secrets.PARTYKIT_LOGIN }}

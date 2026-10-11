@@ -99,7 +99,7 @@ export default defineConfig({
       }
     },
     {
-      command: `bunx partykit dev --port ${PARTYKIT_PORT}`,
+      command: `bunx wrangler dev --port ${PARTYKIT_PORT}`,
       port: PARTYKIT_PORT,
       timeout: 120_000,
       reuseExistingServer: !isCi

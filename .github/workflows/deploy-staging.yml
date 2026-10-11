@@ -34,7 +34,7 @@ jobs:
     uses: ./.github/workflows/deploy_partykit.yml
     with:
       environment: staging
-      projectName: the-genius-party-staging
+      workerName: the-genius-party-staging
     secrets: inherit
 
   deploy-to-staging:

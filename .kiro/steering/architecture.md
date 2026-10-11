@@ -52,11 +52,14 @@ const mutation = api.example.create.useMutation();
 - Nach Schema-Änderungen: `bunx prisma generate` ausführen
 - Neue Spiele werden via dedizierter Prisma-Migration in die `games`-Tabelle eingetragen (slug muss exakt mit `Game`-Enum übereinstimmen)
 
-## Realtime: PartyKit + Yjs
+## Realtime: PartyServer + Yjs
 
 ```
-party/index.ts       # PartyKit Server (Cloudflare Durable Objects)
+party/index.ts       # PartyServer (y-partyserver) als Cloudflare Worker + Durable Object
+wrangler.jsonc       # Worker-Konfiguration (Binding "Main" -> /parties/main/:room)
 ```
+
+Der Server entscheidet bei gleichzeitigen Buzzern über Custom Messages (`onCustomMessage`), das Protokoll liegt in `src/config/buzzerProtocol.ts`.
 
 - `SyncedRoomContext` stellt den geteilten Yjs-Store bereit
 - `useSyncedRoom` Hook für Zugriff auf Live-Room-State in Komponenten
@@ -67,10 +70,10 @@ const { store, room } = useSyncedRoom();
 // store.teams.teamOne.totalScore direkt mutierbar (Yjs/Immer-Proxy)
 ```
 
-PartyKit lokal starten:
+Party-Server lokal starten (Port 1999):
 
 ```bash
-bun run partykit
+bun run party:dev
 ```
 
 Host für lokale Entwicklung in `.env.local` als `NEXT_PUBLIC_PARTYKIT_HOST` setzen.
@@ -93,7 +96,7 @@ if (session.user.role !== UserRole.ADMIN)
 | Scope                 | Lösung                           |
 | --------------------- | -------------------------------- |
 | Server State (API)    | React Query via tRPC             |
-| Realtime Room State   | Yjs / SyncedStore via PartyKit   |
+| Realtime Room State   | Yjs / SyncedStore via PartyServer |
 | Gameshow-Konfigurator | `useGameshowConfig` Hook + Immer |
 | Lokaler UI State      | `useState` / `useImmer`          |
 

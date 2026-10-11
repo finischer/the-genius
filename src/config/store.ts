@@ -1,7 +1,7 @@
 import { randomId } from "@mantine/hooks";
 import type { RoomSounds } from "~/types/gameshow.types";
 import { getYjsValue, syncedStore, type Y } from "@syncedstore/core";
-import YPartyKitProvider from "y-partykit/provider";
+import YProvider from "y-partyserver/provider";
 import { PARTYKIT_HOST } from "~/utils/env";
 import {
   RoomView,
@@ -11,11 +11,7 @@ import {
   type TeamShortNames
 } from "~/types/gameshow.types";
 import { roomConfig } from "./room.config";
-import {
-  encodeBuzzRequest,
-  isBuzzResult,
-  type TBuzzRequest
-} from "./buzzerProtocol";
+import { parseBuzzResult, type TBuzzRequest } from "./buzzerProtocol";
 import type { GameState } from "~/games";
 
 export const initRoom = (
@@ -131,17 +127,15 @@ export const runInTransaction = (fn: () => void) => {
   (getYjsValue(roomStore) as Y.Doc).transact(fn);
 };
 
-let activeProvider: YPartyKitProvider | undefined;
+let activeProvider: YProvider | undefined;
 const BUZZ_RESULT_TIMEOUT_MS = 1500;
 const pendingBuzzes = new Map<string, Array<(granted: boolean) => void>>();
 
 // Resolves with the server's verdict. Without a connection or answer the
 // press is granted so the buzzer never feels dead.
 export const requestBuzz = (teamId: string): Promise<boolean> => {
-  const socket = activeProvider?.ws;
-  if (!socket || socket.readyState !== WebSocket.OPEN) {
-    return Promise.resolve(true);
-  }
+  const provider = activeProvider;
+  if (!provider?.wsconnected) return Promise.resolve(true);
 
   return new Promise((resolve) => {
     const queue = pendingBuzzes.get(teamId) ?? [];
@@ -158,37 +152,24 @@ export const requestBuzz = (teamId: string): Promise<boolean> => {
     pendingBuzzes.set(teamId, queue);
 
     const request: TBuzzRequest = { type: "buzz", teamId };
-    socket.send(encodeBuzzRequest(request));
+    provider.sendMessage(JSON.stringify(request));
   });
 };
 
-const handleBuzzResultMessage = (event: MessageEvent) => {
-  if (typeof event.data !== "string") return;
-  try {
-    const parsed: unknown = JSON.parse(event.data);
-    if (isBuzzResult(parsed)) {
-      pendingBuzzes.get(parsed.teamId)?.shift()?.(parsed.granted);
-    }
-  } catch {
-    // not a buzzer message
-  }
+const handleCustomMessage = (message: string) => {
+  const result = parseBuzzResult(message);
+  if (result) pendingBuzzes.get(result.teamId)?.shift()?.(result.granted);
 };
 
 export const connectToSocket = (roomId: string) => {
   if (!roomId) return;
 
-  const provider = new YPartyKitProvider(
+  const provider = new YProvider(
     PARTYKIT_HOST,
     roomId,
     getYjsValue(roomStore) as Y.Doc
-  ); // sync via partykit
-
-  // The underlying WebSocket is recreated on every reconnect
-  provider.on("status", ({ status }: { status: string }) => {
-    if (status === "connected") {
-      provider.ws?.addEventListener("message", handleBuzzResultMessage);
-    }
-  });
+  );
+  provider.on("custom-message", handleCustomMessage);
 
   activeProvider = provider;
   return provider;
